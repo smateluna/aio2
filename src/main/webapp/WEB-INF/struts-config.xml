@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<data-sources />
+	<form-beans />
+	<global-exceptions />
+	<global-forwards />
+	<action-mappings>
+		<action parameter="metodo" path="/service/inscripcionDigital"
+			type="cl.cbrs.aio.struts.action.service.InscripcionDigitalServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/inscripcionDigitalHipotecas"
+			type="cl.cbrs.aio.struts.action.service.InscripcionDigitalHipotecasServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/inscripcionDigitalProhibiciones"
+			type="cl.cbrs.aio.struts.action.service.InscripcionDigitalProhibicionesServiceAction"
+			validate="false">
+		</action>				
+		
+		<action parameter="metodo" path="/service/gponline"
+			type="cl.cbrs.aio.struts.action.service.GponlineServiceAction"
+			validate="false">
+			<forward name="gponline" path="/app/index.html#/gponline" redirect="true"></forward>
+		</action>
+		
+		<action parameter="metodo" path="/service/auditoria"
+			type="cl.cbrs.aio.struts.action.service.AuditoriaServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/planos"
+			type="cl.cbrs.aio.struts.action.service.PlanosServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/repertorio"
+			type="cl.cbrs.aio.struts.action.service.RepertorioServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/escritura"
+			type="cl.cbrs.aio.struts.action.service.EscrituraServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/borradores"
+			type="cl.cbrs.aio.struts.action.service.BorradoresServiceAction"
+			validate="false">
+		</action>
+
+		<action parameter="metodo" path="/service/solicitud"
+			type="cl.cbrs.aio.struts.action.service.SolicitudServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/solicitudHipotecas"
+			type="cl.cbrs.aio.struts.action.service.SolicitudHipotecasServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/solicitudProhibiciones"
+			type="cl.cbrs.aio.struts.action.service.SolicitudProhibicionesServiceAction"
+			validate="false">
+		</action>				
+
+		<action parameter="metodo" path="/service/requirente"
+			type="cl.cbrs.aio.struts.action.service.RequirenteServiceAction"
+			validate="false">
+		</action>
+
+		<action parameter="metodo" path="/service/pdf"
+			type="cl.cbrs.aio.struts.action.service.PdfServiceAction" validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/estado"
+			type="cl.cbrs.aio.struts.action.service.EstadoServiceAction" validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/anexo"
+			type="cl.cbrs.aio.struts.action.service.AnexoServiceAction" validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/reingreso"
+			type="cl.cbrs.aio.struts.action.service.ReingresoServiceAction" validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/usuario"
+			type="cl.cbrs.aio.struts.action.service.UsuarioServiceAction" validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/indice"
+			type="cl.cbrs.aio.struts.action.service.IndiceServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/oficio"
+			type="cl.cbrs.aio.struts.action.service.OficioServiceAction"
+			validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/mantenedor"
+			type="cl.cbrs.aio.struts.action.service.MantenedorServiceAction"
+			validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/caratula"
+			type="cl.cbrs.aio.struts.action.service.CaratulaServiceAction"
+			validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/anotacion"
+			type="cl.cbrs.aio.struts.action.service.AnotacionServiceAction"
+			validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/anotacionHipotecas"
+			type="cl.cbrs.aio.struts.action.service.AnotacionHipotecasServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/anotacionProhibiciones"
+			type="cl.cbrs.aio.struts.action.service.AnotacionProhibicionesServiceAction"
+			validate="false">
+		</action>						
+
+		<action parameter="metodo" path="/service/carteles"
+			type="cl.cbrs.aio.struts.action.service.CartelesServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/distribucion"
+			type="cl.cbrs.aio.struts.action.service.DistribucionServiceAction" validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/certificacion"
+			type="cl.cbrs.aio.struts.action.service.CertificacionServiceAction"
+			validate="false">
+		</action>
+		
+		<action parameter="metodo" path="/service/certificacionHipotecas"
+			type="cl.cbrs.aio.struts.action.service.CertificacionHipotecasServiceAction"
+			validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/desbloqueo"
+			type="cl.cbrs.aio.struts.action.service.DesbloqueoServiceAction" validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/tareas"
+			type="cl.cbrs.aio.struts.action.service.TareasServiceAction" validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/uaf"
+			type="cl.cbrs.aio.struts.action.service.UafServiceAction" validate="false">
+		</action>	
+		
+		<action parameter="metodo" path="/service/parametros"
+			type="cl.cbrs.aio.struts.action.service.ParametrosServiceAction" validate="false">
+		</action>			
+		
+		<action parameter="metodo" path="/service/reingresoEscritura"
+			type="cl.cbrs.aio.struts.action.service.ReingresoEscrituraServiceAction" validate="false">
+		</action>		
+		
+		<action parameter="metodo" path="/service/firma"
+			type="cl.cbrs.aio.struts.action.service.FirmaServiceAction"
+			validate="false">
+		</action>
+				
+	</action-mappings>
+	<message-resources parameter="cl.cbrs.aio.struts.ApplicationResources" />
+</struts-config>

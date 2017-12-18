@@ -1,0 +1,27 @@
+<script type="text/ng-template" id="perfilesModal.html">
+
+<form class="form-perfil" role="form" name="formReingresar" id="formReingresar" ng-submit="entrar()">
+           <h2 class="form-signin-heading">Seleccionar Perfil</h2>
+              
+			   <div class="row">
+	               		<div class="col-md-8 col-xs-offset-2">
+	                		<label> Perfil</label>
+	                		<select id="formulario" class="form-control" ng-model="data.perfil" ng-options="perfil.perfil for perfil in perfiles track by perfil.idPerfil" required="required" focus-input="formularioIsFocused"></select>
+	               		</div>
+	           </div> 
+
+               <div class="row mt20">   
+	               		<div class="col-md-8 col-xs-offset-2">
+	                 		<button type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid" >Entrar</button>
+	               		</div>
+	           </div> 
+			                                   
+		      
+            </form>
+			
+
+</script>
+
+
+
+   

@@ -1,0 +1,162 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="caratulasPorRutModal.html">
+<div class="panel panel-default">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>Car&aacute;tulas por Rut</h3>
+    </div>
+
+
+
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+        <form name="myForm" class="form-inline" role="form" ng-submit="buscar()" novalidate>
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Rut</label>
+                                    <input autofocus="true" type="text" class="form-control" ng-class="{'error-field': myForm.rut.$error.rut && !myForm.rut.$pristine}"
+                                           id="rut" name="rut" ng-model="req.rut"
+                                           focus-input ="rutIsFocused" placeholder="rut"  ng-rut rut-format >
+                                    <div class="error-message" ng-show="myForm.rut.$error.rut && myForm.rut.$dirty">
+                                        Rut no v&aacute;lido
+                                    </div>                                                        
+                        </div>
+                        <div class="form-group form-group-estado" style="margin-top: 30px !important;">
+							<button class="btn btn-primary btn-sm btn-rad" ng-disabled="myForm.$invalid" type="submit">Buscar</button>
+							<button class="btn btn-primary btn-sm btn-rad" ng-click="limpiar()" type="button">Limpiar</button>
+						</div>
+
+					</div>
+				</div>
+				<div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Nombres o Raz&oacute;n Social</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.nombre}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Paterno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.apep}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Materno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.apem}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Email</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.correo}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Tel&eacute;fono</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.telefono}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Direcci&oacute;n</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.direccion}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>
+        </form>
+    </div>
+<div class="panel-body" style="height:500px;overflow:auto;">
+        <table class="hover table-bordered">
+            <thead >
+			<tr ng-if="!buscando  && listaCaratulas.length>0">
+				<td class="estado-table-td">
+					Mostrar 
+				</td>
+				<td colspan="6" class="estado-table-td">
+						<div class="col-md-3 col-sm-3" style="display: inline-flex;">
+						<select class="form-control" id="resultado" name="resultado" ng-model="req.resultado" ng-change="caratulasPorRutConMaximo()">
+				        	<option value=10>
+				     		10
+				        	</option>
+				        	<option value=20>
+				     		20
+				        	</option>
+				        	<option value=30>
+					      	30
+				        	</option>
+							<option value="">TODO</option>
+				        </select>
+						</div>
+				</td>
+			</tr>
+            <tr>
+                <th class="estado-table-title" col="numeroCaratula">Car&aacute;tula</th>
+				<th class="estado-table-title">Formulario</th>
+				<th class="estado-table-title">Fecha Creaci&oacute;n</th>
+                <th class="estado-table-title">Secci&oacute;n Actual</th>
+				<th class="estado-table-title">Fecha Actual</th>
+                <th class="estado-table-title">Valor Tasado</th>
+                <th class="estado-table-title">Valor Pagado</th>
+            </tr>
+            </thead>
+            <tbody ng-if="!buscando">
+            	<!--<tr ng-repeat="caratula in listaCaratulas" ng-class="{'row-caratula': caratula.datosFormularioDTO.numeroCaratula==numeroCaratula}">-->
+				<tr ng-repeat="caratula in filtered = (listaCaratulas | startFrom:(paginacionCaratulasPorRut.currentPage-1)*paginacionCaratulasPorRut.numPerPage | limitTo:paginacionCaratulasPorRut.numPerPage)" ng-class="{'row-caratula': caratula.datosFormularioDTO.numeroCaratula==numeroCaratula}">
+                	<td class="estado-table-td"><a href ng-click="buscarCaratula(caratula.datosFormularioDTO.numeroCaratula)"><strong>{{caratula.datosFormularioDTO.numeroCaratula}}</strong></a></td>
+					<td class="estado-table-td">{{caratula.datosFormularioDTO.tipoFormularioDTO.id}}</td>					
+					<td class="estado-table-td">{{caratula.datosFormularioDTO.fechaIngreso}}</td>
+					<td class="estado-table-td">{{caratula.estadoActualDTO.descripcionEnFlujo}}</td>
+                	<td class="estado-table-td">{{caratula.estadoActualDTO.fecha}}</td>
+                	<td class="estado-table-td">{{caratula.datosFormularioDTO.valorTasado}}</td>
+                	<td class="estado-table-td">{{caratula.datosFormularioDTO.valorPagado}}</td>
+            	</tr>
+			</tbody>
+			<tfoot >
+            	<tr ng-if="!buscando  && listaCaratulas.length>0">
+						<td colspan="7" class="text-center">
+								<pagination 
+									ng-model="paginacionCaratulasPorRut.currentPage"
+									total-items="paginacionCaratulasPorRut.todos.length"
+									class="pagination-sm"
+									max-size="paginacionCaratulasPorRut.maxSize" 
+									rotate="false"
+									boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;"
+									first-text="&laquo;" last-text="&raquo;">
+								</pagination>
+						</td>
+				</tr>
+				<tr>
+                	<td colspan="7" class="estado-table-td text-center text-italic">
+						<div ng-if="!buscando  && listaCaratulas.length===0" >No hay car&aacute;tulas.</div>
+						<div ng-if="!dataCaratulas.status && buscando" class="loader loader-xs" ></div>
+					</td>
+            	</tr>			
+            </tfoot>
+        </table>
+</div>
+</div>
+</script>

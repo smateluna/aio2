@@ -1,0 +1,267 @@
+<div ng-class="{'masked' : actualizandoAlgo}">
+
+<div class="row row-title-dv">
+    <div class="col-md-12 no-padding">
+        <div class="page-head no-padding">
+            <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">×</button>
+
+            <h4 class="title-dv">
+
+
+                <button ng-click="verInscripcion(data.inscripcionAnteriorDTO)"
+                        class="boton btn-atras" ng-if="data.inscripcionAnteriorDTO && data.inscripcionAnteriorDTO.ano>=2014"
+                        tooltip="Ver inscripción anterior" tooltip-placement="left">
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+
+
+                Car&aacute;tula {{parametros.caratula}} Borrador {{parametros.borrador}} Folio {{parametros.folio}}
+
+            </h4>
+        </div>
+    </div>
+</div>
+
+<div class="row row-dv-loading" ng-if="isLoading">
+    <div class="col-md-12">
+        <div id="loading" class="col-sm-12 text-center cargador-inscripcion">
+            <img src="../app/images/load-65.gif" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="" scroll-bookmark>
+<div class="col-md-12 mT-10">
+<div class="tab-container">
+
+<div class="tab-content" ng-if="busquedaResumen.data.status && busquedaResumen.data.anotaciones.length>0">
+	
+	    <ul class="nav nav-tabs">
+
+			<!-- Listado -->
+			<div class="table-responsive">
+				<div class="header">
+			        <h3> Resumen Notas <small class="vertAM"><span class="badge ng-scope ng-binding">{{busquedaResumen.data.anotaciones.length}}</span></small> </h3> 
+			    </div>
+			    <div class="header">
+			    	
+			    		<input ng-model='filterExpr' placeholder="Filtrar..." class="mT-5">
+			    	
+		    		<button type="button" class="pull-right" ng-click="refrescar()" style="margin-left: 10px;"><i class="fa fa-refresh"></i></button>
+			    	</div>	
+			    </div>
+			    <br>
+				<table class="table-curved table-dat tableCard">
+			        <thead>
+			        <tr>
+			            <th class="text-center border-left-table">
+			                Nota 
+			            </th>			            
+			            <!--<th>
+			                
+			            </th>-->
+			        </tr>
+			        </thead>
+			        <tbody>
+						<tr ng-repeat="sol in filtered = (busquedaResumen.data.anotaciones | filter:filterExpr | orderBy:busquedaResumen.predicate:busquedaResumen.reverse | startFrom:(paginacionResumen.currentPage-1)*paginacionResumen.numPerPage | limitTo:paginacionResumen.numPerPage)">
+
+                          
+                          					        		
+				        		<td class="text-left border-left-table">
+                                
+                              <!-- card --> 
+                              <div class="caja caja-sombra">
+                                  
+                                 <div class="row" style="margin: -11px;">
+                                     <div class="col-md-6 col-sm-7 col-lg-5 infoCard">
+                                        <span class="label label-number">{{((paginacionResumen.currentPage - 1) * paginacionResumen.numPerPage) + ($index + 1)}}</span>
+                                        <label>Foja: {{sol.inscripcionDigitalByIdInscripcionDestinoDTO.foja}}</label>
+                                        <label>Número: {{sol.inscripcionDigitalByIdInscripcionDestinoDTO.numero}}</label>
+                                        <label>Año: {{sol.inscripcionDigitalByIdInscripcionDestinoDTO.ano}}</label>
+                                        <label>Bis: <span ng-show="sol.inscripcionDigitalByIdInscripcionDestinoDTO.bis===1"><i class="fa fa-check"></i></span></label>
+                                              <button type="button" class="btn btn-default btn-xs btn-rad" 
+                                                ng-click="verInscripcion(sol.inscripcionDigitalByIdInscripcionDestinoDTO)">
+	                               		   	    <i class="fa fa-search"></i>
+	                           			      </button>
+                                   </div> 
+                                   
+                                   <div class="col-md-6 col-sm-5 col-lg-7 mT-5" align="right" style="border-bottom: 1px solid #D4D4D4;"> 
+                                     <label class="pR-15"><i class="fa fa-user" tooltip="Creada por"></i>{{sol.nombreUsuarioCreador}}</label>
+                                     <label><i class="fa fa-calendar" tooltip="Fecha creación"></i>{{sol.fechaCreacion}}</label>
+                                   </div>
+                                     
+                                </div>
+                                
+                                <div class="row mT-0">
+                                   <div class="col-md-12">
+                                     <div class="anotacion-card ">
+                                      
+                                        <div class="anotacion-header">
+										   <div class="anotacion-title text-center">
+											  {{sol.acto | uppercase}}
+										   </div>
+										</div>
+                                        <div class="text-center mB-3" ng-switch
+												on="sol.estadoAnotacionDTO.idEstado">
+												<span class="label label-default estado-nota"
+													ng-switch-when="1">{{sol.estadoAnotacionDTO.descripcion}}</span>
+												<span class="label label-primary estado-nota"
+													ng-switch-when="2">{{sol.estadoAnotacionDTO.descripcion}}</span>
+												<span class="label label-success estado-nota"
+													ng-switch-when="3">{{sol.estadoAnotacionDTO.descripcion}}</span>
+												<span class="label label-warning estado-nota"
+													ng-switch-when="5">{{sol.estadoAnotacionDTO.descripcion}}</span>
+												<span class="label label-default estado-nota"
+													ng-switch-default>{{sol.estadoAnotacionDTO.descripcion}}</span>
+										</div>
+                                        <div class="borrador-field" ng-if="sol.tipoAnotacionDTO.idTipoAnotacion==1 && sol.inscripcionDigitalByIdInscripcionOrigenDTO.foja && sol.inscripcionDigitalByIdInscripcionOrigenDTO.numero && sol.inscripcionDigitalByIdInscripcionOrigenDTO.ano">
+												<a ng-click="verInscripcion(sol.inscripcionDigitalByIdInscripcionOrigenDTO)">
+													Inscrito a Fojas
+													{{sol.inscripcionDigitalByIdInscripcionOrigenDTO.foja}},
+													número
+													{{sol.inscripcionDigitalByIdInscripcionOrigenDTO.numero}}
+													del año
+													{{sol.inscripcionDigitalByIdInscripcionOrigenDTO.ano}} 
+                                                </a>
+										 </div>
+                                         <div class="anotacion-contenido">
+												<span ng-bind-html="sol.texto"></span>
+
+												<span ng-if="sol.tipoAnotacionDTO.idTipoAnotacion==1">
+													<br>Santiago, <span
+													ng-if="sol.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio">
+														{{nota.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio
+														| myMoment:'DD/MM/YYYY HH:mm:ss':'LL'}} </span> <span
+													class="widget-nota-content-no-data"
+													ng-if="!sol.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio">
+
+												</span> </span>
+												<span ng-if="sol.tipoAnotacionDTO.idTipoAnotacion==2"
+													ng-switch on="sol.estadoAnotacionDTO.idEstado"> <span
+													ng-switch-when="2">{{nota.nombreUsuarioFirmador}}.</span> <span
+													ng-switch-when="3">{{nota.nombreUsuarioFirmador}}.</span> <span
+													ng-switch-when="4">{{nota.nombreUsuarioFirmador}}.</span> <span
+													ng-switch-when="5">{{nota.nombreUsuarioFirmador}}.</span> <span
+													ng-switch-default></span> </span>
+
+											</div>
+                                           
+                                            <div class="anotacion-creada">
+												<label>
+													Carátula:
+													<a ng-if="sol.caratulaMatriz==''" href
+														ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a>
+													<a ng-if="sol.caratulaMatriz!=''" href
+														ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratulaMatriz}}</a>
+
+												</label>
+
+												<label>
+													Repertorio:
+													<a ng-if="sol.repertorio" href
+														ng-click="verRepertorio(sol.repertorio)">{{sol.repertorio}}</a>
+													<span ng-if="!sol.repertorio"> - </span>
+												</label>
+												<label>
+													Borrador:
+													<span ng-if="!sol.borrador"> - </span>
+											
+													<a href ng-if="sol.borrador"
+														ng-click="irGpOnlineAIO(sol.borrador,sol.folio)">
+														{{sol.borrador}} </a>
+												</label>
+                                               </div>
+                                                
+                                                <div class="anotacion-creada">
+												<div>
+													Id Nota:
+													<span ng-if="sol.idAnotacion"> {{sol.idAnotacion}}
+													</span>
+													<span ng-if="!sol.idAnotacion"> - </span>
+												</div>
+												<div>
+													<i class="fa fa-map-marker" tooltip="Dirección"></i>
+													<span ng-if="sol.direccion">{{sol.direccion}}</span>
+													<span ng-if="!sol.direccion"> -</span>
+												</div>
+											</div>
+                                      
+                                     </div>
+                                  
+                                   </div>
+                                 </div>   
+                              </div>
+                              <!--fin card-->
+
+									</td>
+				        		
+				        </tr>
+				        
+				         <tr>
+							<td colspan="11" class="text-center  border-left-table">
+								<pagination ng-model="paginacionResumen.currentPage"
+									page="paginacionResumen.currentPage"
+									total-items="paginacionResumen.todos.length"
+									max-size="paginacionResumen.maxSize" boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+									last-text="&raquo;">
+								</pagination>
+							</td>
+							
+							<a id="tablaprop"></a>
+						</tr>
+			        </tbody>
+			    </table>
+			</div>
+			<!-- Fin Listado -->
+			
+		</ul>
+   		
+   		<div ng-if="busquedaResumen.data.status && busquedaResumen.data.anotaciones.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay notas.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>	
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+<div ng-include="'views/indiceModal.html'"></div>
+<div ng-include="'views/gpOnlineModal.html'"></div>
+<div ng-include="'views/repertorioModal.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div>
+

@@ -1,0 +1,55 @@
+<div class="table-responsive">
+    <table class="hover table-curved">
+        <thead>
+        <tr>
+            <th class="text-center">Fecha creación</th>
+            <th class="text-center">Carátula</th>
+            <th class="text-center">Registro</th>
+            <th class="text-center">Número</th>
+            <th class="text-center">Mes</th>
+            <th class="text-center">Año</th>
+            <th class="text-center">Bis</th>
+            <th class="text-center">Pág desde</th>
+            <th class="text-center">Pág hasta</th>
+            <th class="text-center">Ver</th>
+            <th class="text-center">Firmar </th>
+            <th class="text-center">Eliminar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="cert in busquedaMis.resultados">
+            <td class="text-center">{{cert.fechaCreacion}}</td>
+            <td class="text-center">{{cert.caratula}}</td>
+            <td class="text-center" ng-switch="cert.idReg">
+            	<span ng-switch-when="1" class="label label-prop label-registro mLmenos2">Propiedad</span>
+            	<span ng-switch-when="2" ng-if="aioParametros.sistema=='AIO AGUAS'" class="label label-hipo label-registro mLmenos2">Hipotecas y Prohibici&oacute;n</span>
+            	<span ng-switch-when="2" ng-if="aioParametros.sistema!='AIO AGUAS'" class="label label-hipo label-registro mLmenos2">Hipoteca</span>
+	            <span ng-switch-when="3" class="label label-proh label-registro mLmenos2">Prohibiciones</span>
+            </td>
+            <td class="text-center">{{cert.numero}}</td>
+            <td class="text-center">{{cert.mes}}</td>
+            <td class="text-center">{{cert.ano}}</td>
+            <td class="text-center">
+
+                <span ng-if="cert.bis">
+                    <i class="fa fa-check"></i>
+                </span>
+
+            </td>
+            <td class="text-center">{{cert.pagDesde}}</td>
+            <td class="text-center">{{cert.pagHasta}}</td>
+            <td class="text-center">
+                <button class="btn btn-primary btn-sm" ng-click="verCertificado(cert.idCertificado, cert.idReg)"> <i class="fa fa-file-pdf-o"></i> </button>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success btn-sm" ng-click="firmar($index, cert.idCertificado, cert.idReg)"> <i class="fa fa-pencil"></i> </button>
+
+            </td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-sm" ng-click="eliminar($index, cert.idCertificado, cert.idReg)"> <i class="fa fa-trash-o"></i> </button>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

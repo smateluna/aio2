@@ -1,0 +1,125 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="listadoPendienteModal.html">
+<div class="panel panel-default">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h5><small class="vertAM" ng-show="listadoPendiente.resultados!=null"><span class="badge ng-scope ng-binding">{{listadoPendiente.resultados.length}}</span></small> Car&aacute;tulas Pendientes a enviar Entrega Documentos</h5>
+    </div>
+
+<div class="panel-body" style="height:400px;overflow:auto;">
+
+  <div class="row">
+     <div class="col-md-3" align="left">
+    	<input maxlength="10" ng-model="filterExprLiquidacion.valor" placeholder="Filtrar..." class="mB-10 form-control" numbers-only="">
+     </div>
+
+	 <div class="col-md-6" align="left">
+		
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROPIEDAD') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('51')"><i class="fa fa-list"></i> Ver Pendientes Propiedad</button>
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_HIPOTECA') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('53')"><i class="fa fa-list"></i> Ver Pendientes Hipoteca</button>
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROHIBICIONES') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('54')"><i class="fa fa-list"></i> Ver Pendientes Prohibiciones</button>
+
+		<button ng-if="!verMisCaratulas" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteUsuario()"><i class="fa fa-list"></i> Ver Mis Caratulas</button>
+
+     </div>
+
+     <div class="col-md-3" align="right">
+         <button tooltip="Refrescar" tooltip-placement="left" type="button" class="mB-10 btn btn-primary btn-xs"	ng-click="verListadoPendienteUsuario()">
+			<i class="fa fa-refresh"></i>
+		</button>
+     </div>
+  </div>
+  <div class="row">
+     <div class="col-md-12" align="left">
+		<label ng-if="verMisCaratulas" class="control-label">Viendo Mis Caratulas Pendientes</label>
+		<label ng-if="!verMisCaratulas" class="control-label">Viendo Caratulas Pendientes Por Seccion</label>
+     </div>
+  </div>
+	
+        <form role="form" name="myform" id="myform">
+								<table class="hover table-curved"
+									style="border-left: solid #ccc 1px !important;">
+									<thead>
+										<tr>
+											<th>
+												<input type="checkbox" class="icheckbox_square-blue"
+													ng-model="selectedAll" ng-click="checkAll()" ng-disabled="filterExprLiquidacion.valor!=''">
+											</th>
+											<th>
+												Caratula
+											</th>
+											<th>
+												Usuario Liquidador
+											</th>
+											<th>
+												Fecha Liquidaci&oacute;n
+											</th>
+											<th>
+												Acci&oacute;n
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="caratula in filtered = (listadoPendiente.resultados | filter:filterExprLiquidacion.valor | orderBy:'-id.fechaMov')" ng-form="userFieldForm">
+											<td class="text-left">
+												<input type="checkbox" class="icheck" ng-i-check=""
+													ng-model="caratula.id.Selected">
+											</td>
+											<td class="text-left">
+												{{caratula.id.caratula}}
+											</td>
+											<td class="text-left">
+												{{caratula.id.usuarioLiquidador}}
+											</td>
+											<td class="text-left">
+												{{caratula.id.fechaMov | date: 'dd-MM-yyyy HH:mm:ss'}}
+											</td>
+											<td class="text-left">
+												<button type="button" tooltip="Eliminar de la lista" class="btn  btn-danger btn-xs" ng-click="eliminarCaratulaPendiente(caratula.id.caratula)">Eliminar</button>
+											</td>
+										</tr>
+
+									</tbody>
+									<tfoot ng-if="listadoPendiente.resultados.length===0">
+										<tr>
+                							<td colspan="5" class="estado-table-td text-center text-italic">
+												<div ng-if="listadoPendiente.resultados.length===0" >No hay car&aacute;tulas.</div>
+											</td>
+            							</tr>			
+            						</tfoot>
+								</table>
+						</div>
+
+					</div>
+				</div>
+			</form>
+</div>
+	<div class="modal-footer ng-scope">
+			<div class="row mt0"> 
+			    <div class="col-md-12">
+				    <span class="label label-success text-left mensaje-label mB-15" ng-if="envioExitoso">
+						Carátulas enviadas.
+	    			</span>
+				    <span class="label label-success text-left mensaje-label mB-15" ng-if="eliminacionExitosa">
+						Carátula eliminada del listado de pendientes.
+	    			</span>
+					<span class="label label-primary text-left mensaje-label mB-15" ng-if="envioEnProceso">
+						Envio en proceso, favor espere...
+	    			</span>
+					<span class="label label-danger text-left mensaje-label mB-15" ng-if="envioError">
+						{{mensaje}}
+	    			</span>					   			  
+			    </div>
+			</div>
+		    <div class="row">  
+			    <div class="col-md-12">
+						<button ng-disabled="listadoPendiente.resultados==null || listadoPendiente.resultados.length===0 || (listadoPendiente.resultados | filter: caratula.id.Selected != true).length == 0" type="button" class="btn  btn-success btn-rad" ng-click="enviarEntregaDoc()">Enviar Entrega Doc</button>
+	   					<button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+			    </div>
+			  </div>
+				
+			</div>
+	   
+    </div>
+</div>
+</script>

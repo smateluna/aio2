@@ -1,0 +1,21 @@
+<script type="text/ng-template" id="datos_formularioModal.html">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Datos de Formulario > <small class="color">Cambiar estado</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">          
+           <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+                <span>Estado</span>
+				<select ui-keypress="{13:'guardarEstadoFormulario()'}" id="estado" class="form-control" ng-model="myv.estadoCaratula" ng-options="item.descripcion for item in listaEstados  track by item.id && item.descripcion" focus-input="estadoIsFocused"></select>
+               </div>
+           </div>  
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="guardarEstadoFormulario()">Guardar</button>
+		<button type="button" class="btn  btn-default" loading-state="isLoadingDatosFormulario" ng-click="cancel()">Cancelar</button>        
+      </div>
+    
+</script>

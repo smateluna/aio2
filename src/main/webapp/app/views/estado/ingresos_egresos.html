@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        <div class="loader loader-xs" ng-show="data.status && !data.statusIngresosEgresos"></div> Ingresos - Egresos</div>
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <table class="hover table-bordered">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Fecha/Hora</th>
+                <th class="estado-table-title">Tipo</th>
+                <th class="estado-table-title">Medio</th>
+                <th class="estado-table-title">Caja</th>
+                <th class="estado-table-title">Transacción</th>
+                <th class="estado-table-title">Monto</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="ie in data.res.caratulaDTO.ingresoEgresoDTOs">
+                <td class="estado-table-td">{{ie.fecha}}</td>
+                <td class="estado-table-td">{{ie.descTipo}}</td>
+                <td class="estado-table-td">{{ie.descMedio}}</td>
+                <td class="estado-table-td">{{ie.caja}}</td>
+                <td class="estado-table-td">{{ie.idTransaccion}}</td>
+                <td class="estado-table-td">{{ie.monto | myCurrency}}</td>
+            </tr>
+            <tr ng-if="!data.res.caratulaDTO.ingresoEgresoDTOs || data.res.caratulaDTO.ingresoEgresoDTOs.length===0">
+                <td colspan="6" class="estado-table-td text-center text-italic">No hay ingresos - egresos.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

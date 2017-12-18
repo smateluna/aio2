@@ -1,0 +1,167 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Listado Cuadernillos" icono="fa-list"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form name="formListaCuadernillo">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group ">
+                                    <label class="control-label">Fecha Desde
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaDesde" name="fechaDesde" ng-model="despachoCuadernillo.fechaDesde" required="" placeholder="dd-MM-yyyy" enter-next=""/>                                    
+                                </div>                                
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group ">
+                                    <label class="control-label">Fecha Hasta
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaHasta" name="fechaHasta" ng-model="despachoCuadernillo.fechaHasta" required="" placeholder="dd-MM-yyyy" enter-next=""/>
+                                          
+                                </div>
+                            </div>
+							<div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+                            	<button class="btn  btn-default" type="button" ng-click="limpiar()">Limpiar</button>
+                            	<button class="btn  btn-primary" type="button" ng-click="buscar()" ng-disabled="formListaCuadernillo.$invalid">Buscar</button>
+                            	</div>
+                        	</div>                            
+                        </div>
+ 
+						
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+
+	    <ul class="nav nav-tabs" ng-show="despachoCuadernillo.resultados.length>0">
+
+			<!-- Listado -->
+			<div class="table-responsive" >
+			
+				<div class="header">
+			        <h3> Resultados <small class="vertAM"><span class="badge ng-scope ng-binding">{{paginacion.todos.length}}</span></small> </h3> 
+			    </div>			
+			    <div class="header">
+			     <div class="row mt0">
+                     <div class="col-md-3 col-sm-3">
+			           <input ng-model='filterExpr' placeholder="Filtrar..." style="margin-top: 5px;" class="form-control">
+			         </div>
+			         
+                     <div class="col-md-3 col-sm-3" ng-if="someSelected">
+					    <div class="btn-group">
+					      <button class="btn btn-primary btn-xl dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i> Asignar <span class="caret"></span></button>
+					      <ul class="dropdown-menu" role="menu">
+						    <li><a href="" ng-click="asignarUsuario('sbielefeldt')">Sebastian Bielefeldt</a></li>
+						    <li><a href="" ng-click="asignarUsuario('rdroguett')">Ricardo Droguett</a></li>
+						    <li><a href="" ng-click="asignarUsuario('rlagos')">Rodrigo Lagos</a></li>
+						    <li class="divider"></li>
+						    <li><a href="" ng-click="asignarUsuario('ovillagran')">Oscar Villagran</a></li>
+						     <li><a href="" ng-click="asignarUsuario('rduarte')">Roberto Duarte</a></li>
+						     <li><a href="" ng-click="asignarUsuario('efarias')">Edson Farias</a></li> 
+						  </ul>
+					    </div>
+			         </div>			         
+			         
+			         <div class="col-md-3 col-sm-3 pull-right" >				          
+                        <select class="form-control" name="resultadosPorPagina" ng-model="paginacionMaster.numPerPage" ng-change="buscar()">				        
+				        	<option value="10">Mostrar 10 resultados</option>
+				        	<option value="25">Mostrar 25 resultados</option>
+				        	<option value="50">Mostrar 50 resultados</option>
+				        	<option value="0">Mostrar todo</option>
+				        </select>                       
+                     </div>
+				  </div>
+				</div>			
+
+			    
+			    <br>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th><input type="checkbox" ng-model="allSelected" ng-click="checkAll()" class="icheckbox_square-blue"/></th>
+			            <th >
+			                Cuadernillo
+			            </th>
+			            <th >
+			                Usuario asignado
+			            </th>
+			            <th >
+			                Fecha 
+			            </th>          
+			        </tr>
+			        </thead>
+			        <tbody>
+
+				       <tr ng-repeat="sol in filtered = (despachoCuadernillo.resultados | orderBy: 'cuadernillo' | filter:filterExpr | startFrom:(paginacion.currentPage-1)*paginacion.numPerPage | limitTo:paginacion.numPerPage>0?paginacion.numPerPage:despachoCuadernillo.resultados.length)" >
+				        		<td><input type="checkbox" ng-model="sol.selected" class="icheck" ng-i-check="" ng-change="validarSelected()" /></td>
+				        		<td class="text-left">{{sol.cuadernillo}}</td>
+				        		<td class="text-left">{{sol.usuario}}</td>
+				        		<td class="text-left">{{sol.fecha}}</td>
+				        </tr>
+				        <tr>
+							<td colspan="11" class="text-center">
+								<pagination ng-model="paginacion.currentPage"
+									page="paginacion.currentPage"
+									total-items="paginacion.todos.length" items-per-page="paginacion.numPerPage"
+									max-size="paginacion.maxSize" boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;" 
+									first-text="&laquo;" last-text="&raquo;">
+								</pagination>
+							</td>
+							<a id="tablaprop"></a>
+						</tr>
+			        </tbody>
+			    </table>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="despachoCuadernillo.data.status && despachoCuadernillo.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+<div ng-include="'views/estadoIndiceModal.html'"></div>

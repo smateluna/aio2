@@ -1,0 +1,168 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Digital Hipotecas" icono="fa-book"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70">
+<div class="col-md-12">
+<div class="tab-container">
+<ul class="nav nav-tabs">
+    <li ng-class="{'active': isActiveParent(1)}"><a href ng-click="activateParent(1)">Buscar Inscripción</a> </li>
+    <li ng-class="{'active': isActiveParent(2)}"><a href ng-click="activateParent(2)">Mis solicitudes</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane" ng-class="{'active': isActiveParent(1)}" ng-show="isActiveParent(1)" cg-busy="{promise:promiseSaveSolicitud, message:'Por favor espere...'}">
+    <div class="row mt0">
+        <div class="col-md-8 col-md-offset-2">
+
+            <div class="block-transparent">
+
+                <div class="content">
+                    <form role="form" name="myform" id="myform">
+                        <div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Foja
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaTitulo.foja" name="foja" placeholder="foja"
+                                           focus-input ="fojaIsFocused" maxlength="6" autofocus="true" required="required" enter-next=""  numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaTitulo.numero"  id="numero" name="numero"
+                                           placeholder="número" maxlength="6" required="required" enter-next="" numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Año</label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="busquedaTitulo.ano" name="ano" placeholder="año"
+                                           maxlength="4" required="required" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-center">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaTitulo.bis" ng-i-check=""> Bis</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20">
+                            <button type="button" class="btn  btn-default btn-rad" ng-click="limpiarTitulo()">Limpiar</button>
+                            <button type="submit" class="btn  btn-primary btn-rad" ng-disabled="myform.$invalid"
+                                    ng-click="buscarTitulo()" >Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div ng-if="states.titulo.isError" class="row mt20">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.titulo.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="busquedaTitulo.data.status && busquedaTitulo.resultados.length===0" class="row mt20">
+        <div class="col-md-6 col-md-offset-3">
+
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                        <p>No hay resultados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane" ng-class="{'active': isActiveParent(2)}" ng-show="isActiveParent(2)" cg-busy="{promise:promiseUpdateSolicitudMis, message:'Por favor espere...'}">
+
+    <div class="row mt0">
+        <div class="col-md-12">
+
+            <div class="block-flat block-border">
+
+                <div class="header">
+                    <h4>Mis solicitudes
+                        <span ng-if="busquedaMis.fecha!=null" class="timeago-title">
+                            (<span am-time-ago="busquedaMis.fecha"></span>)
+                        </span>
+                    </h4>
+                </div>
+
+                <div class="content">
+                    <div class="row mt20">
+                        <div class="col-md-12">
+                            <div class="pull-right mb10">
+                                <button ng-click="openSolicitarMis()" type="button" class="btn btn-primary btn-rad" >
+                                    <i class="fa fa-plus"></i> Crear solicitud</button>
+                            </div>
+                            <div class="pull-left mb10">
+                                <button ng-click="buscarMis(true)" type="button" class="btn btn-primary btn-rad ml0">
+                                    <i class="fa fa-refresh"></i> Refrescar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="!states.mis.isError && busquedaMis.data.status" ng-include="'views/solicitudes/mis_solicitudes.html'"> </div>
+
+                    <div ng-if="busquedaMis.resultados.length>listaMis.data.length" class="row mt0">
+                        <div class="col-md-12">
+                            <div class="text-center mb10 mt20">
+                                <button ng-click="loadMoreMis()" type="button" class="btn btn-primary btn-rad">
+                                    <i class="fa fa-arrow-down"></i> Más</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div ng-if="states.mis.isError" class="row mt0">
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.mis.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<scroll-up></scroll-up>
+
+<div ng-include="'views/solicitarModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/digitalModal.html'"></div>

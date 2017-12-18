@@ -1,0 +1,95 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        Requirente</div>
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CORREO') >= 0 && data.status!=null && !anulada" >
+<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openRequirenteModal()" >
+            <i class="fa fa-envelope"></i>  Editar correo
+        </button>
+    </div>
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+        <form class="form-inline" role="form">
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Rut</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.rut}}-{{data.res.caratulaDTO.requirenteDTO.dv}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Nombres o Razón Social</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.nombres}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Paterno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.apellidoPaterno}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Materno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.apellidoMaterno}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Email</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.email}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Giro</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.giro}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Dirección</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.direccion}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Teléfono</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.requirenteDTO.telefono}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="header">
+    <button type="button" class="close close-resultado" ng-click="cerrarResultadoRut()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>
+
+    <h4>Resultados para rut {{busquedaRut.data.rut}}
+                            <span ng-if="busquedaRut.fecha!=null" class="timeago-title">
+                            (<span am-time-ago="busquedaRut.fecha"></span>)
+                        </span>
+    </h4>
+</div>
+<div class="pull-left mb10 mt20">
+    <button type="button" class="btn btn-primary btn-rad ml0" ng-click="buscarRut(busquedaRut.data.rut)" tooltip="Buscar nuevamente" tooltip-placement="right">
+        <i class="fa fa-refresh"></i> Refrescar</button>
+</div>
+<div class="content">
+    <div class="table-responsive">
+        <!--<div class="pull-right mb10">-->
+        <!--<button type="button" class="btn btn-primary  " tooltip="Crear nueva solicitud de título" tooltip-placement="left">-->
+        <!--<i class="fa fa-plus"></i> Crear solicitud</button>-->
+        <!--</div>-->
+        <table class="hover table-curved">
+            <thead>
+            <tr>
+                <th>
+                    #
+                                        <span class="pull-right">
+
+                                            <i class="fa fa-sort-desc"></i>
+                                        </span>
+                </th>
+                <th class="text-center">
+                    Fecha solicitud
+                </th>
+                <th>
+                    Estado
+
+                </th>
+                <th>
+                    Observación
+
+                </th>
+                <th class="text-center">
+                    Fecha estado
+
+                </th>
+
+                <th class="text-right">
+                    Foja
+
+                </th>
+                <th class="text-right">
+                    Número
+
+                </th>
+                <th class="text-right">
+                    Año
+
+                </th>
+                <th class="text-center">
+                    Bis
+
+                </th>
+                <th class="text-right">
+                    Tomo
+
+                </th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll='loadMoreRut()' infinite-scroll-distance='0'>
+            <tr ng-repeat="sol in listaRut.data | filter: isSolicitudRevisada">
+                <td class="text-right">{{sol.idSolicitud}}</td>
+                <td class="text-center">{{sol.fechaSolicitud}}</td>
+                <td>
+                                 <span ng-if="sol.estadoDTO.idEstado==1" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                 <span ng-if="sol.estadoDTO.idEstado==2" class="label label-success">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==3" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==4" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==5" class="label label-primary">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==6" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==7" class="label label-manual">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                <span ng-if="sol.estadoDTO.idEstado==8" class="label label-warning">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                </td>
+                <td>
+                                        <span ng-if="sol.observacionSolicitudDTO.titulo">
+                                        <span class="font-12">
+                                            <span class="subraya">{{sol.observacionSolicitudDTO.titulo}}</span>
+                                            {{sol.observacionSolicitudDTO.texto}}
+                                        </span>
+                                        </span>
+                </td>
+                <td class="text-center">{{sol.fechaEstado}}</td>
+                <td class="text-right">{{sol.foja}}</td>
+                <td class="text-right">{{sol.numero}}</td>
+                <td class="text-right">{{sol.ano}}</td>
+                <td class="text-center">
+                            <span ng-if="sol.bis==1">
+                                <i class="fa fa-check"></i>
+                            </span>
+                </td>
+                <td class="text-right">{{sol.tomo}}</td>
+                <td class="text-center">
+                    <button ng-if="sol.estadoDTO.idEstado==2 || sol.estadoDTO.idEstado==5" ng-click="accionSolicitud('promiseUpdateSolicitudRut', sol)"
+                            class="btn btn-xs btn-primary btn-rad" tooltip="Ver inscripción" tooltip-placement="left">
+                        <i class="fa fa-search"></i>
+                    </button>
+
+                    <button ng-if="sol.estadoDTO.idEstado==3" ng-click="accionSolicitud('promiseUpdateSolicitudRut', sol)"
+                            class="btn btn-xs btn-danger btn-rad" tooltip="Quitar de la lista" tooltip-placement="left">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <tr ng-if="!hayDataEnTablaRut()">
+                <td colspan="11" class="text-center text-italic">No hay registros.</td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

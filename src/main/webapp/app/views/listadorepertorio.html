@@ -1,0 +1,194 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Listado Repertorio" icono="fa-list"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form role="form" name="myform" id="myform">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Desde
+                                    </label>
+                                    <input type="date" class="form-control" name="fechaDesde" ng-model="busquedaCertificacion.fechaDesde" placeholder="dd-MM-yyyy" enter-next=""/>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Hasta
+                                    </label>
+                                    <input type="date" class="form-control" name="fechaHasta" ng-model="busquedaCertificacion.fechaHasta" placeholder="dd-MM-yyyy" enter-next=""/>
+                                          
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+                                 
+                                     <button type="submit" class="btn  btn-primary" 
+                                    ng-click="refrescar()" >Buscar</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+						
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+	    <ul class="nav nav-tabs">
+
+			<!-- Listado -->
+			<div class="table-responsive">
+				
+				<div class="header">
+			        <h3> Listado <small class="vertAM"><span class="badge ng-scope ng-binding">{{filtered.length}}</span></small> </h3> 
+			    </div>
+			    
+			    <div class="header">
+			     <div class="row mt0">
+                     <div class="col-md-3 col-sm-3">
+			           <input ng-model='filterExpr' placeholder="Filtrar..." style="margin-top: 5px;" class="form-control">
+			         </div>
+			         
+			         <div class="col-md-5 col-sm-5" align="right">				       
+                           <label style="margin-top: 6px;">Auto Refrescar:</label>
+                     </div>
+                     <div class="col-md-4 col-sm-4" style="display: inline-flex;">      
+                           <select class="form-control" id="tiemporefresco" name="tiemporefresco"
+                             ng-model="busquedaCertificacion.tiemporefresco">
+				        	<option value="0">
+				     		-- Nunca --
+				        	</option>
+				        	<option value="2">
+				     		2 minutos
+				        	</option>
+				        	<option value="5">
+					      	5 minutos
+				        	</option>
+				        </select>
+                         <button type="button" class="pull-right btn btn-primary btn-sm" ng-click="refrescar()" style="margin-left: 10px;" tooltip="Refrescar" tooltip-placement="bottom">
+                           <i class="fa fa-refresh"></i>
+                         </button>
+                     </div>  
+				     
+				  
+				  </div>
+				</div>
+				
+			   <br/>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th ng-class="busquedaCertificacion.predicate == 'repertorio' ? 'bgColor-th' : ''">
+			                Repertorio <a ng-click="busquedaCertificacion.predicate = 'tipoFormulario'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'caratula' ? 'bgColor-th' : ''">
+			                Carátula <a ng-click="busquedaCertificacion.predicate = 'caratula'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <!--<th ng-class="busquedaCertificacion.predicate == 'vendedor' ? 'bgColor-th' : ''" >
+			                Vendedor <a ng-click="busquedaCertificacion.predicate = 'foja'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'comprador' ? 'bgColor-th' : ''" >
+			                Comprador <a ng-click="busquedaCertificacion.predicate = 'foja'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            --><th ng-class="busquedaCertificacion.predicate == 'requirente' ? 'bgColor-th' : ''">
+			                Requirente <a ng-click="busquedaCertificacion.predicate = 'requirente'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'acto' ? 'bgColor-th' : ''">
+			                Acto <a ng-click="busquedaCertificacion.predicate = 'caratula'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'registro' ? 'bgColor-th' : ''">
+			                Registro <a ng-click="busquedaCertificacion.predicate = 'caratula'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'fechacreacion' ? 'bgColor-th' : ''">
+			                Fecha Creación <a ng-click="busquedaCertificacion.predicate = 'fechaCreacion'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'fechaSeccion' ? 'bgColor-th' : ''">
+			                Fecha Seccion <a ng-click="busquedaCertificacion.predicate = 'fechaSeccion'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <!--<tr ng-repeat="sol in busquedaCertificacion.resultados | orderBy:predicate:reverse">
+				        --><tr ng-repeat="sol in filtered = (busquedaCertificacion.resultados | filter:filterExpr | orderBy:busquedaCertificacion.predicate:busquedaCertificacion.reverse)">
+				        		<td class="text-left">{{sol.repertorio}}</td>
+				        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
+				        		<!--<td class="text-left">{{sol.vendedor}}</td>
+								<td class="text-left">{{sol.comprador}}</td>
+				        		--><td class="text-left">{{sol.requirente}}</td>
+				        		<td class="text-left">{{sol.acto}}</td>
+				        		<td class="text-left">{{sol.registro}}</td>
+				        		<td class="text-left">{{sol.fechacreacion}}</td>
+				        		<td class="text-left">{{sol.fechaSeccion}}</td>
+				        </tr>
+			        </tbody>
+			    </table>
+			    <div class="footer mt10" align="right"><button type="button" class="btn btn-primary btn-sm" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="bottom"><i class="fa fa-refresh"></i></button>
+                  </div>
+			    <br>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="busquedaCertificacion.data.status && busquedaCertificacion.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   		
+   		<div class="tab-pane">
+   			<div ng-if="busquedaCertificacion.resultados.length>listaPropiedad.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMorePropiedad()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                         
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>   
+                    </div>
+                </div>
+            </div>
+   		</div>	
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+<div ng-include="'views/estadoIndiceModal.html'"></div>

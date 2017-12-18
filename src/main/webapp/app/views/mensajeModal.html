@@ -1,0 +1,24 @@
+<script type="text/ng-template" id="mensajeModal.html">
+    <div class="modal-header bb0">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>&nbsp;</h3>
+    </div>
+    <div class="modal-body pt0">
+        <div class="text-center">
+            <div ng-if="tipo==='error'" class="i-circle danger">
+                <i class="fa fa-times"></i>
+            </div>
+            <div ng-if="tipo==='info'" class="i-circle primary">
+                <i class="fa fa-info"></i>
+            </div>
+            <div ng-if="tipo==='warn'" class="i-circle warning">
+                <i class="fa fa-warning"></i>
+            </div>
+            <div ng-if="tipo==='success'" class="i-circle success">
+                <i class="fa fa-check"></i>
+            </div>
+            <h4 class="color-forza">{{titulo}}</h4>
+            <p ng-bind-html="detalle"></p>
+        </div>
+    </div>
+</script>

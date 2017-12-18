@@ -1,0 +1,394 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}"
+	indisponibilidad={{indisponibilidad}}
+	modulo-disponible={{moduloDisponible}} perfil="{{perfil}}"
+	activo-atencion="{{activoAtencion}}" modulo="{{modulo}}"
+	grupo="{{grupo}}" user-ip-address="{{userIpAddress}}"
+	titulo="Certificaci&oacute;n Manual" icono="fa-edit"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'"
+	titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'"
+	titulo="'Info'"
+	texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70">
+	<div class="col-md-12">
+		<div class="tab-container">
+
+			<form role="form" name="myform" id="myform">
+				<div class="tab-content">
+					<div class="modal-head">
+						<div class="col-md-12">
+
+							<div class="row mt0">
+								<div class="col-md-3 col-sm-3">
+									<div class="form-group">
+										<label class="control-label">Caratula </label> <input
+											type="text" class="form-control"
+											ng-model="plantillero.caratula" name="caratula"
+											placeholder="caratula" focus-input="caratulaIsFocused"
+											maxlength="10" autofocus="true" required="required"
+											enter-next="" numbers-only="numbers-only"
+											ng-change="reemplazaData()">
+									</div>
+								</div>
+								<div class="col-md-5 col-sm-5">
+									<div class="form-group">
+										<label class="control-label">Tipo Certificado </label> <select
+											required="required" class="form-control" id="tipoCertificado"
+											name="tipoCertificado" ng-model="plantillero.tipocertificado"
+											ng-options="tipocertificado.plantillas.plantillaCertificado for tipocertificado in plantillero.tiposcertificados"
+											ng-change="obtenertemplate()">
+											<option value="">--Tipo Certificado--</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-3">
+									<div class="form-group">
+										<label class="control-label">Valor </label> <input
+											type="text" class="form-control"
+											ng-model="plantillero.valor" name="valor"
+											placeholder="valor" 
+											maxlength="50" required="required"
+											enter-next="" numbers-only="numbers-only"
+											ng-change="reemplazaData()">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="plantillero.tipocertificado"
+						ng-repeat="field in entity.fields track by $index">
+						<ng-form name="form">
+						<div class="row mt0" ng-if="field.saltolinea">
+
+							<div
+								ng-class="{'col-md-12': field.type=='textarea', 'col-md-3 col-sm-3' : field.type!='textarea'}">
+								<!--TEXT ONLY NUMBERS-->
+								<div class="form-group" ng-if="field.type=='solonumero'">
+									<label class="control-label">{{field.label}} </label> <input
+										type="text" class="form-control" dynamic-name="field.name"
+										ng-model="field.data" id="{{field.name}}"
+										placeholder="{{field.name}}" maxlength={{field.max}} required
+										enter-next="" numbers-only="numbers-only"
+										ng-change="reemplazaData()" />
+								</div>
+								<!--TEXT FIELDS-->
+								<div class="form-group" ng-if="field.type=='text'">
+									<label class="control-label">{{field.label}} </label> <input
+										type="text" class="form-control" dynamic-name="field.name"
+										ng-model="field.data" id="{{field.name}}"
+										placeholder="{{field.name}}" maxlength={{field.max}} required
+										enter-next="" ng-change="reemplazaData()" />
+								</div>
+
+								<!--SELECT FIELDS-->
+								<div class="form-group" ng-if="field.type=='select'">
+									<label class="control-label">{{field.label}}</label> <select
+										data-ng-model="field.data"
+										ng-options="option.name for option in field.options"
+										class="form-control" required ng-change="reemplazaData()" />
+								</div>
+
+								<!--RADIO FIELDS-->
+								<div class="form-group" ng-if="field.type=='radio'">
+									<label class="control-label">{{field.label}}</label> <br>
+									<span ng-repeat="option in field.options"> <input
+										type="radio" data-ng-model="field.data" name="taskGroup"
+										id="{{option.name}}" value="{{option.id}}"
+										ng-change="reemplazaData()">{{option.name}}
+									</span>
+								</div>
+
+								<!--CHECKBOX FIELDS-->
+								<div class="form-group" ng-if="field.type=='checkbox'">
+									<label class="control-label">{{field.label}}</label><br> <span
+										ng-repeat="option in field.options"> <input
+										type="checkbox" data-ng-model="option.data" name="taskGroup"
+										id="{{option.name}}" value="{{option.id}}"
+										ng-click="reemplazaData()">{{option.name}}
+									</span>
+								</div>
+
+								<!--DATE FIELDS-->
+								<div class="form-group" ng-if="field.type=='date'">
+									<label class="control-label">{{field.label}} </label> <input
+										type="date" class="form-control" dynamic-name="field.name"
+										ng-model="field.data" id="{{field.name}}"
+										placeholder="{{field.name}}" required enter-next=""
+										ng-change="reemplazaData()" max="{{fechahoy}}"
+										placeholder="dd-MM-yyyy" />
+								</div>
+
+								<!--BUTTON FIELDS-->
+								<div class="form-group" ng-if="field.type=='button'">
+									<label class="control-label">{{field.label}} </label><br>
+									<button type="button" class="btn  btn-primary ng-scope"
+										ng-click="add(field.data)">
+										<i class="fa fa-plus"></i>
+									</button>
+									<button type="button" class="btn  btn-primary ng-scope"
+										ng-click="remove(field.data)" ng-if="plantillero.mostrarboton!=0">
+										<i class="fa fa-minus"></i>
+									</button>
+								</div>
+
+								<!--TEXTAREA FIELDS-->
+								<div class="form-group" ng-if="field.type=='textarea'">
+									<label class="control-label">{{field.label}} </label>
+									<textarea class="form-control" id="{{field.name}}"
+										rows="{{field.rows}}" cols="{{field.cols}}"
+										style="{{field.height}};resize: none;" maxlength="{{field.max}}"
+										ng-change="reemplazaData()" ng-model="field.data"></textarea>
+								</div>
+							</div>
+						</div>
+
+
+						<div
+							ng-class="{'col-md-12': field.type=='textarea', 'col-md-3 col-sm-3' : field.type!='textarea'}"
+							ng-if="!field.saltolinea">
+
+							<!--TEXT ONLY NUMBERS-->
+							<div class="form-group" ng-if="field.type=='solonumero'">
+								<label class="control-label">{{field.label}} </label> <input
+									type="text" class="form-control" dynamic-name="field.name"
+									ng-model="field.data" id="{{field.name}}"
+									placeholder="{{field.name}}" maxlength={{field.max}} required
+									enter-next="" numbers-only="numbers-only"
+									ng-change="reemplazaData()" />
+							</div>
+							<!--TEXT FIELDS-->
+							<div class="form-group" ng-if="field.type=='text'">
+								<label class="control-label">{{field.label}} </label> <input
+									type="text" class="form-control" dynamic-name="field.name"
+									ng-model="field.data" id="{{field.name}}"
+									placeholder="{{field.name}}" maxlength={{field.max}} required
+									enter-next="" ng-change="reemplazaData()" />
+							</div>
+
+							<!--SELECT FIELDS-->
+							<div class="form-group" ng-if="field.type=='select'">
+								<label class="control-label">{{field.label}}</label> <select
+									data-ng-model="field.data"
+									ng-options="option.name for option in field.options"
+									class="form-control" required ng-change="reemplazaData()" />
+							</div>
+
+							<!--RADIO FIELDS-->
+							<div class="form-group" ng-if="field.type=='radio'">
+								<label class="control-label">{{field.label}}</label> <br> <span
+									ng-repeat="option in field.options"> <input type="radio"
+									data-ng-model="field.data" name="taskGroup"
+									id="{{option.name}}" value="{{option.id}}"
+									ng-change="reemplazaData()">{{option.name}}
+								</span>
+							</div>
+
+							<!--CHECKBOX FIELDS-->
+							<div class="form-group" ng-if="field.type=='checkbox'">
+								<label class="control-label">{{field.label}}</label><br> <span
+									ng-repeat="option in field.options"> <input
+									type="checkbox" data-ng-model="option.data" name="taskGroup"
+									id="{{option.name}}" value="{{option.id}}"
+									ng-click="reemplazaData()">{{option.name}}
+								</span>
+							</div>
+
+							<!--DATE FIELDS-->
+							<div class="form-group" ng-if="field.type=='date'">
+								<label class="control-label">{{field.label}} </label> <input
+									type="date" class="form-control" dynamic-name="field.name"
+									ng-model="field.data" id="{{field.name}}"
+									placeholder="{{field.name}}" required enter-next=""
+									ng-change="reemplazaData()" max="{{fechahoy}}"
+									placeholder="dd-MM-yyyy" />
+							</div>
+
+							<!--BUTTON FIELDS-->
+							<div class="form-group" ng-if="field.type=='button'">
+								<label class="control-label">{{field.label}} </label><br>
+								<button type="button" class="btn  btn-primary ng-scope"
+									ng-click="add(field.data)">
+									<i class="fa fa-plus"></i>
+								</button>
+								<button type="button" class="btn  btn-primary ng-scope"
+									ng-click="remove(field.data)">
+									<i class="fa fa-minus"></i>
+								</button>
+							</div>
+
+							<!--TEXTAREA FIELDS-->
+							<div class="form-group" ng-if="field.type=='textarea'">
+								<label class="control-label">{{field.label}} </label>
+								<textarea class="form-control" id="{{field.name}}"
+									rows="{{field.rows}}" cols="{{field.cols}}"
+									style="{{field.height}};resize: none;" maxlength="{{field.max}}"
+									ng-change="reemplazaData()" ng-model="field.data"></textarea>
+							</div>
+						</div>
+
+						</ng-form>
+					</div>
+
+
+
+					<!-- <form name="myForm" class="form-horizontal" role="form"
+					ng-submit="submitForm()">
+					<div ng-repeat="field in entity.fields">
+						<ng-form name="form"> 
+						
+						TEXT FIELDS
+						<div ng-if="field.type=='solonumero'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<input
+											type="text" class="form-control"
+											dynamic-name="field.name" data-ng-model="field.data"
+											id="{{field.name}}" placeholder="{{field.name}}" 
+											maxlength="10" required="required"
+											enter-next="" numbers-only="numbers-only" ng-blur="reemplazaData()" />
+							</div>
+						</div>
+						
+						TEXT FIELDS
+						<div ng-if="field.type=='text'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<input type="{{ field.type }}" dynamic-name="field.name"
+									id="{{field.name}}" data-ng-model="field.data"
+									class="form-control" required />
+								<span ng-show="myForm.{{field.name}}.$dirty && myForm.{{field.name}}.$error.required">Required!</span>.
+								<span
+									data-ng-show=" {{'form.'+field.name+'.$dirty && form.'+field.name+'.$error.required'}}">Required!</span>
+							</div>
+						</div>
+
+						EMAIL FIELDS
+						<div ng-if="field.type=='email'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<input type="{{ field.type }}" dynamic-name="field.name"
+									data-ng-model="field.data" class="form-control" required /> <span
+									data-ng-show=" {{'form.'+field.name+'.$dirty && form.'+field.name+'.$error.required'}}">Required!</span>
+								<span
+									data-ng-show=" {{'form.'+field.name+'.$dirty && form.'+field.name+'.$error.email'}}">Not
+									email!</span>
+							</div>
+						</div>
+
+						PASSWORD FIELDS
+						<div ng-if="field.type=='password'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<input type="{{ field.type }}" dynamic-name="field.name"
+									data-ng-model="field.data" ng-minlength={{field.min}}
+									ng-maxlength={{field.max}} class="form-control" required /> <span
+									data-ng-show=" {{'form.'+field.name+'.$dirty && form.'+field.name+'.$error.required'}}">Required!</span>
+								<span
+									data-ng-show=" {{'!form.'+field.name+'.required && (form.'+field.name+'.$error.minlength || form.'+field.name+'.$error.maxlength)' }}">Passwords
+									must be between 8 and 20 characters.</span>
+							</div>
+						</div>
+
+						SELECT FIELDS
+						<div ng-if="field.type=='select'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<select data-ng-model="field.data"
+									ng-options="option.name for option in field.options"
+									class="form-control" required />
+							</div>
+						</div>
+
+						RADIO FIELDS
+						<div ng-if="field.type=='radio'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+
+								<div class="checkbox" ng-repeat="option in field.options">
+									<label> <input type="radio" data-ng-model="field.data"
+										name="taskGroup" id="{{option.name}}" value="{{option.id}}">{{option.name}}
+									</label>
+								</div>
+							</div>
+						</div>
+
+						CHECKBOX FIELDS
+						<div ng-if="field.type=='checkbox'" class="form-group">
+							<label class="col-sm-2 control-label">{{field.label}}</label>
+							<div class="col-sm-6">
+								<div class="checkbox" ng-repeat="option in field.options">
+									<label> <input type="checkbox"
+										data-ng-model="option.data" name="taskGroup"
+										id="{{option.name}}" value="{{option.id}}">{{option.name}}
+									</label>
+								</div>
+
+							</div>
+						</div>
+
+						</ng-form>
+
+					</div>
+
+
+					<br />
+					<button ng-disabled="myForm.$invalid" type="submit" id="submit">Submit</button>
+					<br />
+					<pre>{{entity|json}}</pre>
+					<br />
+
+				</form> -->
+
+					<div class="row mt0">
+						<div class="col-md-12">
+							<div class="form-group" ng-if="plantillero.cuerpocertificado">
+								<label class="control-label">Texto a Certificar: </label><br>
+								<!-- <textarea class="form-control hW-text" ng-model="plantillero.cuerpocertificado" rows="2" cols="8"
+									style="height: 300px;"></textarea> -->
+
+								<div style="border: solid 1px #ccc; padding: 10px;">{{plantillero.cuerpocertificado}}</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<div class="col-md-6 col-md-offset-3" ng-if="states.isError">
+							<div class="block-transparent">
+								<div class="content">
+									<div class="text-center">
+										<p class="label label-danger">{{states.msg}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-md-offset-3" ng-if="states.isOk">
+							<div class="block-transparent">
+								<div class="content">
+									<div class="text-center">
+										<p class="label label-success">{{states.msg}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary"
+							ng-disabled="myform.$invalid" disabled="disabled"
+							data-loading-text="Generando Vista Previa..."
+							ng-click="vistaPrevia()">Vista Previa</button>
+						<button type="button" class="btn btn-default"
+							ng-click="limpiarPlantillero()" data-loading-text="Limpiando...">Limpiar</button>
+					</div>
+
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+</div>
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+

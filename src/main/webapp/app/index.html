@@ -1,0 +1,92 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CBRS AIO</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    
+    <!-- Este css no quizo minimizarse -->
+    <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css"/>
+    
+    <link rel="stylesheet" href="../build/styles/vendor.min.css"/>  
+  	<link rel="stylesheet" href="../build/styles/styles.min.css"/> 
+
+ <!-- endbuild -->
+</head>
+<body class="shelf-open" ng-app="aioApp">
+
+<div id="cl-wrapper" class="fixed-menu">
+    <div class="cl-sidebar" ng-class="{'hide' : ocultar()}" ng-controller="SidebarCtrl" my-sidebar ng-include="'views/tpl/sidebar.html'"></div>
+    <div class="container-fluid" id="pcont">
+        <div class="cl-mcont" id="content" ng-view="" ng-class="{'no-padding' : quitaPadding()}"></div>
+    </div>
+</div>
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jquery-rut-plugin/jquery.Rut.js"></script>
+<script src="bower_components/blazy/js/blazy.min.js"></script>
+<script src="bower_components/jquery-waypoints/waypoints.min.js"></script>
+<script src="bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/accounting/accounting.min.js"></script>
+<script src="bower_components/jqueryui/ui/minified/jquery-ui.min.js"></script>
+<script src="bower_components/nanoscroller/jquery.nanoscroller.js"></script>
+<script src="bower_components/jquery.gritter/js/jquery.gritter.min.js"></script>
+<script src="bower_components/jquery-icheck/icheck.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-local-storage/angular-local-storage.min.js"></script>
+<script src="bower_components/ng-icheck/dist/ng-icheck.min.js"></script>
+<script src="bower_components/angular-ui-utils/ui-utils.min.js"></script>
+<script src="bower_components/angular-rut/dist/angular-rut.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-busy/dist/angular-busy.min.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+<script src="bower_components/angular-moment/angular-moment.min.js"></script>
+<script src="bower_components/moment/lang/es.js"></script>
+<script src="bower_components/angular-ui-sortable/sortable.min.js"></script>
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js"></script>
+<script src="bower_components/lodash/dist/lodash.js"></script>
+<!--textAngular -->
+<script src="bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
+<script src="bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
+<script src="bower_components/textAngular/dist/textAngular.min.js"></script>
+<!-- endtextAngular -->
+<script src="bower_components/angular-autoselect-master/autoselect.js"></script>
+
+<!-- upload file -->
+<script src="bower_components/ng-file-upload-bower-12.0.4/ng-file-upload-shim.min.js"></script>
+<script src="bower_components/ng-file-upload-bower-12.0.4/ng-file-upload.min.js"></script>
+
+<!-- web socket -->
+<script src="bower_components/angular-websocket-master/dist/angular-websocket.js"></script>
+
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script type="text/javascript" src="../build/scripts/vendor.min.js"></script>
+<script type="text/javascript" src="../build/scripts/app.min.js"></script>
+
+<!-- endbuild -->
+
+
+<div ng-include="'views/atencionModal.html'"></div>
+<div ng-include="'views/indice/ingresaRutModal.html'"></div>
+<div ng-include="'views/llamarClienteModal.html'"></div>
+
+</body>
+</html>

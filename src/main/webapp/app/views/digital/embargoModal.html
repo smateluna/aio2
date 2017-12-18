@@ -1,0 +1,67 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="embargoModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		<span class="label label-danger">Embargos y Prohibiciones</span>
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+				<div class="content">
+                <div class="table-responsive mt20">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-left">Estado</th>
+                            <th class="text-left">Texto</th>
+							<th class="text-center">Fecha Creacion</th>
+						    <th class="text-center">Usuario</th>
+							<th class="text-center">Caratula</th>
+							<th class="text-center">Repertorio</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="embargo in embargos">
+                            <td class="text-center">
+								<div class="text-center"  ng-switch on="embargo.estadoAnotacionDTO.idEstado">
+                                	<span class="label label-default estado-nota" ng-switch-when="1">{{embargo.estadoAnotacionDTO.descripcion}}</span>
+                                	<span class="label label-primary estado-nota" ng-switch-when="2">{{embargo.estadoAnotacionDTO.descripcion}}</span>
+                                	<span class="label label-success estado-nota" ng-switch-when="3">{{embargo.estadoAnotacionDTO.descripcion}}</span>
+                                	<span class="label label-warning estado-nota" ng-switch-when="5">{{embargo.estadoAnotacionDTO.descripcion}}</span>
+                                	<span class="label label-default estado-nota" ng-switch-default>{{embargo.estadoAnotacionDTO.descripcion}}</span>
+                            	</div>
+							</td>
+                            <td class="text-left"><span ng-bind-html="embargo.texto"></span></td>
+							<td class="text-center">{{embargo.fechaCreacion}}</td>
+							<td class="text-center">{{embargo.nombreUsuarioCreador}}</td>
+							<td class="text-center">{{embargo.caratula}}</td>
+							<td class="text-center">{{embargo.repertorio}} <span ng-if="!embargo.repertorio"> - </span></td>
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+				<!--fin row-->
+			<div ng-if="embargos.length===0" class="row mt35">
+    		   <div class="col-md-6 col-md-offset-3">
+    	    	   <div class="block-transparent">
+	            	   <div class="content">
+                   			<div class="text-center">
+                       			<div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       			<p>No hay Embargos.</p>
+                   			</div>
+               			</div>
+				    </div>
+       			</div>
+    		</div>
+
+	   </div>
+	   <!--fin bs-callout-->
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

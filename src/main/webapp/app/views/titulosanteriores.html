@@ -1,0 +1,87 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="titulosanteriores.html">
+
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>&nbsp;</h3>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            <h4>Titulos Anteriores de foja: {{foja}} numero: {{numero}} año: {{ano}}</h4>
+            <br>
+			<div class="panel-group">
+  				<div class="panel panel-default">
+    				<div class="panel-heading">
+      					<h4 ng-class="totalTitulosAnteriores>0 ? 'panel-title' : 'panel-title panel-title-off'">
+							<a data-toggle="collapse">
+								<div class="loader loader-xs" ng-show="totalTitulosAnteriores==null"></div>
+          						<span class="badge ng-scope ng-binding" ng-if="totalTitulosAnteriores > 30">30 <i class="fa fa-chevron-right"></i></span>
+								<span class="badge ng-scope ng-binding" ng-if="totalTitulosAnteriores <= 30">{{totalTitulosAnteriores}}</span> Titulos Anteriores
+        					</a>
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="titulos">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+        					<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Foja
+            								</th>
+            								<th>
+												Numero	
+            								</th>
+											<th>
+                								Año
+            								</th>
+            								<th>
+												Bis	
+            								</th>
+											<th>
+												
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.titulosAnteriores">
+	         									<td class="text-left">{{sol.foja}}</td>
+												<td class="text-left">{{sol.numero}}</td>
+												<td class="text-left">{{sol.ano}}</td>
+												<td class="text-left"><i class="fa fa-check" ng-if="sol.bis!=0"></i></td>
+												<td class="text-center">
+	                    							<span ng-if="foja!=sol.foja && numero!=sol.numero && ano!=sol.ano">
+	                           								<button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="verTipoImagen(sol)">
+	                               								<i class="fa fa-search"></i>
+	                           								</button>
+	                    							</span>
+													<span ng-if="foja==sol.foja && numero==sol.numero && ano==sol.ano">
+															<button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="cancel()">
+	                               								<i class="fa fa-search"></i>
+	                           								</button>		
+													</span>
+	                							</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>					
+
+        </div>
+
+
+    </div>
+
+
+    <div class="modal-footer">
+	
+	  <!--ejemplo-->
+      <!-- <div class="loader loader-xs"></div>-->
+	   <!--fin ejemplo-->
+	   
+	   <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

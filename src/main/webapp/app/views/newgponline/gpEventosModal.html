@@ -1,0 +1,62 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="gpEventosModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		Eventos
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            <h4>
+            	Borrador: {{busquedaGponline.borrador}} - Folio: {{busquedaGponline.folio}} 
+			</h4>
+					
+				<div class="content">
+                <div class="table-responsive mt20">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-left">Fecha Evento</th>
+                            <th class="text-left">Aplicacion</th>
+                            <th class="text-left">Caratula</th>
+                            <th class="text-center">Evento</th>
+							<th class="text-center">Funcionario</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="evento in busquedaGponline.eventos">
+                            <td class="text-right">{{evento.fecha}}</td>
+                            <td class="text-right">{{evento.aplicacion}}</td>
+                            <td class="text-left" ng-if="evento.caratula!='' && evento.caratula!='Sin caratula'"><a href ng-click="verEstadoCaratula(evento.caratula)"><strong>{{evento.caratula}}</strong></a></td>
+							<td class="text-left" ng-if="evento.caratula=='' || evento.caratula=='Sin caratula'">{{evento.caratula}}</td>
+							<td class="text-right">{{evento.evento}}</td>
+							<td class="text-right">{{evento.funcionario}}</td>
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+				<!--fin row-->
+		<div ng-if="busquedaGponline.eventos.length===0" class="row mt35">
+    		   <div class="col-md-6 col-md-offset-3">
+    	    	   <div class="block-transparent">
+	            	   <div class="content">
+                   			<div class="text-center">
+                       			<div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       			<p>No hay Eventos.</p>
+                   			</div>
+               			</div>
+				    </div>
+       			</div>
+    		</div>
+
+	   </div>
+	   <!--fin bs-callout-->
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

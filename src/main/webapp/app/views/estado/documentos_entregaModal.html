@@ -1,0 +1,23 @@
+<script type="text/ng-template" id="documentos_entregaModal.html">
+<form role="form" name="aform" id="aform">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Documentos Entrega > <small class="color">Vincular</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">          
+           <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+                <span>Car&aacute;tula</span>
+             		<input type="text" maxlength="10" placeholder="carátula" class="estado-buscar-field"
+                    ng-model="documentoEntrega.caratula" name="numeroCaratula" id="numeroCaratula" required="" numbers-only="" focus-input="numeroCaratulaIsFocused" auto-select/>
+               </div>
+           </div>  
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vincular()" ng-disabled="aform.$invalid">Vincular</button>
+		<button type="button" class="btn  btn-default" loading-state="isLoadingDatosFormulario" ng-click="cancel()">Cancelar</button>        
+      </div>
+</form>    
+</script>

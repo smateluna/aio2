@@ -1,0 +1,131 @@
+<script type="text/ng-template" id="solicitarIndiceModal.html">
+
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>&nbsp;</h3>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+        
+
+        <div>
+            
+            <div ng-if="titulo.tipodocumento==0">
+                <div class="bs-callout bs-callout-mensaje">
+                    <h4>No hay imagen al día para Foja {{titulo.foja}} Número {{titulo.num}} Año {{titulo.ano}} <span ng-if="titulo.bis">bis</span></h4>
+                    <p>No puede solicitar, tiene <span class="call-danger">rechazo</span>.</p>
+                </div>
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Existe rechazo</h4>
+                    <p>Esta misma solicitud de foja, número, año y bis, ya ha sido rechazada anteriormente.</p>
+                </div>
+            </div>
+
+            <div ng-if="titulo.tipodocumento==1">
+                <div class="bs-callout bs-callout-mensaje">
+                    <h4>No hay imagen al día para Foja {{titulo.foja}} Número {{titulo.num}} Año {{titulo.ano}} <span ng-if="titulo.bis">bis</span></h4>
+                    <p>Puede <span class="call-sol">solicitar</span>.</p>
+                </div>
+                <div class="bs-callout bs-callout-warning">
+                    <h4>Solicitar</h4>
+                    <p>Si solicita recibirá
+                        <span ng-if="titulo.esDigital" class="boldie">una digitalización al día.</span>
+                    <span ng-if="!titulo.esDigital"><span class="boldie">un libro</span>, aparecerá en el listado de solicitudes como
+                        <span class="boldie">Impreso para entrega Manual.</span>
+                    </span>
+                    </p>
+
+                    <div ng-if="solicitudStatus.error">
+                        <div class="alert alert-danger mt15 mb0 alert-white rounded">
+                            <div class="icon"> <i class="fa fa-times-circle"></i> </div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> {{solicitudStatus.msg}}
+                        </div>
+                    </div>
+
+                    <div class="text-center mt15" ng-if="!solicitudStatus.ok">
+                        <button type="button" class="btn  btn-primary btn-rad" data-loading-text="Solicitando..." loading-state="isLoadingSolicitar" ng-click="solicitar()">
+                            <span ng-if="titulo.esDigital"> Solicitar imagen al día</span>
+                            <span ng-if="!titulo.esDigital"> Solicitar libro</span>
+                        </button>
+                    </div>
+
+                    <div ng-if="solicitudStatus.ok">
+                        <div class="alert alert-success mt15 mb0 alert-white rounded">
+                            <div class="icon"><i class="fa fa-check"></i></div>
+                            Solicitud realizada.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div ng-if="titulo.tipodocumento==2 || titulo.tipodocumento==4">
+                <div class="solicitar-mensaje mt30">
+                    <p>Puede <span class="call-sol">solicitar</span> o ver la <span class="call-info">imagen referencial</span>:</p>
+                </div>
+                <div class="bs-callout bs-callout-warning">
+                    <h4>Solicitar</h4>
+                    <p>Si solicita recibirá
+                        <span ng-if="titulo.esDigital" class="boldie">una digitalización al día.</span>
+                    <span ng-if="!titulo.esDigital"><span class="boldie">un libro</span>, aparecerá en el listado de solicitudes como
+                        <span class="boldie">Impreso para entrega Manual.</span>
+                    </span>
+                    </p>
+
+                    <div ng-if="solicitudStatus.error">
+                        <div class="alert alert-danger mt15 mb0 alert-white rounded">
+                            <div class="icon"> <i class="fa fa-times-circle"></i> </div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> {{solicitudStatus.msg}}
+                        </div>
+                    </div>
+
+                    <div class="text-center mt15" ng-if="!solicitudStatus.ok">
+                        <button type="button" class="btn  btn-primary btn-rad" data-loading-text="Solicitando..." loading-state="isLoadingSolicitar" ng-click="solicitar()">
+                            <span ng-if="titulo.esDigital"> Solicitar imagen al día</span>
+                            <span ng-if="!titulo.esDigital"> Solicitar libro</span>
+                        </button>
+                    </div>
+
+                    <div ng-if="solicitudStatus.ok">
+                        <div class="alert alert-success mt15 mb0 alert-white rounded">
+                            <div class="icon"><i class="fa fa-check"></i></div>
+                            Solicitud realizada.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bs-callout bs-callout-info">
+                    <h4>Imagen referencial</h4>
+                    <p>Esta inscripción cuenta con una imagen referencial, lo que significa que la imagen puede haber tenido modificaciones o
+                        notas desde que se digitalizó, es decir, no está al día.</p>
+
+                    <div class="text-center mt15">
+                        <button type="button" class="btn  btn-primary btn-rad" ng-click="verInscripcion()" loading-state="isLoadingSolicitar">
+                            <i class="fa fa-search"></i> Ver
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bs-callout bs-callout-success" ng-if="titulo.tipodocumento==3">
+                <h4>Imagen al día</h4>
+                <p>Esta inscripción cuenta con una imagen digitalizada al día, lo que significa que no es necesario solicitarla para ver
+                    la imagen más reciente.</p>
+
+                <div class="text-center mt15">
+                    <button type="button" class="btn  btn-success btn-rad" ng-click="verInscripcion()" > <i class="fa fa-search"></i> Ver</button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

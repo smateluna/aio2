@@ -1,0 +1,36 @@
+<script type="text/ng-template" id="observacionesModal.html">
+<form role="form" name="aform" id="aform">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Observaciones > <small class="color">Agregar observaci&oacute;n</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+                <span>Comentario</span>
+                <textarea name="observacion" id="observacion" class="form-control" ng-model="observacion.comentario" required="required" autofocus="" focus-input ="observacionIsFocused" />
+				<span>Categoria</span>
+				<select class="form-control" id="categoria" name="categoria"
+                             ng-model="observacion.categoria">
+				        	<option value="0">Observacion Interna</option>
+				        	<option value="1">Observacion Externa</option>
+				</select>
+				<div ng-if="observacion.categoria==1 && subPermisos['estado'].indexOf('ENVIAR_OBSERVACION_CLIENTE') >= 0">					
+					<span>&iquest;Enviar correo a requirente?</span>
+					<input type="checkbox" ng-model="observacion.enviarCorreo" ng-disabled="data.res.caratulaDTO.requirenteDTO.email==''"  />
+					<span class="label label-warning text-center mensaje-label ng-scope" ng-if="data.res.caratulaDTO.requirenteDTO.email==''"><i class="fa fa-warning"></i> Requirente no tiene correo registrado</span>
+				</div>
+					
+               </div>
+         </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="agregarObservacion()" ng-disabled="aform.$invalid">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+</form>
+</script>

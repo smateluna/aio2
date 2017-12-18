@@ -1,0 +1,75 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+<script type="text/ng-template" id="generaTicket.html">
+
+<script type="text/javascript">
+/*$(document).ready(function() {
+	// Sort the symbols
+	symdesc.pop();	// remove the null last entry
+	symdesc.sort(function(a,b) {
+			 return (a.desc < b.desc ? -1 : 1);
+		});
+});*/
+</script>
+
+<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">x</button>
+        <h3>&nbsp;</h3>
+</div>
+    
+<div class="modal-body" id="paraimprimir">
+    
+    <div style=" max-width: 290px; padding: 19px 15px 10px 15px;  margin: 0 auto 20px; border: 1px solid #e5e5e5; -webkit-border-radius: 2px;  
+    -moz-border-radius: 2px;  border-radius: 2px;-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); ">
+  <h4 class="text-center">Solicitud Carátula</h4>
+  	titulos
+  	<span ng-if='titulos.length>0'>
+  	<div class="text-center" ng-repeat="titulo in titulos">
+  		{{titulo.numero}}{{titulo.anio}}
+		<canvas id="canvas{{titulo.numero}}{{titulo.anio}}" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+		<div id="output" style="white-space:pre" class="text-center"></div>
+		<xmp id="debug" style="white-space:pre" class="text-center"></xmp>
+	</div>
+	</span>
+	<span ng-if='titulos.length==0'>
+  	<div class="text-center">
+		<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+		<div id="output" style="white-space:pre" class="text-center"></div>
+		<xmp id="debug" style="white-space:pre" class="text-center"></xmp>
+	</div>
+	</span>
+ <ul> 
+<li>Numero Colilla: {{colilla}}</li>
+<li>Registro: {{registro}}</li>
+<li>Foja: {{foja}} Numero: {{numero}} AÃ±o: {{ano}}</li>
+<li ng-repeat="sol in tramites">{{sol.nombre}}</li>
+</ul>
+<hr>
+<div class="text-center"><h6>{{usuario}}</h6></div>
+<div class="text-center"><h6>www.conservador.cl</h6></div>
+</div>
+	
+	<!--  <h4 class="text-center">Solicitud Caratula</h4>
+	
+	<div class="text-center">
+		<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+		<div id="output" style="white-space:pre" class="text-center"></div>
+		<xmp id="debug" style="white-space:pre" class="text-center"></xmp>
+	</div>
+	
+	<h5 class="text-center">Numero Colilla: {{colilla}}</h5>
+	<h5 class="text-center">Registro: {{registro}}</h5>
+	<h6 class="text-center">Foja: {{foja}} Numero: {{numero}} AÃ±o: {{ano}}</h6>
+	<table >
+		<tr ng-repeat="sol in tramites">
+			<td class="text-center"><h6> * {{sol.nombre}}</h6></td>
+		</tr>
+	</table>
+	
+	<h6 class="text-center">www.conservador.cl</h6>
+	 -->
+	
+</div>
+
+<!--<button ng-click="printDiv('paraimprimir')">imprimir</button>-->
+</script>

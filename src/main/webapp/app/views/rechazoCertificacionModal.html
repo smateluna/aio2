@@ -1,0 +1,49 @@
+<script type="text/ng-template" id="rechazoCertificacionModal.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="close()">&times;</button>
+        <h3 class="mtmb5">Rechazar carátula #{{dataRechazo.numeroCaratula}}</h3>
+    </div>
+	<div ng-if="states.isError" class="row mt35">
+	    <div class="col-md-6 col-md-offset-3">
+	         <div class="block-transparent">
+	             <div class="content">
+	                 <div class="text-center">
+	                     <p class="label label-danger">{{states.msg}}</p>
+	                 </div>
+	             </div>
+	         </div>
+	     </div>
+	</div>
+	<div ng-if="states.isOk" class="row mt35">
+	    <div class="col-md-6 col-md-offset-3">
+	         <div class="block-transparent">
+	             <div class="content">
+	                 <div class="text-center">
+	                     <p class="label label-success">{{states.msg}}</p>
+	                 </div>
+	             </div>
+	         </div>
+	     </div>
+	</div>
+    <form role="form" name="rform" id="rform">
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="causal">Seleccione causal</label>
+                <select class="form-control" ng-model="rechazo.causal" id="causal" name="causal" ng-options="causal as causal.descripcion for causal in causales"
+                        ng-change="cambioCausal()" focus-input ="causalIsFocused" loading-state="savingRechazo">
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="detalle">Detalle</label>
+                <textarea class="form-control" rows="15" ng-model="rechazo.detalle" id="detalle" name="detalle" focus-input ="detalleIsFocused"
+                          loading-state="savingRechazo" required="required"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn  btn-default btn-rad" loading-state="savingRechazo" ng-click="close()">Cerrar</button>
+            <button type="submit" class="btn  btn-primary btn-rad" data-loading-text="Rechazando..." loading-state="savingRechazo"  ng-disabled="rform.$invalid || rechazado"
+                    ng-click="saveRechazo()">Rechazar</button>
+        </div>
+    </form>
+</script>

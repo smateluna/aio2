@@ -1,0 +1,70 @@
+
+    <div class="col-md-12">
+        <div class="block-flat block-border">
+            <!--<button type="button" class="close close-resultado" ng-click="cerrarResultadoTitulo()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>-->
+            <div class="header header-sn-lados">
+                <h4><span class="label label-proh label-registro"><i class="fa fa-book"></i></span> Prohibiciones Vigente <button type="button" class="btn btn-primary btn-xs btn-rad pull-right" ng-click="vertodoProh()" ng-hide="!busquedaGponline.tieneNoVigenteProh"><i class="fa fa-plus"></i> Mostrar todo</button></h4></h4>
+            </div>
+            <div class="content">
+                <div class="table-responsive mt10">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-right">Foja</th>
+                            <th class="text-right">Número</th>
+                            <th class="text-right">Año</th>
+                            <th class="text-right">Bis</th>
+                            <th class="text-center">Naturaleza</th>
+                            <th class="text-center">Acreedor</th>
+                            <th class="text-center">Vigente</th>
+                            <th class="text-center">Notas</th>
+                            <th class="text-center">Resumen</th>
+                            <th class="text-center">Ver</th>
+                            <th class="text-center" ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">Solicitar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-repeat="titulo in busquedaGponline.prohibicion" ng-hide="!titulo.vigente && !mostrar.mostrarInactivosProh">
+                            <td class="text-center">{{titulo.fojas}}</td>
+                            <td class="text-center">{{titulo.numero}}</td>
+                            <td class="text-center">{{titulo.anyo}}</td>
+                            <td class="text-center"><span ng-if="titulo.bis" class="fa fa-check"></span></td>
+                            <td class="text-center">{{titulo.naturaleza}}</td>
+                            <td class="text-center">{{titulo.acreedor}}</td>
+                            <td class="text-center"><span ng-if="titulo.vigente" class="fa fa-circle fa-circle-success"></span><span ng-if="!titulo.vigente" class="fa fa-circle fa-circle-danger"></span>	</td>
+                            <td class="text-left"> 
+								<p class="text-justify" ng-repeat="clientes in titulo.listaNotas">-{{clientes.nota}} - C:<span ng-if="clientes.caratula!=0"><a href ng-click="verEstadoCaratula(clientes.caratula)"><strong>{{clientes.caratula}}</strong></a></span></p>
+							</td>
+		                    <td class="text-left">{{titulo.resumen}}</td>
+							<td class="text-center">
+								<button type="button" class="btn btn-primary btn-xs btn-rad"
+									ng-click="verTipoImagenProh(titulo)">
+									<i class="fa fa-search"></i>
+								</button>
+							</td>
+							<td class="text-center" ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+								<div class="btn-group">
+									<button class="btn btn-primary btn-sm btn-rad dropdown-toggle"
+										data-toggle="dropdown">
+										<i class="fa fa-plus"></i> Solicitar
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="" ng-click="openSolicitar(titulo,'proh')"> Crear
+											Pre-Caratula</a>
+									</li>
+									<!--<li>
+										<a href="" ng-click="ticket(titulo,'proh')"> Ticket Proh</a>
+									</li>
+								--></ul>
+								</div>
+							</td>
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

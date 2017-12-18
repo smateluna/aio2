@@ -1,0 +1,6 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Documentos por carátula" icono="fa-paperclip"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<p class="mt70">This is the documentos view.</p>

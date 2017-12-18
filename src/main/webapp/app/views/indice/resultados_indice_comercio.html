@@ -1,0 +1,107 @@
+<div class="table-responsive">
+	<div class="header">
+        <h3> Comercio</h3>
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+            <th>
+                Foja
+            </th>
+            <th>
+                Número
+            </th>
+            <th>
+                Año
+            </th>
+            <th>
+                Nombre Sociedad
+            </th>
+            <th>
+                Socio
+            </th>
+            <th>
+                Acto
+            </th>
+            <th>
+                Tipo
+            </th>
+            <th>
+                Folio
+            </th>
+            <th class="text-center">
+                Ver
+            </th>
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+                Opciones
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+	        <tr ng-repeat="sol in paginacioncom.filteredTodos" ng-class="{selected: sol.id == busquedaIndice.selectedRow}">
+	        		
+	         		<td class="text-left" id="{{sol.id}}">{{sol.foja}}</td>
+	         		<td class="text-left">{{sol.num}}</td>
+	         		<td class="text-left">{{sol.ano}}</td>
+	                <td class="text-left" >
+	                	<span ng-if="sol.highlight.nombreSociedad" ng-bind-html="sol.highlight.nombreSociedad"></span>
+	                	<span ng-if="!sol.highlight.nombreSociedad">{{sol.nombreSociedad}}</span>
+	                </td>
+	                <td class="text-left">
+	                	<span ng-if="sol.highlight.personas" ng-bind-html="sol.highlight.personas"></span>
+	                	<span ng-if="!sol.highlight.personas">{{sol.personas}}</span>
+	                </td>
+	                <td class="text-left">{{sol.acto}}</td>
+	                <td class="text-left">{{sol.tipo}}</td>
+	                <td class="text-left">{{sol.folio}}</td>
+	                <td class="text-center">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagenCom(sol)" tooltip="Ver Inscripción de Comercio" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                     <!-- <span ng-if="sol.tieneImagen != 1"  ng-hide="sol.button_clicked">
+	                            <button type="button" class="btn btn-primary btn-xs btn-rad"
+	                                   ng-click="solicitar(sol)">
+									<i class="fa fa-book"></i><i class="fa fa-arrow-right"></i><i class="fa fa-camera"></i>
+								</button>
+	                     </span> 
+	                     <span ng-show="sol.button_clicked" class="label label-primary">Solicitada</span> -->
+	                </td>
+	                <td class="text-left" ng-show="busquedaIndice.conservadorelegido == null">
+		                <!-- Single button -->
+					    <div class="btn-group">
+					      <!--<button ng-click="openSolicitar(sol)" type="button" class="btn btn-primary btn-rad" ><i class="fa fa-plus"></i> Solicitar</button>
+					      -->
+					      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Solicitar <span class="caret"></span></button>
+					      <ul class="dropdown-menu" role="menu">
+						    <li><a href="" ng-click="openSolicitar(sol,'com')"> Crear Caratula</a></li>
+						    <li><a href="#/reingreso"> Reingresar</a></li>
+						    <li class="divider"></li>
+						    <li><a href="" ng-click="ticket(sol,'com')"> Ticket Com.</a></li>
+						  </ul>
+					    </div>
+	                </td>
+	                   
+	        </tr>
+	        <tr>
+				<td colspan="11" class="text-center">
+					<pagination ng-model="paginacioncom.currentPage"
+						total-items="paginacioncom.todos.length"
+						max-size="paginacioncom.maxSize" boundary-links="true"
+						previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+						last-text="&raquo;">
+					</pagination>
+					<button type="button"
+						class="pull-right btn btn-primary btn-sm btn-rad"
+						ng-click="colapsarnuevabusqueda()">
+						Nueva Busqueda
+					</button>
+				</td>
+			</tr>
+        </tbody>
+    </table>
+</div>
+<!-- </div> -->
+
+

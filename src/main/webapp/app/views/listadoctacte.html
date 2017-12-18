@@ -1,0 +1,164 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Listado Cta Cte" icono="fa-list"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form name="formctacte">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Desde
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaDesde" name="fechaDesde" ng-model="busquedaCtaCte.fechaDesde" required="" placeholder="dd-MM-yyyy" enter-next=""/>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Hasta
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaHasta" name="fechaHasta" ng-model="busquedaCtaCte.fechaHasta" required="" placeholder="dd-MM-yyyy" enter-next=""/>
+                                          
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">N° Cuenta
+                                    </label>
+                                    <input type="text" class="form-control" id="cuenta" name="cuenta" ng-model="busquedaCtaCte.cuenta" required="" enter-next="" numbers-only="numbers-only"/>
+                                          
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Estado
+                                    </label>
+                                    <select class="form-control" id="estado" name="estado" ng-model="busquedaCtaCte.estado" ng-options="estado as estado.descripcion for estado in busquedaCtaCte.estados">
+					                	<option value="">-- TODAS --</option>
+					                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20 mb10">
+                            <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                            <button class="btn  btn-primary " ng-click="refrescar()" ng-disabled="formctacte.$invalid">Buscar</button>
+                        </div> 
+						
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+
+	    <ul class="nav nav-tabs" ng-show="busquedaCtaCte.resultados.length>0">
+
+			<!-- Listado -->
+			<div class="table-responsive" >
+				
+				<div class="header">
+			        <h3> Resultados<small class="vertAM"><span class="badge ng-scope ng-binding">{{paginacion.todos.length}}</span></small> </h3> 
+			    </div>
+			    <div class="header"><input ng-model='filterExpr' placeholder="Filtrar..."></div>
+			    <br>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			            <th ng-class="busquedaCtaCte.predicate == 'caratula' ? 'bgColor-th' : ''">
+			                Carátula<a ng-click="busquedaCtaCte.predicate = 'caratula'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'clienteCtaCte' ? 'bgColor-th' : ''">
+			                Cliente Cta Cte<a ng-click="busquedaCtaCte.predicate = 'clienteCtaCte'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'fechacreacionL' ? 'bgColor-th' : ''">
+			                Fecha Creación<a ng-click="busquedaCtaCte.predicate = 'fechacreacionL'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'estadoactual' ? 'bgColor-th' : ''">
+			                Secci&oacute;n<a ng-click="busquedaCtaCte.predicate = 'estadoactual'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'fechaseccionL' ? 'bgColor-th' : ''">
+			                Fecha Secci&oacute;n<a ng-click="busquedaCtaCte.predicate = 'fechaseccionL'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'estado' ? 'bgColor-th' : ''">
+			                Estado<a ng-click="busquedaCtaCte.predicate = 'estado'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCtaCte.predicate == 'glosaProducto' ? 'bgColor-th' : ''">
+			                Número Operaci&oacute;n<a ng-click="busquedaCtaCte.predicate = 'glosaProducto'; busquedaCtaCte.reverse = !busquedaCtaCte.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>			            
+			        </tr>
+			        </thead>
+			        <tbody>
+				       <tr ng-repeat="sol in filtered = (busquedaCtaCte.resultados | filter:filterExpr | startFrom:(paginacion.currentPage-1)*paginacion.numPerPage | limitTo:paginacion.numPerPage | orderBy: busquedaCtaCte.predicate:busquedaCtaCte.reverse )" >
+				        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
+				        		<td class="text-left">{{sol.clienteCtaCte}}</td>
+				        		<td class="text-left">{{sol.fechacreacion}}</td>
+				        		<td class="text-left">{{sol.estadoactual}}</td>
+				        		<td class="text-left">{{sol.fechaseccion}}</td>
+				        		<td class="text-left">{{sol.estado}}</td>
+				        		<td class="text-left">{{sol.glosaProducto}}</td>
+				        </tr>
+				        <tr>
+							<td colspan="11" class="text-center">
+								<pagination ng-model="paginacion.currentPage"
+									page="paginacion.currentPage"
+									total-items="paginacion.todos.length"
+									max-size="paginacion.maxSize" boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+									last-text="&raquo;">
+								</pagination>
+							</td>
+							<a id="tablaprop"></a>
+						</tr>
+			        </tbody>
+			    </table>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="busquedaCtaCte.data.status && busquedaCtaCte.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+<div ng-include="'views/estadoIndiceModal.html'"></div>

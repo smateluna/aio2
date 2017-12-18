@@ -1,0 +1,201 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Reingreso" icono="fa-repeat"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>  
+   
+   <div class="row row-main-estado">
+   <div class="panel-heading estado-barra caratula-fija">
+          <form name="myForm" ng-submit="buscarCaratula()" novalidate>
+              <input placeholder="carátula" class="estado-buscar-field" numbers-only ng-enter="buscarCaratula()" id="numeroCaratula" required="" numbers-only="" focus-input="numeroCaratulaIsFocused" type="text" ng-model="req.numeroCaratula"/>
+              <button class="btn btn-primary btn-sm btn-rad" ng-disabled="myForm.$invalid" type="submit">Buscar</button>
+          </form>
+   </div>
+   <div class="col-md-6">
+   <div class="panel panel-default">
+         <div class="panel-heading">
+				<h4 class="panel-title">Datos de Car&aacute;tula 
+			    <button type="button" class="btn btn-primary btn-sm pull-right mTmenos-6" ng-click="obtenerBitacoraCaratula()" ng-show="data.estado && listaTiposFormulario.length>0 && caratula.resultados.length!==0"  tooltip="Comentarios Caratula" tooltip-placement="top">
+           			<i class="fa fa-comment" alt=""></i>
+      			</button>
+      			<button type="button" class="btn btn-primary btn-sm pull-right mTmenos-6" ng-click="openDocumentosEntregaModal()"  ng-show="data.estado" tooltip="Documentos Entrega" tooltip-placement="top">
+           			<i class="fa fa-download" alt=""></i>
+      			</button>	
+				</h4>
+			
+				
+		 </div>
+      <div class="panel-body panel-form row-bottom-10 formulario min-heigth-616">
+           <div class="row">
+               <div class="col-md-9 col-xs-offset-2">
+                <span>Tipo de Formulario</span>
+               <div class="myinput mytextfield">{{dataOriginal.caratulaDTO.tipoFormularioDTO.descripcion}}</div>
+               </div>
+            </div>
+           <!--fin row-->  
+           
+           <div class="row">
+               <div class="col-md-9 col-xs-offset-2">
+                <span>Registro</span>
+                <div class="myinput mytextfield">{{dataOriginal.caratulaDTO.inscripcionDigitalDTO.registroDTO.descripcion}}</div>
+               </div>
+            </div>
+           <!--fin row-->             
+           
+           <div class="row">
+              <div class="col-md-5 col-xs-offset-2">
+                <span>Foja</span>
+                <div class="myinput mytextfield">{{dataOriginal.caratulaDTO.inscripcionDigitalDTO.foja}}</div>
+               </div>
+           </div>
+           <!--fin row-->
+           
+           <div class="row">
+               <div class="col-md-5 col-xs-offset-2">
+                <span>N&uacute;mero</span>
+                <div class="myinput mytextfield">{{dataOriginal.caratulaDTO.inscripcionDigitalDTO.numero}}</div>
+               </div>
+           </div>
+           <!--fin row--> 
+           
+           <div class="row">   
+               <div class="col-md-5 col-xs-offset-2">
+                <span>A&ntilde;o</span>
+                <div class="myinput mytextfield">{{dataOriginal.caratulaDTO.inscripcionDigitalDTO.ano}}</div>
+               </div>
+           </div>
+           <!--fin row-->    
+           
+           <div class="row">   
+               <div class="col-md-5 col-xs-offset-2">
+                <span>Bis</span>             
+				  <div class="animate-switch-container" ng-switch on="dataOriginal.caratulaDTO.inscripcionDigitalDTO.bis">
+				      <div class="animate-switch myinput mytextfield" ng-switch-when="true">SI</div>
+				      <div class="animate-switch myinput mytextfield" ng-switch-when="false">NO</div>
+				      <div class="animate-switch myinput mytextfield" ng-switch-default></div>
+				  </div>                
+               </div>
+           </div>
+           <!--fin row-->                        
+           
+         </div>
+         <!--fin panel body-->
+    </div>   
+  </div>
+<form role="form" name="formReingresar" id="formReingresar" ng-submit="reingresarCaratula()">   
+   <div class="col-md-6">   	
+	      <div class="panel panel-default">
+	         <div class="panel-heading">
+					<h4 class="panel-title">Datos de Reingreso</h4>
+				</div>
+	      <div class="panel-body panel-form row-bottom-10 formulario">
+	           <div class="row">
+	               <div class="col-md-9 col-xs-offset-2">
+	                <div class="loader loader-xs" ng-show="data.estado && listaTiposFormulario==null"></div><span> Tipo de Formulario</span> 
+	                <select id="formulario" enter-next class="form-control" ng-model="data.caratulaDTO.tipoFormularioDTO" ng-options="item.descripcion for item in listaTiposFormulario  track by item.id" required focus-input="formularioIsFocused"></select>
+	               </div>
+	            </div>
+	           <!--fin row-->  
+	           
+	           <div class="row">
+	               <div class="col-md-9 col-xs-offset-2">
+	                <div class="loader loader-xs" ng-show="data.estado && listaRegistros==null"></div><span> Registro</span> 
+	                <!-- <select  ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" class="form-control" ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required="required"></select>  -->
+	                <select  class="form-control" ng-change="recargaListas()" enter-next ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required></select>	                	               
+	               </div>
+	            </div>
+	           <!--fin row-->
+	           <div class="row" ng-show="data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id==4">
+	               <div class="col-md-9 col-xs-offset-2">
+	                <div class="loader loader-xs" ng-show="data.estado && listaWorkflow==null"></div><span> Workflow</span> 
+	                <!-- <select  ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" class="form-control" ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required="required"></select>  -->
+	                <select  class="form-control" enter-next ng-model="data.workflow" ng-options="item.nombre for item in listaWorkflow  track by item.id" ></select>	                	               
+	               </div>
+	            </div>
+	           <!--fin row--> 	  
+	           <div class="row" ng-show="data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id==4 && (data.workflow.id==1 || data.workflow.id==2)">
+	               <div class="col-md-8 col-xs-offset-2">
+	                <div class="loader loader-xs" ng-show="data.estado && listaWorkflow==null"></div><span> C&oacute;digo de Verificaci&oacute;n</span> 
+	                <input type="text" enter-next class="form-control" ng-model="data.codigoExtracto" />              	               
+	               </div>
+	            </div>
+	           <!--fin row--> 	
+	           <div class="row" ng-show="data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id==4 && (data.workflow.id==1 || data.workflow.id==2)">
+	               <div class="col-md-8 col-xs-offset-2">
+	                <div class="loader loader-xs" ng-show="data.estado && listaWorkflow==null"></div><span> Notario</span> 
+	                    <input type="text" enter-next ng-model="data.notario" typeahead="notario as notario.nombre for notario in getListaNotarios($viewValue) | filter:$viewValue | limitTo:8" typeahead-wait-ms="500" typeahead-loading="cargandoNotarios" typeahead-min-length="3" class="form-control">                                	              
+	               </div>
+	            </div>
+	           <!--fin row--> 	                                        
+	           <div class="row">
+	              <div class="col-md-5 col-xs-offset-2">
+	                <span>Foja</span>
+	                <!-- <input ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" type="text" class="form-control" enter-next="" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.foja" required="required"/> -->
+	                <input type="text" enter-next class="form-control" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.foja" />
+	               </div>
+	           </div>
+	           <!--fin row-->
+	           
+	           <div class="row">
+	               <div class="col-md-5 col-xs-offset-2">
+	                <span>N&uacute;mero</span>
+	                <!-- <input ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" type="text" class="form-control" enter-next="" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.numero" required="required"/> -->
+	                <input type="text" enter-next class="form-control" enter-next="" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.numero" />
+	               </div>
+	           </div>
+	           <!--fin row--> 
+	           
+	           <div class="row">   
+	               <div class="col-md-5 col-xs-offset-2">
+	                <span>A&ntilde;o</span>
+	                <!-- <input ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" type="text" class="form-control" enter-next="" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.ano" required="required"/> -->
+	                <input type="text" enter-next class="form-control" enter-next="" numbers-only="numbers-only" ng-model="data.caratulaDTO.inscripcionDigitalDTO.ano" />
+	               </div>
+	           </div>
+	           <!--fin row-->    
+	           
+	           <div class="row">   
+	               <div class="col-md-5 col-xs-offset-2">
+	                <span>Bis</span>
+	                <!-- <input ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" type="checkbox" ng-model="data.caratulaDTO.inscripcionDigitalDTO.bis" ng-Checked="data.caratulaDTO.inscripcionDigitalDTO.bis=='SI'" class="icheck" ng-i-check="" /> -->
+	                <input type="checkbox" ng-model="data.caratulaDTO.inscripcionDigitalDTO.bis" ng-Checked="data.caratulaDTO.inscripcionDigitalDTO.bis=='SI'" class="icheck" ng-i-check="" />
+	               </div>
+	           </div>
+	           <!--fin row--> 
+	           <div class="row">  
+	               <div class="col-md-8 col-xs-offset-2">
+	                <span>Observaci&oacute;n</span>
+	                <textarea ng-model="data.observacion" class="form-control" id="observacion"></textarea>
+	               </div>           
+	           </div> 
+	           <!--fin row-->          
+	            <div class="row mt20">   
+	               <div class="col-md-8 col-xs-offset-2">
+	                 <button type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid" >Reingresar</button>
+	                 <button type="button" class="btn btn-default" ng-click="limpiar()">Limpiar</button>
+	               </div>
+	           </div>
+
+	           <!--fin row--> 
+	           
+	         </div>
+	         <!--fin panel body-->
+	    </div>  
+  
+  </div>
+</form>  
+  <!--fin col 3--> 
+  
+  
+  </div>
+  <!--fin row -->
+
+</div>
+
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/rechazoModal.html'"></div>
+<div ng-include="'views/comentariosCaratula.html'"></div>
+<div ng-include="'views/documentosEntregaModal.html'"></div>
+
+   

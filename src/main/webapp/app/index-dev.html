@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CBRS AIO</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/jquery.gritter/css/jquery.gritter.css"/>
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="bower_components/nanoscroller/nanoscroller.css"/>
+    <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css"/>
+    <link rel="stylesheet" href="bower_components/angular-busy/dist/angular-busy.min.css"/>    
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css"/>
+    <link rel="stylesheet" href="bower_components/scrollup/demo/css/themes/image.css"/>
+    <link rel="stylesheet" href="bower_components/textAngular/dist/textAngular.css"/>
+    <link rel="stylesheet" href="bower_components/jqueryui/themes/base/jquery-ui.css"/>
+    
+    <link rel="stylesheet" href="styles/modal.css"/>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/loaders.css"/>
+    <link rel="stylesheet" href="styles/custom.css"/>
+    <link rel="stylesheet" href="styles/theme.blue.css"/>
+  	<link rel="stylesheet" href="styles/bootstrap-switch.css"/>
+  	
+  	
+  	
+    
+    <!-- <link rel="stylesheet" href="bower_components/datatables-bootstrap3/BS3/assets/css/datatables.css"/> -->
+    
+</head>
+<body class="shelf-open" ng-app="aioApp">
+
+<div id="cl-wrapper" class="fixed-menu">
+    <div class="cl-sidebar" ng-class="{'hide' : ocultar()}" ng-controller="SidebarCtrl" my-sidebar ng-include="'views/tpl/sidebar.html'"></div>
+    <div class="container-fluid" id="pcont">
+        <div class="cl-mcont" id="content" ng-view="" ng-class="{'no-padding' : quitaPadding()}"></div>
+    </div>
+</div>
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jquery-rut-plugin/jquery.Rut.js"></script>
+<script src="bower_components/blazy/js/blazy.min.js"></script>
+<script src="bower_components/jquery-waypoints/waypoints.min.js"></script>
+<script src="bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/accounting/accounting.min.js"></script>
+<script src="bower_components/jqueryui/ui/minified/jquery-ui.min.js"></script>
+<script src="bower_components/nanoscroller/jquery.nanoscroller.js"></script>
+<script src="bower_components/jquery.gritter/js/jquery.gritter.min.js"></script>
+<script src="bower_components/jquery-icheck/icheck.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-local-storage/angular-local-storage.min.js"></script>
+<script src="bower_components/ng-icheck/dist/ng-icheck.min.js"></script>
+<script src="bower_components/angular-ui-utils/ui-utils.min.js"></script>
+<script src="bower_components/angular-rut/dist/angular-rut.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-busy/dist/angular-busy.min.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+<script src="bower_components/angular-moment/angular-moment.min.js"></script>
+<script src="bower_components/moment/lang/es.js"></script>
+<script src="bower_components/angular-ui-sortable/sortable.min.js"></script>
+
+<!-- upload file -->
+<script src="bower_components/ng-file-upload-bower-12.0.4/ng-file-upload-shim.min.js"></script>
+<script src="bower_components/ng-file-upload-bower-12.0.4/ng-file-upload.min.js"></script>
+
+<!-- web socket -->
+<script src="bower_components/angular-websocket-master/dist/angular-websocket.js"></script>
+
+<script src="bower_components/lodash/dist/lodash.js"></script>
+
+<script src="bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js"></script>
+<!-- <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>  -->
+<!-- <script src="bower_components/datatables-bootstrap3/BS3/assets/js/datatables.js"></script>  -->
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<!-- <script src="bower_components/jquery-searchable/dist/jquery.searchable-1.1.0.min.js"></script>  -->
+<!--textAngular -->
+<script src="bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
+<script src="bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
+<script src="bower_components/textAngular/dist/textAngular.min.js"></script>
+<!-- endtextAngular -->
+<script src="bower_components/angular-autoselect-master/autoselect.js"></script>
+
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+
+
+<!-- MODULOS AIO -->
+	<!-- MODULO HOME -->
+	<script src="scripts/controllers/home.js"></script>
+	<script src="scripts/controllers/perfilesModal.js"></script>
+	
+	<!-- MODULO ESTADO -->
+	<script src="scripts/controllers/estado.js"></script>
+	<script src="scripts/services/estadoService.js"></script>
+	<script src="scripts/controllers/movimientosModal.js"></script>
+	<script src="scripts/controllers/datos_formularioModal.js"></script>
+	<script src="scripts/controllers/requirenteModal.js"></script>
+	<script src="scripts/controllers/citadoModal.js"></script>
+	<script src="scripts/models/estadoModel.js"></script>
+	<script src="scripts/controllers/caratulasPorRutModal.js"></script>
+	<script src="scripts/controllers/observacionesModal.js"></script>
+	<script src="scripts/controllers/comentariosModal.js"></script>
+	<script src="scripts/controllers/documentos_entregaModal.js"></script>
+	
+	<!-- MODULO INDICE -->
+	<script src="scripts/controllers/indice.js"></script>
+	<script src="scripts/services/IndiceService.js"></script>
+	<script src="scripts/models/indiceModel.js"></script>
+	<script src="scripts/controllers/indiceModal.js"></script>
+	<script src="scripts/controllers/masinfoindiceModal.js"></script>
+	<script src="scripts/models/masInfoModel.js"></script>
+	<script src="scripts/services/borradoresService.js"></script>
+	<script src="scripts/services/planosService.js"></script>
+	<script src="scripts/controllers/ingresaRutModal.js"></script>
+		
+	<!-- MODULO REINGRESO -->
+	<script src="scripts/controllers/reingreso.js"></script>
+	<script src="scripts/services/reingresoService.js"></script>
+	<script src="scripts/controllers/documentosEntregaModal.js"></script>
+	
+	<!-- MODULO BODEGA -->
+	<script src="scripts/controllers/bodega.js"></script>
+	
+	<!-- MODULO CERTIFICACION -->
+	<script src="scripts/services/certificacionService.js"></script>
+	<script src="scripts/controllers/certificacion.js"></script>
+	<script src="scripts/models/certificacionModel.js"></script>
+	
+	<!-- MODULO CERTIFICACION HIPOTECAS-->
+	<script src="scripts/services/certificacionHipotecasService.js"></script>
+	<script src="scripts/controllers/certificacionHipotecas.js"></script>
+	<script src="scripts/models/certificacionHipotecasModel.js"></script>	
+	
+	<!-- MODULO DISTRIBUCION -->
+	<script src="scripts/controllers/distribucion.js"></script>
+	<script src="scripts/services/distribucionService.js"></script>
+	<script src="scripts/controllers/distribucionModal.js"></script>
+	
+	<!-- MODULO MANTENEDOR DISTRIBUCION -->
+	<script src="scripts/services/mantenedorService.js"></script>
+	<script src="scripts/controllers/mantenedorcertifica.js"></script>
+	<script src="scripts/models/mantenedorCertificaModel.js"></script>
+	
+	<!-- MODULO DIGITAL -->
+	<script src="scripts/controllers/digital.js"></script>
+	<script src="scripts/models/digitalModel.js"></script>
+	<script src="scripts/controllers/digitalModal.js"></script>
+	<script src="scripts/services/inscripcionDigitalService.js"></script>
+	
+	<!-- MODULO DIGITAL HIPOTECAS -->
+	<script src="scripts/controllers/digitalHipotecas.js"></script>
+	<script src="scripts/models/digitalHipotecasModel.js"></script>
+	<script src="scripts/services/inscripcionDigitalHipotecasService.js"></script>
+	
+	<!-- MODULO DIGITAL PROHIBICIONES -->
+	<script src="scripts/controllers/digitalProhibiciones.js"></script>
+	<script src="scripts/models/digitalProhibicionesModel.js"></script>
+	<script src="scripts/services/inscripcionDigitalProhibicionesService.js"></script>		
+	
+	<!-- MODULO SOLICITUDES -->
+	<script src="scripts/controllers/solicitudes.js"></script>
+	<script src="scripts/models/solicitudesModel.js"></script>
+	<script src="scripts/services/solicitudService.js"></script>
+	
+	<!-- MODULO SOLICITUDES HIPOTECAS -->
+	<script src="scripts/controllers/solicitudesHipotecas.js"></script>
+	<script src="scripts/models/solicitudesHipotecasModel.js"></script>
+	<script src="scripts/services/solicitudHipotecasService.js"></script>
+	
+	<!-- MODULO SOLICITUDES PROHIBICIONES -->
+	<script src="scripts/controllers/solicitudesProhibiciones.js"></script>
+	<script src="scripts/models/solicitudesProhibicionesModel.js"></script>
+	<script src="scripts/services/solicitudProhibicionesService.js"></script>		
+	
+	<!-- MODULO DESBLOQUEO MAL CITADO -->
+	<script src="scripts/controllers/desbloqueo.js"></script>
+	<script src="scripts/services/desbloqueoService.js"></script>
+	
+	<!-- MODULO URGENCIA SOLICITUD -->
+	<script src="scripts/controllers/urgencia.js"></script>
+	<script src="scripts/models/urgenciaModel.js"></script>
+	
+	<!-- MODULO ANEXOS -->
+	<script src="scripts/controllers/anexos.js"></script>
+	<script src="scripts/services/anexoService.js"></script>
+	<script src="scripts/models/anexoModel.js"></script>
+	
+	<!-- MODULO CARTELES -->
+	<script src="scripts/controllers/carteles.js"></script>
+	<script src="scripts/models/cartelesModel.js"></script>
+	<script src="scripts/services/cartelesService.js"></script>
+	<script src="scripts/controllers/verCartel.js"></script>
+	
+	<!-- MODULO DOCUMENTOS -->
+	<script src="scripts/controllers/documentos.js"></script>
+	
+	<!-- MODULO REPERTORIO -->
+	<script src="scripts/controllers/repertorio.js"></script>
+	<script src="scripts/models/repertorioModel.js"></script>
+	<script src="scripts/services/repertorioService.js"></script>
+	<script src="scripts/controllers/masinforepertorioModal.js"></script>
+	<script src="scripts/controllers/repertorioModal.js"></script>
+	
+	<!-- MODULO GP ONLINE -->
+	<script src="scripts/controllers/gponline.js"></script>
+	<script src="scripts/models/gponlineModel.js"></script>
+	<script src="scripts/services/gponlineService.js"></script>
+	<script src="scripts/controllers/verGP.js"></script>
+	<script src="scripts/controllers/gpOnlineModal.js"></script>
+	
+	<!-- MODULO AUDITORIA -->
+	<script src="scripts/controllers/auditoria.js"></script>
+	
+	<!-- MODULO CERTIFICACION EN PARTE -->
+	<script src="scripts/controllers/certificacionenparte.js"></script>
+	
+	<!-- MODULO LISTADO REPERTORIO -->
+	<script src="scripts/controllers/listadorepertorio.js"></script>
+
+	<!-- MODULO LIQUIDACION -->
+	<script src="scripts/controllers/liquidacion.js"></script>
+
+	<!-- MODULO LISTADO CTA CTE -->
+	<script src="scripts/controllers/listadoctacte.js"></script>
+	
+	<!-- MODULO NOMINA CTA CTE -->
+	<script src="scripts/controllers/nominactacte.js"></script>
+	
+	<!-- MODULO TAREAS -->
+	<script src="scripts/controllers/tareas.js"></script>
+	<script src="scripts/controllers/tareasModal.js"></script>
+	<script src="scripts/services/tareasService.js"></script>	
+	<script src="scripts/controllers/transaccionModal.js"></script>
+	<script src="scripts/models/tareasModel.js"></script>
+	<script src="scripts/controllers/escrituraelectronicaModal.js"></script>
+	
+	<!-- MODULO UAF -->
+	<script src="scripts/controllers/uaf.js"></script>	
+	<script src="scripts/services/uafService.js"></script>
+	<script src="scripts/models/uafModel.js"></script>
+	
+	<!-- MODULO REVISION NOTAS -->
+	<script src="scripts/controllers/revisionnotas.js"></script>
+	<script src="scripts/models/revisionNotasModel.js"></script>
+	
+	<!-- MODULO INFO -->
+	<script src="scripts/controllers/info.js"></script>
+	<script src="scripts/controllers/infoUsuarioModal.js"></script>		
+	
+
+	<!-- MODULO REINGRESO ESCRITURA-->
+	<script src="scripts/controllers/reingresoescritura.js"></script>
+	<script src="scripts/models/reingresoEscrituraModel.js"></script>
+	
+	<!-- MODULO OFICIO -->
+	<script src="scripts/controllers/oficio.js"></script>
+	<script src="scripts/services/OficioService.js"></script>
+	<script src="scripts/models/oficioModel.js"></script>	
+	
+	<!-- MODULO MANTENEDOR CTAS CTES -->
+	<script src="scripts/controllers/mantenedorctasctes.js"></script>	
+	<script src="scripts/controllers/ctaCteModal.js"></script>
+	
+	<!-- MODULO PLANTILLERO -->
+	<script src="scripts/controllers/plantillero.js"></script>
+	
+	<!-- MODULO RECEPCION PLANOS -->
+	<script src="scripts/controllers/recepcionPlanos.js"></script>
+	<script src="scripts/controllers/recepcionPlanosModal.js"></script>
+	
+	<!-- MODULO LISTADO DESPACHO CUADERNILLO -->
+	<script src="scripts/controllers/despachoCuadernillo.js"></script>
+	
+<!-- SHARED -->
+	<!-- FILTERS -->
+	<script src="scripts/filters/myCurrency.js"></script>
+	<script src="scripts/filters/myMoment.js"></script>
+	<script src="scripts/filters/cut.js"></script>
+	<!-- DIRECTIVES -->
+	<script src="scripts/directives/scrollposition.js"></script>
+	<script src="scripts/directives/mysidebar.js"></script>
+	<script src="scripts/directives/myheader.js"></script>
+	<script src="scripts/directives/mysubmenu.js"></script>
+	<script src="scripts/directives/enternext.js"></script>
+	<script src="scripts/directives/ngenter.js"></script>
+	<script src="scripts/directives/numbersonly.js"></script>
+	<script src="scripts/directives/numbersonlyneg.js"></script>
+	<script src="scripts/directives/focusinput.js"></script>
+	<script src="scripts/directives/rutFormat.js"></script>
+	<script src="scripts/directives/nombrerequirente.js"></script>
+	<script src="scripts/directives/requirenteFull.js"></script>
+	<script src="scripts/directives/bnLazySrc.js"></script>
+	<script src="scripts/directives/waypoint.js"></script>
+	<script src="scripts/directives/scrollUp.js"></script>
+	<script src="scripts/directives/dvBotonPage.js"></script>
+	<script src="scripts/directives/dvCurrentPage.js"></script>
+	<script src="scripts/directives/scrollBubble.js"></script>
+	<script src="scripts/directives/utilIzquierda.js"></script>
+	<script src="scripts/directives/utilDerecha.js"></script>
+	<script src="scripts/directives/utilIzquierdacertifica.js"></script>
+	<script src="scripts/directives/anexosDatatable.js"></script>
+	<script src="scripts/directives/resizeInscripcion.js"></script>
+	<script src="scripts/directives/myLoad.js"></script>
+	<script src="scripts/directives/loadingstate.js"></script>
+	<script src="scripts/directives/mynotification.js"></script>
+	<script src="scripts/directives/scrollToBookmark.js"></script>
+	<script src="scripts/directives/estadoIndice.js"></script>
+	<script src="scripts/directives/repertorioDigital.js"></script>
+	<script src="scripts/directives/ng-text-truncate.js"></script>
+	<script src="scripts/directives/gpOnline.js"></script>
+	<script src="scripts/directives/autocomplete.js"></script>
+	<script src="scripts/directives/confirmDelete.js"></script>
+	<!-- SERVICES -->
+	<script src="scripts/services/usuario.js"></script>
+	<script src="scripts/services/caratulaService.js"></script>
+	<script src="scripts/services/anotacionService.js"></script>
+	<script src="scripts/services/anotacionHipotecasService.js"></script>
+	<script src="scripts/services/anotacionProhibicionesService.js"></script>
+	<script src="scripts/services/requirenteService.js"></script>
+	<script src="scripts/services/parametrosService.js"></script>
+	<script src="scripts/services/modal.service.js"></script>
+	<script src="scripts/services/socketService.js"></script>
+	<script src="scripts/services/firmaService.js"></script>
+	<!-- ETC -->
+	<script src="scripts/controllers/mensajeModal.js"></script>
+	<script src="scripts/controllers/loadingModal.js"></script>
+	<script src="scripts/controllers/sidebar.js"></script>
+	<script src="scripts/controllers/verInscripcion.js"></script>
+	<script src="scripts/controllers/verInscripcionReg.js"></script>
+	<script src="scripts/controllers/verInscripcionCertificar.js"></script>
+	<script src="scripts/controllers/verInscripcionCertificarHipo.js"></script>
+	<script src="scripts/controllers/verVistaPreviaPlantilla.js"></script>
+	<script src="scripts/models/anotacionTipoModel.js"></script>
+	<script src="scripts/controllers/comentariosCaratulaModal.js"></script>
+	<script src="scripts/controllers/solicitarModal.js"></script>
+	<script src="scripts/controllers/rechazoModal.js"></script>
+	<script src="scripts/controllers/rechazoCertificacionModal.js"></script>
+	<script src="scripts/controllers/rehacerImagenModal.js"></script>
+	<script src="scripts/controllers/anotacionModal.js"></script>
+	<script src="scripts/controllers/modificaAnotacionModal.js"></script>
+	<script src="scripts/controllers/solicitarIndiceModal.js"></script>
+	<script src="scripts/services/escrituraService.js"></script>
+	<script src="scripts/controllers/verEscritura.js"></script>
+	<script src="scripts/controllers/verEscrituraEstudio.js"></script>
+	<script src="scripts/controllers/documentoModal.js"></script>
+	<script src="scripts/controllers/generaTicket.js"></script>
+	<script src="scripts/controllers/estadoIndiceModal.js"></script>
+	<script src="scripts/controllers/ticketInformacion.js"></script>
+	<script src="scripts/controllers/verExportarPDF.js"></script>
+	<script src="scripts/controllers/embargoModal.js"></script>
+	<script src="scripts/controllers/verImprimeCaratula.js"></script> 
+	<script src="scripts/controllers/masinfoLiquidacionModal.js"></script>
+	<script src="scripts/controllers/consultadiablito.js"></script>
+	<script src="scripts/controllers/titulosanteriores.js"></script>
+	<script src="scripts/controllers/atencionModal.js"></script>
+	<script src="scripts/controllers/listadoPendiente.js"></script>
+	<script src="scripts/controllers/llamarClienteModal.js"></script>
+	
+<!-- endbuild -->
+
+<script type="text/javascript" src="bwip-js/bwip.js"></script>
+<script type="text/javascript" src="bwip-js/lib/symdesc.js"></script>
+<script type="text/javascript" src="bwip-js/lib/needyoffset.js"></script>
+<script type="text/javascript" src="bwip-js/lib/canvas.js"></script>
+<script type="text/javascript" src="scripts/bootstrap-switch.js"></script>
+
+<div ng-include="'views/atencionModal.html'"></div>
+<div ng-include="'views/indice/ingresaRutModal.html'"></div>
+<div ng-include="'views/llamarClienteModal.html'"></div>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Bodega" icono="fa-archive"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>   
+
+<div class="row mt70">
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form role="form" name="myform" id="myform">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Foja
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaTitulo.foja" name="foja" placeholder="foja"
+                                           focus-input ="fojaIsFocused" maxlength="6" autofocus="true" required="required" enter-next=""  numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaTitulo.numero"  id="numero" name="numero"
+                                           placeholder="número" maxlength="6" required="required" enter-next="" numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Año</label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="busquedaTitulo.ano" name="ano" placeholder="año"
+                                           maxlength="4" required="required" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-center">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaTitulo.bis" ng-i-check=""> Bis</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20">
+                            <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                            <!-- <button type="button" class="btn  btn-default " ng-click="limpiarFnaTitulo()">Limpiar Foja, Número y Año</button> -->
+                            <button type="submit" class="btn  btn-primary " ng-disabled="myform.$invalid"
+                                    ng-click="buscar()" >Buscar</button>
+                        </div> 
+                    </form>
+     </div>                   
+   </div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   		
+   		<div ng-if="busquedaTitulo.resultados.length>0" ng-include="'views/urgencia/resultados_urgencia.html'" class="mt35"> </div>
+   
+   
+   		<div ng-if="busquedaTitulo.data.status && busquedaTitulo.resultados.length===0" class="row mt35">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                        <p>No hay solicitudes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    	</div>
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

@@ -1,0 +1,41 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Mantenedor Distribución" icono="fa-code-fork" id="header"></my-header>
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+			
+			<div ng-if="busquedaUsuario.resultados.length>0" ng-include="'views/mantenedor/resultados_usuario.html'" > </div>
+			<!-- <div ng-show="busquedaIndice.propiedades" ng-if="busquedaIndice.resultados.length>0" ng-include="'views/indice/resultados_indice_propiedades.html'" class="mt35"> </div> -->
+			
+			<div ng-if="busquedaUsuario.data.status && busquedaUsuario.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay usuarios.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   			
+		</div>	
+                    
+     </div>                   
+   </div>
+	    
+	   
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

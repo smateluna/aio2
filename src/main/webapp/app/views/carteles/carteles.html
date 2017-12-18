@@ -1,0 +1,183 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Carteles" icono="fa fa-folder-open"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification> 
+
+<div class="row mt70">
+<div class="col-md-12">
+<div class="tab-container">
+<ul class="nav nav-tabs">
+    <li ng-class="{'active': isActiveParent(1)}"><a href ng-click="activateParent(1)">Buscar Cartel</a> </li>
+    <li ng-class="{'active': isActiveParent(2)}"><a href ng-click="activateParent(2)">Listado Certificados</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane" ng-class="{'active': isActiveParent(1)}" ng-show="isActiveParent(1)">
+    <div class="row mt0">
+        <div class="col-md-12">
+
+            <div class="block-transparent">
+
+                <div class="content">
+                    <form role="form" name="myform" id="myform">
+                        <div class="row mt0">
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaCartel.numero"  id="numero" name="numero"
+                                           placeholder="número" maxlength="6" focus-input="numeroIsFocused" required="required" enter-next="" numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3" ng-if="aioParametros.sistema!='AIO AGUAS'">
+                                <div class="form-group">
+                                    <label class="control-label">Mes
+                                    </label>
+                                    <select class="form-control" ng-model="busquedaCartel.mes" enter-next="" required>
+                                        <option value="" disabled selected>Seleccione mes</option>
+                                        <option value="1">Enero</option>
+                                        <option value="2">Febrero</option>
+                                        <option value="3">Marzo</option>
+                                        <option value="4">Abril</option>
+                                        <option value="5">Mayo</option>
+                                        <option value="6">Junio</option>
+                                        <option value="7">Julio</option>
+                                        <option value="8">Agosto</option>
+                                        <option value="9">Septiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Año</label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="busquedaCartel.ano" name="ano" placeholder="año"
+                                           maxlength="4" required="required" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3" ng-if="aioParametros.sistema=='AIO AGUAS'">
+                                <div class="form-group">
+                                    <label class="control-label">Registro</label>
+                                    <select class="form-control" ng-model="busquedaCartel.registro" required="">
+                                    	<option value="" disabled selected>Seleccione</option>
+                                        <option value="1">Propiedad</option>
+                                        <option value="2" ng-if="aioParametros.sistema=='AIO AGUAS'">Hipotecas y Prohibici&oacute;n</option>
+                                        <option value="2" ng-if="aioParametros.sistema!='AIO AGUAS'">Hipoteca</option>
+                                        <option value="3" ng-if="aioParametros.sistema!='AIO AGUAS'">Prohibiciones</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                           
+                           <!--fin nuevo registro-->
+                           
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group text-center">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaCartel.bis" ng-i-check=""> Bis</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20">
+                            <button type="button" class="btn  btn-default btn-rad" ng-click="limpiarFormulario()">Limpiar</button>
+                            <button type="submit" class="btn  btn-primary btn-rad" ng-disabled="myform.$invalid"
+                                    ng-click="buscarCartel()" >Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div ng-if="states.titulo.isError" class="row mt20">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.titulo.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="busquedaCartel.data.status && busquedaCartel.resultados.length===0" class="row mt20">
+        <div class="col-md-6 col-md-offset-3">
+
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                        <p>No hay resultados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane" ng-class="{'active': isActiveParent(2)}" ng-show="isActiveParent(2)" cg-busy="{promise:promiseUpdateSolicitudMis, message:'Por favor espere...'}">
+
+    <div class="row mt0">
+        <div class="col-md-12">
+
+            <div class="block-flat block-border">
+
+                <div class="header">
+                    <h4>Mis certificados
+                        <span ng-if="busquedaMis.fecha!=null" class="timeago-title">
+                            (<span am-time-ago="busquedaMis.fecha"></span>)
+                        </span>
+                    </h4>
+                </div>
+
+                <div class="content">
+                    <div class="row mt20">
+                        <div class="col-md-12">
+                            <div class="pull-left mb10">
+                                <button ng-click="buscarMis(true)" type="button" class="btn btn-primary btn-rad ml0">
+                                    <i class="fa fa-refresh"></i> Refrescar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="!states.mis.isError && busquedaMis.data.status" ng-include="'views/carteles/mis_certificados.html'"> </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div ng-if="states.mis.isError" class="row mt0">
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.mis.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<scroll-up></scroll-up>
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/documentoModal.html'"></div>

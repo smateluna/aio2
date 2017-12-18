@@ -1,0 +1,125 @@
+<div>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="B&uacute;squeda de Personas" icono="fa fa-briefcase"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0" >
+        <div class="col-md-12">
+				<form role="form" name="formUAF" id="formUAF">
+						<div class="row mt0" >
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">B&uacute;squeda
+                                    </label>
+                                     <input type="text" class="form-control" ng-model="busquedaUAF.inscripciones" name="inscripciones" placeholder="cantidad inscripciones"
+                                           maxlength="3" numbers-only="numbers-only" focus-input ="inscripcionesIsFocused" required="required">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+									 <select class="form-control" id="ano" name="ano" required="required" ng-model="busquedaUAF.ano" ng-options="anoBusqueda  for anoBusqueda in busquedaUAF.anos">
+					                	<option value="">-- año --</option>
+					                </select>
+                                </div>
+                            </div>                           
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+                                 	 <button type="button" class="btn  btn-default " ng-click="limpiar()">Limpiar</button>
+                                     <button type="submit" class="btn  btn-primary" ng-disabled="formUAF.$invalid" ng-click="buscarPersonas()" >Buscar</button>
+                                </div>
+                            </div>
+                          
+                    </form>
+     </div>  
+     	   
+             
+   </div>
+     	<div class="header" ng-if="busquedaUAF.resultadosPersonas>0 || (busquedaUAF.data.status && busquedaUAF.resultadosPersonas===0)">
+		     <h3> <!-- {{busquedaUAF.resultadosPersonas}} --> Resultados </h3> 
+		</div>    
+			<!-- Listado -->
+			<div class="table-responsive" ng-if="busquedaUAF.resultadosPersonas>0 || (busquedaUAF.data.status && busquedaUAF.resultadosPersonas===0)">
+			
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th style="width: 100px;">
+			                Car&aacute;tula
+			            </th>			        
+			        	<th style="width: 800px;">
+			                Nombre
+			            </th>
+			            <th style="width: 100px;">
+			                Rut
+			            </th>
+			        </tr>
+			        </thead>
+			        </table>
+				<div ng-repeat="(key, value) in busquedaUAF.listaPersonasAgrupadas" id="accordion">
+					<table ng-if="value.length>=busquedaUAF.inscripciones" class="hover table-curved">
+				        <tbody>
+					        <tr data-toggle="collapse" data-parent="#accordion" data-target="#caratulas{{key}}">
+				        		<td class="text-left" style="width: 100px;">
+				        			<a data-toggle="collapse" data-parent="#accordion" data-target="#caratulas{{key}}"><span class="badge ng-scope ng-binding">{{value.length}}</span> Caratulas</td></a>				        
+				        		<td class="text-left" style="width: 800px;">{{value[0].nombre}}</td>
+				        		<td class="text-left" style="width: 100px;">{{key | rut}}</td>
+					        </tr>
+					        <tr ng-repeat="sol in value" id="caratulas{{sol.rut}}" class="panel-collapse collapse">
+				        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>				        
+				        		<td class="text-left">{{sol.nombre}}</td>
+				        		<td class="text-left">{{sol.rut | rut}}</td>
+					        </tr>
+				        </tbody>
+				    </table>				
+				</div>
+			    
+			    <div ng-if="busquedaUAF.data.status && busquedaUAF.resultadosPersonas===0" class="row mt35">
+			        <div class="col-md-6 col-md-offset-3">
+			                <div class="content">
+			                    <div class="text-center">
+			                    	<div class="i-circle primary"><i class="fa fa-info"></i></div>
+			                        <p>No se encontraron registros.</p>
+			                    </div>
+			                </div>
+			        </div>
+		   		</div>
+				<br>
+			</div>
+			<!-- Fin Listado -->
+			
+
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        
+  
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/estadoIndiceModal.html'"></div> 
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+
+</div>

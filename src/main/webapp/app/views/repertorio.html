@@ -1,0 +1,162 @@
+<div>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header ng-if="!busquedaRepertorio.simpleMode" en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Repertorio" icono="fa-info"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div ng-class="!busquedaRepertorio.simpleMode?'row mt70':'row'" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0" >
+        <div class="col-md-12" ng-if="!busquedaRepertorio.simpleMode">
+				<form role="form" name="myform" id="myform">
+						<div class="row mt0" >
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">B&uacute;squeda
+                                    </label>
+                                     <input type="text" class="form-control" ng-model="busquedaRepertorio.caratula" name="caratula" placeholder="c&aacute;ratula"
+                                           maxlength="8" numbers-only="numbers-only" focus-input ="caratulaIsFocused">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+									 <input type="text" class="form-control" ng-model="busquedaRepertorio.repertorio" name="repertorio" placeholder="repertorio"
+                                           maxlength="10" numbers-only="numbers-only">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+									 <select class="form-control" id="anoRepertorio" name="anoRepertorio" ng-model="busquedaRepertorio.anoRepertorio" ng-options="anoRepertorio as anoRepertorio.descripcion for anoRepertorio in busquedaRepertorio.anosRepertorios">
+					                	<option value="">-- año --</option>
+					                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-35">
+                                 	 <button type="button" class="btn  btn-default " ng-click="limpiar()">Limpiar</button>
+                                     <button type="submit" class="btn  btn-primary" 
+                                    ng-click="buscar()" >Buscar</button>
+                                </div>
+                            </div>
+                        </div>  
+                    </form>
+           </div>  
+       </div>
+       
+     	<div ng-if="!busquedaRepertorio.simpleMode" class="header" ng-if="busquedaRepertorio.resultados.length>0 || (busquedaRepertorio.data.status && busquedaRepertorio.resultados.length===0)">
+		     <h3> Resultado </h3> 
+		</div>    
+			<!-- Listado -->
+			<div class="table-responsive" ng-if="busquedaRepertorio.resultados.length>0 || (busquedaRepertorio.data.status && busquedaRepertorio.resultados.length===0)">
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th>
+			                Car&aacute;tula
+			            </th>			        
+			        	<th>
+			                Repertorio
+			            </th>
+			            <th>
+			                Año
+			            </th>
+			            <th>
+			                Fecha
+			            </th>			            
+			        	<th>
+			                Tipo
+			            </th>
+			            <th>
+			                Requirente
+			            </th>
+			            <th>
+			                Notario
+			            </th>
+			            <th>
+			                Notaria
+			            </th>
+			            <th>
+			                Comprador
+			            </th>
+			            <th>
+			                Vendedor
+			            </th>
+			            <th>
+			                Observacion
+			            </th>
+			            <th>
+			                + Info.
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in busquedaRepertorio.resultados">
+			        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>				        
+			        		<td class="text-left">{{sol.repertorio}}</td>
+			        		<td class="text-left">{{sol.anorepertorio}}</td>
+			        		<td class="text-left">{{sol.fechaIngreso | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+			        		<td class="text-left">{{sol.tipo}}</td>
+			        		<td class="text-left">{{sol.requirente}}</td>
+			        		<td class="text-left">{{sol.notario}}</td>
+			        		<td class="text-left">{{sol.notaria}}</td>
+			        		<td class="text-left">{{sol.comprador}}</td>
+			        		<td class="text-left">{{sol.vendedor}}</td>
+			        		<td class="text-left">{{sol.obs}}</td>
+			        		<td class="text-center">
+			                    <span>
+			                           <button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="masInfo(sol)">
+			                               <i class="fa fa-th-list"></i>
+			                           </button>
+			                    </span>
+			                </td> 
+				        </tr>
+			        </tbody>
+			    </table>
+			    <div ng-if="busquedaRepertorio.data.status && busquedaRepertorio.resultados.length===0" class="row mt35">
+			        <div class="col-md-6 col-md-offset-3">
+			                <div class="content">
+			                    <div class="text-center">
+			                    	<div class="i-circle primary"><i class="fa fa-info"></i></div>
+			                        <p>No se encontro repertorio.</p>
+			                    </div>
+			                </div>
+			        </div>
+		   		</div>
+				<br>
+			</div>
+			<!-- Fin Listado -->
+			
+
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        
+  
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/masInforepertorioModal.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div> 
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+
+</div>

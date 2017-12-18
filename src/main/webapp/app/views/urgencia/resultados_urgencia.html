@@ -1,0 +1,114 @@
+<div class="table-responsive">
+
+	<button ng-click="darUrgencia()"
+            class="btn  btn-danger " tooltip="Dar Urgencia" tooltip-placement="left">
+        <i class="fa fa-ambulance"></i> Dar Urgencia
+    </button>
+	
+    <table class="hover table-curved">
+        <thead>
+        <tr>
+            <th>
+                #
+                                        <span class="pull-right">
+
+                                            <i class="fa fa-sort-desc"></i>
+                                        </span>
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Solicitante
+            </th>
+            <th>
+                Fecha solicitud
+            </th>
+            <th>
+                Estado
+
+            </th>
+            <th>
+                Fecha estado
+
+            </th>
+
+            <th>
+                Foja
+
+            </th>
+            <th>
+                Número
+
+            </th>
+            <th>
+                Año
+
+            </th>
+            <th>
+                Bis
+
+            </th>
+            <th>
+                Tomo
+
+            </th>
+            
+        </tr>
+        </thead>
+        <tbody>
+
+
+        <tr ng-repeat="sol in busquedaTitulo.resultados">
+         		<td class="text-right">{{sol.idSolicitud}}</td>
+         		<td class="text-right">{{sol.usuario}}</td>
+         		<td class="text-right">{{sol.nombre}}</td>
+                <td class="text-center">{{sol.fechaSolicitud}}</td>
+                <td>
+                                 <span ng-if="sol.estadoDTO.idEstado==1" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                 <span ng-if="sol.estadoDTO.idEstado==2" class="label label-success">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==3" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==4" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==5" class="label label-primary">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==6" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==7" class="label label-manual">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                <span ng-if="sol.estadoDTO.idEstado==8" class="label label-warning">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                </td>
+                <td class="text-center">{{sol.fechaEstado}}</td>
+                <td class="text-right">{{sol.foja}}</td>
+                <td class="text-right">{{sol.numero}}</td>
+                <td class="text-right">{{sol.ano}}</td>
+                <td class="text-center">
+                            <span ng-if="sol.bis==1">
+                                <i class="fa fa-check"></i>
+                            </span>
+                </td>
+                <td class="text-right">{{sol.tomo}}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+

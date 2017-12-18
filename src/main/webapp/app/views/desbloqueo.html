@@ -1,0 +1,93 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Desbloqueo mal citado" icono="fa-unlock"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+   <div class="row mt70">
+   
+   <div class="col-md-12">
+      <div class="panel panel-default badger-left badger-primary" data-badger="Búsqueda de documentos para desbloquear">
+      
+      <div class="panel-body row-bottom-10 formulario">
+      	<form role="form" name="formDesbloqueo" id="formDesbloqueo" ng-submit="buscar()">    
+           <div class="row">
+              <div class="col-md-2">
+                <span>Foja</span>
+                <input type="text" id="foja" class="form-control" ng-model="req.foja" required="" enter-next focus-input="fojaIsFocused" />
+               </div>
+               <div class="col-md-2">
+                <span>Número</span>
+                <input type="text" class="form-control" ng-model="req.numero" required="" enter-next />
+               </div>
+               <div class="col-md-2">
+                <span>Año</span>
+                <input type="text" class="form-control" ng-model="req.ano" required="" />
+               </div>
+               <div class="col-md-2">
+                <span>Bis</span>
+                <div>
+                	<input type="checkbox" ng-model="req.bis" class="icheck" ng-i-check=""  />
+                </div>
+               </div>
+               
+               <div class="col-md-3 mT-35">
+	           <button type="submit" class="btn btn-primary" ng-disabled="formDesbloqueo.$invalid" >Buscar</button>
+	           <button type="button" class="btn btn-default" ng-click="limpiar()">Limpiar</button>               
+               </div>
+               
+           </div>
+           <!--fin row-->
+       </form> 
+     </div>
+     <!--fin panel body-->
+    </div>  
+  </div>
+  <!--fin col 3--> 
+  
+  
+  </div>
+  <!--fin row -->
+  
+   <div class="row">
+  	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-body"> 
+            	<table id="tablaSorter" class="tablesorter tablesorter-blue">
+					<thead>
+					   <tr class="tablesorter-headerRow">
+					      <td>Id Solicitud</td>
+					      <td>Estado</td>
+					      <td>Usuario</td>
+					      <td>Fecha Estado</td>
+					      <td ng-if="subPermisos['desbloqueo'].indexOf('DESBLOQUEAR') >= 0">Desbloquear</td>
+					   </tr>
+					   </thead>
+					   <tbody>
+			            <tr ng-repeat="dto in data.listaSolicitudes">
+			            	<td class="estado-table-td">{{dto.idSolicitud}}</td>
+				  			<td class="estado-table-td">{{dto.estado}}</td>
+			            	<td class="estado-table-td">{{dto.usuario}}</td>
+			                <td class="estado-table-td">{{dto.fechaEstado}}</td>
+			                <td><button ng-if="(dto.idEstado==3 || dto.idEstado==6) && subPermisos['desbloqueo'].indexOf('DESBLOQUEAR') >= 0" type="button" class="btn btn-primary btn-xs" ng-click="desbloquear(dto)"><i class="fa fa-unlock"></i> Desbloquear</button>   </td>
+			            </tr>
+			            <tr ng-if="!data.listaSolicitudes || data.listaSolicitudes.length===0">
+			                <td colspan="5" class="estado-table-td text-center text-italic">No hay datos.</td>
+			            </tr>					   
+					   
+					   </tbody>
+				</table>
+             </div>
+             <!--fin bs-callout-info-->
+             
+             </div>
+             </div>
+             <!--fin panel-->
+                  
+              </div>
+           </div>
+	</div>
+<!--fin container-->
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/rechazoModal.html'"></div>

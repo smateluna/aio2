@@ -1,0 +1,140 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        Citado</div>
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CITADO') >= 0 && data.status!=null && !anulada">
+        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openCitadoModal()">
+            <i class="fa fa-edit"></i>  Editar datos
+        </button>
+    </div>
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+
+
+        <form class="form-inline" role="form">
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Registro</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    <span ng-switch on="data.res.caratulaDTO.citadoDTO.registroDTO.id">
+                                        <span ng-switch-when="1">Propiedad</span>
+                                        <span ng-switch-when="2">Hipotecas</span>
+                                        <span ng-switch-when="3">Prohibiciones</span>
+                                        <span ng-switch-when="4">Comercio</span>
+                                        <span ng-switch-when="5">Aguas</span>
+                                        <span ng-switch-default></span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Foja</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.foja}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Número</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.numero}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Año</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.ano}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Bis</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+
+                                    <i ng-if="data.res.caratulaDTO.citadoDTO.bis" class="fa fa-check"></i>
+
+                                </p>
+                            </div>
+                        </div>
+						<div class="form-group form-group-estado">
+							<label class="estado-title-field">
+								Ver
+							</label>
+							<div class="form-control-static">
+								<button type="button" class="btn btn-primary btn-sm btn-rad"
+									ng-click="verTitulo(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===1">
+									<i class="fa fa-search"></i>
+								</button>
+								<button type="button" class="btn btn-primary btn-sm btn-rad"
+									ng-click="verTipoImagenHipo(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===2">
+									<i class="fa fa-search"></i>
+								</button>
+								<button type="button" class="btn btn-primary btn-sm btn-rad"
+									ng-click="verTipoImagenProh(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===3">
+									<i class="fa fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+ <!-- Modal Edit datos-->
+<div class="modal fade" id="edit-dat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Citado > <small class="color">Editar datos</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-6 col-xs-offset-3">
+               <div class="col-md-12">
+                <span>Registro</span>
+                <input type="text" class="form-control">
+               </div>
+               <div class="col-md-12">
+                <span>Foja</span>
+                <input type="text" class="form-control">
+               </div>
+               <div class="col-md-12">
+                <span>Número</span>
+                <input type="text" class="form-control">
+               </div>
+               <div class="col-md-12">
+                <span>Año</span>
+                    <input type="text" class="form-control">
+               </div>
+                <div class="col-md-12">
+                <span>Bis</span>
+                  <label><input type="checkbox" name="checkbox-bis" checked data-size="small" data-on-text="Si" data-off-text="No"></label>
+               </div>
+    </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--fin modal  Edit datos-->
+
+<script type="text/javascript">
+  $("[name='checkbox-bis']").bootstrapSwitch();
+</script>

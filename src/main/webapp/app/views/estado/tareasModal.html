@@ -1,0 +1,42 @@
+<script type="text/ng-template" id="tareasModal.html">	
+	<form role="form" name="aform" id="aform"> 
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Tareas solicitadas > 
+			<small ng-if="operacion=='add'" class="color">Agregar tarea</small>
+			<small ng-if="operacion=='remove'" class="color">Eliminar tarea</small>
+		</h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-6 col-xs-offset-3">
+               <div class="col-md-12">
+                <span>Tipo Tarea</span>
+                <select ui-keypress="{13:'agregarTarea()'}" ng-if="operacion=='add'" id="tarea" required="required" class="form-control" ng-model="tarea.tipoTarea" ng-options="item.descripcion for item in listaTipoTareas track by item.id" focus-input="tareaIsFocused"></select>
+				<div ng-if="operacion=='remove'" class="myinput mytextfield">{{tarea.tipoTarea.descripcion}}</div>
+               </div>
+			<!--
+               <div class="col-md-12">
+                <span>Foja</span>
+                <input type="text" class="form-control" required="required" numbers-only="numbers-only">
+               </div>
+               <div class="col-md-12">
+                <span>Número</span>
+                <input type="text" class="form-control" required="required" numbers-only="numbers-only">
+               </div>
+               <div class="col-md-12">
+                <span>Año</span>
+                    <input type="text" class="form-control" required="required" numbers-only="numbers-only">
+               </div>
+			-->
+    	</div>   
+      </div>         
+    </div>
+      <div class="modal-footer">
+        <button ng-if="operacion=='add'" type="button" class="btn btn-primary" ng-click="agregarTarea()" ng-disabled="aform.$invalid">Agregar</button>
+		<button ng-if="operacion=='remove'" type="button" class="btn btn-danger" ng-click="eliminarTarea()" ng-disabled="aform.$invalid">Eliminar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+        
+      </div>
+	</form>
+</script>

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CBRS AIO</title>
+
+<link href="http://localhost:8080/aio/login/css/bootstrap.css" rel="stylesheet">
+<link href="http://localhost:8080/aio/login/css/animate.css" rel="stylesheet">
+<link href="http://localhost:8080/aio/login/css/login.css" rel="stylesheet">
+</head>
+
+<body class="body-login">
+
+<div class="container">
+  <div align="center" class="animated fadeInDown"><img src="http://localhost:8080/aio/login/images/logo_grande.png" width="250" /></div>
+ <p class="p-login animated fadeInUp">Ingresa a al sistema AIO CBRS donde podrás acceder a todas las aplicaciones informativas del Conservador</p>
+ 
+ <form id="j_security_check" methos="post" action="j_security_check" name="j_securigty_check" 
+ 	class="form-signin fadeInUp animated" role="form">
+        <h2 class="form-signin-heading">Registro</h2>
+        <input type="text" id="j_username_input" name="j_username_input" class="form-control" placeholder="Nombre de Usuario" required="" autofocus="">
+        <input type="hidden" id="j_username" name="j_username" class="form-control" placeholder="Nombre de Usuario" style="width:          211px;"/>
+        
+        <input type="password" name="j_password" class="form-control" placeholder="Contraseña" required="">
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Recordar contraseña
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+      </form>
+</div>
+
+
+
+<script src="http://localhost:8080/aio/login/js/bootstrap.js"></script>
+<script src="http://localhost:8080/aio/login/js/jquery.min.js"></script>
+</body>
+</html>

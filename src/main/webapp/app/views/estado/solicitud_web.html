@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        <div class="loader loader-xs" ng-show="data.status && !data.statusProductoWeb"></div> Solicitud Web</div>
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <form class="form-inline" role="form">
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Usuario</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.productoWebDTO.nameUsuarioWeb}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Transacción</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.productoWebDTO.idTransaccion}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+
+
+        <table class="hover table-bordered mt15">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Detalle</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="texto in data.res.caratulaDTO.productoWebDTO.productoGlosa">
+                <td class="estado-table-td">{{texto}}</td>
+            </tr>
+            <tr ng-if="!data.res.caratulaDTO.productoWebDTO.productoGlosa || data.res.caratulaDTO.productoWebDTO.productoGlosa.length===0">
+                <td class="estado-table-td text-center text-italic">No hay detalle.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<script type="text/ng-template" id="comentariosCaratulaModal.html">
+    <div class="modal-header" ng-keyup="close()">
+        <button type="button" class="close" ng-click="close()">&times;</button>
+        <h3 class="mtmb5">Comentarios caratula #{{dataImagen.numeroCaratula}}</h3>
+    </div>
+	<div ng-if="states.isError" class="row mt35">
+	    <div class="col-md-6 col-md-offset-3">
+	         <div class="block-transparent">
+	             <div class="content">
+	                 <div class="text-center">
+	                     <p class="label label-danger">{{states.msg}}</p>
+	                 </div>
+	             </div>
+	         </div>
+	     </div>
+	</div>
+	<div ng-if="states.isOk" class="row mt35">
+	    <div class="col-md-6 col-md-offset-3">
+	         <div class="block-transparent">
+	             <div class="content">
+	                 <div class="text-center">
+	                     <p class="label label-success">{{states.msg}}</p>
+	                 </div>
+	             </div>
+	         </div>
+	     </div>
+	</div>
+    <div class="modal-body">
+			<table class="hover table-curved" display="none">
+			        <thead>
+			        <tr>
+			        	<th>
+			                Fecha
+			            </th>
+			            <th>
+			                Obs.
+			            </th>
+			            <th>
+			                Funcionario
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in caratula.resultados">
+			        		<td class="text-left">{{sol.fecha}}</td>
+			        		<td class="text-left">{{sol.observacion}}</td>
+			        		<td class="text-left">{{sol.funcionario}}</td>
+				        </tr>
+			        </tbody>
+			 </table>
+			<div ng-if="status && caratula.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay comentarios.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" name="buttonClose" id="buttonClose"  class="btn  btn-default btn-rad" loading-state="savingRehacerImagen" ng-click="close()" focus-input ="buttonCloseIsFocused">Cerrar</button>
+    	</div>
+
+</script>

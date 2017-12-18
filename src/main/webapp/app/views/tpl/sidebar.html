@@ -1,0 +1,40 @@
+
+<!-- Collapse Toggle -->
+<div class="cl-toggle"><i class="fa fa-reorder"></i></div>
+
+<!-- Menu Items -->
+<div class="cl-navblock">
+    <div class="menu-space">
+        <div class="content">
+
+            <ul class="cl-vnavigation">
+
+                <li ng-repeat="permiso in permisos" data-ng-class="{'selected':getClass(permiso.path), 'parent': permiso.subOpcionesDTO.length>0}" my-submenu>
+                    <a ng-if="!permiso.subOpcionesDTO ||permiso.subOpcionesDTO.length==0" ng-href="#{{permiso.path}}">
+                        <i class="fa {{permiso.icono}}" style="{{permiso.estilo}}"></i>
+                        <span>{{permiso.titulo | cut:false:20:'...'}}</span>
+                        <span class="ng-hide">{{permiso.titulo}}</span>
+                    </a>
+
+                    <a ng-if="permiso.subOpcionesDTO.length>0" href>
+                        <i class="fa {{permiso.icono}}"></i>
+                        <span>{{permiso.titulo | cut:false:20:'...'}}</span>
+                    </a>
+
+                    <ul ng-if="permiso.subOpcionesDTO.length>0" class="sub-menu">
+                        <li ng-repeat="subopcion in permiso.subOpcionesDTO">
+                            <a class="menu-hijo" ng-href="#{{subopcion.path}}">{{subopcion.titulo | cut:false:20:'...'}}</a>
+                        </li>
+                    </ul>
+
+
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+    <div class="text-right collapse-button" style="padding:7px 9px;">
+        <button id="sidebar-collapse" class="btn btn-default" style=""><i style="color:#fff;" class="fa fa-angle-left"></i></button>
+    </div>
+</div>

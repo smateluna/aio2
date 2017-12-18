@@ -1,0 +1,64 @@
+<script type="text/ng-template" id="modificaAnotacionModal.html">
+ <style>
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+  max-height: 300px;
+}
+</style>
+
+
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="closeAnotacion()">&times;</button>
+        <h3>Modificar Nota</h3>
+    </div>
+    <form role="form" name="aform" id="aform">
+        <div class="modal-body">
+           
+			<div class="form-group">
+				<div text-angular ng-model="anotacion.texto"></div>
+			</div>
+
+            <div class="form-group">
+               <div class="row">
+               <div class="col-md-12">
+                <label for="caratula" style="display: block;"> Carátula <span class="peque pull-right">Versión</span>
+                </label>
+                </div>
+              </div>
+           
+            <div class="row">
+               <div class="col-md-10">
+                  <input type="text" class="form-control" ng-model="anotacion.caratula" id="caratula" loading-state="savingAnotacion"
+                       name="caratula" placeholder="" maxlength="8" numbers-only="numbers-only" focus-input ="caratulaIsFocused" required="required">
+                </div>
+                <div class="col-md-2">
+				<input type="text" class="form-control" ng-model="anotacion.version" id="version" loading-state="savingAnotacion"
+                       name="version" placeholder="" maxlength="3" numbers-only="numbers-only">
+                  
+                 </div>
+              </div>
+
+            </div>
+
+            <div class="form-group" ng-if="anotacionStatus.error">
+                <div class="alert alert-danger">
+                    <strong>Problemas!</strong> Se ha detectado un problema. <span ng-if="anotacionStatus.msg">{{anotacionStatus.msg}}</span>
+                </div>
+            </div>
+
+            <div class="alert alert-success" ng-if="anotacionStatus.ok">
+                <strong>Éxito!</strong> Nota Actualizada correctamente.
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn  btn-default" loading-state="savingAnotacion" ng-click="closeAnotacion()">Cerrar</button>
+            <button type="submit" class="btn  btn-primary" data-loading-text="Modificando..." loading-state="savingAnotacion"  ng-disabled="aform.$invalid"
+                    ng-click="modificarAnotacion()">Modificar</button>
+        </div>
+    </form>
+</script>

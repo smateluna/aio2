@@ -1,0 +1,90 @@
+<div class="fixed-heading" ng-class="{shadowy: scroll > 20}"
+	scroll-position="scroll">
+
+	<div class="grid-container grid-parent">
+
+		<div class="global-secondary-nav" ng-app="myHeader">
+
+			<ul class="usuario">
+				<span ng-if="activoAtencion"> 
+					<span ng-if="indisponibilidad!='true'">
+						<li tooltip-placement="bottom">M&Oacute;DULO {{modulo}} : <span
+							class="text-disponible ng-scope" ng-if="moduloDisponible!='0'">
+								Disponible</span> <span class="text-ocupado ng-scope"
+							ng-if="moduloDisponible=='0'"> Ocupado</i></li>
+						<li class="mR-18 btn-atencion">
+
+							<!-- <div class="btn-group listadoUser" ng-if="moduloDisponible=='0'">
+						      <button class="btn btn-success btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> 
+						        <font color="#FFFFFF">Disponible <span class="caret"></span></font>
+						      </button>  
+						      <ul class="dropdown-menu" role="menu">
+							    <li style="margin-bottom: 5px;"><button class="btn btn-success btn-xs btn-rad" ng-click="callDisponible()">Fila</button></li>
+							    <li><button class="btn btn-success btn-xs btn-rad" ng-click="llamarCliente()">Llamar Cliente</button></li>
+							  </ul>
+						    </div> -->
+							<!-- <button ng-if="moduloDisponible!='0'" class="btn btn-success btn-xs btn-rad" type="button"
+								ng-click="callDisponible()" tooltip="Cambia a Disponible"
+								tooltip-placement="bottom">Disponible</button> -->
+							<button ng-if="moduloDisponible=='0'" class="btn btn-success btn-xs btn-rad" type="button"
+								ng-click="callDisponible()" tooltip="Cambia a Disponible"
+								tooltip-placement="bottom">Disponible</button>
+							<button ng-if="moduloDisponible!='0'" class="btn btn-success btn-xs btn-rad" type="button"
+								ng-click="callDisponible()" tooltip="Insistir"
+								tooltip-placement="bottom">Insistir</button> 
+							<button ng-if="moduloDisponible=='0'" class="btn btn-success btn-xs btn-rad ng-scope" type="button"
+								ng-click="llamarCliente()" tooltip="Llamar Cliente"
+								tooltip-placement="bottom" style='width:30px; height:25px'><span class="glyphicon glyphicon-user"></span></button>
+							<button class="btn btn-danger btn-xs btn-rad" type="button"
+								ng-click="callOcupado()" tooltip="Cambia a Ocupado"
+								tooltip-placement="bottom">Ocupado</button>
+					</button>
+					</li>
+
+				</span> 
+				<span ng-if="indisponibilidad=='true'">
+						<li><label class="label label-warning mR-18 ng-scope">Desconectado,
+								reconectando...</label></li>
+				</span> 
+				</span>
+				<li class="label-moduloUser">
+					<button type="button" class="btn btn-primary btn-xs btn-rad"
+						ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'"
+						ng-click="contarAtencionService()" tooltip="Nueva Atencion"
+						tooltip-placement="bottom">
+						<span class="glyphicon glyphicon-bullhorn"></span>
+					</button>
+
+					{{username}} <span ng-if="perfil"> [{{perfil}}] </span> </span> <a
+					ng-href="../login/logout.jsp" href="../login/logout.jsp"
+					ng-click=desconectar() tooltip="Salir" tooltip-placement="bottom"><i
+						class="fa fa-sign-out"></i> </a>
+				</li>
+
+			</ul>
+
+		</div>
+
+
+		<div ng-if="enModal=='true'" class="div-contador"
+			ng-click='callOcupado()'>
+			<div align="center">
+				<div class="label-number" ng-if="moduloDisponible=='2'">{{countdown}}</div>
+				<span class="text-caption" ng-if="moduloDisponible=='2'">Seleccione
+					cualquier parte de la pantalla para estar en modo ocupado</span> <span
+					class="text-caption" ng-if="moduloDisponible!=='2'">Ud. se
+					encuentra en la fila</span>
+			</div>
+		</div>
+
+		<div class="primary-heading">
+
+			<span ng-if="enModal!='true'">
+				<h1>
+					<i class="fa {{icono}}"></i> {{titulo}}
+				</h1>
+			</span>
+		</div>
+
+	</div>
+</div>

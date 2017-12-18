@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        Movimientos</div>
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed"  ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CAJA') >= 0 && data.status!=null && !anulada">
+        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openMovimientosModal()">
+            <span class="fa fa-plus"></span> Agregar caja
+        </button>
+    </div>
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <table class="table hover table-bordered">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Fecha/Hora</th>
+                <th class="estado-table-title">Sección</th>
+                <th class="estado-table-title">Responsable</th>
+                <th class="estado-table-title">Envía</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr ng-repeat="mov in data.res.caratulaDTO.movimientoDTOs" ng-class="{'danger':mov.seccionDTO.id==='63'}">
+                <td class="estado-table-td">{{mov.fecha}}</td>
+                <td class="estado-table-td">{{mov.seccionDTO.descripcion}}</td>
+                <td class="estado-table-td">{{mov.responsable.nombre}} {{mov.responsable.apellidoPaterno}}</td>
+                <td class="estado-table-td">{{mov.envia.nombre}} {{mov.envia.apellidoPaterno}}</td>
+            </tr>
+            <tr ng-if="!data.res.caratulaDTO.movimientoDTOs || data.res.caratulaDTO.movimientoDTOs.length===0">
+                <td colspan="4" class="estado-table-td text-center text-italic">No hay datos.</td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        Estado Actual</div>
+    	<div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['reingreso'] && data.status!=null && !anulada">
+	        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="reingresarCaratula()" > 
+	            <i class="fa fa-repeat"></i>  Reingresar
+	        </button>
+        </div>
+            	
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+        <form class="form-inline" role="form">
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Sección Actual</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.estadoActualDTO.seccionDTO.descripcion}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Fecha Actual</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.estadoActualDTO.fecha}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Descripción en Flujo</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-label-field">
+                                    <label class="label label-primary" ng-if="data.res.caratulaDTO.estadoActualDTO.descripcionEnFlujo==='En Proceso'">
+                                        En Proceso
+                                    </label>
+
+                                    <label class="label label-success" ng-if="data.res.caratulaDTO.estadoActualDTO.descripcionEnFlujo=='Finalizada'">
+                                       Finalizada
+                                    </label>
+
+                                    <label class="label label-danger" ng-if="data.res.caratulaDTO.estadoActualDTO.descripcionEnFlujo=='Rechazada'">
+                                        Rechazada
+                                    </label>
+                                    
+                                    <label class="label label-danger" ng-if="data.res.caratulaDTO.estadoActualDTO.descripcionEnFlujo=='Anulada'">
+                                        Anulada
+                                    </label>                                    
+
+                                </p>
+                            </div>
+                        </div>                       
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

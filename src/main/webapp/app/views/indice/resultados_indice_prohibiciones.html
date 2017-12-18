@@ -1,0 +1,128 @@
+<div class="table-responsive">
+	<div class="header">
+        <h3>Prohibiciones <small class="pull-right" ng-if="((busquedaIndice.foja!=null) && (busquedaIndice.numero!=null) && (busquedaIndice.ano!=null))"><label class="control-label"><input type="checkbox" class="icheck" ng-model="busquedaIndice.buscarPorInscricionProh" ng-i-check="" ng-change="buscarporregistro(1)"> Buscar Por Inscripcion Prohibiciones</label></small></h3>
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+           <th>
+                Foja Prop
+            </th>
+            <th>
+                Número Prop
+            </th>
+            <th>
+                Año Prop
+            </th>
+            <th class="text-center">
+                Ver
+            </th>
+            <th>
+                Foja Proh
+            </th>
+            <th>
+                Número Proh
+            </th>
+            <th>
+                Año Proh
+            </th>
+            <th class="text-center">
+                Ver
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Naturaleza
+            </th>
+            <th>
+                Tipo
+            </th>
+            
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+                Opciones
+            </th>
+           <!-- <th>
+
+            </th>-->
+            
+            
+        </tr>
+        </thead>
+        <!-- <tbody infinite-scroll='loadMoreProhibiciones()' infinite-scroll-distance='2'> -->
+        <tbody>
+	       <tr ng-repeat="sol in paginacionproh.filteredTodos" ng-class="{selected: sol.id == busquedaIndice.selectedRow}">
+        			<td class="text-left" id="{{sol.id}}">{{sol.foja}}</td>
+	         		<td class="text-left">{{sol.num}}</td>
+	         		<td class="text-left">{{sol.ano}}</td>
+	         		<td class="text-center">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagen(sol)" tooltip="Ver Inscripción de Propiedad" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                </td>
+	         		<td class="text-left">{{sol.fojaph}}</td>
+	         		<td class="text-left">{{sol.numph}}</td>
+	         		<td class="text-left">{{sol.anoph}}</td>
+	         		<td class="text-center">
+	                    <span ng-if="sol.tieneImagen===1 && sol.anoph>2000">
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagenProh(sol)" tooltip="Ver Inscripción de Prohibiciones" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                </td>
+	                <td class="text-left">
+	                	<span ng-if="sol.highlight.nombre" ng-bind-html="sol.highlight.nombre"></span>
+	                	<span ng-if="!sol.highlight.nombre">{{sol.nombre}}</span>
+	                </td>
+	                <td class="text-left">{{sol.naturaleza}}</td>
+	                <td class="text-left">{{sol.tipo}}</td>
+	                
+	                <td class="text-left" ng-show="busquedaIndice.conservadorelegido == null">
+					    <!-- Single button -->
+					    <div class="btn-group">
+					      <!--<button ng-click="openSolicitar(sol)" type="button" class="btn btn-primary btn-rad" ><i class="fa fa-plus"></i> Solicitar</button>
+					      -->
+					      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Solicitar <span class="caret"></span></button>
+					      <ul class="dropdown-menu" role="menu">
+						    <li><a href="" ng-click="openSolicitar(sol,'prop')"> Propiedad</a></li>
+						    <li><a href="" ng-click="openSolicitar(sol,'proh')"> Prohibicion</a></li>
+						    <li class="divider"></li>
+						    <li><a href="" ng-click="ticket(sol,'prop')"> Ticket Prop.</a></li>
+						    <li><a href="" ng-click="ticket(sol,'proh')"> Ticket Proh.</a></li>
+						  </ul>
+					    </div>
+	                </td>
+	                <!--<td class="text-center">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="masInfo(sol)">
+	                               <i class="fa fa-th-list"></i>
+	                           </button>
+	                    </span>
+	                </td>
+                
+        --></tr>
+        <tr>
+				<td colspan="12" class="text-center">
+					<pagination ng-model="paginacionproh.currentPage"
+						total-items="paginacionproh.todos.length"
+						max-size="paginacionproh.maxSize" boundary-links="true"
+						previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+						last-text="&raquo;">
+					</pagination>
+					
+					<button type="button"
+						class="pull-right btn btn-primary btn-sm btn-rad"
+						ng-click="colapsarnuevabusqueda()">
+						Nueva Busqueda
+					</button>
+				</td>
+			</tr>
+
+        </tbody>
+    </table>
+</div>
+</div>
+
+

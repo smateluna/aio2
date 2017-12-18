@@ -1,0 +1,45 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        Observaciones</div>
+	    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && data.status!=null && !anulada" >
+	<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openObservacionesModal()" >
+	            <i class="fa fa-comment"></i>  Agregar observaci&oacute;n
+	        </button>
+	    </div>        
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <table class="table hover table-bordered">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Fecha/Hora</th>
+                <th class="estado-table-title">Funcionario</th>
+                <th class="estado-table-title">Origen</th>
+                <th class="estado-table-title">Tipo</th>
+                <th class="estado-table-title">Categoria</th>
+                <th class="estado-table-title">Comentario</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="obs in data.res.caratulaDTO.bitacoraDTOs" ng-class="{'danger':  obs.idTipo===1}">
+                <td class="estado-table-td">{{obs.fecha}}</td>
+                <td class="estado-table-td">{{obs.funcionario.nombre}} {{obs.funcionario.apellidoPaterno}}</td>
+                <td class="estado-table-td">{{obs.descOrigen}}</td>
+                <td class="estado-table-td">{{obs.descTipo}} <span ng-if="obs.idCausal">/ {{obs.descCausal}}</span></td>
+                <td class="estado-table-td">
+                	<span ng-show="obs.categoria==0 && obs.categoria!=''">Interna</span>
+                	<span ng-show="obs.categoria==1 && obs.categoria!=''">Externa</span>
+                </td>
+                <td class="estado-table-td">{{obs.comentario}}</td>
+            </tr>
+
+            <tr ng-if="!data.res.caratulaDTO.bitacoraDTOs || data.res.caratulaDTO.bitacoraDTOs.length===0">
+                <td colspan="6" class="estado-table-td text-center text-italic">No hay observaciones.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

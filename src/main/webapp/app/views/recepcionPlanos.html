@@ -1,0 +1,139 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header username="{{userLogin}}" perfil="{{perfil}}" titulo="Recepci&oacute;n Planos" icono="fa fa-map-o"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form role="form" name="myform" id="myform">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">                                 
+                                     <button type="submit" class="btn  btn-primary" 
+                                    ng-click="ingresarPlano()" >Registrar prestamo</button>
+                                </div>                               
+                            </div>
+                        </div>
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+	    <ul class="nav nav-tabs">
+
+			<!-- Listado -->
+			<div class="table-responsive">
+				
+				<div class="header">
+			        <h3> Planos pendientes <small class="vertAM"><span class="badge ng-scope ng-binding">{{filtered.length}}</span></small>  </h3> 
+			    </div>
+			    
+			    <div class="header">
+			     <div class="row mt0">
+                     <div class="col-md-3 col-sm-3">
+			           <input ng-model='filterExpr' placeholder="Filtrar..." style="margin-top: 5px;" class="form-control">
+			         </div>
+			         
+                     <div class="col-md-4 col-sm-4" style="display: inline-flex;">      
+                        <button type="button" class="pull-right btn btn-primary btn-sm" ng-click="refrescar()" style="margin-left: 10px;" tooltip="Refrescar" tooltip-placement="top">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                     </div>  
+				     
+				  
+				  </div>
+				</div>
+				
+			   <br/>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th ng-class="recepcionPlanos.predicate == 'nombre' ? 'bgColor-th' : ''">
+			                Requirente <a ng-click="recepcionPlanos.predicate = 'requirente'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="recepcionPlanos.predicate == 'path' ? 'bgColor-th' : ''">
+			                Plano <a ng-click="recepcionPlanos.predicate = 'plano'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="recepcionPlanos.predicate == 'path' ? 'bgColor-th' : ''">
+			                Letra <a ng-click="recepcionPlanos.predicate = 'letra'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>	
+			            <th ng-class="recepcionPlanos.predicate == 'path' ? 'bgColor-th' : ''">
+			                Categor&iacute;a <a ng-click="recepcionPlanos.predicate = 'categoria'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>				            		            
+			            <th ng-class="recepcionPlanos.predicate == 'fechaRetiroL' ? 'bgColor-th' : ''">
+			                Fecha retiro <a ng-click="recepcionPlanos.predicate = 'fechaRetiroL'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="recepcionPlanos.predicate == 'path' ? 'bgColor-th' : ''">
+			                Observaci&oacute;n <a ng-click="recepcionPlanos.predicate = 'observacion'; recepcionPlanos.reverse = !recepcionPlanos.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>			            
+			            <th>
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in filtered = (recepcionPlanos.resultados | filter:filterExpr | orderBy:recepcionPlanos.predicate:recepcionPlanos.reverse)">
+				        		<td class="text-left">{{sol.requirente}}</td>
+				        		<td class="text-left">{{sol.numero}}</td>
+				        		<td class="text-left">{{sol.letra}}</td>
+				        		<td class="text-left">{{sol.categoria}}</td>
+				        		<td class="text-left">{{sol.fechaRetiro}}</td>
+				        		<td class="text-left">{{sol.observacion}}</td>
+				        		<td class="text-left"><a href="" ng-click="infoUsuarioModal(sol)" class="btn btn-primary btn-xs" tooltip="Información" tooltip-placement="top"><i class="fa fa-search"></i></a></td>
+				        </tr>
+			        </tbody>
+			    </table>
+			             <div class="footer"><button type="button" class="pull-right  btn btn-primary btn-sm mT-10 mB-5" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="top">
+                                      <i class="fa fa-refresh"></i>
+                                   </button>
+                         </div>
+			    <br>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="recepcionPlanos.data.status && recepcionPlanos.listaPendientes.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   			
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+
+
+<div ng-include="'views/recepcionPlanosModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

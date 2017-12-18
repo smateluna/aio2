@@ -1,0 +1,125 @@
+<div class="table-responsive">
+	<div class="header">
+        <h3>Hipotecas <small class="pull-right" ng-if="((busquedaIndice.foja!=null) && (busquedaIndice.numero!=null) && (busquedaIndice.ano!=null))"><label class="control-label"><input type="checkbox" class="icheck" ng-model="busquedaIndice.buscarPorInscricionHipo" ng-i-check="" ng-change="buscarporregistro(0)"> Buscar Por Inscripcion Hipoteca</label></small></h3> 
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+            <th>
+                Foja Prop
+            </th>
+            <th>
+                Número Prop
+            </th>
+            <th>
+                Año Prop
+            </th>
+            <th class="text-center">
+                Ver
+            </th>
+            <th>
+                Foja Hipo
+            </th>
+            <th>
+                Número Hipo
+            </th>
+            <th>
+                Año Hipo
+            </th>
+            <th class="text-center">
+                Ver
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Naturaleza
+            </th>
+            <th>
+                Tipo
+            </th>
+            
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+                Opciones
+            </th>
+           <!-- <th>
+
+            </th>-->
+        </tr>
+        </thead>
+        <!-- <tbody infinite-scroll='loadMoreHipoteca()' infinite-scroll-distance='2'> -->
+        <tbody>
+	       <tr ng-repeat="sol in paginacionhipo.filteredTodos" ng-class="{selected: sol.id == busquedaIndice.selectedRow}">
+        			<td class="text-left" id="{{sol.id}}">{{sol.foja}}</td>
+	         		<td class="text-left">{{sol.num}}</td>
+	         		<td class="text-left">{{sol.ano}}</td>
+	         		<td class="text-center">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagen(sol)" tooltip="Ver Inscripción de Propiedad" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                </td>
+	         		<td class="text-left">{{sol.fojah}}</td>
+	         		<td class="text-left">{{sol.numh}}</td>
+	         		<td class="text-left">{{sol.anoh}}</td>
+	         		<td class="text-center">
+	                    <span ng-if="sol.tieneImagen===1 && sol.anoh>2000">
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagenHipo(sol)" tooltip="Ver Inscripción de Hipoteca" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                </td>
+	                <td class="text-left">
+	                	<span ng-if="sol.highlight.nombre" ng-bind-html="sol.highlight.nombre"></span>
+	                	<span ng-if="!sol.highlight.nombre">{{sol.nombre}}</span>
+	                </td>
+	                <td class="text-left">{{sol.naturaleza}}</td>
+	                <td class="text-left">{{sol.tipo}}</td>
+	                
+	                <td class="text-left" ng-show="busquedaIndice.conservadorelegido == null">
+					    <!-- Single button -->
+					    <div class="btn-group">
+					      <!--<button ng-click="openSolicitar(sol)" type="button" class="btn btn-primary btn-rad" ><i class="fa fa-plus"></i> Solicitar</button>
+					      -->
+					      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Solicitar <span class="caret"></span></button>
+					      <ul class="dropdown-menu" role="menu">
+						    <li><a href="" ng-click="openSolicitar(sol,'prop')"> Propiedad</a></li>
+						    <li><a href="" ng-click="openSolicitar(sol,'hip')"> Hipoteca</a></li>
+						    <li class="divider"></li>
+						    <li><a href="" ng-click="ticket(sol,'prop')"> Ticket Prop.</a></li>
+						    <li><a href="" ng-click="ticket(sol,'hip')"> Ticket Hipo.</a></li>
+						  </ul>
+					    </div>
+	                </td>
+	                <!--<td class="text-center">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="masInfo(sol)">
+	                               <i class="fa fa-th-list"></i>
+	                           </button>
+	                    </span>
+	                </td>
+                
+        --></tr>
+			<tr>
+				<td colspan="12" class="text-center">
+					<pagination ng-model="paginacionhipo.currentPage"
+						total-items="paginacionhipo.todos.length"
+						max-size="paginacionhipo.maxSize" boundary-links="true"
+						previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+						last-text="&raquo;">
+					</pagination>
+					<button type="button"
+						class="pull-right btn btn-primary btn-sm btn-rad"
+						ng-click="colapsarnuevabusqueda()">
+						Nueva Busqueda
+					</button>
+				</td>
+			</tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+

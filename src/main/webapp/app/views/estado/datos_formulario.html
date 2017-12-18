@@ -1,0 +1,152 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+
+
+        Datos Formulario</div>
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && data.status!=null && !anulada">
+        <button type="button" class="btn btn-danger btn-xs btn-rad" ng-click="openRechazoModal()" ng-if="data.res.caratulaDTO.estadoActualDTO.descripcionEnFlujo==='En Proceso'">
+            <span class="fa fa-times"></span> Rechazar
+        </button>
+        <!-- <button type="button" class="btn btn-primary btn-xs btn-rad" data-toggle="modal" data-target="#cambiar-estado"> -->
+        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openDatosFormularioModal()" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_ESTADO') >= 0 && data.status!=null && !anulada"> 
+            <i class="fa fa-edit"></i>  Cambiar Estado
+        </button>
+    </div>
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+        <form class="form-inline" role="form">
+            <fieldset>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Fecha Ingreso</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.datosFormularioDTO.fechaIngreso}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Tipo de Formulario</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{data.res.caratulaDTO.datosFormularioDTO.tipoFormularioDTO.id}} - {{data.res.caratulaDTO.datosFormularioDTO.tipoFormularioDTO.descripcion}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Canal</label>
+
+
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    <!--<label class="label label-info" ng-if="data.res.caratulaDTO.datosFormularioDTO.canalDTO.id===2">-->
+                                        <!--<i class="fa fa-laptop"></i> Web-->
+                                    <!--</label>-->
+
+                                    <!--<label class="label label-warning" ng-if="data.res.caratulaDTO.datosFormularioDTO.canalDTO.id===1">-->
+                                        <!--<i class="fa fa-money"></i> Caja-->
+                                    <!--</label>-->
+
+                                    <span ng-if="data.res.caratulaDTO.datosFormularioDTO.canalDTO.id===1">CAJA</span>
+                                    <span ng-if="data.res.caratulaDTO.datosFormularioDTO.canalDTO.id===2">WEB</span>
+
+                                </p>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group form-group-estado" ng-if="data.res.caratulaDTO.datosFormularioDTO.usuarioCreador!=null">
+                            <label class="estado-title-field">Usuario Creador Pre-Caratula</label>
+
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+
+                                    {{data.res.caratulaDTO.datosFormularioDTO.usuarioCreador}}
+
+                                </p>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Valor Tasado</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.datosFormularioDTO.valorTasado | myCurrency}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Valor Pagado</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.datosFormularioDTO.valorPagado | myCurrency}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Valor Real</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.datosFormularioDTO.valorReal | myCurrency}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Diferencia</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field" ng-class="{'bgcolor-warning': data.res.caratulaDTO.datosFormularioDTO.diferencia &lt; 0}">
+                                    {{data.res.caratulaDTO.datosFormularioDTO.diferencia | myCurrency}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Estado</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+
+                                    <span ng-switch on="data.res.caratulaDTO.datosFormularioDTO.estado">
+
+                                        <span ng-switch-when="p">En Proceso</span>
+                                        <span ng-switch-when="d">Despachada</span>
+                                        <span ng-switch-when="w">Auditoría</span>
+                                        <span ng-switch-default>{{data.res.caratulaDTO.datosFormularioDTO.estado}}</span>
+
+                                    </span>
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Cliente Cuenta Corriente</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">{{data.res.caratulaDTO.datosFormularioDTO.clienteCuentaCorriente}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Código</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                      <span ng-switch on="data.res.caratulaDTO.datosFormularioDTO.codigo">
+
+                                        <span ng-switch-when="0"></span>
+                                        <span ng-switch-default>{{data.res.caratulaDTO.datosFormularioDTO.codigo}}</span>
+
+                                    </span>
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

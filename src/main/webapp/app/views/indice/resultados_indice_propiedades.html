@@ -1,0 +1,141 @@
+ <style type="text/css">
+.selectedResultado {
+  background-color: lightgreen;
+}
+ </style>
+<div class="table-responsive">
+	<div class="header">
+        <h3> Propiedad</h3>
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+        	<!--<th>
+                id
+            </th>
+            --><th>
+                Foja
+            </th>
+            <th>
+                Número
+            </th>
+            <th>
+                Año
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+                Dirección
+            </th>
+            <th>
+                Comuna
+            </th>
+            
+            <th>
+                Naturaleza
+            </th>
+            <th>
+                Tipo
+            </th>
+            <th class="text-center" ng-show="busquedaIndice.conservadorelegido == null">
+                Ver
+            </th>
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+                Opciones
+            </th>
+            <th ng-show="busquedaIndice.conservadorelegido == null">
+				Detalle
+            </th>
+        </tr>
+        </thead>
+        <!-- <tbody infinite-scroll='loadMorePropiedad()' infinite-scroll-distance='2'>  -->
+        <tbody>
+	        <!--<tr ng-repeat="sol in listaPropiedad.data" ng-class="{selected: (sol.id == busquedaIndice.selectedRow && busquedaIndice.conservadorelegido == null)}">-->
+	        <tr ng-repeat="sol in paginacion.filteredTodos" ng-class="{selected: (sol.id == busquedaIndice.selectedRow && busquedaIndice.conservadorelegido == null)}">
+					<!--<td class="text-left">{{sol.id}}</td>-->
+	         		<td class="text-left" id="{{sol.id}}">{{sol.foja}}</td>
+	         		<td class="text-left">{{sol.num}}</td>
+	         		<td class="text-left">{{sol.ano}}</td>
+	                <td class="text-left">
+	                	<span ng-if="sol.highlight.nombre" ng-bind-html="sol.highlight.nombre"></span>
+	                	<span ng-if="!sol.highlight.nombre">{{sol.nombre}}</span>
+	                </td>
+	                <td class="text-left" ng-show="busquedaIndice.conservadorelegido == null">
+	                	<span ng-if="sol.highlight.dir" ng-bind-html="sol.highlight.dir"></span>
+	                	<span ng-if="!sol.highlight.dir">{{sol.dir}}</span>
+	                </td>
+	                <td class="text-left"><span ng-if="sol.comuna.length!=0">{{sol.comuna}}</span></td>
+	                <td class="text-left">{{sol.naturaleza}}</td>
+	                <td class="text-left" ng-class="{selected: (sol.tipo == 'co' || sol.tipo == 'CO')}"><span ng-if="sol.tipo.length!=0">{{sol.tipo}}</span></td>
+	                <td class="text-center" ng-show="busquedaIndice.conservadorelegido == null">
+	                    <span>
+	                           <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTipoImagen(sol)" tooltip="Ver Inscripción de Propiedad" tooltip-placement="top">
+	                               <i class="fa fa-search"></i>
+	                           </button>
+	                    </span>
+	                    <!--  <span ng-if="sol.tieneImagen != 1"  ng-hide="sol.button_clicked">
+	                            <button type="button" class="btn btn-primary btn-xs btn-rad"
+	                                   ng-click="solicitar(sol)">
+									<i class="fa fa-book"></i><i class="fa fa-arrow-right"></i><i class="fa fa-camera"></i>
+								</button>
+	                     </span> 
+	                     <span ng-show="sol.button_clicked" class="label label-primary">Solicitada</span> -->
+	                </td>
+	                <td class="text-left" ng-show="busquedaIndice.conservadorelegido == null">
+					    <div class="btn-group">
+					      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Solicitar <span class="caret"></span></button>
+					      <ul class="dropdown-menu" role="menu">
+						    <li><a href="" ng-click="openSolicitar(sol,'prop')"> Crear Pre-Caratula</a></li>
+						    <li><a href="" ng-click="reingresar(sol,'Propiedad','1')"> Reingresar</a></li>
+						    <li class="divider"></li>
+						    <li><a href="" ng-click="ticket(sol,'prop')"> Ticket Prop.</a></li>
+						  </ul>
+					    </div>
+	                </td>
+				<td class="text-center"
+					ng-show="busquedaIndice.conservadorelegido == null">
+					<span>
+						<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="masInfo(sol)" tooltip="Ver Detalle" tooltip-placement="top">
+							<i class="fa fa-th-list"></i>
+						</button> </span>
+				</td>
+
+				<!--<h1>
+					Todos
+				</h1>
+				<h4>
+					{{todos.length}} total
+				</h4>
+				<ul>
+					<li ng-repeat="todo in paginacion.filteredTodos">
+						{{todo.foja}}
+					</li>
+				</ul>
+				-->
+			</tr>
+			<tr>
+				<td colspan="11" class="text-center">
+					<pagination ng-model="paginacion.currentPage"
+						total-items="paginacion.todos.length"
+						max-size="paginacion.maxSize" boundary-links="true"
+						previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+						last-text="&raquo;">
+					</pagination>
+
+					<button type="button"
+						class="pull-right btn btn-primary btn-sm btn-rad"
+						ng-click="colapsarnuevabusqueda()">
+						Nueva Busqueda
+					</button>
+				</td>
+				<a id="tablaprop"></a>
+				
+			</tr>
+        </tbody>
+    </table>
+	
+</div>
+<!-- </div> -->
+
+

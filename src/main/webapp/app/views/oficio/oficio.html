@@ -1,0 +1,293 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Búsqueda de Oficio" icono="fa fa-search"></my-header>
+
+
+
+<div class="row mt70">
+<div class="col-md-12">
+    
+  <div class="tab-container">
+
+    <div class="tab-content">
+	  <div class="row mt0">
+        <div class="col-md-12">
+        				<div align="right">
+						<span style="padding: 10px 30px;" class="colapsa unselectable" ng-if="busquedaOficio.busquedaOficio" ng-click="colapsar()"> 
+                            <i class="fa fa-chevron-up"></i> </span>
+						<span class="colapsa unselectable" style="padding: 10px 30px;"
+							ng-if="!busquedaOficio.busquedaOficio" ng-click="colapsar()"> <i
+							class="fa fa-chevron-down"></i> </span>
+                        </div>    
+							
+						<form role="form" name="myform" id="myform" ng-hide="busquedaOficio.indicebusqueda">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Carátula
+                                    </label>
+                                    <input type="text" numbers-only class="form-control" ng-class="{'error-field': myform.caratula.$error.caratula && !myform.caratula.$pristine}"
+                                           id="caratula" name="caratula" ng-model="busquedaOficio.caratula"
+                                           placeholder="Carátula" nombre-requirente destino="busquedaOficio" ng-enter="buscarOficio()">
+                                    <div class="error-message" ng-show="myform.caratula.$error.caratula && !myform.caratula.$pristine">
+                                        Error de Carátula
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Institución
+                                    </label>
+                                    <input autofocus type="text" class="form-control" ng-model="busquedaOficio.institucion"
+                                    	   autocomplete ui-items="suggest" ng-change="solrSuggester()"
+                                           id="institucion" name="institucion" focus-input="institucionIsFocused"
+                                           placeholder="Institución" maxlength="100" ng-enter="buscarOficio()">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-left">
+                                    <label class="control-label">Requirente</label>
+                                   <input autofocus type="text" class="form-control" ng-model="busquedaOficio.requirente"
+                                           id="requirente" name="requirente" focus-input="requirenteIsFocused"
+                                           placeholder="Requirente" maxlength="100" ng-enter="buscarOficio()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt0">
+                             <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-left">
+                                    <label class="control-label">Estado</label>
+					                <select class="form-control" id="estado" name="estado" ng-model="busquedaOficio.estado" ng-enter="buscarOficio()">
+					                	<option value=""></option>
+					                	<option value="En Proceso">En Proceso</option>
+					                	<option value="Despachada">Despachada</option>
+					                	<option value="Auditoria">Auditoria</option>
+					                	<option value="Rechazado">Rechazado</option>
+					                	<option value="Contabilidad">Contabilidad</option>
+					                </select>                                    
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-left">
+                                    <label class="control-label">Fecha Creación Desde</label>
+                                   <input type="date" class="form-control" ng-model="busquedaOficio.fechaCreacionDesde" max="{{fechahoy}}" placeholder="dd-MM-yyyy" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-left">
+                                    <label class="control-label">Fecha Creación Hasta</label>
+                                  <input type="date" class="form-control" ng-model="busquedaOficio.fechaCreacionHasta" max="{{fechahoy}}" placeholder="dd-MM-yyyy" enter-next="">
+                                </div>
+                            </div>
+                             <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Entrega
+                                    </label>
+                                    <input type="date" class="form-control" ng-model="busquedaOficio.fechaEntrega" max="{{fechahoy}}" placeholder="dd-MM-yyyy" enter-next="">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row mt0">
+                           <div class="col-md-6 col-sm-6">
+                               <div class="form-group">
+                                   <label class="control-label">Materia
+                                   </label>
+                                   <input autofocus type="text" class="form-control" ng-model="busquedaOficio.materia"
+                                          id="materia" name="materia" focus-input="materiaIsFocused"
+                                          placeholder="Materia" maxlength="100" ng-enter="buscarOficio()">
+                               </div>
+                           </div>
+                       
+                           <div class="col-md-6 col-sm-6">
+                               <div class="form-group">
+                                   <label class="control-label">Ciudad
+                                   </label>
+                                   <select class="form-control" ng-options="ciudad for ciudad in ciudades" id="ciudad" name="ciudad" ng-model="busquedaOficio.ciudad" ng-enter="buscarOficio()">
+                                	<option value=""></option>
+                                   </select>                                   
+                               </div>
+                           </div>
+                           
+                       </div>
+						
+                        
+                        
+                        <div class="row mt0" style="margin-bottom:30px">
+                          <div class="col-md-3 col-sm-3">
+                            <div class="form-group">
+                                    <label class="control-label">Rol
+                                    </label>
+                                    <input autofocus type="text" class="form-control" ng-model="busquedaOficio.rol"
+                                           id="rol" name="rol" focus-input="rolIsFocused"
+                                           placeholder="Rol" maxlength="100" ng-enter="buscarOficio()">
+                                </div>
+                             </div>
+                           <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Oficio</label>
+                                    <input autofocus type="text" class="form-control" ng-model="busquedaOficio.oficio"
+                                           id="oficio" name="oficio" focus-input="oficioIsFocused"
+                                           placeholder="Oficio" maxlength="100" ng-enter="buscarOficio()">
+                                </div>
+                           </div>   
+                           <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Identificador</label>
+                                    <input autofocus type="text" class="form-control" ng-model="busquedaOficio.identificador"
+                                           id="identificador" name="identificador" focus-input="identificadorIsFocused"
+                                           placeholder="Identificador" maxlength="100" ng-enter="buscarOficio()">
+                                </div>
+                           </div> 
+                           
+                           <div class="col-md-3 col-sm-3">
+                                <div class="form-group mT-38 inlineForm">
+                                    <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                                    <button type="submit" class="btn  btn-primary " ng-click="buscarOficio()" >Buscar</button>
+                                </div>
+                           </div>    
+                          </div>
+                         
+                    </form>
+     </div>                   
+   </div>
+	    
+	   
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   			
+   		  <div ng-if="busquedaOficio.data.status && busquedaOficio.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay resultados Oficio.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+            
+            <div class="table-responsive" ng-show="busquedaOficio.data.status && busquedaOficio.resultados.length>0">
+      <div class="header">
+		<label> Resultados de Búsqueda <small class="vertAM"><span class="badge">{{busquedaOficio.resultados.length}}</span></small> </label> 
+	  </div>
+      
+       <table class="hover table-curved">
+        <thead>
+          <tr>
+            <th ng-class="busquedaOficio.predicate == 'caratula' ? 'bgColor-th' : ''">
+              <span class="inlineForm">Carátula 
+                <a ng-click="busquedaOficio.predicate = 'caratula'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                  <i class="fa fa-sort"></i>
+                </a>
+               </span>
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'fechaCreacion' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Fecha Creación 
+                  <a ng-click="busquedaOficio.predicate = 'fechaCreacion'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                  <i class="fa fa-sort"></i></a>
+                </span>  
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'institucion' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Institución 
+                   <a ng-click="busquedaOficio.predicate = 'institucion'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                   <i class="fa fa-sort"></i></a>
+                </span>   
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'requirente' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Requirente 
+                   <a ng-click="busquedaOficio.predicate = 'requirente'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                   <i class="fa fa-sort"></i></a>
+                </span>   
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'rol' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Rol 
+                  <a ng-click="busquedaOficio.predicate = 'rol'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                  <i class="fa fa-sort"></i></a>
+                </span>  
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'caratula' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Oficio 
+                  <a ng-click="busquedaOficio.predicate = 'oficio'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                  <i class="fa fa-sort"></i></a>
+                 </span> 
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'identificador' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Identificador 
+                  <a ng-click="busquedaOficio.predicate = 'identificador'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                  <i class="fa fa-sort"></i></a>
+                </span>  
+            </th>
+            <th ng-class="busquedaOficio.predicate == 'estado' ? 'bgColor-th' : ''">
+            	<span class="inlineForm">Estado Carátula 
+                   <a ng-click="busquedaOficio.predicate = 'estado'; busquedaOficio.reverse = !busquedaOficio.reverse" href="">
+                   <i class="fa fa-sort"></i></a>
+                </span>   
+            </th>
+            
+          </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="sol in filtered = (paginacion.filteredTodos | orderBy:busquedaOficio.predicate:busquedaOficio.reverse)" ng-class="{selected: (sol.id == busquedaOficio.selectedRow)}">
+          <td id="{{sol.id}}"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
+	      <td>{{sol.fechaCreacion}}</td>
+          <td>
+           	<span ng-if="sol.highlight.institucion" ng-bind-html="sol.highlight.institucion"></span>
+           	<span ng-if="!sol.highlight.institucion">{{sol.institucion}}</span>          
+		  </td>	
+          <td>
+           	<span ng-if="sol.highlight.requirente" ng-bind-html="sol.highlight.requirente"></span>
+           	<span ng-if="!sol.highlight.requirente">{{sol.requirente}}</span>
+          </td>
+          <td>{{sol.rol}}</td>
+          <td>{{sol.oficio}}</td>
+          <td>{{sol.identificador}}</td>
+          <td>{{sol.estado}}</td>
+         
+         </tr>
+         <tr>
+			<td colspan="8" class="text-center">
+				<pagination ng-model="paginacion.currentPage"
+					total-items="paginacion.todos.length"
+					max-size="paginacion.maxSize" boundary-links="true"
+					previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+					last-text="&raquo;">
+				</pagination>
+
+				<button type="button"
+					class="pull-right btn btn-primary btn-sm btn-rad"
+					ng-click="colapsarnuevabusqueda()">
+					Nueva Busqueda
+				</button>
+			</td>
+			</tr> 
+        </tbody>
+        </table>
+            
+            </div>        
+    	</div>
+    	
+    	
+</div>
+
+
+</div>
+</div>
+
+<scroll-up></scroll-up>
+
+<div ng-include="'views/estadoIndiceModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>

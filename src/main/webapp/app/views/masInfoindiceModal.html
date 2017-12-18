@@ -1,0 +1,265 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="masInfoindiceModal.html">
+
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>&nbsp;</h3>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            <h4>Detalle Informacion foja: {{foja}} numero: {{numero}} año: {{ano}}</h4>
+            <br>
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading" ng-click="obtenerBorradores()">
+      					<h4 ng-class="totalBorradores>0 ? 'panel-title' : 'panel-title panel-title-off'">
+        					<a data-toggle="collapse" data-parent="#accordion" data-target="#borradores">
+							<div class="loader loader-xs" ng-show="totalBorradores==null"></div><span class="badge ng-scope ng-binding">{{totalBorradores}}</span> Borradores
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="borradores" class="panel-collapse collapse" ng-if="totalBorradores>0">
+      					<div class="panel-body"  style="height:200px;overflow:auto;">
+							<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Borrador
+            								</th>
+            								<th>
+                								Folio
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.borradores">
+	         									<!--<td class="text-left"><a href='http://prod01.conservador.cl/gpOnline/index.jsp?borrador={{sol.borrador}}&folio={{sol.folio}}' target='_new'><strong>{{sol.borrador}}</strong></a></td>-->
+													<td class="text-left"><a href ng-click="irGpOnlineAIO(sol.borrador,sol.folio)"><strong>{{sol.borrador}}</strong></a></td>
+													<td class="text-left">{{sol.folio}}</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading" ng-click="obtenerCaratulas(0)">
+      					<h4 ng-class="totalCaratulasEnProceso>0 ? 'panel-title' : 'panel-title panel-title-off'">
+        					<a data-toggle="collapse" data-parent="#accordion" data-target="#enproceso">
+          					<div class="loader loader-xs" ng-show="totalCaratulasEnProceso==null"></div><span class="badge ng-scope ng-binding">{{totalCaratulasEnProceso}}</span> Caratulas En proceso
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="enproceso" class="panel-collapse collapse" ng-if="totalCaratulasEnProceso>0">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+        					<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Caratula
+            								</th>
+											<th>
+                								Cod Form
+            								</th>
+											<th>
+                								Tipo Form
+            								</th>
+            								<th>
+                								Estado Actual
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.caratulasEnProceso">
+	         									<td class="text-left"><a href ng-click="verEstadoCaratula(sol.numerocaratula)"><strong>{{sol.numerocaratula}}</strong></a></td>
+												<td class="text-left">{{sol.codtipoform}}</td>			
+												<td class="text-left">{{sol.tipoform}}</td>
+												<td class="text-left">{{sol.estadoactual}}</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading" ng-click="obtenerCaratulas(1)">
+      					<h4 ng-class="totalCaratulasTerminadas>0 ? 'panel-title' : 'panel-title panel-title-off'">
+        					<a data-toggle="collapse" data-parent="#accordion" data-target="#terminadas">
+          					<div class="loader loader-xs" ng-show="totalCaratulasTerminadas==null"></div><span class="badge ng-scope ng-binding">{{totalCaratulasTerminadas}}</span> Caratulas Terminadas
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="terminadas" class="panel-collapse collapse" ng-if="totalCaratulasTerminadas>0">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+        					<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Caratula
+            								</th>
+            								<th>
+                								Cod Form
+            								</th>
+            								<th>
+                								Tipo Form
+            								</th>
+            								<th>
+                								Estado Actual
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.caratulasTerminadas">
+	         									<td class="text-left"><a href ng-click="verEstadoCaratula(sol.numerocaratula)"><strong>{{sol.numerocaratula}}</strong></a></td>
+												<td class="text-left">{{sol.codtipoform}}</td>
+												<td class="text-left">{{sol.tipoform}}</td>
+												<td class="text-left">{{sol.estadoactual}}</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading">
+      					<h4 ng-class="totalEscrituras>0 ? 'panel-title' : 'panel-title panel-title-off'">
+        					<a data-toggle="collapse" data-parent="#accordion" data-target="#escrituras" ng-if="caratula != ''">
+          						<div class="loader loader-xs" ng-show="totalEscrituras==null"></div><span class="badge ng-scope ng-binding">{{totalEscrituras}}</span> Escritura - Caratula {{caratula}}
+        					</a>
+							<a data-toggle="collapse" data-parent="#accordion" data-target="#escrituras" ng-if="caratula == ''">
+          						<div class="loader loader-xs" ng-show="totalEscrituras==null"></div><span class="badge ng-scope ng-binding">{{totalEscrituras}}</span> Escritura
+        					</a>
+      					</h4>
+    				</div>
+    				<div id="escrituras" class="panel-collapse collapse" ng-if="totalEscrituras>0">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+        					<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Escritura
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr>
+	         								<!--<td class="text-left"><a href='{{urlPdf}}' target='_new'><strong>Ver</strong></a></td>-->
+											<td class="text-left"><button ng-click="verEscritura(urlPdf)" type="button" class="btn btn-primary btn-rad">
+                            				 <i class="fa fa-search"></i></button>
+											</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>	
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading">
+      					<h4 ng-class="totalPlanos>0 ? 'panel-title' : 'panel-title panel-title-off'">
+        					<a data-toggle="collapse" data-parent="#accordion" data-target="#planos">
+          					<div class="loader loader-xs" ng-show="totalPlanos==null"></div><span class="badge ng-scope ng-binding">{{totalPlanos}}</span> Planos
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="planos" class="panel-collapse collapse" ng-if="totalPlanos>0">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+							<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Plano
+            								</th>
+            								<th>
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.planos">
+	         									<td class="text-left">{{sol.numeroPlano}}</td>
+												<td class="text-left"><a href='http://prod01.conservador.cl/PlanosWeb/index.jsp?plano={{sol.numeroPlano}}&categoria={{sol.idCategoria}}&op=1' target='_new'><i class="fa fa-camera"></i></a></td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+					</div>
+  				</div>
+			</div>		
+			<div class="panel-group" id="accordion">
+  				<div class="panel panel-default">
+    				<div class="panel-heading">
+      					<h4 ng-class="totalTitulosAnteriores>0 ? 'panel-title' : 'panel-title panel-title-off'">
+							<a data-toggle="collapse" data-parent="#accordion" data-target="#titulos">
+								<div class="loader loader-xs" ng-show="totalTitulosAnteriores==null"></div>
+          						<span class="badge ng-scope ng-binding" ng-if="totalTitulosAnteriores > 30">30 <i class="fa fa-chevron-right"></i></span>
+								<span class="badge ng-scope ng-binding" ng-if="totalTitulosAnteriores <= 30">{{totalTitulosAnteriores}}</span> Titulos Anteriores
+        					</a>
+        				</a>
+      					</h4>
+    				</div>
+    				<div id="titulos" class="panel-collapse collapse">
+      					<div class="panel-body" style="height:200px;overflow:auto;">
+        					<table class="hover table-curved">
+								<thead>
+        								<tr>
+            								<th>
+                								Foja
+            								</th>
+            								<th>
+												Numero	
+            								</th>
+											<th>
+                								Año
+            								</th>
+            								<th>
+												Bis	
+            								</th>
+											<th>
+												
+            								</th>
+										</tr>
+								</thead>
+        						<tbody>
+	        							<tr ng-repeat="sol in busquedaBorrador.titulosAnteriores">
+	         									<td class="text-left">{{sol.foja}}</td>
+												<td class="text-left">{{sol.numero}}</td>
+												<td class="text-left">{{sol.ano}}</td>
+												<td class="text-left"><i class="fa fa-check" ng-if="sol.bis!=0"></i></td>
+												<td class="text-center">
+	                    							<span>
+	                           								<button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="verTipoImagen(sol)">
+	                               								<i class="fa fa-search"></i>
+	                           								</button>
+	                    							</span>
+	                							</td>
+	        							</tr>
+        						</tbody>
+    						</table>
+      					</div>
+    				</div>
+  				</div>
+			</div>					
+
+        </div>
+
+
+    </div>
+
+
+    <div class="modal-footer">
+	
+	  <!--ejemplo-->
+      <!-- <div class="loader loader-xs"></div>-->
+	   <!--fin ejemplo-->
+	   
+	   <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

@@ -1,0 +1,341 @@
+<div ng-class="{'masked' : actualizandoAlgo}">
+
+    <div class="row row-title-dv">
+        <div class="col-md-12 no-padding">
+            <div class="page-head no-padding">
+                <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">×</button>
+
+                <div class="DV-registro-data">
+                        <span ng-switch="parametros.tipo">
+	                        <span ng-switch-when="1" class="label label-prop label-registro">Cartel</span>
+	                        <span ng-switch-when="0" class="label label-prop label-registro">Tomo</span>
+                        </span>
+                        
+                        <span ng-switch="parametros.registro">
+	                        <span ng-switch-when="1" class="label label-prop label-registro mLmenos2">Propiedad</span>
+	                        <span ng-switch-when="2" ng-if="aioParametros.sistema=='AIO AGUAS'" class="label label-hipo label-registro mLmenos2">Hipotecas y Prohibici&oacute;n</span>
+	                        <span ng-switch-when="2" ng-if="aioParametros.sistema!='AIO AGUAS'" class="label label-hipo label-registro mLmenos2">Hipoteca</span>
+	                        <span ng-switch-when="3" ng-if="aioParametros.sistema!='AIO AGUAS'" class="label label-proh label-registro mLmenos2">Prohibici&oacute;n</span>
+                        </span>
+                </div>
+
+
+                <h4 class="title-dv">
+                    Número {{parametros.numero}} 
+
+                                         <span ng-switch="parametros.mes" ng-if="aioParametros.sistema!='AIO AGUAS'">
+                                         	<span>- </span>
+                                            <span ng-switch-when="1">Enero</span>
+                                            <span ng-switch-when="2">Febrero</span>
+                                             <span ng-switch-when="3">Marzo</span>
+                                            <span ng-switch-when="4">Abril</span>
+                                            <span ng-switch-when="5">Mayo</span>
+                                            <span ng-switch-when="6">Junio</span>
+                                             <span ng-switch-when="7">Julio</span>
+                                            <span ng-switch-when="8">Agosto</span>
+                                             <span ng-switch-when="9">Septiembre</span>
+                                            <span ng-switch-when="10">Octubre</span>
+                                            <span ng-switch-when="11">Noviembre</span>
+                                            <span ng-switch-when="12">Diciembre</span>
+                                         </span>
+
+                    - Año {{parametros.ano}}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-dv-loading" ng-if="isLoading">
+        <div class="col-md-12">
+            <div id="loading" class="col-sm-12 text-center cargador-inscripcion">
+                <img src="../app/images/load-65.gif" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-dv" ng-if="!isLoading" >    	
+        <div class="columna-izquierda col-sm-2" >
+          <div ng-if="subPermisos['carteles'].indexOf('CERTIFICAR_CARTEL') >= 0">
+            <button class="btn btn-primary btn-sm btn-block margin-bottom-10 ml0" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==1" ng-click="irRehacer(estadoDocumento)">Rehacer</button>
+
+            <div class="panel-group accordion no-margin-bottom" >
+
+                <div class="panel panel-default" >
+                    <div class="panel-heading">
+                        <h4 class="panel-title padding-5" ng-if="!parametros.rehacer">
+                            Certificación
+                        </h4>
+                        <h4 class="panel-title padding-5" ng-if="parametros.rehacer">
+                            Rehacer
+                        </h4>
+                    </div>
+                    <div class="panel-collapse" >
+                        <div class="panel-body panel-body-dv-formulario">
+                            <form role="form" name="myform" id="myform">
+                                <div class="form-group" ng-if="!parametros.rehacer">
+                                    <label>Carátula</label>
+                                    <input class="form-control" ng-model="formulario.caratula" numbers-only="" maxlength="10" focus-input="caratulaIsFocused" enter-next="" required="">
+                                </div>
+                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label>Número</label>
+                                    <input class="form-control" ng-model="formulario.numero" numbers-only="" maxlength="10" enter-next="" required="">
+                                </div>
+<!--                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label>Mes</label>
+                                    <select class="form-control" ng-model="formulario.mes" enter-next="" required="" >
+                                        <option value="" disabled selected>Seleccione mes</option>
+                                        <option value="1">Enero</option>
+                                        <option value="2">Febrero</option>
+                                        <option value="3">Marzo</option>
+                                        <option value="4">Abril</option>
+                                        <option value="5">Mayo</option>
+                                        <option value="6">Junio</option>
+                                        <option value="7">Julio</option>
+                                        <option value="8">Agosto</option>
+                                        <option value="9">Septiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label>Año</label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="formulario.ano" name="ano"
+                                           maxlength="4" required="required" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only" enter-next="">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>-->
+                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label class="control-label">Bis</label>
+                                    <div class="checkbox mt0">
+                                        <input type="checkbox" class="icheck" ng-model="formulario.bis" ng-i-check="">
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label>Página desde</label>
+                                    <input class="form-control" ng-model="formulario.paginaDesde" maxlength="4" numbers-only="" enter-next="" required="">
+                                </div>
+                                <div class="form-group" ng-if="estadoDocumento.tipoArchivoDTO.tipoArchivo==0">
+                                    <label>Página hasta</label>
+                                    <input class="form-control" ng-model="formulario.paginaHasta" maxlength="4" numbers-only="" required="">
+                                </div>
+                                <button type="button" class="btn" ng-class="{'btn-default': myform.$invalid, 'btn-primary': !myform.$invalid}" ng-disabled="myform.$invalid" ng-click="certificarCartel()" ng-if="!parametros.rehacer">Certificar</button>
+
+                                <button type="button" class="btn" ng-class="{'btn-default': myform.$invalid, 'btn-primary': !myform.$invalid}" ng-disabled="myform.$invalid" ng-click="rehacer()" ng-if="parametros.rehacer">Rehacer</button>
+
+
+
+                                <button type="button" class="btn btn-default" ng-click="limpiarFormulario()">Limpiar</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-8">
+
+            <div class="block-flat">
+
+
+
+                <div class="content content-doc" ng-style="style()" resize-inscripcion="">
+
+                    <div class="tab-container">
+
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{'active': isActiveParent(1)}">
+                                <a style="padding-top: 2px; padding-bottom: 2px;" href ng-click="activateParent(1)">
+                                    Imagen
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" style="padding: 0px; border-top: 1px solid #ECECEC; margin-bottom: 0px">
+                            <div class="tab-pane tab-img" ng-class="{'active': isActiveParent(1)}" ng-show="isActiveParent(1)" ng-style="styleImagen()" resize-inscripcion="">
+                                <div class="">
+                                    <div class="panel-toolbar DV-toolbar">
+
+
+                                        <div class="font-12">
+
+                                            <button type="button" class="btn btn-default btn-xs " tooltip="Pág. inicio" tooltip-placement="top" dv-boton-page=""
+                                                    ng-model = "imagen.page"   data-actual="{{imagen.page}}"  data-direccion="inicio" data-total="{{estadoDocumento.cantidadPaginas}}">
+                                                <i class="fa fa-fast-backward"></i>
+                                            </button>
+
+                                            <button type="button" class="btn btn-default btn-xs " tooltip="Pág. anterior" tooltip-placement="top" dv-boton-page=""
+                                                    ng-model = "imagen.page" data-actual="{{imagen.page}}"   data-direccion="atras" data-total="{{estadoDocumento.cantidadPaginas}}"  style="margin-right: 20px">
+                                                <i class="fa fa-step-backward"></i>
+                                            </button>
+
+                                            Página
+
+                                            <input type="text" value="1" class="form-control" ng-model="imagen.page" dv-current-page="" numbers-only="" maxlength="4" style="display: inline-block; width: 50px; height: 23px; margin-left: 10px; font-size: 12px; margin-right: 10px;">
+
+                                            de {{estadoDocumento.cantidadPaginas}}
+
+                                            <button type="button" class="btn btn-default btn-xs " tooltip="Pág. siguiente" tooltip-placement="top" dv-boton-page=""
+                                                    ng-model = "imagen.page"   data-actual="{{imagen.page}}"  data-direccion="siguiente" data-total="{{estadoDocumento.cantidadPaginas}}" style="margin-left: 20px">
+                                                <i class="fa fa-step-forward"></i>
+                                            </button>
+
+                                            <button type="button" class="btn btn-default btn-xs " tooltip="Pág. final" tooltip-placement="top" dv-boton-page=""
+                                                    ng-model = "imagen.page"   data-actual="{{imagen.page}}"  data-direccion="final" data-total="{{estadoDocumento.cantidadPaginas}}">
+                                                <i class="fa fa-fast-forward"></i>
+                                            </button>
+                                        </div>
+
+
+
+
+
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="DV-doc" ng-style="styleImagenDOC()" resize-inscripcion=""  style="overflow: auto">
+
+
+                                    <div id="scrollbubble" scroll-bubble="">
+                                        <span id="scrollBubbleText"></span>
+
+                                    </div>
+
+
+
+                                    <div class="DV-set" ng-repeat="pagina in paginas track by $index" data-page="{{$index+1}}" style="margin-top: 10px; margin-bottom: 30px;"  bn-lazy-src="">
+
+                                        <input type="hidden" ng-model="imagen.page" waypoint=""/>
+
+                                        <div data-page="{{$index+1}}" class="DV-pageMeta DV-waypoint" id="hp{{$index+1}}">
+
+                                        <span class="DV-pageNumber wp" id="np{{$index+1}}" style="padding-top: 10px">
+                                            Cargando página {{$index+1}}
+                                            <span>
+                                                <img src="../app/images/load-14.gif" alt="" style="margin-left: 5px;">
+                                            </span>
+                                        </span>
+
+                                        </div>
+
+
+                                        <div class="DV-pageFrame">
+                                            <img data-page="{{$index+1}}" style="border-radius: 0; width: 95%; height: auto; padding: 0;" class="b-lazy img-thumbnail DV-page" src="../app/images/default-placeholder.png" data-src="{{pagina.url}}"/>
+                                        </div>
+
+
+                                        <div data-page="{{$index+1}}" class=""> </div>
+
+
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+        <div class="columna-notas col-sm-2">
+
+
+
+
+            <div class="panel-group accordion no-margin-bottom">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title padding-5">
+                            Certificados
+                        </h4>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body panel-body-dv-formulario">
+
+                            <div class="certificado-cartel-wrapper" ng-repeat="cert in certificados">
+                                <div class="anotacion-delete">
+                                    <button ng-click="eliminar($index, cert.idCertificado, cert.idReg)" class="btn btn-default btn-xs pull-right" tooltip="Eliminar certificado">
+                                        <i class="fa fa-times dv-icon-boton-remove"></i>
+                                    </button>
+                                </div>
+                                <div class="certificado-cartel-card">
+
+                                    <div class="certificado-cartel-title">Certificado</div>
+
+
+                                    <div class="text-center margin-bottom-10">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary  btn-xs" ng-click="verCertificado(cert.idCertificado, cert.idReg)">Ver</button>
+                                            <button class="btn btn-success  btn-xs" ng-click="firmar($index, cert.idCertificado, cert.idReg)">Firmar</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="certificado-cartel-field">Carátula: {{cert.caratula}}</div>
+                                    <div class="certificado-cartel-field">Número: {{cert.numero}}</div>
+                                    <div class="certificado-cartel-field" ng-if="aioParametros.sistema!='AIO AGUAS'">Mes:
+
+                                         <span ng-switch="cert.mes">
+                                            <span ng-switch-when="1">Enero</span>
+                                            <span ng-switch-when="2">Febrero</span>
+                                             <span ng-switch-when="3">Marzo</span>
+                                            <span ng-switch-when="4">Abril</span>
+                                            <span ng-switch-when="5">Mayo</span>
+                                            <span ng-switch-when="6">Junio</span>
+                                             <span ng-switch-when="7">Julio</span>
+                                            <span ng-switch-when="8">Agosto</span>
+                                             <span ng-switch-when="9">Septiembre</span>
+                                            <span ng-switch-when="10">Octubre</span>
+                                            <span ng-switch-when="11">Noviembre</span>
+                                            <span ng-switch-when="12">Diciembre</span>
+                                         </span>
+
+                                    </div>
+                                    <div class="certificado-cartel-field">Año: {{cert.ano}}</div>
+                                    <div class="certificado-cartel-field" ng-if="cert.bis">Bis: <span class="fa fa-check"></span>  </div>
+
+                                    <div class="certificado-cartel-field" ng-if="cert.tipo===0">Pág desde-hasta: {{cert.pdesde}}-{{cert.phasta}}</div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+</div>
+
+</div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/documentoModal.html'"></div>

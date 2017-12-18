@@ -1,0 +1,15 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="gpOnlineModal.html">
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancelModal()">×</button>
+	<h3>Borrador #{{borrador}} - Folio #{{folio}}</h3>
+</div>
+<div>
+  <gp-online simple-mode=true borrador={{borrador}} folio={{folio}}></gp-online>	
+</div>
+<div class="modal-footer">
+	<button class="btn btn-danger" ng-click="cancelModal()">Cerrar</button>
+</div>
+
+</script>

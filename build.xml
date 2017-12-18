@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AIO" default="Genera War" basedir=".">
+	<property file="build.properties" />
+	<path id="lib.classpath">
+		<fileset dir="${jboss.dir}/server/default/lib/" includes="**/*.jar" />
+		<fileset dir="${jboss.dir}/client/" includes="**/*.jar" />
+		<fileset dir="${jboss.dir}/common/lib/" includes="*.jar" />
+	</path>	
+  <target name="grunt">
+    <exec executable="buildgrunt.cmd" dir="${basedir}" failonerror="true" resultproperty="Batcherrorcode">
+    </exec>
+  </target>
+	
+	<target name="prepare">
+		<delete>
+			<fileset dir="${basedir}" includes="*jar" />
+		</delete>
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<target name="compile" depends="prepare">
+		<javac classpathref="lib.classpath" srcdir="${src.dir}" destdir="${bin.classes}" />
+	</target>
+	
+	<target name="Genera War" depends="compile, grunt">
+		<war destfile="${war.dir}/${war.name}" webxml="${web.inf.web}/web.xml">
+			<fileset dir="${web.root.name}"/>
+			<zipfileset dir="${src.dir}" prefix="WEB-INF/classes" includes="**/*.java" />			
+			<zipfileset dir="${web.root.name}" prefix="WEB-INF/classes" includes="*.ttf" />
+		</war>
+	</target>
+	
+	<target name="war-deploy" depends="Genera War">
+		<copy file="${build.dir}/war/${war.name}" todir="${deploy.dir}" />
+	</target>	
+	
+</project>

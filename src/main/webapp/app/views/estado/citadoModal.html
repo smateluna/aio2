@@ -1,0 +1,51 @@
+<script type="text/ng-template" id="citadoModal.html">
+	<form role="form" name="aform" id="aform">      
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Citado > <small class="color">Editar datos</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-6 col-xs-offset-3">
+               <div class="col-md-12">
+                <span>Registro</span>
+                  <!-- <span ng-if="data.res.caratulaDTO.citadoDTO.registroDTO!=null" ng-switch on="inscripcion.registroDTO.id">
+					<div ng-switch-when="1" class="myinput mytextfield">Propiedad</div>
+					<div ng-switch-when="2" class="myinput mytextfield">Hipotecas</div>
+					<div ng-switch-when="3" class="myinput mytextfield">Prohibiciones</div>
+					<div ng-switch-when="4" class="myinput mytextfield">Comercio</div>
+					<div ng-switch-when="5" class="myinput mytextfield">Aguas</div>
+                  </span> -->
+				  <span>
+				  	<select enter-next id="registro" name="registro" required="required" class="form-control" ng-model="inscripcion.registroDTO" ng-options="item.descripcion for item in listaRegistros track by item.id" focus-input="registroIsFocused"></select>
+				  </span>
+               </div>
+               <div class="col-md-12">
+                <span>Foja</span>
+                <input enter-next type="text" id="foja" name="foja" class="form-control" ng-model="inscripcion.foja" required="required" numbers-only="numbers-only"  autofocus="" focus-input="fojaIsFocused">
+               </div>
+               <div class="col-md-12">
+                <span>Número</span>
+                <input enter-next type="text" class="form-control" ng-model="inscripcion.numero" required="required" numbers-only="numbers-only">
+               </div>
+               <div class="col-md-12">
+                <span>Año</span>
+                    <input enter-next type="text" class="form-control" ng-model="inscripcion.ano" required="required" numbers-only="numbers-only">
+               </div>
+                <div class="col-md-12">
+                <span>Bis</span>
+                  <label>
+					<input ui-keypress="{13:'guardarDatosCitado()'}" type="checkbox" name="checkbox-bis" data-size="small" data-on-text="Si" data-off-text="No" ng-model="inscripcion.bis" ng-Checked="inscripcion.bis==1">
+				  </label>
+               </div>
+    </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="guardarDatosCitado()" ng-disabled="aform.$invalid">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+	</form>
+</script>

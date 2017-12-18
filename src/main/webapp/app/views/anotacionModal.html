@@ -1,0 +1,197 @@
+<script type="text/ng-template" id="anotacionModal.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="closeAnotacion()">&times;</button>
+        <h3>Agregar anotación</h3>
+    </div>
+    <form role="form" name="aform" id="aform">
+        <div class="modal-body modalForm">
+		<div ng-form="nuevaNotaForm">
+            <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <select class="form-control" ng-model="anotacion.selectedTipo" id="tipo" name="tipo" ng-options="tipo.nombreAnotacion for tipo in tipos track by tipo.valorAnotacion"
+                        ng-change="cambioTipo()" focus-input ="tipoIsFocused" loading-state="savingAnotacion">
+                </select>
+
+            </div>
+            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion==0">
+                <label for="texto">Texto</label>
+                <textarea class="form-control" rows="7" ng-model="anotacion.texto" id="texto" name="texto" focus-input ="textoIsFocused"
+                          loading-state="savingAnotacion" required="required"></textarea>
+            </div>
+
+            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+               <div class="row">
+               <div class="col-md-12">
+                <label for="caratula" style="display: block;"> Carátula <span class="peque pull-right">Versión</span>
+                </label>
+                </div>
+              </div>
+           
+            <div class="row">
+               <div class="col-md-10">
+                  <input type="text" class="form-control" ng-model="anotacion.caratula" id="caratula" loading-state="savingAnotacion"
+                       name="caratula" placeholder="" maxlength="8" numbers-only="numbers-only" focus-input ="caratulaIsFocused" required="required" ng-blur="getRepertorioCaratula()">
+                </div>
+                <div class="col-md-2">
+				<input type="text" class="form-control" ng-model="anotacion.version" id="version" loading-state="savingAnotacion"
+                       name="version" placeholder="" maxlength="3" numbers-only="numbers-only">
+                  
+                 </div>
+              </div>
+
+            </div>
+
+            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+                <label for="repertorio"> Repertorio
+                </label> <input type="text" class="form-control" ng-model="anotacion.repertorio" id="repertorio" loading-state="savingAnotacion"
+                                name="repertorio" placeholder="" maxlength="8" numbers-only="numbers-only" required="required">
+            </div>
+
+            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=3 && anotacion.selectedTipo.valorAnotacion!=4 && anotacion.selectedTipo.valorAnotacion!=11">
+                <label for="repertorio"> Texto Libre </label>
+                <textarea class="form-control" rows="2" ng-model="anotacion.texto" id="textoRep" name="textoRep" focus-input ="textoRepIsFocused"
+                          loading-state="savingAnotacion"></textarea> 
+            </div>
+
+            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+                <label for="fecha"> Fecha
+                </label> <input type="date" class="form-control" ng-model="anotacion.fecha" id="fecha" loading-state="savingAnotacion"
+                                name="repertorio" placeholder="" required="required">
+            </div>
+			
+			<div class="form-group">
+		   	  <label><input type="checkbox" ng-click="titulosanteriores()" ng-model="anotacion.anotacionMasiva" class="icheck"> Anotación Masiva</label> 
+			</div>
+		</div>
+			<div ng-if="anotacion.anotacionMasiva">
+
+			<p ng-if="loaders.titulosanteriores.isLoading" class="text-center">
+				Buscando Titulos Anteriores...
+			<br>
+			<img src="../app/images/load-18.gif" alt="" />
+			</p>
+				<div align="right" ng-show="!loaders.titulosanteriores.isLoading">
+				<button tooltip="Refrescar" type="button" class="btn btn-primary btn-xs"
+					ng-click="refrescarDocumentosInscripciones()" ng-disabled="enProceso">
+						<i class="fa fa-refresh"></i>
+				</button>
+				</div>
+                <div class="table-responsive maxHeigth200" ng-show="!loaders.titulosanteriores.isLoading">							
+								<table class="hover table-curved"
+									style="border-left: solid #ccc 1px !important;">
+									<thead>
+										<tr>
+											<th>
+												<input type="checkbox" class="icheckbox_square-blue"
+													ng-model="selectedAll" ng-click="checkAll()">
+											</th>
+											<th>
+												Foja
+											</th>
+											<th>
+												Número
+											</th>
+											<th>
+												Año
+											</th>
+											<th>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="titulo in titulos" ng-form="userFieldForm">
+											<td class="text-left">
+												 <span ng-if="titulo.idInscripcion!=''">
+												 <input type="checkbox" ng-change="selectTitulo(titulos)" class="icheck" ng-i-check="" ng-model="titulo.Selected" ng-disabled="titulo.vigente || titulo.estado.tieneRechazo">
+												 <img src="images/load-14.gif" alt="" ng-show="titulo.Selected && savingAnotacion">
+												 <i class="fa fa-times colorRed" ng-show="!titulo.flag && titulo.flag!=''"></i>
+												 <i class="fa fa-check colorGreen" ng-show="titulo.flag"></i>
+												 </span>	
+												<span ng-if="titulo.idInscripcion==''" class="label label-default">Sin imagen</span>
+											</td>
+											<td class="text-left">
+												{{titulo.foja}}
+											</td>
+											<td class="text-left">
+												{{titulo.numero}}
+											</td>
+											<td class="text-left">
+												{{titulo.anio}}												
+											</td>
+											<td class="text-left">
+												<button tooltip="Ver" ng-if="titulo.consultaDocumentoDTO.hayDocumento==true && titulo.consultaDocumentoDTO.tipoDocumento==8" type="button" class="btn btn-primary btn-xs"
+													ng-click="verInscripcion(titulo)"
+													ng-show="titulo.idInscripcion!=''">
+													<i class="fa fa-search"></i>
+												</button>
+												<span tooltip="Solicitar digitalizaci&oacute;n" ng-if="!titulo.consultaDocumentoDTO.hayDocumento && (titulo.estado && !titulo.estado.tieneRechazo)" type="button" class="btn btn-warning btn-xs"
+													ng-click="openSolicitar(titulo)"
+													ng-show="titulo.idInscripcion!=''">
+													<i class="fa fa-exclamation-triangle"></i>
+												</span>
+												<span tooltip="Tiene rechazo" ng-if="titulo.estado && titulo.estado.tieneRechazo" type="button" class="btn btn-danger btn-xs"
+													ng-click="openSolicitar(titulo)"
+													ng-show="titulo.idInscripcion!=''">
+													<i class="fa fa-minus-circle"></i>
+												</span>
+											</td>
+										</tr>
+										
+										
+										
+										<tr ng-form="nuevaInscripcionForm" ng-submit="agregarInscripcion()">
+											<td class="text-left">
+											</td>
+											<td class="text-left col-xs-3">
+												<input name="fojas" class="form-control" required type="number" enter-next="" ng-model="nuevaInscripcion.fojas" numbers-only="numbers-only" ng-minlength="1" ng-maxlength="6" />
+											</td>
+											<td class="text-left col-xs-3">
+												<input name="numero" class="form-control" required type="number" enter-next="" ng-model="nuevaInscripcion.numero" numbers-only="numbers-only" ng-maxlength="6" />
+											</td>
+											<td class="text-left col-xs-3">
+												<input type="number" class="form-control" required name="ano" form="nuevaInscripcionForm" ng-model="nuevaInscripcion.ano" 
+													ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"
+													ng-class="{'error-field': (nuevaInscripcionForm.ano.$error.archivoNacional || nuevaInscripcionForm.ano.$error.anoActual) && !nuevaInscripcionForm.ano.$pristine}" 
+													numbers-only="numbers-only" ng-minlength="4" ng-maxlength="4" maxlength="4" 
+													ng-enter="agregarInscripcion()"/>	
+                                    			<div class="error-message" ng-show="nuevaInscripcionForm.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        			Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    			</div>										
+											</td>
+											<td class="text-left">
+												<button type="button" class="btn btn-primary btn-xs" ng-click="agregarInscripcion()"
+													ng-disabled="nuevaInscripcionForm.$invalid">
+														<i class="fa fa-plus"></i>
+												</button>
+											</td>
+										</tr>
+																				
+									</tbody>
+								</table>
+						</div>  
+				  
+            </div>
+
+            <div class="form-group mT-10" ng-if="anotacionStatus.error">
+                <div class="alert alert-danger">
+                    <strong>Problemas!</strong> Se ha detectado un problema. <span ng-if="anotacionStatus.msg">{{anotacionStatus.msg}}</span>
+                </div>
+            </div>
+
+            <div class="alert alert-success" ng-if="anotacionStatus.ok">
+                <strong>Éxito!</strong> Anotación guardada correctamente.
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn  btn-default" loading-state="savingAnotacion" ng-click="closeAnotacion()">Cerrar</button>
+            <button type="submit" class="btn  btn-primary" data-loading-text="Guardando..." loading-state="savingAnotacion"  ng-disabled="nuevaNotaForm.$invalid || !puedeGuardar || enProceso"
+                    ng-click="guardaAnotacion()">Guardar</button>
+        </div>
+    </form>
+
+<div ng-include="'views/solicitarModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/digitalModal.html'"></div>
+</script>

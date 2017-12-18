@@ -1,0 +1,89 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="masInfoRepertorioModal.html">
+
+<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>&nbsp;</h3>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            	<!-- Listado -->
+			<div class="table-responsive" ng-if="resultadoDetalle.resultados.length>0 || (resultadoDetalle.data.status && resultadoDetalle.resultados.length===0)">
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th>
+			                Registro
+			            </th>
+			        	<th>
+			                Repertorio
+			            </th>
+			            <th>
+			                Caratula
+			            </th>
+			            <th>
+			                Inscripciones
+			            </th>
+			            <th>
+			                Nombre de archivo
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in resultadoDetalle.resultados">
+			        		<td class="text-left">
+								 	<span ng-switch="sol.registro">
+                        			<span ng-switch-when="Propiedad"><span class="label label-prop label-registro"><i class="fa fa-book"></i></span> Propiedad</span>
+                        			<span ng-switch-when="Prohibiciones"><span  class="label label-proh label-registro"> <i class="fa fa-book"></i></span> Prohibiciones</span>
+                        			<span ng-switch-when="Hipoteca"><span class="label label-hipo label-registro"> <i class="fa fa-book"></i></span> Hipoteca</span>
+							</td>
+			        		<td class="text-left">{{sol.repertorio}}</td>
+			        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)"><strong>{{sol.caratula}}</strong></a></td>
+			        		<td class="text-left">{{sol.inscripciones}}</td>
+			        		<td class="text-left">{{sol.nombreArchivo}}</td>
+				        </tr>
+			        </tbody>
+			    </table>
+			    <div ng-if="resultadoDetalle.data.status && resultadoDetalle.resultados.length===0" class="row mt35">
+			        <div class="col-md-6 col-md-offset-3">
+			                <div class="content">
+			                    <div class="text-center">
+			                    	<div class="i-circle primary"><i class="fa fa-info"></i></div>
+			                        <p>No se encontro repertorio.</p>
+			                    </div>
+			                </div>
+			        </div>
+		   		</div>
+				<br>
+			</div>
+			<!-- Fin Listado -->
+			
+
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>				
+			
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+	
+	  <!--ejemplo-->
+      <!-- <div class="loader loader-xs"></div>-->
+	   <!--fin ejemplo-->
+	   
+	   <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

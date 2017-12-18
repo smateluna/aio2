@@ -1,0 +1,63 @@
+
+    <div class="col-md-12">
+        <div class="block-flat block-border">
+            <button type="button" class="close close-resultado" ng-click="cerrarResultadoTitulo()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>
+            <div class="header">
+                <h4>Resultados Foja {{busquedaTitulo.data.req.foja}} Número {{busquedaTitulo.data.req.numero}} Año {{busquedaTitulo.data.req.ano}}
+                    <span ng-if="busquedaTitulo.data.req.bis">bis</span>
+                </h4>
+            </div>
+            <div class="content">
+                <div class="table-responsive mt20">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-right">Foja</th>
+                            <th class="text-right">Número</th>
+                            <th class="text-right">Año</th>
+                            <th class="text-center">Bis</th>
+                            <th class="text-center">Estado digitalización</th>
+                            <th class="text-center">Ver</th>
+                            <th class="text-center">
+                                    <input ng-if="busquedaTitulo.data.solicita" type="checkbox" class="mycheck" ng-change="seleccionarTodo()" ng-model="busquedaTitulo.checkTodo">
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-repeat="titulo in busquedaTitulo.resultados">
+                            <td class="text-right">{{titulo.foja}}</td>
+                            <td class="text-right">{{titulo.numero}}</td>
+                            <td class="text-right">{{titulo.ano}}</td>
+                            <td class="text-center">  <span ng-if="titulo.bis" class="fa fa-check"></span>  </td>
+                            <td class="text-center">
+                                <span ng-if="titulo.tipoDocumento===8" class="label label-success">Al día</span>
+                                <span ng-if="titulo.tipoDocumento===10 || titulo.tipoDocumento ===9" class="label label-info">Referencial</span>
+                                <span ng-if="!titulo.hayDocumento" class="label label-default">Sin imagen</span>
+                            </td>
+                            <td class="text-center">
+                                <span ng-if="titulo.hayDocumento">
+                                       <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verTitulo(titulo)">
+                                           <i class="fa fa-search"></i>
+                                       </button>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                 <span ng-if="titulo.tipoDocumento!=8">
+                                        <input ng-if="titulo.puedeSolicitar" type="checkbox" class="mycheck"
+                                               ng-model="busquedaTitulo.titulosSeleccionados[titulo.firma]" ng-change="seleccionaSingle(titulo.firma)">
+
+                                     <span ng-if="!titulo.puedeSolicitar" class="label label-primary">Solicitada</span>
+                                 </span>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-right" ng-if="busquedaTitulo.data.solicita">
+                        <button type="button" class="btn btn-primary  btn-rad mt15" tooltip="Click para solicitar inscripciones seleccionadas" tooltip-placement="left" ng-click="solicitarTodoTitulo()">Solicitar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

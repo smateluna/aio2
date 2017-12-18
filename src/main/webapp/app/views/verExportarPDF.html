@@ -1,0 +1,30 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="verExportarPDF.html">
+<div class="row row-custom">
+
+    <div class="col-md-12">
+
+        <div class="block-flat">
+            <div class="header bb0">
+                <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">x</button>
+                <h4>
+                   Estado Caratula en PDF
+                </h4>
+            </div>
+            <div class="content border-simple" ng-style="style()" resize-inscripcion>
+				<div ng-if="isLoading" id="loading" class="cargando">Obteniendo documento <img class="mtm3" src="../app/images/load-18.gif" alt=""/>
+                	<span class="mensajeLento" ng-bind-html="mensajeDemora"> </span>
+            	</div>
+
+                <iframe ng-src="{{urlPDF}}" width="100%" height="200%" my-load="myLoader"></iframe>
+            
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</script>

@@ -1,0 +1,73 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="documentosEntregaModal.html">
+    <div class="modal-header bb0">
+		<button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>Documentos Entrega</h3> 
+    </div>
+    <div class="modal-body pt0">
+	
+        <form class="form-inline" role="form" ng-if="data.res.entregaEnLineaDTO.estado===false">
+            <fieldset>
+
+                        <div class="form-control-static text-center bgcolor-warning">
+                            <p class="estado-transparent-field">
+                                <i class="fa fa-warning"></i>
+                                {{data.res.entregaEnLineaDTO.mensaje}}
+                            </p>
+                        </div>
+
+            </fieldset>
+        </form>
+        <table class="hover table-bordered" ng-if="data.res.entregaEnLineaDTO.estado">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Documento</th>
+                <th class="estado-table-title text-center">Descargar</th>
+				<th class="estado-table-title text-center">Estado</th>
+				<th class="estado-table-title text-center">No Vigente</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="doc in data.res.entregaEnLineaDTO.documentos">
+                <td class="estado-table-td">{{doc.tipoDocumentoDTO.descripcion}}</td>
+				<td class="estado-table-td text-center">
+
+                    <a class="btn btn-primary btn-xs btn-rad" ng-href="{{doc.url}}">
+                        <i class="fa fa-download"></i>
+                    </a>
+
+                </td>
+				<td class="estado-table-td">
+					<span ng-if="doc.vigente==1"><i class="fa fa-check"></i></span>
+					<span ng-if="doc.vigente==0"><i class="fa fa-times"></i></span>
+				</td>
+				<td class="estado-table-td text-center">
+
+                    <a class="btn btn-danger btn-xs btn-rad" ng-click="dejarDocumentoNoVigente(doc)">
+                        <i class="fa fa-times"></i>
+                    </a>
+
+                </td>
+            </tr>
+
+            <!--<tr ng-if="data.res.entregaEnLineaDTO.boleta">
+                <td class="estado-table-td">Boleta #{{data.res.entregaEnLineaDTO.boleta.numero}}</td>
+                <td class="estado-table-td text-center">
+                    <a class="btn btn-primary btn-xs btn-rad" ng-href="{{data.res.entregaEnLineaDTO.boleta.url}}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </td>
+            </tr>-->
+
+            <tr ng-if="!data.res.entregaEnLineaDTO.documentos || data.res.entregaEnLineaDTO.documentos.length===0">
+                <td colspan="2" class="estado-table-td text-center text-italic">No hay documentos.</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cerrar</button>
+</div>
+</script>

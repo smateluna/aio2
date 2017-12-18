@@ -1,0 +1,229 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Certificaci&oacute;n En Parte" icono="fa-check-circle"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row row-main-estado" scroll-bookmark>
+
+<div class="row mt0"> 
+ <div class="col-md-12" >
+   <div  class="panel-heading estado-barra caratula-fija">
+       <form role="form" name="myform" id="myform">
+            <input type="text" class="estado-buscar-field" ng-model="busquedaCertificacion.caratula" name="carátula" placeholder="caratula"
+                                           maxlength="8" numbers-only="numbers-only">
+            
+           <button type="submit" class="btn  btn-primary btn-sm" ng-click="buscarCaratulaFuera()" >Buscar</button>
+           
+       </form>
+    </div>
+  </div>
+ </div>   
+
+
+<div class="row mt0" ng-if="caratulafuera.status"> 
+   <div class="col-md-12" >
+     <div class="tab-container">
+        <div class="tab-content">
+	
+	       
+<!-- Listado -->
+			<div class="table-responsive">
+                <table class="hover table-curved" ng-show="caratulafuera.muestra">
+			        <thead>
+			        <tr>
+			        	<th>
+			                Carátula
+			            </th>
+			            <th>
+			                Tipo
+			            </th>
+			            <th>
+			                Sección
+			            </th>
+			            <th>
+			                Fecha Sección
+			            </th>
+			            <th>
+			                Usuario
+			            </th>
+			            <!--<th ng-if="subPermisos['certificacion'].indexOf('REDISTRIBUIR') >= 0 && data.status!=null>
+			            --><th class="text-center">
+			                Redistribuir
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr>
+			        		<td class="text-left">{{caratulafuera.caratula.numeroCaratula}}</td>
+			        		<td class="text-left">{{caratulafuera.caratula.tipoform}}</td>
+			        		<td class="text-left">{{caratulafuera.caratula.estadoactual}}</td>
+			        		<td class="text-left">{{caratulafuera.caratula.fechaseccion}}</td>
+			        		<td class="text-left">{{caratulafuera.caratula.usuarioactual}}</td>
+			        		<td class="text-center"><!-- 
+			        			<span ng-if="userLoginSinCBRS==='mfarfan'">
+                           			<button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="redistribuir(caratulafuera.caratula.numerocaratula)">
+                               			<i class="fa fa-retweet"></i>
+                           			</button>
+                    			</span>
+                    			<span ng-if="userLoginSinCBRS!='mfarfan'">
+                           			S/ Permiso
+                    			</span>
+                    			--><button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="redistribuirCaratula(caratulafuera.caratula)" tooltip="Redistribuir Car&aacute;tula" tooltip-placement="top">
+                               		    <i class="fa fa-retweet"></i>
+                           		</button>
+                    		</td>
+				        </tr>
+			        </tbody>
+			    </table>
+              </div>
+			    <div ng-if="!caratulafuera.muestra && caratulafuera.caratula!==null" class="row mt35">
+			        <div class="col-md-6 col-md-offset-3">
+			                <div class="content">
+			                    <div class="text-center">
+			                        <p>No se encontro carátula.</p>
+			                    </div>
+			                </div>
+			        </div>
+		   		</div>
+
+		</div>
+       </div>
+      </div>
+    </div>    	
+				
+				
+	<div class="row mt0"> 
+       <div class="col-md-12" >
+          <div class="tab-container">
+             <div class="tab-content">		
+				<div class="header">
+			        <h3> Carátulas Asignadas <small class="vertAM"><span class="badge ng-scope ng-binding">{{filtered.length}}</span></small> </h3> 
+			    </div>
+                
+                <div class="row mb10">
+                    <div class="col-md-3 col-sm-3">
+                       <input ng-model="filterExpr" placeholder="Filtrar..." class="form-control">
+                    </div>
+                    
+                    <div class="col-md-9 col-sm-9" align="right">   
+                      <button type="button" class="btn btn-primary btn-sm" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="bottom">
+                         <i class="fa fa-refresh"></i>
+                      </button>
+                    </div>
+                
+                
+                </div>
+                
+                
+			   
+                
+                
+			 <div class="table-responsive">  
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th ng-class="busquedaCertificacion.predicate == 'caratula' ? 'bgColor-th' : ''">
+			                Carátula <a ng-click="busquedaCertificacion.predicate = 'caratula'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'tipoFormulario' ? 'bgColor-th' : ''">
+			                Tipo <a ng-click="busquedaCertificacion.predicate = 'tipoFormulario'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'foja' ? 'bgColor-th' : ''" >
+			                Foja <a ng-click="busquedaCertificacion.predicate = 'foja'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'numero' ? 'bgColor-th' : ''">
+			                Número <a ng-click="busquedaCertificacion.predicate = 'numero'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'ano' ? 'bgColor-th' : ''">
+			                Año <a ng-click="busquedaCertificacion.predicate = 'ano'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'bis' ? 'bgColor-th' : ''">
+			                Bis <a ng-click="busquedaCertificacion.predicate = 'bis'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaCertificacion.predicate == 'fechaCreacion' ? 'bgColor-th' : ''">
+			                Fecha Sección <a ng-click="busquedaCertificacion.predicate = 'fechaCreacion'; busquedaCertificacion.reverse = !busquedaCertificacion.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th class="text-center">
+			                Doc.
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <!--<tr ng-repeat="sol in busquedaCertificacion.resultados | orderBy:predicate:reverse">
+				        --><tr ng-repeat="sol in filtered = (busquedaCertificacion.resultados | filter:filterExpr | orderBy:busquedaCertificacion.predicate:busquedaCertificacion.reverse)">
+				        		<td class="text-left">{{sol.caratula}}</td>
+				        		<td class="text-left">{{sol.tipoFormulario}}</td>
+				        		<td class="text-left">{{sol.foja}}</td>
+				        		<td class="text-left">{{sol.numero}}</td>
+				        		<td class="text-left">{{sol.ano}}</td>
+				        		<td class="text-center"><span ng-show="sol.bis===1"><i class="fa fa-check"></i></span></td>
+				        		<td class="text-left">{{sol.fechaCreacion}}</td>
+				        		<td class="text-center"> 
+				        			<span>
+	                           			<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verInscripcionCertificar(sol)" tooltip="Revisar y Certificar" tooltip-placement="top">
+	                               			<i class="fa fa-file-text-o"></i>
+	                           			</button>
+	                    			</span>
+	                    		</td>
+				        </tr>
+			        </tbody>
+			    </table>
+			</div>
+			<!-- Fin Listado -->
+			
+	
+   		
+   		<div ng-if="busquedaCertificacion.data.status && busquedaCertificacion.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay carátulas por certificar.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   		
+   		<div class="tab-pane">
+   			<div ng-if="busquedaCertificacion.resultados.length>listaPropiedad.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMorePropiedad()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                         
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>   
+                    </div>
+                </div>
+            </div>
+   		</div>	
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/indiceModal.html'"></div>
+<div ng-include="'views/solicitarIndiceModal.html'"></div>
+<div ng-include="'views/masInfoindiceModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

@@ -1,0 +1,29 @@
+<script type="text/ng-template" id="ingresaRutModal.html">
+<form role="form" name="aform" id="aform">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Informaciones > <small class="color">Nueva Atenci&oacute;n</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+                <span>Rut</span>
+                <input autofocus="true" type="text" class="form-control" ng-class="{'error-field': aform.rut.$error.rut && !aform.rut.$pristine}"
+                                           id="rut" name="rut" ng-model="req.rut"
+                                           focus-input ="rutIsFocused" placeholder="rut"  ng-rut rut-format ng-enter="agregarNuevaAtencion()">
+                                    <div class="error-message" ng-show="aform.rut.$error.rut && aform.rut.$dirty">
+                                        Rut no v&aacute;lido
+                                    </div>
+               </div>
+         </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="agregarNuevaAtencion()" ng-disabled="aform.$invalid">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+</form>
+</script>

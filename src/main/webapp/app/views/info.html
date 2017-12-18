@@ -1,0 +1,144 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Info AIO" icono="fa-users"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form role="form" name="myform" id="myform">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">                                 
+                                     <button type="submit" class="btn  btn-primary" 
+                                    ng-click="cacheAIO()" >Recargar cache AIO</button>
+                                </div>                               
+                            </div>
+                        </div>
+						
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+	    <ul class="nav nav-tabs">
+
+			<!-- Listado -->
+			<div class="table-responsive">
+				
+				<div class="header">
+			        <h3> Usuarios activos <small class="vertAM"><span class="badge ng-scope ng-binding">{{filtered.length}}</span> &nbsp;({{busquedaInfo.numeroSesiones}} sesiones)</small>  </h3> 
+			    </div>
+			    
+			    <div class="header">
+			     <div class="row mt0">
+                     <div class="col-md-3 col-sm-3">
+			           <input ng-model='filterExpr' placeholder="Filtrar..." style="margin-top: 5px;" class="form-control">
+			         </div>
+			         
+			         <div class="col-md-5 col-sm-5" align="right">				       
+                           <label style="margin-top: 6px;">Auto Refrescar:</label>
+                     </div>
+                     <div class="col-md-4 col-sm-4" style="display: inline-flex;">      
+                           <select class="form-control" id="tiemporefresco" name="tiemporefresco"
+                             ng-model="busquedaInfo.tiemporefresco">
+				        	<option value="0">
+				     		-- Nunca --
+				        	</option>
+				        	<option value="2">
+				     		2 minutos
+				        	</option>
+				        	<option value="5">
+					      	5 minutos
+				        	</option>
+				        </select>
+                        <button type="button" class="pull-right btn btn-primary btn-sm" ng-click="refrescar()" style="margin-left: 10px;" tooltip="Refrescar" tooltip-placement="top">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                     </div>  
+				     
+				  
+				  </div>
+				</div>
+				
+			   <br/>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			        	<th ng-class="busquedaInfo.predicate == 'nombre' ? 'bgColor-th' : ''">
+			                Usuario <a ng-click="busquedaInfo.predicate = 'nombre'; busquedaInfo.reverse = !busquedaInfo.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaInfo.predicate == 'path' ? 'bgColor-th' : ''">
+			                Path <a ng-click="busquedaInfo.predicate = 'path'; busquedaInfo.reverse = !busquedaInfo.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th ng-class="busquedaInfo.predicate == 'fechaUltimoAccesoL' ? 'bgColor-th' : ''">
+			                &Uacute;ltimo acceso <a ng-click="busquedaInfo.predicate = 'fechaUltimoAccesoL'; busquedaInfo.reverse = !busquedaInfo.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>
+			            <th>
+			            	Mas info
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in filtered = (busquedaInfo.resultados | filter:filterExpr | orderBy:busquedaInfo.predicate:busquedaInfo.reverse)">
+				        		<td class="text-left">{{sol.nombre}}</td>
+				        		<td class="text-left">{{sol.path}}</td>
+				        		<td class="text-left">{{sol.fechaUltimoAccesoL | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+				        		<td class="text-left"><a href="" ng-click="infoUsuarioModal(sol)" class="btn btn-primary btn-xs" tooltip="Información" tooltip-placement="top"><i class="fa fa-search"></i></a></td>
+				        </tr>
+			        </tbody>
+			    </table>
+			             <div class="footer"><button type="button" class="pull-right  btn btn-primary btn-sm mT-10 mB-5" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="top">
+                                      <i class="fa fa-refresh"></i>
+                                   </button>
+                         </div>
+			    <br>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="busquedaInfo.data.status && busquedaInfo.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   			
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+
+
+<div ng-include="'views/infoUsuarioModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

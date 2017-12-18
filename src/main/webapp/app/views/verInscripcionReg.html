@@ -1,0 +1,222 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<div class="row row-title-dv">
+	<div class="col-md-12 no-padding">
+		<div class="page-head no-padding">
+			<button type="button" class="close close-resultado ng-scope"
+				ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">
+				x
+			</button>
+
+			<div class="DV-registro-data">
+				<span ng-switch="parametros.registro"> <span
+					ng-switch-when="com" class="label label-com label-registro">Comercio</span>
+					<span ng-switch-when="prop" class="label label-prop label-registro">Propiedad</span>
+					<span ng-switch-when="proh" class="label label-proh label-registro">Prohibición</span>
+					<span ng-switch-when="hip" class="label label-hipo label-registro">Hipoteca</span>
+				</span>
+
+			</div>
+
+			<h4 class="title-dv">
+
+				Foja {{parametros.foja}} Número {{parametros.numero}} Año
+				{{parametros.agno}}
+				<span ng-if="parametros.bis"> Bis </span>
+
+			</h4>
+
+			
+
+		</div>
+	</div>
+</div>
+
+
+
+<div
+	ng-class="{'col-md-8':perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES','col-md-12':perfil!='DESARROLLO AIO' && perfil!='INFORMACIONES'}">
+
+	<div class="block-flat">
+		<div class="content border-simple" ng-style="style()"
+			resize-inscripcion>
+			<div ng-if="isLoading" id="loading" class="cargando">
+				Obteniendo documento
+				<img class="mtm3" src="../app/images/load-18.gif" alt="" />
+				<span class="mensajeLento" ng-bind-html="mensajeDemora"> </span>
+			</div>
+
+			<iframe ng-src="{{urlPDF}}" width="100%" height="99%"
+				my-load="myLoader"></iframe>
+
+		</div>
+
+	</div>
+
+
+</div>
+
+<div class="col-md-4" ng-show="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+    <ul class="nav nav-tabs">
+				<button type="button"
+					class="btn btn-primary btn-sm btn-rad btn-top-header pull-right"
+					ng-click="openSolicitar(parametros,parametros.registro)"
+					ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+					<i class="fa fa-plus"></i> Pre - Caratula
+				</button>
+
+				<button type="button"
+					class="btn btn-primary btn-sm btn-rad btn-top-header pull-right"
+					ng-click="ticket(parametros,parametros.registro)"
+					ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+					<i class="fa fa-plus"></i> Ticket
+				</button>
+			</ul>
+			
+	<div class="columna-notas">
+
+		<!-- comienza solicitud masiva pre-caratula -->
+		<div class="panel panel-default" style="border-radius: 0;"
+			ng-show="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+			<div class="panel-heading">
+				<h4 class="panel-title" style="padding: 5px;">
+					<div class="pull-left">
+						<i class="fa fa-file-o"></i>&nbsp;
+					</div>
+
+					Formulario PreCaratula
+
+				</h4>
+			</div>
+
+			<div>
+				<div class="panel-body-table-xs">
+
+					<div align="right"  ng-show="!loaders.titulosanteriores.isLoading">
+						<button type="button" class="btn btn-primary btn-xs"
+							ng-click="addRow()" tooltip="Agregar fila" >
+							<i class="fa fa-plus"></i>
+						</button>
+						<br>
+					</div>
+
+					<p ng-if="loaders.titulosanteriores.isLoading" class="text-center">
+						Buscando Titulos Anteriores...
+						<br>
+						<img src="../app/images/load-18.gif" alt="" />
+					</p>
+
+					<div class="table-responsive" ng-show="!loaders.titulosanteriores.isLoading">
+						<form role="form" name="myform" id="myform">
+						  <div class="divMaxHeight-800">
+							<table class="hover table-curved"
+								style="border-left: solid #ccc 1px !important;">
+								<thead>
+									<tr>
+										<th>
+											<input type="checkbox" class="icheckbox_square-blue"
+												ng-model="selectedAll" ng-click="checkAll()">
+										</th>
+										<th>
+											Foja
+										</th>
+										<th>
+											Número
+										</th>
+										<th>
+											Año
+										</th>
+										<th>
+											Quitar
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="titulo in titulos" ng-form="userFieldForm">
+										<td class="text-left">
+											<input type="checkbox" class="icheck" ng-i-check=""
+												ng-model="titulo.Selected" ng-disabled="titulo.vigente">
+										</td>
+										<td class="text-left">
+											<input type="text" class="form-control"
+												ng-model="titulo.foja" maxlength="6"
+												numbers-only="numbers-only" placeholder="foja" required="" ng-readonly="titulo.vigente">
+										</td>
+										<td class="text-left">
+											<input type="text" class="form-control"
+												ng-model="titulo.numero" maxlength="6"
+												numbers-only="numbers-only" placeholder="numero" required="" ng-readonly="titulo.vigente">
+										</td>
+										<td class="text-left">
+											<input type="text" class="form-control"
+												ng-model="titulo.anio" name="ano" placeholder="año"
+												minlength="4" maxlength="4"
+												ng-class="{'error-field': (userFieldForm.ano.$error.archivoNacional || userFieldForm.ano.$error.anoActual) && !userFieldForm.ano.$pristine}"
+												ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"
+												numbers-only="numbers-only" ng-readonly="titulo.vigente">
+											<div class="error-message"
+												ng-show="userFieldForm.ano.$error.archivoNacional && !userFieldForm.ano.$pristine">
+												Anterior a {{aioParametros.anoArchivoNacional}} debe ir a
+												Archivo Nacional
+											</div>
+											<div class="error-message"
+												ng-show="userFieldForm.ano.$error.anoActual && !userFieldForm.ano.$pristine">
+												No debe ser mayor al año actual
+											</div>
+										</td>
+										<td class="text-center" class="form-control" style="min-width: 78px;">
+											
+												<button type="button" class="btn btn-primary btn-xs"
+													ng-click="verInscripcionDesdePreCaratula(titulo)"
+													ng-show="titulo.foja && titulo.numero && titulo.anio">
+													<i class="fa fa-search"></i>
+												</button>
+												<button type="button" class="btn btn-danger btn-xs"
+													ng-click="removeRow(titulo)">
+													<i class="fa fa-trash-o"></i>
+												</button> 
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="panel-footer-table-x">
+				
+					<div class="btn-group">
+						<button class="btn btn-primary btn-xs btn-rad dropdown-toggle"
+							data-toggle="dropdown" ng-disabled="myform.$invalid">
+							Solicitar
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href=""
+									ng-click="solicitarPreCaratulaMasiva(parametros.registro)">
+									Pre-Caratula Masiva</a>
+							</li>
+							
+							<li>
+								<a href="" ng-click="ticketMasiva(parametros.registro)">
+									Ticket Masivo</a>
+							</li>
+						</ul>
+					</div>
+				
+				</form>
+			</div>
+		</div>
+
+		<!-- fin solicitud masiva pre - caratula -->
+
+
+
+	</div>
+</div>
+
+<div ng-include="'views/ticketInformacion.html'"></div>
+<div ng-include="'views/indiceModal.html'"></div>
+<div ng-include="'views/titulosanteriores.html'"></div>

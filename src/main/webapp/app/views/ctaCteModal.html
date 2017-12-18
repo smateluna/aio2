@@ -1,0 +1,97 @@
+<script type="text/ng-template" id="ctaCteModal.html">
+<form role="form" name="aform" id="aform">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Mantenedor Cuentas Corrientes > 
+			<small ng-if="ctaCte.codigo" class="color">Editar Cuenta Corriente</small>
+			<small ng-if="!ctaCte.codigo" class="color">Nueva Cuenta Corriente</small>
+		</h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Instituci&oacute;n</span>
+                <input type="text" name="institucion" id="institucion" maxlength="100" class="form-control" ng-class="{'error-field': aform.institucion.$error.required }" placeholder="nombre instituci&oacute;n" ng-model="ctaCte.institucion" required="required" autofocus="" focus-input ="institucionIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5">
+               <div class="col-md-12">
+                <span>Rut</span>
+                <input ng-rut rut-format type="text" name="rut" maxlength="12" id="rut" class="form-control" ng-class="{'error-field': (aform.rut.$error.rut) }" placeholder="rut" ng-model="ctaCte.rut" required="required"  focus-input ="rutIsFocused">
+               </div>
+         </div>
+          <div class="col-xs-3">
+               <div class="col-md-12">
+                <span>Tipo cta</span>
+                <input type="text" ng-pattern="/^(cc|sv)$/" name="tipo" id="tipo" maxlength="2" class="form-control" ng-class="{'error-field': aform.tipo.$error.required || aform.tipo.$error.pattern }" placeholder="cc o sv" ng-model="ctaCte.tipo" required="required"  focus-input ="tipoIsFocused">
+               </div>
+         </div>
+          <div class="col-xs-4">
+               <div class="col-md-12">
+                <span>Tel&eacute;fono</span>
+                <input type="text" name="telefono" numbers-only="" id="telefono" maxlength="28" class="form-control" placeholder="tel&eacute;fono" ng-model="ctaCte.telefono"  focus-input ="telefonoIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>E-Mail</span>
+                <input type="text" ng-pattern="/^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*;{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$/" name="email" id="email" maxlength="200" class="form-control" ng-class="{'error-field': aform.email.$error.required || aform.email.$error.pattern }" placeholder="e-mail" ng-model="ctaCte.email" required="required" focus-input="emailIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Encargado</span>
+                <input type="text" name="encargado" id="encargado" maxlength="50" class="form-control" ng-class="{'error-field': aform.encargado.$error.required }" placeholder="nombre encargado" ng-model="ctaCte.encargado" required="required" focus-input="encargadoIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Direcci&oacute;n</span>
+                <input type="text" name="direccion" id="direccion" maxlength="100" class="form-control" ng-class="{'error-field': aform.direccion.$error.required }" placeholder="direccion" ng-model="ctaCte.direccion" required="required" focus-input ="direccionIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Encargado Entrega</span>
+                <input type="text" name="encargadoEntrega" id="encargadoEntrega" maxlength="100" class="form-control" placeholder="nombre encargado entrega" ng-model="ctaCte.encargadoEntrega" focus-input ="encargadoEntregaIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Direcci&oacute;n Entrega</span>
+                <input type="text" name="direccionEntrega" id="DireccionEntrega" maxlength="100" class="form-control" placeholder="direcci&oacute;n entrega" ng-model="ctaCte.direccionEntrega" focus-input ="direccionEntregaIsFocused">
+               </div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-12">
+                <span>Boleta</span>
+                <input type="text" name="boleta" id="boleta" maxlength="100" class="form-control" ng-class="{'error-field': aform.boleta.$error.required }" placeholder="boleta" ng-model="ctaCte.boleta" required="required" focus-input ="boletaIsFocused">
+               </div>
+         </div>
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="guardarCtaCte()" ng-disabled="aform.$invalid">
+			<div ng-if="ctaCte.codigo">Actualizar</div>
+			<div ng-if="!ctaCte.codigo">Guardar</div>
+		</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+</form>
+</script>

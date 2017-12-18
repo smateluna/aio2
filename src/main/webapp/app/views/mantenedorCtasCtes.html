@@ -1,0 +1,100 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Mantenedor Cuentas Corrientes" icono="fa-cogs" id="header"></my-header>
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+<div class="table-responsive">
+	<div class="header">
+        <h3> Cuentas Corrientes 
+          <button type="button" class="pull-right btn  btn-primary btn-sm" ng-click="obtenerCtasCtes()" tooltip="Refrescar" tooltip-placement="bottom">
+              <i class="fa fa-refresh"></i>
+           </button>
+        </h3>       
+        <div class="header"><input ng-model='filterExpr' placeholder="Filtrar...">
+        	<small class="vertAM"><span class="badge ng-scope ng-binding">{{paginacion.todos.length}}</span></small>
+        </div>
+        <div align="right">
+	       	<button tooltip="Nueva cuenta corriente" type="button" class="btn btn-primary btn-sm btn-rad" ng-click="editarCtaCte(sol)">
+	               	<i class="fa fa-file-o"> Nueva</i>
+	        </button>
+        </div>
+        <br>
+
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+        	<th class="text-center">
+                C&oacute;digo
+            </th>
+            <th class="text-center">
+                Instituci&oacute;n
+            </th>
+            <th class="text-center">
+                Rut
+            </th>
+            <th class="text-center">
+            	Acci&oacute;n
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        	<tr ng-repeat="sol in filtered = (listaCtasCtes | orderBy: 'codigo' | filter:filterExpr | startFrom:(paginacion.currentPage-1)*paginacion.numPerPage | limitTo:paginacion.numPerPage)">
+	        		<td class="text-left">{{sol.codigo}}</td>
+	         		<td class="text-left">{{sol.institucion}}</td>
+	         		<td class="text-left">{{sol.rut | rut}}</td>
+				    <td class="text-left">
+						    <button tooltip="Editar" type="button" class="btn btn-primary btn-sm btn-rad" ng-click="editarCtaCte(sol)">
+                            	<i class="fa fa-edit"></i>
+                           	</button>
+					</td>  
+	        </tr>
+	        <tr>
+				<td colspan="11" class="text-center">
+					<pagination ng-model="paginacion.currentPage"
+						page="paginacion.currentPage"
+						total-items="paginacion.todos.length"
+						max-size="paginacion.maxSize" boundary-links="true"
+						previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+						last-text="&raquo;">
+					</pagination>
+				</td>
+				<a id="tablaprop"></a>
+			</tr>	        
+        </tbody>
+    </table>
+</div>			
+			
+			<div ng-if="busquedaUsuario.data.status && busquedaUsuario.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay usuarios.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   			
+		</div>	
+                    
+     </div>                   
+   </div>
+	    
+	   
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/ctaCteModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

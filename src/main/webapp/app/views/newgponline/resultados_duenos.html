@@ -1,0 +1,78 @@
+
+    <div class="col-md-12">
+        <div class="block-flat block-border">
+            <!--<button type="button" class="close close-resultado" ng-click="cerrarResultadoTitulo()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>-->
+            <div class="header header-D top0">
+                <h4><i class="fa fa-group"></i> Dueños <button type="button" class="btn btn-primary btn-xs btn-rad pull-right" ng-click="vertodoProp()" ng-hide="!busquedaGponline.tieneNoVigenteProp"><i class="fa fa-plus"></i> Mostrar todo</button></h4>
+            </div>
+            <div class="content">
+                <div class="table-responsive">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class=" ">Foja</th>
+                            <th class="text-right">Número</th>
+                            <th class="text-right">Año</th>
+                            <th class="text-center">Bis</th>
+                            <th class="text-center">Naturaleza</th>
+                            <th class="text-center">Vigente</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Nota Electrónica</th>
+                            <th class="text-center">Ver</th>
+                            <th class="text-center" ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">Solicitar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="titulo in busquedaGponline.duenyos" ng-hide="!titulo.vigente && !mostrar.mostrarInactivosProp">
+                            <td class="text-center">{{titulo.fojas}}</td>
+                            <td class="text-center">{{titulo.numero}}</td>
+                            <td class="text-center">{{titulo.anyo}}</td>
+                            <td class="text-center"><span ng-if="titulo.bis" class="fa fa-check"></span></td>
+                            <td class="text-center">{{titulo.naturaleza}}</td>
+                            <td class="text-center">	<span ng-if="titulo.vigente" class="fa fa-circle fa-circle-success"></span><span ng-if="!titulo.vigente" class="fa fa-circle fa-circle-danger"></span>	</td>
+                            <td class="text-right"> 
+								<ul class="listado">
+									<li ng-repeat="clientes in titulo.clientes">
+										<span ng-if="clientes.vigente" class="fa fa-circle fa-circle-success">
+	                            	</span>
+	                            	<span ng-if="!clientes.vigente" class="fa fa-circle fa-circle-danger">
+	                            	</span>
+	                            	<h7>{{clientes.nombres}}</h7>
+									</li>
+								</ul>
+							</td>
+							<td class="text-left"> 
+								<p class="text-justify" ng-repeat="clientes in titulo.listaNotas">-{{clientes.nota}}</p>
+							</td>
+							<td class="text-center">
+								<button type="button" class="btn btn-primary btn-xs btn-rad"
+									ng-click="verInscripcion(titulo,'prop')">
+									<i class="fa fa-search"></i>
+								</button>
+							</td>
+							<td class="text-center" ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+								<div class="btn-group">
+									<button class="btn btn-primary btn-sm btn-rad dropdown-toggle"
+										data-toggle="dropdown">
+										<i class="fa fa-plus"></i> Solicitar
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li>
+											<a href="" ng-click="openSolicitar(titulo,'prop')"> Crear
+												Pre-Caratula</a>
+										</li>
+										<li>
+											<a href="" ng-click="ticket(titulo,'prop')"> Ticket Prop.</a>
+										</li>
+									</ul>
+								</div>
+							</td>
+							
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

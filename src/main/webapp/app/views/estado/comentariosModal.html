@@ -1,0 +1,20 @@
+<script type="text/ng-template" id="comentariosModal.html">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Comentarios</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+				<span><i class="fa fa-exclamation-triangle"></i> Repertorio {{repertorio.numeroRepertorio}} <label class="label label-danger ng-scope">NO VIGENTE</label>. {{repertorio.observacion}} </span>
+               </div>
+         </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" name="buttonComenClose" id="buttonComenClose" class="btn btn-default" ng-click="cancel()" focus-input="buttonComenCloseIsFocused">Cancelar</button>
+      </div>
+</script>

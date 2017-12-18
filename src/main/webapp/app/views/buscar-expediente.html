@@ -1,0 +1,180 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}"  titulo="Estado" icono="fa fa-chevron-right"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification> 
+
+<div class="row mt70 ng-scope">
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form role="form" name="myform" id="myform" class="ng-pristine ng-invalid ng-invalid-required">
+						
+                        
+						<div class="row mt0">
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Carátula</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" name="caratula" placeholder="Carátula" autofocus="true">
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Feche desde</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" name="fecha" placeholder="Fecha desde" autofocus="true">
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha hasta</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" name="fecha" placeholder="Fecha hasta" autofocus="true">
+                                    <div class="error-message ng-hide" ng-show="myform.ano.$error.archivoNacional &amp;&amp; !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message ng-hide" ng-show="myform.ano.$error.anoActual &amp;&amp; !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+
+<div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Rol</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" name="rol" placeholder="Rol" autofocus="true">
+                                </div>
+			                </div>
+
+<div class="col-md-4 col-sm-4">
+                                <div class="form-group">
+		                            <label for="anoInscripcion">Juzgado</label>
+					                <select class="form-control ng-pristine ng-valid"> 
+        <option value="">1er. Juzgado de Santiago</option></select>
+			                	</div>
+			                </div>
+                            
+                            
+                        </div>
+                        <div class="row mt0">
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" placeholder="Fecha" autofocus="true">
+                                </div>
+			                </div>	
+			                
+			                <div class="col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Demandante</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" placeholder="Demandante" autofocus="true">
+                                </div>
+                            </div>
+
+<div class="col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Demandado</label>
+                                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required" placeholder="Demandante" autofocus="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20">
+                            <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                            <!-- <button type="button" class="btn  btn-default " ng-click="limpiarFnaTitulo()">Limpiar Foja, Número y Año</button> -->
+                            <button type="submit" class="btn  btn-primary " ng-disabled="myform.$invalid" ng-click="buscar()" disabled="disabled">Buscar</button>
+                        </div> 
+                    </form>
+     </div>                   
+   </div>
+
+
+<div class="row">
+        <div class="col-md-12">
+         <div class="table-responsive ng-scope">
+    <table class="hover table-curved">
+        <thead>
+        <tr>
+            <th># <span class="pull-right"><i class="fa fa-sort-desc"></i> </span>
+            </th>
+            <th>Carátula</th>
+            <th>Fecha Ingreso</th>
+            <th>Juzgado</th>
+            <th>Rol</th>
+
+            <th>Fecha</th>
+            <th>Demandante</th>
+            <th>Demandado</th>
+            <th>Ver documento</th>
+            
+            
+        </tr>
+        </thead>
+        <tbody class="ng-isolate-scope">
+  <tr class="ng-scope">
+    <td>1</td>
+    <td>5557784</td>
+    <td>15/03/2014</td>
+    <td>1er. Juzgado de Santiago</td>
+    <td>22456</td>
+    <td>11/05/2014</td>
+    <td>Jorge Parra</td>
+    <td>Daniela Lopez</td>
+    <td>
+  <button type="button" class="btn btn-primary btn-xs btn-rad">
+            <i class="fa fa-file-pdf-o"></i>
+        </button>
+  </td>
+  </tr>
+
+<tr class="ng-scope">
+    <td>2</td>
+    <td>5557784</td>
+    <td>15/03/2014</td>
+    <td>1er. Juzgado de Santiago</td>
+    <td>22456</td>
+    <td>11/05/2014</td>
+    <td>Jorge Parra</td>
+    <td>Daniela Lopez</td>
+    <td>
+  <button type="button" class="btn btn-primary btn-xs btn-rad">
+            <i class="fa fa-file-pdf-o"></i>
+        </button>
+  </td>
+  </tr>
+
+<tr class="ng-scope">
+    <td>3</td>
+    <td>5557784</td>
+    <td>15/03/2014</td>
+    <td>1er. Juzgado de Santiago</td>
+    <td>22456</td>
+    <td>11/05/2014</td>
+    <td>Jorge Parra</td>
+    <td>Daniela Lopez</td>
+    <td>
+  <button type="button" class="btn btn-primary btn-xs btn-rad">
+            <i class="fa fa-file-pdf-o"></i>
+        </button>
+  </td>
+  </tr>
+</tbody>
+    </table>
+</div>
+  </div>
+</div>  
+   		
+   		<!-- ngIf: states.buscar.isError -->
+   		
+   		<!-- ngIf: busquedaIndice.resultados.length>0 -->
+   
+   
+   		<!-- ngIf: busquedaIndice.data.status && busquedaIndice.resultados.length===0 -->
+</div>   
+		
+</div>
+</div>
+</div>
+
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   

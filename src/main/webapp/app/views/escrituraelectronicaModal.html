@@ -1,0 +1,43 @@
+<script type="text/ng-template" id="escrituraelectronicaModal.html">
+<form role="form" name="aform" id="aform">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Escritura Electronica> <small class="color">Obtener</small></h4>
+      </div>
+      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+               <div class="col-md-12">
+                <span>Caratula</span>
+                <input type="text" name="caratula" id="caratula" class="form-control" ng-model="escritura.caratula" required="required" autofocus="" focus-input ="caratulaIsFocused" enter-next/>
+               </div>
+               <div class="col-md-12">
+                <span>Notario</span>
+				<!--<select class="form-control" ng-model="escritura.notario" id="notario" name="notario" ng-options="notario.nombre for notario in listaNotarios" required="required">
+					<option value="">-- LISTA NOTARIOS --</option>
+                </select>-->
+				<input type="text" enter-next ng-model="escritura.notario" typeahead="notario as notario.nombre for notario in getListaNotarios($viewValue) | filter:$viewValue | limitTo:8" typeahead-wait-ms="500" typeahead-loading="cargandoNotarios" typeahead-min-length="3" class="form-control" required="required">
+               </div>
+               <div class="col-md-12">
+                <span>Cod Escritura</span>
+                <input type="text" name="codescritura" id="codescritura" class="form-control" ng-model="escritura.codescritura" required="required" />
+               </div>
+         </div>
+   
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="buscarDocumento()" ng-disabled="aform.$invalid">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+
+ 	  <div ng-if="solicitudStatus.ok">
+            <div class="alert alert-success mt15 mb0 alert-white rounded">
+                  <div class="icon"><i class="fa fa-check"></i></div>
+                            Escritura Obtenida.
+            </div>
+      </div>
+	
+</form>
+</script>

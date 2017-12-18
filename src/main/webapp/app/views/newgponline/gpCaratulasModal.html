@@ -1,0 +1,57 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="gpCaratulasModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		Caratulas
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            <h4>
+            	Borrador: {{busquedaGponline.borrador}} - Folio: {{busquedaGponline.folio}} 
+			</h4>
+					
+			<div class="content">
+                <div class="table-responsive mt20" ng-repeat="caratulasPorPropiedad in busquedaGponline.listaCaratulaPorPropiedad">
+					Fojas: {{caratulasPorPropiedad.fojas}} Numero: {{caratulasPorPropiedad.numero}} Año: {{caratulasPorPropiedad.anyo}} Bis: {{caratulasPorPropiedad.bis}}
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-left">Fecha Creacion</th>
+                            <th class="text-left">Caratula</th>
+                            <th class="text-left">Estado</th>
+                        </tr>
+                        </thead>
+                        <tr ng-repeat="caratulas in caratulasPorPropiedad.listaCaratulaPorPropiedad">
+                            <td class="text-right">{{caratulas.fechaCreacionCaratula}}</td>
+                            <td class="text-right"><a href ng-click="verEstadoCaratula(caratulas.numeroCaratula)"><strong>{{caratulas.numeroCaratula}}</strong></a></td>
+                            <td class="text-right">{{caratulas.estadoCaratula}}</td>
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+				<!--fin row-->
+
+			<div ng-if="busquedaGponline.listaCaratulaPorPropiedad.length===0" class="row mt35">
+    		   <div class="col-md-6 col-md-offset-3">
+    	    	   <div class="block-transparent">
+	            	   <div class="content">
+                   			<div class="text-center">
+                       			<div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       			<p>No hay caratulas.</p>
+                   			</div>
+               			</div>
+				    </div>
+       			</div>
+    		</div>
+	   </div>
+	   <!--fin bs-callout-->
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

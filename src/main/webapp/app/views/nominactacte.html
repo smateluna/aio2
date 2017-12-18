@@ -1,0 +1,155 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Nomina Cta Cte" icono="fa-list"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+				<form name="formctacte">
+						<div class="row mt0">
+                            <div class="col-md-3 col-md-offset-2 col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">N° Cuenta
+                                    </label>
+                                    <input type="text" class="form-control" id="cuenta" name="cuenta" ng-model="nominaCtaCte.cuenta" required="" enter-next="" focus-input="cuentaIsFocused" numbers-only="numbers-only"/>
+                                          
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Periodo
+                                    </label>
+                                    <input type="month" class="form-control" id="mes" name="mes" ng-model="nominaCtaCte.mes" required="" placeholder="MM-yyyy" enter-next=""/>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Tipo Cierre
+                                    </label>
+                                    <select class="form-control" id="estado" name="estado" ng-model="nominaCtaCte.estado" ng-options="estado as estado.descripcion for estado in nominaCtaCte.estados">
+					                	<option value="">Total</option>
+					                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20 mb10">
+                            <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                            <button class="btn  btn-primary " ng-click="refrescar()" ng-disabled="formctacte.$invalid">Buscar</button>
+                        </div> 
+						
+                    </form>
+     </div>  
+     	<br>                 
+   </div>
+
+	    <ul class="nav nav-tabs" ng-show="nominaCtaCte.resultados.length>0">
+
+			<!-- Listado -->
+			<div class="table-responsive" >
+				
+				<div class="header">
+			        <h3> Periódo {{nominaCtaCte.fechaInicioCierre}} al {{nominaCtaCte.fechaFinCierre}} Carátulas <small class="vertAM"><span class="badge ng-scope ng-binding">{{nominaCtaCte.resultados.length}}</span></small> </h3>
+			        <h5>
+						 Total a Pagar {{nominaCtaCte.total | myCurrency}}<br>
+  						 <span ng-if="nominaCtaCte.estado.codigo!=0">Boleta #{{nominaCtaCte.numeroBoleta}} 
+  						 		<a class="btn btn-primary btn-xs btn-rad" ng-click="downloadBoleta()">
+                        			<i class="fa fa-download"></i>
+			                    </a>				                    
+                    	</span>
+                    	 <button type="button" class="pull-right btn  btn-primary btn-xs"  ng-if="nominaCtaCte.resultados.length>0"
+                          ng-click="exportarNominaExcel()" ><i class="fa fa-file-excel-o"></i></button>
+					</h5> 
+			    </div>
+			    <div class="header"><input ng-model='filterExpr' placeholder="Filtrar..."></div>
+			    <br>
+				<table class="hover table-curved">
+			        <thead>
+			        <tr>
+			            <th >
+			                Carátula
+			            </th>
+			            <th >
+			                Monto 
+			            </th>
+			            <th >
+			                Fecha Cierre 
+			            </th>
+			            <th >
+			                Observación 
+			            </th>
+			            
+			        </tr>
+			        </thead>
+			        <tbody>
+				       <tr ng-repeat="sol in filtered = (nominaCtaCte.resultados | filter:filterExpr | startFrom:(paginacion.currentPage-1)*paginacion.numPerPage | limitTo:paginacion.numPerPage)" >
+				        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
+				        		<td class="text-left">{{sol.monto | myCurrency}}</td>
+				        		<td class="text-left">{{sol.fechacierre}}</td>
+				        		<td class="text-left">{{sol.obs}}</td>
+				        </tr>
+				        <tr>
+							<td colspan="11" class="text-center">
+								<pagination ng-model="paginacion.currentPage"
+									page="paginacion.currentPage"
+									total-items="paginacion.todos.length"
+									max-size="paginacion.maxSize" boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+									last-text="&raquo;">
+								</pagination>
+							</td>
+							<a id="tablaprop"></a>
+						</tr>
+			        </tbody>
+			    </table>
+			</div>
+			<!-- Fin Listado -->
+							
+			
+		</ul>
+   		
+   		<div ng-if="nominaCtaCte.data.status && nominaCtaCte.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay datos.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+</div>    
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>   
+<div ng-include="'views/estadoIndiceModal.html'"></div>

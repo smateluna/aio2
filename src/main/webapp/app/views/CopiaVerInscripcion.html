@@ -1,0 +1,57 @@
+<div class="fixed-heading" ng-class="{shadowy: scroll > 10}" scroll-position="scroll">
+
+    <div class="grid-container grid-parent">
+        <div class="primary-heading">
+
+            <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left" style="font-size: 30px;">×</button>
+            <h4 style="color: #384047; font-weight: bold; margin-top: 8px; margin-bottom: 8px;">
+
+                    <span ng-switch="parametros.registro">
+                        <span ng-switch-when="com" class="label label-com label-registro">Comercio</span>
+                        <span ng-switch-when="prop" class="label label-prop label-registro">Propiedad</span>
+                        <span ng-switch-when="proh" class="label label-proh label-registro">Prohibición</span>
+                        <span ng-switch-when="hip" class="label label-hipo label-registro">Hipoteca</span>
+                    </span>
+                     <span ng-switch="parametros.estado">
+                        <span ng-switch-when="2" class="label label-info label-registro" tooltip="No está al día, el documento puede haber tenido modificaciones o notas desde que se digitalizó" tooltip-placement="bottom">Referencial</span>
+                        <span ng-switch-when="3" class="label label-success label-registro" tooltip="Documento más reciente" tooltip-placement="bottom">Al día</span>
+                    </span>
+
+                Foja {{parametros.foja}} Número {{parametros.numero}} Año {{parametros.ano}}
+
+                    <span ng-if="parametros.bis">
+                        Bis
+                    </span>
+
+            </h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div ng-if="isLoading"  id="loading" class="col-sm-12 text-center cargador-inscripcion">
+        <img src="../app/images/load-65.gif" alt="">
+    </div>
+
+    <div class="col-sm-12 DV-doc" ng-if="data.status">
+        <div class="DV-set" ng-repeat="pagina in paginas" style="margin-top: 35px; margin-bottom: 35px;">
+
+            <div class="DV-pageMeta">
+
+                <span class="DV-pageNumber">Página {{$index+1}}</span>
+
+            </div>
+
+
+            <div class="DV-pageFrame">
+                <img style="border-radius: 0; width: 70%; height: auto; padding: 0;" class="img-thumbnail DV-page" bn-lazy-src="{{pagina.url}}"/>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+

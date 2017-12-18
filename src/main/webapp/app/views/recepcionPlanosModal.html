@@ -1,0 +1,146 @@
+<script type="text/ng-template" id="recepcionPlanosModal.html">
+
+<div class="panel panel-default">
+	<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Recepci&oacute;n Planos > <small class="color">Agregar plano</small></h4>
+    </div>
+
+    <div class="panel-body estado-content-padding" ng-hide="area.collapsed">
+        <form name="myForm" class="form-inline" role="form" ng-submit="buscarRequirente()" novalidate>
+            <fieldset class="fieldset-Bode">
+				<legend class="mBmenos2">
+					Datos Requirente
+				</legend>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Rut</label>
+                                    <input autofocus="true" type="text" class="form-control" ng-class="{'error-field': myForm.rut.$error.rut && !myForm.rut.$pristine}"
+                                           id="rut" name="rut" ng-model="plano.rut"
+                                           focus-input ="rutIsFocused" placeholder="rut"  ng-rut rut-format >
+                                    <div class="error-message" ng-show="myForm.rut.$error.rut && myForm.rut.$dirty">
+                                        Rut no v&aacute;lido
+                                    </div>                                                        
+                        </div>
+                        <div class="form-group form-group-estado" style="margin-top: 30px !important;">
+							<button class="btn btn-primary btn-sm btn-rad" ng-disabled="myForm.$invalid" type="submit">Buscar</button>
+							<button class="btn btn-primary btn-sm btn-rad" ng-click="limpiar()" type="button">Limpiar</button>
+						</div>
+
+					</div>
+				</div>
+				<div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Nombres o Raz&oacute;n Social</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.nombre}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Paterno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.apep}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Apellido Materno</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.apem}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-estado">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Email</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.correo}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Tel&eacute;fono</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.telefono}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-estado">
+                            <label class="estado-title-field">Direcci&oacute;n</label>
+                            <div class="form-control-static">
+                                <p class="estado-display-field">
+                                    {{dataRequirente.direccion}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>
+        </form>
+
+		<br />
+        <fieldset class="fieldset-Bode">
+			<legend class="mBmenos2">
+				Datos Plano
+			</legend>
+       	 	<div class="row">
+          		<div class="col-xs-5">
+               		<div class="col-md-12">
+                		<span>N&uacute;mero</span>
+                		<input numbers-only type="text" name="numero" maxlength="6" id="numero" class="form-control" ng-class="{'error-field': (aform.rut.$error.numero) }" placeholder="n&uacute;mero" ng-model="plano.numero" required="required"  focus-input ="numeroIsFocused">
+               		</div>
+         		</div>
+          		<div class="col-xs-3">
+               		<div class="col-md-12">
+                		<span>Letra</span>
+                		<input type="text" name="letra" id="letra" maxlength="100" class="form-control" ng-class="{'error-field': aform.letra.$error.required }" placeholder="letra" ng-model="plano.letra" required="required"  focus-input ="letraIsFocused">
+               		</div>
+         		</div>
+          		<div class="col-xs-4">
+               		<div class="col-md-12">
+                		<span>Categor&iacute;a</span>
+				 			<select class="form-control" id="categoria" name="categoria" ng-model="plano.categoria">
+				        		<option value="Ley 19.537">Ley 19.537</option>
+				        		<option value="Ley 6.071">Ley 6.071</option>
+								<option value="Subdivisi&oacute;n">Subdivisi&oacute;n</option>
+				        	</select>
+               		</div>
+         		</div>
+        	</div>
+		</fieldset>
+
+		<br />
+        <fieldset class="fieldset-Bode">
+			<legend class="mBmenos2">
+				Observaciones
+			</legend>
+        	<div class="row">
+          		<div class="col-xs-12">
+               		<div class="col-md-12">
+                	<textarea rows="6" name="observacion" maxlength="500" id="observacion" class="form-control" ng-model="plano.observacion" focus-input ="observacionIsFocused">
+               		</div>
+         		</div>
+        	</div>
+		</fieldset>
+
+
+
+    </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="guardar()" ng-disabled="aform.$invalid">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>        
+      </div>
+</div>
+</script>

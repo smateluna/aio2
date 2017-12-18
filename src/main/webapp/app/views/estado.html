@@ -1,0 +1,42 @@
+<div>
+<my-header ng-if="!req.simpleMode" en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" perfiles="{{perfiles}}" titulo="Estado" icono="fa fa-chevron-right"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification> 
+
+
+<div ng-class="!req.simpleMode?'row row-main-estado':'row'">
+
+     <div ng-if="!req.simpleMode" class="panel-heading estado-barra caratula-fija">
+         <form name="myForm" ng-submit="buscar()" novalidate>
+             <input type="text" maxlength="10" placeholder="carátula" class="estado-buscar-field"
+                    ng-model="req.numeroCaratula" name="numeroCaratula" id="numeroCaratula" required="" numbers-only="" focus-input="numeroCaratulaIsFocused" auto-select/>
+             <button class="btn btn-primary btn-sm btn-rad" ng-disabled="myForm.$invalid" type="submit">Buscar</button>
+             <button class="btn btn-primary btn-sm btn-rad" type="button" ng-click="abrirCaratulasPorRutModal()">Busqueda Por Rut</button>
+             <button ng-if="data.status" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="limpiar()">Nueva búsqueda</button>
+             <button ng-if="data.status && data.res!=null" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="exportarPDF()" >Exportar a PDF</button>
+         <button ng-if="data.status && data.res!=null && documentos.terminada!=null" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verDocumentoTerminado()">Caratula Terminada PDF</button>    
+         </form>
+         
+     </div>
+
+    <div ui-sortable="sortableOptions" id="screen-{{$index}}"  class="col-sm-6 apps-container" ng-model="screen" ng-repeat="screen in rawScreens">
+        <div ng-repeat="area in screen" ng-include="area.url"></div>
+    </div>
+</div>
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/rechazoCertificacionModal.html'"></div>
+
+<div ng-include="'views/estado/datos_formularioModal.html'"></div>
+<div ng-include="'views/estado/requirenteModal.html'"></div>
+<div ng-include="'views/estado/citadoModal.html'"></div>
+<div ng-include="'views/estado/movimientosModal.html'"></div>
+<div ng-include="'views/estado/tareasModal.html'"></div>
+<div ng-include="'views/estado/caratulasPorRutModal.html'"></div>
+<div ng-include="'views/estado/observacionesModal.html'"></div>
+<div ng-include="'views/estado/documentos_entregaModal.html'"></div>
+<div ng-include="'views/verExportarPDF.html'"></div>
+<div ng-include="'views/estado/comentariosModal.html'"></div>
+</div>

@@ -1,0 +1,204 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Distribución" icono="fa-code-fork"></my-header>
+
+<div class="row mt70">
+    <div class="col-sm-3">
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-heading-aio">
+                Carátula
+            </div>
+            <div class="panel-body estado-content-padding">
+                <form role="form">
+                    <fieldset>
+                        <div class="row row-estado">
+                            <div class="col-sm-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="formulario.numero" id="numero" name="numero" placeholder="número" maxlength="8" focus-input="numeroIsFocused" required="required" numbers-only="numbers-only" auto-select>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" style="margin-left: 0" ng-click="buscarCaratula()">Agregar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-heading-aio">
+                Datos carátula {{caratula.datosFormularioDTO.numeroCaratula}}
+            </div>
+            <div class="panel-body estado-content-padding">
+                <form class="form-inline" role="form">
+                    <fieldset>
+                        <div class="row row-estado">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Fecha Ingreso</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.datosFormularioDTO.fechaIngreso | date: 'dd/MM/yyyy HH:mm:ss'}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Tipo de Formulario</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.datosFormularioDTO.tipoFormularioDTO.id}} -
+                                            {{caratula.datosFormularioDTO.tipoFormularioDTO.descripcion}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Canal</label>
+
+
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            <label class="label label-info" ng-if="caratula.datosFormularioDTO.canalDTO.id===2">
+                                            <i class="fa fa-laptop"></i> Web
+                                            </label>
+
+                                            <label class="label label-warning" ng-if="caratula.datosFormularioDTO.canalDTO.id===1">
+                                            <i class="fa fa-money"></i> Caja
+                                            </label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-estado">
+                            <div class="col-sm-12">
+                                <div class="panel-heading panel-heading-aio" style="border-bottom: 1px solid #ccc; color: #333;">
+                                    Requirente
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-estado">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Rut</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.rut}}-{{caratula.requirenteDTO.dv}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Nombres o Razón Social</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.nombres}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Apellido Paterno</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.apellidoPaterno}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Apellido Materno</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.apellidoMaterno}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-estado">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Email</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.email}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Dirección</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.direccion}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-estado">
+                                    <label class="estado-title-field">Teléfono</label>
+                                    <div class="form-control-static">
+                                        <p class="estado-display-field">
+                                            {{caratula.requirenteDTO.telefono}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt20">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading panel-heading-aio">
+                Carátulas a distribuir
+
+            </div>
+            <div class="panel-body estado-content-padding">
+                <table class="table table-striped table-hover table-td13px">
+                    <thead>
+                    <tr>
+                        <th>N° Carátula</th>
+                        <th>Última sección</th>
+                        <th>Fecha movimiento</th>
+                        <th class="text-center">Eliminar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="c in caratulas" ng-click="selectCaratula(c)" ng-class="{'info': isSelected(c.datosFormularioDTO.numeroCaratula)}">
+                        <td>{{c.datosFormularioDTO.numeroCaratula}}</td>
+                        <td>{{c.estadoActualDTO.seccionDTO.descripcion}}</td>
+                        <td>{{c.estadoActualDTO.fecha | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                        <td class="text-center">  <button ng-click="eliminar($index, c)" class="btn btn-danger btn-sm"> <i class="fa fa-trash-o"></i> </button> </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="row" ng-if="caratulas && caratulas.length>0">
+                   <div class="col-md-12"> 
+                    <div class="col-md-3 col-xs-offset-6">
+                        <span>Sección</span>
+                        <select class="form-control" ng-model="formulario.seccion" ng-options="seccion.descripcion for seccion in secciones"></select>
+                    </div>
+
+                    <div class="col-md-2 top-19x">
+                        <button class="btn btn-primary" ng-click="distribuir()" ng-disabled="!formulario.seccion.codigo">Distribuir Carátulas</button>
+                    </div>
+                  
+				  </div>
+               </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'views/distribucionModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>

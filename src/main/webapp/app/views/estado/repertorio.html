@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-aio handle unselectable">
+        <span ng-include="'views/estado/tools.html'">
+
+        </span>
+
+        <div class="loader loader-xs" ng-show="data.status && !data.statusRepertorios"></div> Repertorios 
+    </div>
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <table class="hover table-bordered">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Fecha</th>
+                <th class="estado-table-title">N° Repertorio</th>
+                <th class="estado-table-title">Año</th>
+                <th class="estado-table-title">Vigencia</th>
+                <th class="estado-table-title">Observación</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="repertorio in data.res.caratulaDTO.repertorioDTOs">
+                <td class="estado-table-td">{{repertorio.fechaIngreso}}</td>
+                <td class="estado-table-td">{{repertorio.numeroRepertorio}}</td>
+                <td class="estado-table-td">{{repertorio.ano}}</td>
+                <td class="estado-table-td">
+ 					<label class="label label-success ng-scope" ng-if="repertorio.vigente!=0">
+                        VIGENTE
+                     </label>
+                     <label class="label label-danger ng-scope" ng-if="repertorio.vigente==0">
+                        NO VIGENTE
+                     </label>
+                </td>
+                <td class="estado-table-td">{{repertorio.observacion}}</td>
+            </tr>
+            <tr ng-if="!data.res.caratulaDTO.repertorioDTOs || data.res.caratulaDTO.repertorioDTOs.length===0">
+                <td colspan="5" class="estado-table-td text-center text-italic">No hay Repertorios</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

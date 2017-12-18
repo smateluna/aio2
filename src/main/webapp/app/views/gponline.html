@@ -1,0 +1,365 @@
+<my-header ng-if="!req.simpleMode" en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="GP Online" icono="fa-list-alt"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div ng-class="!req.simpleMode?'row mt70':'row'">
+<div class="col-md-12">
+<div class="tab-container">
+<ul class="nav nav-tabs" ng-if="!req.simpleMode">
+    <li ng-class="{'active': isActiveParent(1)}"><a href ng-click="activateParent(1)">Buscar Por Borrador</a> </li>
+    <li ng-class="{'active': isActiveParent(2)}"><a href ng-click="activateParent(2)">Buscar Por Carátula</a> </li>
+    <li ng-class="{'active': isActiveParent(3)}"><a href ng-click="activateParent(3)">Buscar Por Inscripción</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane" ng-class="{'active': isActiveParent(1)}" ng-show="isActiveParent(1)" cg-busy="{promise:promiseSaveSolicitud, message:'Por favor espere...'}">
+    <div ng-if="!req.simpleMode" class="row mt0">
+        <div ng-class="!req.simpleMode?'':'col-md-12'">
+
+            <div class="block-transparent">
+
+                <div class="content">
+                    <form role="form" name="myform" id="myform">
+                        <div class="row mt0">
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Borrador
+                                    </label>
+                                    <input type="text" required="" class="form-control" ng-model="busquedaGponline.borrador"
+                                           focus-input ="borradorIsFocused" ng-enter="buscarFolio()" maxlength="20" required="required" numbers-only="numbers-only" placeholder="borrador" >
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Folio
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaGponline.folio"
+                                           placeholder="folio" maxlength="20" numbers-only="numbers-only" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Fecha Hoy
+                                    </label>
+                                    <input type="date" class="form-control" ng-model="busquedaGponline.fecha" max="{{fechahoy}}" placeholder="dd-MM-yyyy" enter-next="">
+                                    <h6>(puede seleccionar otras fechas)</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Año
+                                    </label>{{myForm.input.$error}}
+                                    <input type="text" class="form-control" ng-model="busquedaGponline.anos" ui-validate="{anos : 'anos($value)'}" 
+                                           placeholder="Años" maxlength="2" min="0" max="80"  numbers-only="numbers-only">
+                                    <h6>(máx. ultimos 80 años)</h6>
+                                    <div class="error-message" ng-show="myform.ano.$error.anos">
+                                        Valor fuera de rango
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-3 col-sm-3 mT-38 align-right">
+                              <button type="button" class="btn  btn-default btn-rad" ng-click="limpiarBorrador()">Limpiar</button>
+	                          <button type="submit" class="btn  btn-primary btn-rad" ng-click="buscarPorBorrador()" >Buscar</button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="row mt0" ng-if="busquedaGponline.datosPropiedad!='' && busquedaGponline.datosPropiedad!=null" ng-include="'views/newgponline/resultados_propiedad.html'"></div>
+
+    <div class="row mt20" ng-if="busquedaGponline.duenyos.length>0" ng-include="'views/newgponline/resultados_duenos.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.duenyos.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Propiedad.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.hipoteca.length>0" ng-include="'views/newgponline/resultados_hipoteca.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.hipoteca.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Hipoteca.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.prohibicion.length>0" ng-include="'views/newgponline/resultados_prohibicion.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.prohibicion.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Prohibición.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    
+    <div ng-if="states.borrador.isError" class="row mt35">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.borrador.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="tab-pane" ng-class="{'active': isActiveParent(2)}" ng-show="isActiveParent(2)" cg-busy="{promise:promiseUpdateSolicitudRut, message:'Por favor espere...'}">
+    <div ng-if="!req.simpleMode" class="row mt0">
+        <div class="col-md-12">
+
+            <div class="block-transparent">
+
+                <div class="content">
+                    <form role="form" name="myformRut" id="myformRut">
+                        <div class="row mt0">
+                            <div class="col-md-3 col-sm-3 ">
+                                <div class="form-group">
+                                    <label class="control-label">Carátula
+                                    </label>
+                                    <input type="text" required="" class="form-control" ng-model="busquedaCaratula.caratula"
+                                  focus-input="caratulaIsFocused" maxlength="20" required="required" numbers-only="numbers-only" placeholder="carátula" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4 mT-38 align-left">
+                               <button type="button" class="btn  btn-default btn-rad" ng-click="limpiarCaratula()">Limpiar</button>
+                            <button type="submit" class="btn btn-primary btn-rad" ng-disabled="myformRut.$invalid"
+                                    ng-click="buscarCaratula()">Buscar</button>
+                            </div>
+                        </div>
+                        
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="row mt0" ng-if="busquedaGponline.datosPropiedad!='' && busquedaGponline.datosPropiedad!=null" ng-include="'views/newgponline/resultados_propiedad.html'"></div>
+
+    <div class="row mt20" ng-if="busquedaGponline.duenyos.length>0" ng-include="'views/newgponline/resultados_duenos.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.duenyos.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Propiedad.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.hipoteca.length>0" ng-include="'views/newgponline/resultados_hipoteca.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.hipoteca.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Hipoteca.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.prohibicion.length>0" ng-include="'views/newgponline/resultados_prohibicion.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.prohibicion.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Prohibición.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    
+    <div ng-if="states.borrador.isError" class="row mt35">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.borrador.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="tab-pane" ng-class="{'active': isActiveParent(3)}" ng-show="isActiveParent(3)" cg-busy="{promise:promiseUpdateSolicitudMis, message:'Por favor espere...'}">
+
+    <div ng-if="!req.simpleMode" class="row mt0">
+        <div class="col-md-12">
+
+            <div class="block-transparent">
+
+                <div class="content">
+                    <form role="form" name="myform" id="myform">
+                        <div class="row mt0">
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Fojas
+                                    </label>
+                                    <input type="text" required="" class="form-control" ng-model="busquedaInscripcion.fojas"
+                                           focus-input="fojaIsFocused" name="foja" maxlength="20" required="required" numbers-only="numbers-only" placeholder="foja" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaInscripcion.numero"
+                                           placeholder="numero" name="numero"  maxlength="20" numbers-only="numbers-only" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Año
+                                    </label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="busquedaInscripcion.ano" name="ano" placeholder="año"
+                                           maxlength="4" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <div class="form-group text-center">
+                                    <label class="control-label">Bis</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaInscripcion.bis" ng-i-check=""></label>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div class="col-md-2 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label">Registro
+                                    </label>
+                                    <select class="form-control" ng-model="busquedaInscripcion.registro" enter-next="" required>
+                                        <option value="PROP" selected>Propiedad</option>
+                                        <option value="HIP">Hipotecas</option>
+                                        <option value="PROH">Prohibiciones</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-3 mT-38 align-right">
+                              <button type="button" class="btn  btn-default btn-rad" ng-click="limpiarInscripcion()">Limpiar</button>
+                              <button type="submit" class="btn  btn-primary btn-rad" ng-disabled="myform.$invalid" ng-click="buscarBorradorPorInscripcion()" >Buscar</button>
+                            </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt0" ng-if="busquedaGponline.datosPropiedad!='' && busquedaGponline.datosPropiedad!=null" ng-include="'views/newgponline/resultados_propiedad.html'"></div>
+
+    <div class="row mt20" ng-if="busquedaGponline.duenyos.length>0" ng-include="'views/newgponline/resultados_duenos.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.duenyos.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Propiedad.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.hipoteca.length>0" ng-include="'views/newgponline/resultados_hipoteca.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.hipoteca.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Hipoteca.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="row mt20" ng-if="busquedaGponline.prohibicion.length>0" ng-include="'views/newgponline/resultados_prohibicion.html'"></div>
+    <div ng-if="busquedaGponline.data.status && busquedaGponline.prohibicion.length===0" class="row mt35">
+       <div class="col-md-6 col-md-offset-3">
+           <div class="block-transparent">
+               <div class="content">
+                   <div class="text-center">
+                       <div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       <p>No hay resultados Prohibicion.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    
+    <div ng-if="states.borrador.isError" class="row mt35">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="block-transparent">
+                <div class="content">
+                    <div class="text-center">
+                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+                        <p>{{states.borrador.msg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<scroll-up></scroll-up>
+
+<div ng-include="'views/ticketInformacion.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div>   
+<div ng-include="'views/newgponline/gpCaratulasModal.html'"></div>
+<div ng-include="'views/newgponline/gpEventosModal.html'"></div>
+<div ng-include="'views/newgponline/gpCertificadoEmitidoModal.html'"></div>
+<div ng-include="'views/newgponline/foliosModal.html'"></div>
+<div ng-include="'views/solicitarModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/indiceModal.html'"></div>

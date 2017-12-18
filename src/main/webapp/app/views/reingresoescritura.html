@@ -1,0 +1,328 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}"
+	titulo="Reingreso Escritura" icono="fa fa-repeat"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'"
+	titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'"
+	titulo="'Info'"
+	texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+	<div class="col-md-12">
+		<div class="tab-container">
+
+			<div class="tab-content">
+				<div class="row mt0">
+					<div class="col-md-4">
+
+						<div class="row mt0">
+							<div class="col-md-12 col-sm-12">
+								<form role="form" name="myform" id="myform">
+									<div class="form-group form-group-estado mB-2">
+										<label class="control-label">
+											Buscar Carátula
+										</label>
+										<div style="display: flex;">
+											<input type="text" class="form-control" autofocus
+												ng-model="busquedaReingreso.caratula" name="caratula"
+												placeholder="car&aacute;tula" maxlength="8"
+												numbers-only="numbers-only" required="" focus-input="caratulaIsFocused">
+											<button type="submit" ng-disabled="myform.$invalid"
+												class="btn  btn-primary"
+												ng-click="buscarEscriturasCaratula()" tooltip="Buscar" tooltip-placement="top">
+												<i class="fa fa-search"></i>
+											</button>
+											<button type="button" class="btn btn-default" ng-click="resetResultado()" tooltip="Eliminar" tooltip-placement="top">
+												<i class="fa fa-trash-o"></i>
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+
+						</div>
+
+						<div class="row mt0" ng-if="busquedaReingreso.data.success">
+							<div class="col-md-12 col-sm-12">
+
+								<fieldset class="fieldset-Bode">
+									<legend class="mBmenos2">
+										Listado de Versiones
+									</legend>
+
+
+									<p class="nohay" ng-if="busquedaReingreso.escrituras==0">
+										No se han encontrado escrituras.
+									</p>
+
+									<div style="overflow-y: scroll; max-height: 140px;">
+										<table class="hover table-curved table-responsive"
+											ng-if="busquedaReingreso.escrituras.length>0">
+											<thead>
+												<tr>
+													<th class="estado-table-title">
+														Versión
+													</th>
+													<th class="estado-table-title text-center">
+														Fecha digitalización
+													</th>
+													<th class="estado-table-title text-center">
+													</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="escritura in busquedaReingreso.escrituras | filter: {vigente: true}">
+													<td>
+														{{escritura.version}}
+													</td>
+													<td>
+														{{escritura.fechaDigitaliza}}
+													</td>
+													<td class="estado-table-title text-center">
+														<button ng-click="verDocumentoEstudio(escritura)"
+															class="btn btn-xs btn-primary" tooltip="Ver Documento" tooltip-placement="top">
+															<i class="fa fa-file-pdf-o"></i>
+														</button>
+														<button ng-show="escritura.vigente" class="btn btn-danger btn-xs"
+															ng-click="removeVersion(escritura)" tooltip="Eliminar" tooltip-placement="top">
+															<i class="fa fa-trash-o"></i>
+														</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</fieldset>
+								
+								<div class="errorT" ng-show="statesListado.ok==false">
+									<i class="fa fa-times"></i> {{statesListado.msg}}
+								</div>								
+								
+							</div>
+						</div>
+						<!--fin listado-->
+
+						<div class="row mt0" ng-if="busquedaReingreso.data.success">
+							<div class="col-md-12 col-sm-12">
+								
+									<fieldset class="fieldset-Bode">
+										<legend>
+											Escritura Nueva Version
+										</legend>
+								<form role="form" name="subirArchivoForm" id="subirArchivoForm">
+										<div class="form-group form-group-estado">
+
+											<label class="estado-title-field">
+												<span class="tit-boder"></span> Subir Archivo
+											</label>
+											<div class="form-control-static">
+												<input type="file" class="file" ngf-select ng-model="files"
+													name="file" accept=".pdf" required=""
+													ngf-model-invalid="errorFile">
+											</div>
+										</div>
+
+										<div class="form-group form-group-estado">
+											<label class="estado-title-field">
+												Observación
+											</label>
+											<div class="form-control-static">
+												<textarea class="form-control" rows="1"
+													ng-model="busquedaReingreso.observacion1" required=""></textarea>
+											</div>
+
+										</div>
+										<div class=" text-right">
+											<button class="btn  btn-primary btn-xs mT-2"
+												ng-disabled="!subirArchivoForm.$valid"
+												ng-click="subirArchivo(files)" value="Versionar">
+												Versionar
+											</button>
+										</div>
+								</form>
+
+								<!--<div class="okT"><i class="fa fa-check"></i> test {{statesEscritura.msg}}</div>-->
+								<div class="errorT" ng-show="statesEscritura.ok==false">
+									<i class="fa fa-times"></i> {{statesEscritura.msg}}
+								</div>
+
+								<hr>
+								<legend class="estado-title-field">
+									<span class="tit-boder"></span> Descargar Archivo
+								</legend>
+
+								<form role="form" name="descargaform" id="descargaform">
+
+									<div class="form-group form-group-estado">
+										<label class="estado-title-field">
+											Código
+										</label>
+										<div class="form-control-static">
+											<input type="text" name="codescritura" class="form-control"
+												id="codescritura" ng-model="busquedaReingreso.codescritura"
+												required="" enter-next />
+										</div>
+									</div>
+
+									<div class="form-group form-group-estado">
+										<label class="estado-title-field">
+											Notario
+										</label>
+										<div class="form-control-static">
+											<input type="text" class="form-control"
+												ng-model="busquedaReingreso.notario"
+												typeahead="notario as notario.nombre for notario in getListaNotarios($viewValue) | filter:$viewValue | limitTo:8"
+												typeahead-wait-ms="500" typeahead-loading="cargandoNotarios"
+												typeahead-min-length="3" required="" />
+										</div>
+									</div>
+
+									<div class="text-right">
+										<button type="button" class="btn btn-primary btn-xs mT-2"
+											ng-click="buscarDocumento()"
+											ng-disabled="descargaform.$invalid">
+											Versionar
+										</button>
+									</div>
+
+								</form>
+
+								<!-- <div class="okT"><i class="fa fa-check"></i> test</div>-->
+								<div class="errorT" ng-show="statesDescarga.ok==false">
+									<i class="fa fa-times"></i> {{statesDescarga.msg}}
+								</div>
+
+
+
+								</fieldset>
+								<!--fin escritura-->
+							</div>
+						</div>
+
+						<div class="row mt0" ng-if="busquedaReingreso.data.success">
+							<div class="col-md-12 col-sm-12">
+
+								<fieldset class="fieldset-Bode">
+									<legend>
+										Escritura Fusion
+									</legend>
+
+									<form role="form" name="fusionarArchivoForm"
+										id="fusionarArchivoForm">
+
+										<div class="form-group form-group-estado">
+											<label class="estado-title-field">
+												<span class="tit-boder"></span> Fusionar Archivo
+											</label>
+											<div class="form-control-static">
+												<input type="file" class="file" ngf-select
+													ng-model="fusionarfiles" name="fusionarfile" accept=".pdf"
+													required="" ngf-model-invalid="fusionarerrorFile">
+											</div>
+										</div>
+										<div class="form-group form-group-estado">
+											<label class="estado-title-field">
+												Observación:
+											</label>
+											<div class="form-control-static">
+												<textarea type="text"
+													ng-model="busquedaReingreso.observacion2" required=""
+													class="form-control" rows="1"></textarea>
+											</div>
+										</div>
+
+										<div class=" text-right">
+											<button type="button" class="btn btn-primary btn-xs mT-2"
+												ng-disabled="!fusionarArchivoForm.$valid"
+												ng-click="fusionarArchivo(fusionarfiles)" value="Fusionar">
+												Fusionar
+											</button>
+										</div>
+
+									</form>
+
+									<!--<div class="okT"><i class="fa fa-check"></i> test {{statesAnexo.msg}}</div>-->
+									<div class="errorT" ng-show="statesAnexo.ok==false">
+										<i class="fa fa-times"></i> {{statesAnexo.msg}}
+									</div>
+									
+									<hr>
+								<legend class="estado-title-field">
+									<span class="tit-boder"></span> Descargar Archivo
+								</legend>
+
+								<form role="form" name="descargaFusionform" id="descargaFusionform">
+
+									<div class="form-group form-group-estado">
+										<label class="estado-title-field">
+											Código
+										</label>
+										<div class="form-control-static">
+											<input type="text" name="codescritura" class="form-control"
+												id="codescritura" ng-model="busquedaReingreso.codescritura2"
+												required="" enter-next />
+										</div>
+									</div>
+
+									<div class="form-group form-group-estado">
+										<label class="estado-title-field">
+											Notario
+										</label>
+										<div class="form-control-static">
+											<input type="text" class="form-control"
+												ng-model="busquedaReingreso.notario2"
+												typeahead="notario as notario.nombre for notario in getListaNotarios($viewValue) | filter:$viewValue | limitTo:8"
+												typeahead-wait-ms="500" typeahead-loading="cargandoNotarios"
+												typeahead-min-length="3" required="" />
+										</div>
+									</div>
+
+									<div class="text-right">
+										<button type="button" class="btn btn-primary btn-xs mT-2"
+											ng-click="buscarDocumentoFusion()"
+											ng-disabled="descargaFusionform.$invalid">
+											Fusionar
+										</button>
+									</div>
+
+								</form>
+
+								<!-- <div class="okT"><i class="fa fa-check"></i> test</div>-->
+								<div class="errorT" ng-show="statesDescargaFusion.ok==false">
+									<i class="fa fa-times"></i> {{statesDescargaFusion.msg}}
+								</div>
+									
+
+								</fieldset>
+								<!--fin Doc Anexos-->
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-8" ng-if="busquedaReingreso.data.success">
+						<div class="block-flat">
+							<div class="content border-simple heighFrame" resize-inscripcion>
+								<div ng-if="isLoading" id="loading" class="cargando">
+									Obteniendo documento
+									<img class="mtm3" src="../app/images/load-18.gif" alt="" />
+									<span class="mensajeLento" ng-bind-html="mensajeDemora">
+									</span>
+								</div>
+
+								<iframe ng-src="{{urlPDF}}" width="100%" height="100%"
+									my-load="myLoader" style="border: 0;"></iframe>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div ng-include="'views/loadingModal.html'"></div>
+		<div ng-include="'views/mensajeModal.html'"></div>
+		<div ng-include="'views/genericos/eliminarModal.html'"></div>

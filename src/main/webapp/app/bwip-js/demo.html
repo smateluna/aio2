@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><title>bwip-js - demo</title>
+<!--
+	Notes about making the text fit nicely to your bar code.
+	1. Specify textxalign=center or textxalign=justify.
+	2. Specify the text as the alttext to bypass the built-in formatting.
+	3. If you specify textyalign=above and text has descenders (characters: gjpqy_|,; )
+	   specify textyoffset=1
+-->
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// Sort the symbols
+	symdesc.pop();	// remove the null last entry
+	symdesc.sort(function(a,b) {
+			 return (a.desc < b.desc ? -1 : 1);
+		});
+});
+
+function render(caratula) {
+
+	var text = caratula;
+	var altx = '';
+	var opts = '';
+
+	var bw = new BWIPJS;
+
+	// Convert the options to a dictionary object, so we can pass alttext with
+	// spaces.
+	var tmp = opts.split(' '); 
+	opts = {};
+	for (var i = 0; i < tmp.length; i++) {
+		if (!tmp[i])
+			continue;
+		var eq = tmp[i].indexOf('=');
+		if (eq == -1)
+			opts[tmp[i]] = bw.value(true);
+		else
+			opts[tmp[i].substr(0, eq)] = bw.value(tmp[i].substr(eq+1));
+	}
+
+	// Add the alternate text
+	if (altx)
+		opts.alttext = bw.value(altx);
+
+	// Add any hard-coded options required to fix problems in the javascript
+	// emulation. 
+	opts.inkspread = bw.value(0);
+	if (needyoffset['code39ext'] && !opts.textxalign && !opts.textyalign &&
+			!opts.alttext && opts.textyoffset === undefined)
+		opts.textyoffset = bw.value(-10);
+
+	bw.bitmap(new Bitmap);
+	
+	var scl = 2; //define tamaño de codigo barra
+	bw.scale(scl,scl);
+
+	var div = document.getElementById('output');
+	if (div)
+		div.innerHTML = '';
+
+	bw.push(text);
+	bw.push(opts);
+
+	try {
+		bw.call('code39ext'); //tipo codigo barra
+		bw.bitmap().show('canvas', 'N');
+	} catch(e) {
+		var s = '';
+		if (e.fileName)
+			s += e.fileName + ' ';
+		if (e.lineNumber)
+			s += '[line ' + e.lineNumber + '] ';
+		alert(s + (s ? ': ' : '') + e.message);
+	}
+}
+</script>
+</head><body>
+<div id="menu">
+<table border=0 cellpading=0 cellspacing=0><tr>
+<td>
+<td style="padding-left:10mm">
+	<table border=0 cellpading=0 cellspacing=0>
+	<tr><td><td><button ng-click="generaTicket('9077241')">Show Barcode</button>
+	</table>
+<tr><td><br>
+</table>
+</div>
+<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+<div id="output" style="white-space:pre"></div>
+<xmp id="debug" style="white-space:pre"></xmp>
+</body>
+</html>

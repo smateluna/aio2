@@ -1,0 +1,672 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<div class="row row-title-dv">
+    <div class="col-md-12 no-padding">
+        <div class="page-head no-padding">
+            <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">x</button>
+
+            <div class="DV-registro-data">
+                        <span ng-switch="parametros.registro">
+                        <span ng-switch-when="com" class="label label-com label-registro">Comercio</span>
+                        <span ng-switch-when="prop" class="label label-prop label-registro">Propiedad</span>
+                        <span ng-switch-when="proh" class="label label-proh label-registro">Prohibición</span>
+                        <span ng-switch-when="hip" class="label label-hipo label-registro">Hipoteca</span>
+                    </span>
+            </div>
+
+            <h3 class="title-dv">Certificando Caratula {{parametros.caratula}}</h3>							   						
+            <h6 class="title-dv">Fecha Digitalizacion {{parametros.fechaDoc | date:'dd/MM/yyyy HH:mm:ss'}}  
+            <span>
+            <button type="button" class="btn btn-default btn-sm" ng-click="openComentariosModal()" ng-show="caratula.resultados.length!==0">
+           		<i class="fa fa-comment" alt=""></i>
+      		</button>
+            </span>
+            </h6>
+            <div class="title-dv">
+            <input type="button" ng-if="parametros.mostrar==='1'" class="btn-warning btn btn-sm btn-alto" ng-click="rehacerImagen()" value="Rehacer Imagen">
+            </div>
+           
+           <!-- <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Bitacora" ng-click="obtenerBitacoraCaratula()">--><!--
+           <a popover id="showDays"
+		    type="button"
+		    class="btn btn-success btn-xs pull-left"
+		    data-toggle="popover"
+		    data-placement="right"
+		    data-html="true"
+		    title=""
+		    data-content=
+		    '<table class="table table-condensed">
+					        <thead>
+					        <tr>
+					        	<th>
+					                Fecha
+					            </th>
+					            <th>
+					                Obs.
+					            </th>
+					            <th>
+					                Funcionario
+					            </th>
+					        </tr>
+					        </thead>
+					        <tbody>
+						        <tr ng-repeat="sol in caratula.resultados">
+					        		<td ng-bind="sol" ></td>
+						        </tr>
+					        </tbody>
+					 </table>'>
+		      <i class="fa fa-clock-o fa-lg">Click me</i>
+		  </a>
+           <table class="table table-condensed"><tbody><tr ng-repeat="d in days"><td ng-bind="d"></td></tr></tbody></table>-->
+           
+            <!--<table class="hover table-curved" display="none">
+			        <thead>
+			        <tr>
+			        	<th>
+			                Fecha
+			            </th>
+			            <th>
+			                Obs.
+			            </th>
+			            <th>
+			                Funcionario
+			            </th>
+			        </tr>
+			        </thead>
+			        <tbody>
+				        <tr ng-repeat="sol in caratula.resultados">
+			        		<td class="text-left">{{sol.fecha}}</td>
+			        		<td class="text-left">{{sol.observacion}}</td>
+			        		<td class="text-left">{{sol.funcionario}}</td>
+				        </tr>
+			        </tbody>
+			 </table>
+            --><!--</button>-->
+            
+            <div class="border-header">
+            <form role="form" name="myform" id="myform">
+            <div class="row mt0">
+                 <div class="col-md-1 col-sm-1">
+                     <div class="form-group">
+                         <label class="control-label">Foja
+                         </label>
+                         <input type="text" class="form-control" ng-model="parametros.foja" name="foja" placeholder="foja"
+                                maxlength="6" enter-next=""  numbers-only="numbers-only">
+                     </div>
+                 </div>
+                 <div class="col-md-1 col-sm-1">
+                     <div class="form-group">
+                         <label class="control-label" for="numero">Número
+                         </label>
+                         <input type="text" class="form-control" ng-model="parametros.numero"  id="numero" name="numero"
+                                placeholder="número" maxlength="6" enter-next="" numbers-only="numbers-only">
+                     </div>
+                 </div>
+                 <div class="col-md-1 col-sm-1">
+                     <div class="form-group">
+                         <label class="control-label">Año</label>
+                         <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="parametros.ano" name="ano" placeholder="año"
+                                maxlength="4" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
+                         <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                             Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                         </div>
+                         <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                             No debe ser mayor al año actual
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-md-1 col-sm-1">
+                     <div class="form-group">
+                         <label class="control-label" for="numero">Bis
+                         </label>
+                         <div ng-if="parametros.bis==='1'"><i class="fa fa-check"></i></div>
+                     </div>
+                 </div>
+                 <div class="col-md-2 col-sm-2">
+                 	 <label class="control-label">&nbsp </label>
+                     <div class="form-group" align="left">
+                         <input type="button" class="btn  btn-primary btn-sm" ng-click="modificaTitulo()" value="Modificar Titulo">
+                     </div>
+                 </div>
+                 
+                 <div class="col-md-2 col-sm-2">
+                  	<div class="form-group">
+	                 	<label for="comuna">Tipo</label>																											
+		                <select class="form-control" id="tipoCertificacion" name="tipoCertificacion" ng-model="certificacion.tipo" ng-options="tipoCertificacion.descripcion for tipoCertificacion in tipoCertificacion">
+		                	<option value="">-- Seleccione... --</option>
+		                </select>
+	                </div>
+	             </div>
+	             
+	             <div class="col-md-4 col-sm-4">
+                 	 <label class="control-label">&nbsp</label>
+                     <div class="form-group">
+                         <input type="button" class="btn btn-sm" ng-click="certificar()" value="Certificar"><i class="icon-ok cert-ok" style="display:none" id="ok"></i><i class="icon-remove cert-remove" style="display:none" id="nok"></i>
+                   
+                         <input type="button" class="btn btn-sm  btn-primary " ng-click="distribuir()" value="Distribuir">
+                    
+                         <input type="button" class="btn-danger btn btn-sm btn-alto" ng-click="openRechazoModal()" value="Rechazar">
+                   
+                         <input type="button" class="btn btn-success btn-sm pull-right" ng-click="obtenerInscripcionBis()" value="Inscripcion BIS">
+                     </div>
+                 </div>
+                 
+                 
+                 
+<!--                if(rehaceImagen==0)-->
+<!--					$('#fechaCreacion').text('Fecha Digitalizacion: ' + fechaDoc);-->
+<!--				else-->
+<!--					$('#fechaCreacion').html("<input type='button' id='rehacer' class='btn btn-success btn-small' data-loading-text='Rehacer Imagen' onClick='rehacerImagen();' value='Rehacer Imagen'> Fecha Digitalizacion:  " + fechaDoc);-->
+					
+             </div>
+             </form>
+             
+             
+             <div ng-if="states.isError" class="row mt35">
+			    <div class="col-md-6 col-md-offset-3">
+				         <div class="block-transparent">
+				             <div class="content">
+				                 <div class="text-center">
+				                     <p class="label label-danger">{{states.msg}}</p>
+				                 </div>
+				             </div>
+				         </div>
+				     </div>
+				</div>
+				<div ng-if="states.isOk" class="row mt35">
+				    <div class="col-md-6 col-md-offset-3">
+				         <div class="block-transparent">
+				             <div class="content">
+				                 <div class="text-center">
+				                     <p class="label label-success">{{states.msg}}</p>
+				                 </div>
+				             </div>
+				         </div>
+				     </div>
+				</div>
+            
+            </div>    
+            <!--fin borde-->    
+                
+                
+            
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row row-custom">
+
+
+	<div class="columna-izquierda"	ng-class="{'desaparecer': !derechaStatus.notasExpanded, 'col-md-2' : derechaStatus.notasExpanded}">
+
+		<div class="panel-group accordion no-margin-bottom">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title padding-5"
+						ng-click="acordionIzquierda('anotaciones')">
+						<div class="pull-left">
+							<span class="dv-contador label label-default">{{anotaciones.length}}</span>
+						</div>
+
+						Anotaciones
+
+						<div class="pull-right">
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="!izquierdaStatus.anotaciones" tooltip="Expandir">
+								<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+							</button>
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="izquierdaStatus.anotaciones" tooltip="Colapsar">
+								<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+							</button>
+						</div>
+					</h4>
+				</div>
+				<div class="panel-collapse panel-collapse-dv" util-izquierda-certifica=""
+					modelo="{{izquierdaStatus.anotaciones}}" target="anotacion"
+					versionado="{{esVersionado()}}">
+					<div class="panel-body panel-body-inscripcion-anotacion">
+
+						<p ng-if="loaders.anotaciones.isLoading" class="text-center">
+							Buscando Anotaciones...
+							<br>
+							<img src="../app/images/load-18.gif" alt="" />
+						</p>
+
+						<p class="nohay" ng-if="anotaciones.length==0 && !loaders.anotaciones.isLoading">
+							No se han encontrado anotaciones.
+						</p>
+
+						<p class="nohay" ng-if="loaders.anotaciones.error">
+							<span class="fa fa-times-circle"></span> Problema obteniendo
+							Anotaciones.
+						</p>
+
+						<div class="anotacion-wrapper"
+							ng-repeat="anotacion in anotaciones">
+							<!--<div class="anotacion-delete"
+								ng-if="anotacion.estadoAnotacionDTO.idEstado==5">
+								<button ng-click="deleteAnotacion(anotacion)"
+									class="btn btn-default btn-xs pull-right"
+									tooltip="Eliminar anotaciÃ³n">
+									<i class="fa fa-times dv-icon-boton-remove"></i>
+								</button>
+							</div>
+							--><div class="anotacion-card ">
+								<div class="anotacion-header">
+									<div class="anotacion-title">
+										<div class="pull-left">
+											<span class="anotacion-counter label label-default">{{$index+1}}</span>
+										</div>
+										{{anotacion.acto}}
+									</div>
+								</div>
+								<div class="anotacion-contenido"
+									ng-class="{'nota-eliminada': anotacion.estadoAnotacionDTO.idEstado==7}">
+									<span ng-bind-html="anotacion.texto"></span>
+									<span ng-if="!anotacion.caratula"> <br>Santiago,
+										{{anotacion.fechaCreacion | myMoment:'DD/MM/YYYY
+										HH:mm:ss':'LL'}} </span>
+
+								</div>
+								<div class="anotacion-creada"
+									ng-if="anotacion.caratula && anotacion.repertorio">
+									<div>
+										CarÃ¡tula:
+										<a class="no-decorator" href
+											ng-click="verEstadoCaratula(anotacion.caratula)">{{anotacion.caratula}}</a>
+									</div>
+
+									<div>
+										Repertorio: {{anotacion.repertorio}}
+									</div>
+								</div>
+								<div class="anotacion-creada">
+									<div>
+										<i class="fa fa-plus" tooltip="Creada por"
+											tooltip-placement="right"></i>
+										{{anotacion.nombreUsuarioCreador}}
+									</div>
+
+									<div>
+										<i class="fa fa-calendar" tooltip="Fecha creaciÃ³n"
+											tooltip-placement="right"></i>&nbsp;
+										{{anotacion.fechaCreacion}}
+									</div>
+								</div>
+								<div class="anotacion-eliminada"
+									ng-if="anotacion.estadoAnotacionDTO.idEstado==7">
+									<div>
+										<i class="fa fa-times" tooltip="Eliminada por"
+											tooltip-placement="right"></i>
+										{{anotacion.nombreUsuarioEliminador}}
+									</div>
+									<div>
+										<i class="fa fa-calendar" tooltip="Fecha eliminaciÃ³n"
+											tooltip-placement="right"></i>&nbsp;
+										{{anotacion.fechaEliminacion}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel-footer panel-footer-ins">
+					<div id="anotacion-bar-queda" class="bar-queda">
+					</div>
+					<div id="anotacion-bar" class="progress bar-progreso">
+						<div class="progress-bar progress-bar-info bar-line-h"
+							style="width: 0%" id="anotacion-bar-progress">
+							0%
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="panel panel-default"
+				ng-class="{'margin-top-30': esVersionado()}">
+				<div class="panel-heading">
+					<h4 class="panel-title padding-5"
+						ng-click="acordionIzquierda('borradores')">
+						<div class="pull-left">
+							<span class="dv-contador label label-default">{{data.contadores.borradores}}</span>
+
+						</div>
+
+						Borradores
+
+						<div class="pull-right">
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="!izquierdaStatus.borradores" tooltip="Expandir">
+								<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+							</button>
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="izquierdaStatus.borradores" tooltip="Colapsar">
+								<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+							</button>
+						</div>
+					</h4>
+				</div>
+				<div class="panel-collapse panel-collapse-dv" util-izquierda-certifica=""
+					modelo="{{izquierdaStatus.borradores}}" target="borrador"
+					versionado="{{esVersionado()}}">
+					<div class="panel-body panel-body-inscripcion">
+
+
+						<p class="nohay" ng-if="data.contadores.borradores==0">
+							No se han encontrado borradores.
+						</p>
+
+						<p class="nohay" ng-if="loaders.borradores.error">
+							<span class="fa fa-times-circle"></span> Problema obteniendo
+							borradores.
+						</p>
+
+						<p ng-if="loaders.borradores.isLoading" class="text-center">
+							<img src="../app/images/load-18.gif" alt="" />
+						</p>
+
+						<div class="borrador-wrapper"
+							ng-repeat="borradorElement in borradores  | orderBy:'-borrador'">
+							<div class="borrador-card ">
+
+								<div class="borrador-header">
+
+									<div class="borrador-field">
+										Borrador:
+										<!--  <a ng-if="borradorElement.borrador" target="_blank"
+                               ng-href="{{data.urlGpOnline}}?borrador={{borradorElement.borrador}}&folio={{borradorElement.folio}}&anyos=50&fecha={{hoy}}">
+                                {{borradorElement.borrador}}
+                                <i class="fa fa-external-link-square"></i>
+                            </a>-->
+										<a href ng-if="borradorElement.borrador"
+											ng-click="irGpOnlineAIO(borradorElement.borrador,borradorElement.folio)">{{borradorElement.borrador}}</a>
+									</div>
+									<div class="borrador-field" ng-if="borradorElement.folio!=0">
+										Folio: {{borradorElement.folio}}
+									</div>
+								</div>
+								<div class="borrador-contenido">
+									<i class="fa fa-map-marker" tooltip="DirecciÃ³n"></i>
+									{{borradorElement.direccion}}
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				<div class="panel-footer panel-footer-ins">
+					<div id="borrador-bar-queda" class="bar-queda">
+					</div>
+					<div id="borrador-bar" class="progress bar-progreso">
+						<div class="progress-bar progress-bar-info bar-line-h"
+							style="width: 0%" id="borrador-bar-progress">
+							0%
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default"
+				style="border-radius: 0; margin-bottom: 0px; margin-top: 30px;">
+				<div class="panel-heading">
+					<h4 class="panel-title" style="padding: 5px;">
+						Carátulas
+
+					</h4>
+				</div>
+			</div>
+
+			<div class="panel panel-default"
+				style="border-radius: 0; margin-bottom: 0px;">
+				<div class="panel-heading">
+					<h4 class="panel-title" ng-click="acordionIzquierda('proceso')"
+						style="padding: 5px;">
+						<div class="pull-left">
+							<span class="dv-contador label label-default">{{data.contadores.proceso}}</span>
+
+						</div>
+
+						En proceso
+
+						<div class="pull-right">
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="!izquierdaStatus.proceso" tooltip="Expandir">
+								<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+							</button>
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="izquierdaStatus.proceso" tooltip="Colapsar">
+								<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+							</button>
+						</div>
+					</h4>
+				</div>
+				<div class="panel-collapse" style="height: 0px; overflow: auto;"
+					util-izquierda-certifica="" modelo="{{izquierdaStatus.proceso}}"
+					target="proceso" versionado="{{esVersionado()}}">
+					<div class="panel-body panel-body-inscripcion">
+
+						<p class="nohay" ng-if="data.contadores.proceso==0">
+							No se han encontrado carátulas en proceso.
+						</p>
+						<p class="nohay" ng-if="loaders.enProceso.error">
+							<span class="fa fa-times-circle"></span> Problema obteniendo
+							carátulas en proceso.
+						</p>
+
+
+						<p ng-if="loaders.enProceso.isLoading" class="text-center">
+							<img src="../app/images/load-18.gif" alt="" />
+						</p>
+
+
+						<div class="borrador-wrapper"
+							ng-repeat="caratula in proceso | orderBy:'-numeroCaratula'">
+							<div class="borrador-card ">
+
+								<div class="borrador-header">
+
+									<div class="borrador-field">
+										Carátula:
+										<a href ng-click="verEstadoCaratula(caratula.numeroCaratula)">
+											{{caratula.numeroCaratula}} <i
+											class="fa fa-external-link-square"></i> </a>
+									</div>
+									<div class="borrador-field">
+										Formulario: {{caratula.tipoFormularioDTO.descripcion}}
+									</div>
+								</div>
+								<div class="caratula-detalle">
+									<div>
+										<i class="fa fa-chevron-right" tooltip="SecciÃ³n"
+											tooltip-placement="right"></i>
+										{{caratula.estadoActualCaratulaDTO.seccionDTO.descripcion}}
+									</div>
+
+									<div>
+										<i class="fa fa-calendar" tooltip="Fecha"
+											tooltip-placement="right"></i>&nbsp;
+										{{caratula.estadoActualCaratulaDTO.fechaMov}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer panel-footer-ins">
+					<div id="proceso-bar-queda" class="bar-queda">
+					</div>
+					<div id="proceso-bar" class="progress bar-progreso">
+						<div class="progress-bar progress-bar-info bar-line-h"
+							style="width: 0%" id="proceso-bar-progress">
+							0%
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default" style="border-radius: 0;">
+				<div class="panel-heading">
+					<h4 class="panel-title" ng-click="acordionIzquierda('terminadas')"
+						style="padding: 5px;">
+						<div class="pull-left">
+							<span class="dv-contador label label-default">{{data.contadores.terminadas}}</span>
+
+						</div>
+
+						Terminadas
+
+						<div class="pull-right">
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="!izquierdaStatus.terminadas" tooltip="Expandir">
+								<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+							</button>
+							<button class="btn btn-primary btn-xs dv-boton-plus"
+								ng-if="izquierdaStatus.terminadas" tooltip="Colapsar">
+								<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+							</button>
+						</div>
+
+
+
+
+
+
+					</h4>
+				</div>
+				<div class="panel-collapse" style="height: 0px; overflow: auto;"
+					util-izquierda-certifica="" modelo="{{izquierdaStatus.terminadas}}"
+					target="terminada" versionado="{{esVersionado()}}">
+					<div class="panel-body panel-body-inscripcion">
+
+						<p class="nohay" ng-if="data.contadores.terminadas==0">
+							No se han encontrado carátulas terminadas.
+						</p>
+						<p class="nohay" ng-if="loaders.terminadas.error">
+							<span class="fa fa-times-circle"></span> Problema obteniendo
+							carátulas terminadas.
+						</p>
+
+
+						<p ng-if="loaders.terminadas.isLoading" class="text-center">
+							<img src="../app/images/load-18.gif" alt="" />
+						</p>
+
+
+						<div class="borrador-wrapper"
+							ng-repeat="caratula in terminadas | orderBy:'-numeroCaratula'">
+							<div class="borrador-card ">
+
+								<div class="borrador-header">
+
+									<div class="borrador-field">
+										Carátula:
+										<a href ng-click="verEstadoCaratula(caratula.numeroCaratula)">
+											{{caratula.numeroCaratula}} <i
+											class="fa fa-external-link-square"></i> </a>
+									</div>
+									<div class="borrador-field">
+										Formulario: {{caratula.tipoFormularioDTO.descripcion}}
+									</div>
+								</div>
+								<div class="caratula-detalle">
+									<div>
+										<i class="fa fa-chevron-right" tooltip="SecciÃ³n"
+											tooltip-placement="right"></i>
+										{{caratula.estadoActualCaratulaDTO.seccionDTO.descripcion}}
+									</div>
+
+									<div>
+										<i class="fa fa-calendar" tooltip="Fecha"
+											tooltip-placement="right"></i>&nbsp;
+										{{caratula.estadoActualCaratulaDTO.fechaMov}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer panel-footer-ins">
+					<div id="terminada-bar-queda" class="bar-queda">
+					</div>
+					<div id="terminada-bar" class="progress bar-progreso">
+						<div class="progress-bar progress-bar-info bar-line-h"
+							style="width: 0%" id="terminada-bar-progress">
+							0%
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div ng-class="{'col-md-12': !derechaStatus.notasExpanded, 'col-md-10' : derechaStatus.notasExpanded}">
+    
+    <div class="pull-left">
+		<button class="btn btn-primary btn-xs dv-boton-nota-certificado-agrandar"
+			tooltip="Expandir" tooltip-placement="right" ng-click="acordionNotas()" ng_if="!derechaStatus.notasExpanded">
+			<i class="fa fa-chevron-right dv-icon-boton-plus"></i>
+		</button>
+		<button class="btn btn-primary btn-xs dv-boton-nota-certificado-achicar"
+			tooltip="Contraer" tooltip-placement="right" ng-click="acordionNotas()" ng_if="derechaStatus.notasExpanded">
+			<i class="fa fa-chevron-left dv-icon-boton-plus"></i>
+		</button>
+	</div>
+
+        <div class="block-flat">
+            <div class="content border-simple heighFrame" resize-inscripcion>
+				<div ng-if="isLoading" id="loading" class="cargando">Obteniendo documento <img class="mtm3" src="../app/images/load-18.gif" alt=""/>
+                	<span class="mensajeLento" ng-bind-html="mensajeDemora"> </span>
+            	</div>
+
+	                <iframe ng-src="{{urlPDF}}" width="100%" height="100%" my-load="myLoader"></iframe>
+            
+        	</div>
+
+    	</div>
+
+	</div>
+
+</div>
+
+<div ng-include="'views/rechazoCertificacionModal.html'"></div>
+<div ng-include="'views/rehacerImagenModal.html'"></div>
+<div ng-include="'views/comentariosCaratula.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/gpOnlineModal.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div>
+
+
+<script type="text/javascript">
+   //$('#element').popover('hide')
+</script>
+

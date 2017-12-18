@@ -1,0 +1,345 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="&Iacute;ndice" icono="fa-list"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div class="row mt70" scroll-bookmark>
+<div class="col-md-12">
+<div class="tab-container">
+
+<div class="tab-content">
+	<div class="row mt0">
+        <div class="col-md-12">
+        				Formulario <span ng-show="contador.total>=0">- Atenciones de hoy <span class="badge ng-scope ng-binding">{{contador.total}}</span></span> <span ng-hide="datosSesion.requirente===null"> - Atendiendo a <label class="control-label">{{datosSesion.requirente}}</label></span> 
+						<span class="pull-right colapsa unselectable"
+							ng-if="busquedaIndice.indicebusqueda" ng-click="colapsar()"> <i
+							class="fa fa-chevron-up"></i> </span>
+						<span class="pull-right colapsa unselectable"
+							ng-if="!busquedaIndice.indicebusqueda" ng-click="colapsar()"> <i
+							class="fa fa-chevron-down"></i> </span>
+							
+						<form role="form" name="myform" id="myform" ng-hide="busquedaIndice.indicebusqueda">
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Rut
+                                    </label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': myform.rutt.$error.rut && !myform.rutt.$pristine}"
+                                           id="rutt" name="rutt" ng-model="busquedaIndice.rut"
+                                           placeholder="rut" nombre-requirente destino="busquedaIndice" ng-rut rut-format ng-enter="buscarIndice()">
+                                    <div class="error-message" ng-show="myform.rutt.$error.rut && !myform.rutt.$pristine">
+                                        Rut no válido
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Nombre o Razón Social
+                                    </label>
+                                    <input autofocus type="text" class="form-control" ng-model="busquedaIndice.nombre"
+                                           id="nombre" name="nombre" focus-input="nombreIsFocused"
+                                           placeholder="Apellidos Propietario" maxlength="100" ng-enter="buscarIndice()">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group text-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaIndice.exacta" ng-i-check=""> Búsqueda Exacta</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt0">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Direcci&oacute;n
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaIndice.direccion"
+                                           id="direccion" name="direccion"
+                                           placeholder="Direcci&oacute;n" maxlength="50" ng-enter="buscarIndice()">
+                                </div>
+                            </div>
+                             <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Rol
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaIndice.rol" name="rol" placeholder="rol"
+                                           maxlength="20" enter-next=""  numbers-only="numbers-only" disabled>
+                                </div>
+                            </div>
+                             <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+		                            <label for="comuna">Conservador</label>
+					                <select class="form-control" id="conservador" name="conservador" ng-model="busquedaIndice.conservador" ng-options="conservador as conservador.nombre for conservador in busquedaIndice.listaconservadores">
+					                	<option value="">-- CBR SANTIAGO --</option>
+					                </select>
+			                	</div>
+			                </div>	
+                        </div>
+						<div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Foja
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaIndice.foja" name="foja" placeholder="foja"
+                                           maxlength="6" numbers-only="numbers-only" enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="numero">Número
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="busquedaIndice.numero"  id="numero" name="numero"
+                                           placeholder="número" maxlength="6" numbers-only="numbers-only"  enter-next="">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Año</label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="busquedaIndice.ano" name="ano" placeholder="año"
+                                           maxlength="4" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only" ng-enter="buscarIndice()">
+                                    <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
+                                        Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
+                                    </div>
+                                    <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
+                                        No debe ser mayor al año actual
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="checkbox">
+                                        <label> <input type="checkbox" class="icheck" ng-model="busquedaIndice.bis" ng-i-check=""> Bis</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt0">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+		                            <label for="comuna">Comuna</label>
+					                <select class="form-control" id="comuna" name="comuna" ng-model="busquedaIndice.comuna" ng-options="comuna as comuna.descripcion for comuna in busquedaIndice.comunas">
+					                	<option value="">-- comuna --</option>
+					                </select>
+			                	</div>
+			                </div>	
+			                <div class="col-md-3 col-sm-3">
+                                <div class="form-group">
+		                            <label for="anoInscripcion">Año Inscripci&oacute;n</label>
+					                <select class="form-control" id="anoInscripcion" name="anoInscripcion" ng-model="busquedaIndice.anoInscripcion" ng-options="anoInscripcion as anoInscripcion.descripcion for anoInscripcion in busquedaIndice.anosInscripciones">
+					                	<option value="">-- año --</option>
+					                </select>
+			                	</div>
+			                </div>
+			               
+                            <div class="col-md-3 col-sm-3" ng-show="busquedaIndice.comercio">
+                                <div class="form-group">
+		                            <label for="acto">Acto</label>
+					                <select class="form-control" id="acto" name="acto" ng-model="busquedaIndice.acto" ng-options="acto as acto.nombre for acto in busquedaIndice.listaactos">
+					                	<option value="">-- acto --</option>
+					                </select>
+			                	</div>
+			                </div>	
+			                <div class="col-md-3 col-sm-3" ng-show="busquedaIndice.comercio">
+                                <div class="form-group">
+		                            <label for="tipo">Tipo</label>
+					                <select class="form-control" id="tipo" name="tipo" ng-model="busquedaIndice.tipo" ng-options="tipo as tipo.nombre for tipo in busquedaIndice.listatipos">
+					                		<option value="">-- tipo --</option>
+					                </select>
+			                	</div>
+			                </div>
+                          </div>
+                          
+                          <div class="row mt0">  
+			                <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Registro</label>
+                                    <div class="checkbox checkfile">
+                                        <div class="row mt0">
+                                          <div class="col-md-3">
+                                          <label><input type="checkbox" class="icheck" ng-model="busquedaIndice.propiedades" ng-i-check=""> Propiedad</label> </div>
+                                           <div class="col-md-3"><label> <input type="checkbox" class="icheck" ng-model="busquedaIndice.hipoteca" ng-i-check=""> Hipoteca</label> </div>
+                                            <div class="col-md-3"> <label> <input type="checkbox" class="icheck" ng-model="busquedaIndice.prohibiciones" ng-i-check=""> Prohibiciones</label> </div>
+                                             <div class="col-md-3"><label> <input type="checkbox" class="icheck" ng-model="busquedaIndice.comercio" ng-i-check=""> Comercio</label> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt20 mb10">
+                            <button type="button" class="btn  btn-default " ng-click="limpiarTitulo()">Limpiar</button>
+                            <!-- <button type="button" class="btn  btn-default " ng-click="limpiarFnaTitulo()">Limpiar Foja, Número y Año</button> -->
+                            <button type="submit" class="btn  btn-primary " 
+                                    ng-click="buscarIndice()" >Buscar</button>
+                                    <!-- ng-disabled="myform.$invalid"  -->
+
+                             <button type="button" class="btn  btn-primary "  ng-if="(subPermisos['indice'].indexOf('EXCEL_INDICE') >= 0 && ((busquedaIndice.resultados.length>0) || (busquedaIndice.resultadoshipotecas.length>0) || (busquedaIndice.resultadosprohibiciones.length>0) || (busquedaIndice.resultadoscomercio.length>0)))"
+                                    ng-click="exportarExcel()" >Exportar resultado a Excel</button>
+                             <button type="button" class="btn  btn-primary " ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'" ng-click="contarAtencion()" alt="Nueva Atencion">Registrar Atención</button>       
+                        </div> 
+                    </form>
+     </div>                   
+   </div>
+	    
+	    <ul class="nav nav-tabs">
+		    <li ng-show="busquedaIndice.propiedades" ng-if="busquedaIndice.resultados.length>0 || (busquedaIndice.data.status && busquedaIndice.resultados.length===0)" ng-class="{'active': isActiveParent(1)}"><a href ng-click="activateParent(1)"><span class="badge ng-scope ng-binding" ng-if="busquedaIndice.resultados.length>0">{{busquedaIndice.resultados.length}}</span> Propiedad</a> </li>
+		    <li ng-show="busquedaIndice.hipoteca" ng-if="busquedaIndice.resultadoshipotecas.length>0 || (busquedaIndice.data.status && busquedaIndice.resultadoshipotecas.length===0)"  ng-class="{'active': isActiveParent(3)}"><a href ng-click="activateParent(3)"> <span class="badge ng-scope ng-binding" ng-if="busquedaIndice.resultadoshipotecas.length>0">{{busquedaIndice.resultadoshipotecas.length}}</span> Hipoteca</a></li>
+		    <li ng-show="busquedaIndice.prohibiciones" ng-if="busquedaIndice.resultadosprohibiciones.length>0 || (busquedaIndice.data.status && busquedaIndice.resultadosprohibiciones.length===0)" ng-class="{'active': isActiveParent(2)}"><a href ng-click="activateParent(2)"> <span class="badge ng-scope ng-binding" ng-if="busquedaIndice.resultadosprohibiciones.length>0">{{busquedaIndice.resultadosprohibiciones.length}}</span> Prohibiciones</a> </li>
+		    <li ng-show="busquedaIndice.comercio" ng-if="busquedaIndice.resultadoscomercio.length>0 || (busquedaIndice.data.status && busquedaIndice.resultadoscomercio.length===0)" ng-class="{'active': isActiveParent(4)}"><a href ng-click="activateParent(4)"> <span class="badge ng-scope ng-binding" ng-if="busquedaIndice.resultadoscomercio.length>0">{{busquedaIndice.resultadoscomercio.length}}</span> Comercio</a> </li>
+		</ul>
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+   		
+   		<div class="tab-pane" ng-class="{'active': isActiveParent(1)}" ng-show="isActiveParent(1)">
+   			<div ng-show="busquedaIndice.propiedades" ng-if="busquedaIndice.resultados.length>0" ng-include="'views/indice/resultados_indice_propiedades.html'" class="mt35"> </div>
+   			
+   			<!--<div ng-show="busquedaIndice.propiedades" ng-if="busquedaIndice.resultados.length>listaPropiedad.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMorePropiedad()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                         
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>   
+                    </div>
+                </div>
+            </div>
+   			
+   			--><div ng-if="busquedaIndice.data.status && busquedaIndice.resultados.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay resultados Propiedad.</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   		</div>	
+   		
+   		<div class="tab-pane" ng-class="{'active': isActiveParent(2)}" ng-show="isActiveParent(2)">
+   			
+   			<div ng-show="busquedaIndice.prohibiciones" ng-if="busquedaIndice.resultadosprohibiciones.length>0" ng-include="'views/indice/resultados_indice_prohibiciones.html'" class="mt35"> </div>
+   			
+   			<!--<div ng-show="busquedaIndice.prohibiciones" ng-if="busquedaIndice.resultadosprohibiciones.length>listaProhibiciones.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMoreProhibiciones()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                            
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>
+                    </div>
+                </div>
+            </div>
+   			
+   			--><div ng-if="busquedaIndice.data.status && busquedaIndice.resultadosprohibiciones.length===0" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay resultados Prohibiciones.</p>
+	                        
+	                        <small class="pull-center" ng-if="((busquedaIndice.foja!=null) && (busquedaIndice.numero!=null) && (busquedaIndice.ano!=null))"><label class="control-label"><input type="checkbox" class="icheck" ng-model="busquedaIndice.buscarPorInscricionProh" ng-i-check="" ng-change="buscarporregistro(1)"> <i class="fa fa-search"></i> Buscar Por Inscripcion Prohibiciones</label></small>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   		</div>
+   			
+   		<div class="tab-pane" ng-class="{'active': isActiveParent(3)}" ng-show="isActiveParent(3)">
+   			
+   			<div ng-show="busquedaIndice.hipoteca" ng-if="busquedaIndice.resultadoshipotecas.length>0" ng-include="'views/indice/resultados_indice_hipotecas.html'" class="mt35"> </div>
+   			
+   			<!--<div ng-show="busquedaIndice.hipoteca" ng-if="busquedaIndice.resultadoshipotecas.length>listaHipoteca.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMoreHipoteca()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                            
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>
+                    </div>
+                </div>
+            </div>
+   			
+   			--><div ng-if="busquedaIndice.data.status && busquedaIndice.resultadoshipotecas.length===0" class="row mt35">
+		    
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay resultados Hipotecas.</p>
+                            
+                            <small class="pull-center" ng-if="((busquedaIndice.foja!=null) && (busquedaIndice.numero!=null) && (busquedaIndice.ano!=null))"><label class="control-label"><input type="checkbox" class="icheck" ng-model="busquedaIndice.buscarPorInscricionHipo" ng-i-check="" ng-change="buscarporregistro(0)"> <i class="fa fa-search"></i> Buscar Por Inscripcion Hipoteca</label></small>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   		</div>		
+   		
+   		<div class="tab-pane" ng-class="{'active': isActiveParent(4)}" ng-show="isActiveParent(4)">
+   			
+   			<div ng-show="busquedaIndice.comercio" ng-if="busquedaIndice.resultadoscomercio.length>0" ng-include="'views/indice/resultados_indice_comercio.html'" class="mt35"> </div>
+   			
+   			<!--<div ng-show="busquedaIndice.comercio" ng-if="busquedaIndice.resultadoscomercio.length>listaComercio.data.length" class="row mt0">
+                <div class="col-md-12">
+                    <div class="text-center mb10 mt20">
+                        <button ng-click="loadMoreComercio()" type="button" class="btn btn-primary btn-rad">
+                            <i class="fa fa-arrow-down"></i> Más</button>
+                            
+                        <button class="btn btn-primary btn-rad" scroll-to-bookmark><i class="fa fa-arrow-up"></i> Volver al Inicio</button>
+                    </div>
+                </div>
+            </div>
+   			
+   			--><div ng-if="busquedaIndice.data.status && busquedaIndice.resultadoscomercio.length===0" class="row mt35">
+		    
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle primary"><i class="fa fa-info"></i></div>
+	                        <p>No hay resultados comercio.</p>
+                           
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   			</div>
+   		</div>	
+        
+    	</div>
+    	
+    	
+</div>   
+		
+</div>
+</div>
+  
+
+<div ng-include="'views/ticketInformacion.html'"></div>
+<div ng-include="'views/gpOnlineModal.html'"></div>
+<div ng-include="'views/solicitarIndiceModal.html'"></div>
+<div ng-include="'views/masInfoindiceModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div>
+<div ng-include="'views/indiceModal.html'"></div>

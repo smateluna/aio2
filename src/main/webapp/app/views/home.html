@@ -1,0 +1,66 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Home" icono="fa-home"></my-header>
+<!-- <my-header titulo="Home" icono="fa-home"></my-header> -->
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}">
+</my-notification>
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opci&oacute;n solicitada.'">
+</my-notification>
+
+<div class="row headerTitle" ng-if="aioParametros.sistema=='AIO AGUAS'">
+    <div class="col-md-8 col-md-offset-2 mT-30" align="center">
+      <img src="images/registroAguas.svg" alt="" width="50">
+      <h1 class="text-center hT"> Bienvenidos al All in One CBRS <span class="cBlue">| Aguas</span></h1>
+    </div>
+  </div>
+  <!--Home Aguas-->
+  
+  <div class="row headerTitle" ng-if="aioParametros.sistema=='AIO'">
+    <div class="col-md-6 col-md-offset-3 mT-30" align="center">
+      <img src="images/registroProp.svg" alt="" width="50">
+      <h1 class="text-center hT"> Bienvenidos al All in One CBRS</h1>
+    </div>
+  </div>
+  <!--Home propiedades-->
+  
+<!--<div class="alert alert-info alert-white rounded mt70">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
+    <div class="icon"><i class="fa fa-info-circle"></i></div>
+    <strong>Nueva aplicaciÃ³n!</strong> Hemos aÃ±adido el Ã­ndice de comercio.
+</div>-->
+
+<h4 class="">Opciones disponibles</h4>
+
+<div class="row" ng-repeat="fila in misFilas">
+    <div class="col-md-3" ng-repeat="permiso in fila">
+        <a ng-href="#{{permiso.path}}">
+        <div class="block-flat opcion">
+
+
+                <div class="text-center">
+
+                        <h3><i class="fa {{permiso.icono}}" style="{{permiso.estilo}}"></i></h3>
+
+
+                </div>
+                <div class="text-center">
+                    <p>{{permiso.titulo}}</p>
+
+                    <ul ng-if="permiso.subOpcionesDTO.length>0">
+                        <li ng-repeat="sub in permiso.subOpcionesDTO">{{sub.titulo}} </li>
+                    </ul>
+
+                </div>
+
+
+
+        </div>
+            </a>
+    </div>
+
+
+</div>
+
+<div ng-include="'views/perfilesModal.html'"></div>
+

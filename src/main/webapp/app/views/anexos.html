@@ -1,0 +1,164 @@
+<my-header en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Anexos" icono="fa-users"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>   
+   
+   <div class="row mt70">
+   
+   <div class="col-md-12">
+      <div class="panel panel-default">
+      
+      <div class="panel-body">
+           
+       <div class="row row-padding">
+        <div class="col-lg-6 ">
+            <input type="search" id="search" value="" class="form-control" placeholder="Filtro de B&uacute;squeda">
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="height-673" >
+            <table class="table" id="table" anexos-datatable>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th>Secci&oacute;n</th>
+                        <th>Anexo</th>
+                        <th>Piso</th>
+                        <th>Correo</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    <tr>
+                        <td>dsfsdf</td>
+                        <td>anexo.apelladssdfidoPaterno</td>
+                        <td>sdffd</td>
+                        <td>dfffff</td>
+                        <td>sssss</td>
+                        <td>fwfwfwf</td>
+                        <td><a href="mailto:anexo.correo" target="_top">fwfwfw</a></td>
+                        <td><a href="#/anexos" class="btn btn-primary btn-xs tooltip-editar" data-toggle="modal" data-target="#edit-anexo"
+                         data-placement="top" title="" data-original-title="Editar Anexo" id="tooltip-editar"><i class="fa fa-edit font-14"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>anexo.nombre</td>
+                        <td>anexo.apellidoPaterno</td>
+                        <td>aneetertMaterno</td>
+                        <td>anexertertion</td>
+                        <td>aertertenexo</td>
+                        <td>anexo.piso</td>
+                        <td><a href="mailto:anexo.correo" target="_top">anexo.correo</a></td>
+                        <td><a href="#/anexos" class="btn btn-primary btn-xs tooltip-editar" data-toggle="modal" data-target="#edit-anexo"
+                         data-placement="top" title="" data-original-title="Editar Anexo" id="tooltip-editar"><i class="fa fa-edit font-14"></i></a></td>
+                    </tr>
+                    <tr ng-repeat="anexo in data.listaAnexos">
+                        <td>{{anexo.nombre}}</td>
+                        <td>{{anexo.apPaterno}}</td>
+                        <td>{{anexo.apMaterno}}</td>
+                        <td>{{anexo.codSeccion}}</td>
+                        <td>{{anexo.anexo}}</td>
+                        <td>{{anexo.piso}}</td>
+                        <td><a href="mailto:{{anexo.correo}}" target="_top">{{anexo.correo}}</a></td>
+                        <td><a href="#/anexos" class="btn btn-primary btn-xs tooltip-editar" data-toggle="modal" data-target="#edit-anexo"
+                         data-placement="top" ng-click="editar(anexo)" title="" data-original-title="Editar Anexo" id="tooltip-editar"><i class="fa fa-edit font-14"></i></a></td>
+                    </tr>                    
+                </tbody>
+            </table>          
+          </div>
+    	</div>
+    </div>
+           
+         </div>
+         <!--fin panel body-->
+         </div>
+         </div>
+         
+         
+    </div>   
+	
+  </div>
+  
+      <!-- Modal editar anexo -->
+	<div  class="modal fade" id="edit-anexo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+	  <div class="modal-dialog ">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	        <h4 class="modal-title" id="myModalLabel">Editar Anexo</h4>
+	      </div>
+	      <form name="formEditar" novalidate ng-submit="guardarAnexo()">
+	      	<fieldset>
+		      <div class="modal-body row-bottom-10 formulario col-md-12-espacio-bottom">
+		        <div class="row">
+		          <div class="col-xs-6 col-xs-offset-3">
+		               <div class="col-md-12">
+		                <span>Nombre</span>
+		                <input type="text" class="form-control" ng-model="anexoEditar.nombre">
+		               </div>
+		               <div class="col-md-12">
+		                <span>Apellido Paterno</span>
+		                <input type="text" class="form-control" ng-model="anexoEditar.apPaterno">
+		               </div>
+		               <div class="col-md-12">
+		                <span>Apellido Materno</span>
+		                <input type="text" class="form-control" ng-model="anexoEditar.apMaterno">
+		               </div>
+		               <div class="col-md-12">
+		                <span>Secci&oacute;n</span>
+		                   <select class="form-control" ng-model="anexoEditar.codSeccion">
+		                     <option 	ng-repeat="seccion in data.listaSecciones" 
+		                     			value="{{seccion.codigo}}"
+		                     			ng-selected="{{anexo.codSeccion == seccion.codigo}}" >
+		                     		{{seccion.descripcion}}
+		                     </option>
+		                    </select>
+		               </div>
+		               <div class="col-md-12">
+		                <span>Anexo</span>
+		                    <input type="text" class="form-control" ng-model="anexoEditar.anexo" placeholder="Anexo" maxlength="6" enter-next="" numbers-only="numbers-only">
+		               </div>
+		               <div class="col-md-12">
+		                <span>Piso</span>
+		                    <select class="form-control" ng-model="anexoEditar.piso">
+		                     <option>1</option>
+		                     <option>2</option>
+		                     <option>3</option>
+		                     <option>4</option>
+		                    </select>
+		               </div>
+		               <div class="col-md-12">
+		                <span>Correo</span>
+		                    <div class="input-group">
+		                      <span class="input-group-addon">@</span>
+		                       <input ng-class="{error: formEditar.correo.$dirty && formEditar.correo.$invalid}" type="email" name="correo" class="form-control" ng-model="anexoEditar.correo" placeholder="usuario@conservador.cl" maxlength="30" />
+		                    </div>
+							<div class="error-container" ng-show="formEditar.correo.$dirty && formEditar.correo.$invalid">
+						      <small class="error" ng-show="formEditar.correo.$error.email">
+						             Formato de correo inv&aacute;lido.
+						      </small>
+						    </div>	                    
+		               </div>
+		    </div>
+		   
+		        </div>
+		         
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn btn-primary" ng-disabled="formEditar.$invalid" >Guardar Modificaci&oacute;n</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        
+		      </div>
+	      	  </fieldset>
+	       </form>
+	    </div>
+	  </div>
+	</div>      
+	<!--fin editar anexo-->
+	
+	<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>
+<div ng-include="'views/rechazoModal.html'"></div>

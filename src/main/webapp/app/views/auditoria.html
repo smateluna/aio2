@@ -1,0 +1,105 @@
+<my-header ng-if="!req.simpleMode" en-modal="{{false}}" username="{{userLogin}}" indisponibilidad={{indisponibilidad}} modulo-disponible={{moduloDisponible}} perfil="{{perfil}}" activo-atencion="{{activoAtencion}}" modulo="{{modulo}}" grupo="{{grupo}}" user-ip-address="{{userIpAddress}}" titulo="Auditoria" icono="fa-list-alt"></my-header>
+<my-notification ng-if="cartel.bienvenido" tipo="'clean'" titulo="'Bienvenido'" texto="{{userLogin}}"></my-notification>			
+<my-notification ng-if="cartel.sinAcceso" tipo="'warning'" titulo="'Info'" texto="'No tiene permiso para acceder a la opción solicitada.'">
+</my-notification>
+
+<div ng-class="!req.simpleMode?'row mt70':'row'">
+<div class="col-md-12">
+		<div class="tab-container">
+
+			<div class="tab-content">
+				<div class="row mt0">
+					<div class="col-md-12" ng-if="!busquedaRepertorio.simpleMode">
+						<form role="form" name="myform" id="myform">
+							<div class="row mt0">
+								<div class="col-md-3 col-sm-3">
+									<div class="form-group">
+										<label class="control-label">
+											B&uacute;squeda
+										</label>
+										<input type="text" class="form-control"
+											ng-model="busquedaAuditoria.numcarpeta" name="numCarpeta"
+											placeholder="carpeta" maxlength="8"
+											numbers-only="numbers-only" focus-input="caratulaIsFocused">
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-3">
+									<div class="form-group mT-35">
+										<button type="button" class="btn  btn-default "
+											ng-click="limpiar()">
+											Limpiar
+										</button>
+										<button type="submit" class="btn  btn-primary"
+											ng-click="buscar()">
+											Buscar
+										</button>
+									</div>
+								</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="table-responsive">
+				<div class="header">
+					<h3>
+						Resultado
+					</h3>
+				</div>
+				<table class="hover table-curved">
+					<thead>
+						<tr>
+							<th>
+								Número Carpeta
+							</th>
+							<th>
+								Fecha
+							</th>
+							<th>
+								Ver
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-left">
+								1
+							</td>
+							<td class="text-left">
+								22-05-2010
+							</td>
+							<td class="text-center">
+								<span>
+									<button type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Ver documento" tooltip-placement="top">
+										<i class="fa fa-search"></i>
+									</button> </span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row mt35">
+				<div class="col-md-6 col-md-offset-3">
+					<div class="block-transparent">
+						<div class="content">
+							<div class="text-center">
+								<div class="i-circle primary">
+									<i class="fa fa-info"></i>
+								</div>
+								<p>
+									No hay resultados.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<scroll-up></scroll-up>
+
+<div ng-include="'views/mensajeModal.html'"></div>
+<div ng-include="'views/loadingModal.html'"></div>

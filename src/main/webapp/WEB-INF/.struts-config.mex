@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowViewLayout Version="1.2">
+  <StrutsActivity path="/do/service/inscripcionDigital" location="50,50" dimension="366,96" />
+  <StrutsActivity path="/do/service/inscripcionDigitalHipotecas" location="350,2250" dimension="419,96" />
+  <StrutsActivity path="/do/service/inscripcionDigitalProhibiciones" location="950,2250" dimension="438,96" />
+  <StrutsActivity path="/do/service/gponline" location="50,1850" dimension="322,96" />
+  <StrutsActivity path="/do/service/auditoria" location="650,1850" dimension="323,96" />
+  <StrutsActivity path="/do/service/planos" location="650,250" dimension="309,96" />
+  <StrutsActivity path="/do/service/repertorio" location="50,2050" dimension="329,96" />
+  <StrutsActivity path="/do/service/escritura" location="50,450" dimension="319,96" />
+  <StrutsActivity path="/do/service/borradores" location="650,450" dimension="331,96" />
+  <StrutsActivity path="/do/service/solicitud" location="650,50" dimension="320,96" />
+  <StrutsActivity path="/do/service/solicitudHipotecas" location="1550,550" dimension="373,96" />
+  <StrutsActivity path="/do/service/solicitudProhibiciones" location="1550,750" dimension="392,96" />
+  <StrutsActivity path="/do/service/requirente" location="50,250" dimension="331,96" />
+  <StrutsActivity path="/do/service/pdf" location="50,650" dimension="292,96" />
+  <StrutsActivity path="/do/service/estado" location="650,650" dimension="309,96" />
+  <StrutsActivity path="/do/service/anexo" location="50,850" dimension="307,96" />
+  <StrutsActivity path="/do/service/reingreso" location="650,850" dimension="326,96" />
+  <StrutsActivity path="/do/service/usuario" location="50,1050" dimension="314,96" />
+  <StrutsActivity path="/do/service/indice" location="650,1050" dimension="306,96" />
+  <StrutsActivity path="/do/service/oficio" location="1550,350" dimension="306,96" />
+  <StrutsActivity path="/do/service/mantenedor" location="50,1250" dimension="339,96" />
+  <StrutsActivity path="/do/service/caratula" location="650,1250" dimension="318,96" />
+  <StrutsActivity path="/do/service/anotacion" location="50,1450" dimension="329,96" />
+  <StrutsActivity path="/do/service/anotacionHipotecas" location="1550,950" dimension="382,96" />
+  <StrutsActivity path="/do/service/anotacionProhibiciones" location="1550,1150" dimension="401,96" />
+  <StrutsActivity path="/do/service/carteles" location="650,1450" dimension="316,96" />
+  <StrutsActivity path="/do/service/distribucion" location="50,1650" dimension="338,96" />
+  <StrutsActivity path="/do/service/certificacion" location="650,1650" dimension="341,96" />
+  <StrutsActivity path="/do/service/desbloqueo" location="350,2450" dimension="337,96" />
+  <StrutsActivity path="/do/service/tareas" location="650,2050" dimension="308,96" />
+  <StrutsActivity path="/do/service/uaf" location="1250,1850" dimension="292,96" />
+  <StrutsActivity path="/do/service/parametros" location="1250,2050" dimension="297,96" />
+  <StrutsActivity path="/do/service/reingresoEscritura" location="1550,1350" dimension="371,96" />
+  <StrutsActivity path="/do/service/firma" location="1550,1550" dimension="304,96" />
+  <StrutsActivity path="/app/index.html#/gponline" location="50,2250" dimension="175,51" />
+  <StrutsActivity path="/app/index-dev.html#/gponline" location="1250,450" dimension="199,51" />
+  <StrutsActivity path="/login.jsp/" location="1250,650" dimension="85,51" />
+  <StrutsActivity path="/login.jsp" location="1250,850" dimension="80,51" />
+  <StrutsActivity path="www.google.cl" location="1250,1050" dimension="109,51" />
+  <StrutsActivity path="/login/index.jsp" location="1250,1250" dimension="113,51" />
+  <StrutsActivity path="/l" location="1250,1450" dimension="38,51" />
+  <StrutsActivity path="/app/index.html\#/gponline" location="1250,1650" dimension="180,51" />
+  <StrutsActivity path="/do/service/certificacionHipotecas" />
+  <StrutsTransition id="/do/service/gponline,gponline,/app/index.html#/gponline,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="211,1898" />
+      <AbsolutePoint location="137,2275" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+</FlowViewLayout>
+

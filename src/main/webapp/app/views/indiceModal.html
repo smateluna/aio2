@@ -1,0 +1,176 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="indiceModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		<span ng-switch="registro">
+            <span ng-switch-when="com" class="label label-com label-registro">Comercio</span>
+           	<span ng-switch-when="prop" class="label label-prop label-registro">Propiedad</span>
+           	<span ng-switch-when="proh" class="label label-proh label-registro">Prohibición</span>
+           	<span ng-switch-when="hip" class="label label-hipo label-registro">Hipoteca</span>
+        </span>
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+
+
+
+
+    <div class="modal-body modal-body-solicitar">
+	    <form ng-submit="preSolicitar()" role="form" name="sform" id="sform">
+	
+	
+	
+	
+        <div class="bs-callout bs-callout-warning">
+            <h4 ng-if="foja!=''">
+            	Solicitar Pre-Caratula para foja: {{foja}} numero: {{numero}} año: {{ano}} 
+			</h4>
+            <h4 ng-if="foja==''">
+            	Solicitar Pre-Caratula Masiva 
+			</h4>
+            <!--<p>Dependiendo del título solicitado, recibirá un libro o una digitalización al día.</p>-->
+                <div class="row mt15">
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group">
+                           <label class="control-label">Rut
+                                    </label>
+                                    <input type="text" class="form-control" ng-class="{'error-field': sform.rutt.$error.rut && !sform.rutt.$pristine}"
+                                           id="rutt" name="rutt" ng-model="solicitaCaratula.rut"
+                                           focus-input ="ruttIsFocused" placeholder="rut" requirente-full destino="solicitaCaratula" ng-rut rut-format enter-next="">
+                                    <div class="error-message" ng-show="sform.rutt.$error.rut && !sform.rutt.$pristine">
+                                        Rut no válido
+                                    </div> 
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                            <label class="control-label" for="snombre">Nombre
+                            </label> <input type="text" ng-class="{'error-field': solicitaCaratula.rutConsultado && sform.snombre.$invalid}" class="form-control" ng-model="solicitaCaratula.nombre" loading-state="isLoadingSolicitar"
+                                            id="snombre" name="snombre" placeholder="nombre" maxlength="30" required="required" enter-next="">
+                        </div>
+                    </div>
+				</div>
+				<!--fin row-->
+					
+				<div class="row">	
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="snumero">Apellido Paterno
+                            </label> <input type="text" ng-class="{'error-field': solicitaCaratula.rutConsultado && sform.sapep.$invalid}" class="form-control" ng-model="solicitaCaratula.apep" loading-state="isLoadingSolicitar"
+                                            id="sapep" name="sapep" placeholder="apellido paterno" maxlength="20" required="required" enter-next="">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="snumero">Apellido Materno
+                            </label> <input type="text" ng-class="{'error-field': solicitaCaratula.rutConsultado && sform.sapem.$invalid}" class="form-control" ng-model="solicitaCaratula.apem" loading-state="isLoadingSolicitar"
+                                            id="sapem" name="sapem" placeholder="apellido materno" maxlength="20" enter-next="">
+                        </div>
+                    </div>
+                </div>
+				<!--fin row-->
+                
+				<div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                           <label class="control-label">Dirección
+                                    </label>
+									</label> <input ng-class="{'error-field': solicitaCaratula.rutConsultado && sform.sdireccion.$invalid}" type="text" class="form-control" ng-model="solicitaCaratula.direccion" loading-state="isLoadingSolicitar"
+                                            id="sdireccion" name="sdireccion" placeholder="dirección" maxlength="50" required="required" enter-next="">                       
+                    	</div>
+					</div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="snombre">Teléfono
+                            </label> <input type="text" class="form-control" ng-model="solicitaCaratula.telefono" loading-state="isLoadingSolicitar"
+                                            id="stelefono" name="stelefono" placeholder="teléfono" maxlength="20" enter-next="">
+                        </div>
+                    </div>
+				</div>
+				<!--fin row-->
+					
+				
+				<div class="row">	
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                            <label class="control-label">Correo electrónico
+                            </label> <input class="form-control" type="email" name="email" ng-model="solicitaCaratula.correo" enter-next="" placeholder="correo electrónico" maxlength="100">
+									<div class="error-message" ng-show="sform.email.$dirty && sform.email.$invalid">
+                                        correo electrónico invalido 
+                                    </div> 
+                        </div>
+                    </div>
+                </div>
+				<!--fin row-->
+				
+	   </div>
+	   <!--fin bs-callout-->
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+				<div class="row-fluid mt15" ng-if="registro!='com'">
+					<div class="col-md-12 col-sm-12">
+					  <div class="block-flat block-border">
+		                <div class="header">
+                          <h4>Tramite a Solicitar</h4>
+                        </div>
+                      </div>
+					 
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite1" class="icheck" ng-i-check="" > Copia <label ng-show="registro=='prop'">Dominio</label> Vigente</label>	<input type="text" ng-model="solicitaCaratula.obs1" ng-show="solicitaCaratula.tramite1" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite2" class="icheck" ng-i-check="" > Copia <label ng-show="registro=='prop'">Dominio</label> sin Vigencia</label> <input type="text" ng-model="solicitaCaratula.obs2" ng-show="solicitaCaratula.tramite2" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox" ng-show="registro=='prop'"><input type="checkbox" ng-model="solicitaCaratula.tramite3" class="icheck" ng-i-check="" > Certificado Gravámenes y Prohibición (GP)</label> <input type="text" ng-model="solicitaCaratula.obs3" ng-show="solicitaCaratula.tramite3" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox" ng-show="registro=='prop'"><input type="checkbox" ng-model="solicitaCaratula.tramite4" class="icheck" ng-i-check="" > Certificado Gravámenes y Prohibición con Litigio (GP)</label> <input type="text" ng-model="solicitaCaratula.obs4" ng-show="solicitaCaratula.tramite4" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox" ng-show="registro=='prop'"><input type="checkbox" ng-model="solicitaCaratula.tramite5" class="icheck" ng-i-check="" > Certificado de Título Últimos 10 años (Incluye GP y Copia con Vigencia)</label> <input type="text" ng-model="solicitaCaratula.obs5" ng-show="solicitaCaratula.tramite5" class="form-control mb10" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+					</div>
+				</div>
+				
+				
+
+				<div class="row-fluid mt15" ng-if="registro=='com'">
+					<div class="col-md-12 col-sm-12">
+					  <div class="block-flat block-border">
+		                <div class="header">
+                          <h4>Tramite a Solicitar</h4>
+                        </div>
+                      </div>
+					 
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite1" class="icheck" ng-i-check=""> Copia con Vigencia Reg. Comercio</label>	<input type="text" ng-model="solicitaCaratula.obs1" ng-show="solicitaCaratula.tramite1" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite2" class="icheck" ng-i-check=""> Copia sin Vigencia Reg. Comercio</label> <input type="text" ng-model="solicitaCaratula.obs2" ng-show="solicitaCaratula.tramite2" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite3" class="icheck" ng-i-check=""> Certificado Vigencia de Sociedad Reg. Comercio</label> <input type="text" ng-model="solicitaCaratula.obs3" ng-show="solicitaCaratula.tramite3" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="" value="Certificado Vigencia de Sociedad">
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite4" class="icheck" ng-i-check=""> Certificado Vigencia de Poder Reg. Comercio</label> <input type="text" ng-model="solicitaCaratula.obs4" ng-show="solicitaCaratula.tramite4" class="form-control" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="" value="Certificado Vigencia de Poder">
+						<label class="checkbox"><input type="checkbox" ng-model="solicitaCaratula.tramite5" class="icheck" ng-i-check=""> Certificado de Capital para Publicacion Diario Oficial</label> <input type="text" ng-model="solicitaCaratula.obs5" ng-show="solicitaCaratula.tramite5" class="form-control mb10" loading-state="isLoadingSolicitar" id="smail" name="smail" placeholder="observación" maxlength="100" enter-next="">
+					</div>
+				</div>
+
+                <div class="row mt15">
+                    <div class="text-center">
+                        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar"  ng-click="limpiarSolicitaCaratula()">Limpiar</button>
+                        <button type="submit" class="btn  btn-primary btn-rad" data-loading-text="Solicitando..." loading-state="isLoadingSolicitar"  ng-disabled="sform.$invalid || (!solicitaCaratula.tramite1 && !solicitaCaratula.tramite2 && !solicitaCaratula.tramite3 && !solicitaCaratula.tramite4 && !solicitaCaratula.tramite5)" ng-click="preSolicitaCaratula()">Solicitar</button>
+                    </div>
+					
+                </div>
+				<!--fin row-->
+				
+				 <div class="form-group padding-lr-15" ng-if="solicitudStatus.error || solicitudStatus.warning || solicitudStatus.ok">
+                        <div class="alert alert-white rounded" ng-class="{'alert-danger': solicitudStatus.error, 'alert-warning': solicitudStatus.warning, 'alert-success': solicitudStatus.ok}">
+                            <div class="icon"><i class="fa" ng-class="{'fa-times-circle': solicitudStatus.error, 'fa-warning': solicitudStatus.warning, 'fa-check': solicitudStatus.ok}"></i>
+							</div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> <span ng-bind-html="solicitudStatus.msg"></span>
+                         </div>
+                    </div>
+
+            </form>
+
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

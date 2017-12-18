@@ -1,0 +1,109 @@
+
+    <div class="col-md-12">
+        <div class="block-flat block-border">
+            <!--<button type="button" class="close close-resultado" ng-click="cerrarResultadoTitulo()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>-->
+            <div class="row mt0">
+                            <div class="col-md-12 col-sm-12 barra-buttons">
+                                
+                               <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openGpCertfEmitModal()"><i class="fa fa-search"></i> Certificados Emitidos
+                               </button>
+                               
+                                <button type="button" class="btn  btn-primary btn-xs btn-rad" ng-click="openEventosModal()">
+                                  <span class="badge ng-scope ng-binding" ng-if="busquedaGponline.numeroEventos>=0">{{busquedaGponline.numeroEventos}}</span> Eventos
+                                </button>
+                                
+                                <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="buscarCaratulas()">
+                                  <i class="fa fa-search"></i> Carátulas
+                                </button>     
+									
+                                    
+                                 <span ng-if="(busquedaGponline.urls=='' || busquedaGponline.urls==null) && !busquedaPlanos.data.status">
+                                 <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="buscarPlanos()"><i class="fa fa-search"></i> Planos</button>        
+                                 </span> 
+                                 
+                                 <span ng-if="busquedaPlanos.data.status && !busquedaPlanos.tienePlanos">
+                                    <span class="label label-info"><i class="fa fa-info"></i> No hay planos para este borrador</span>
+                                 </span>
+                                 <span ng-if="busquedaGponline.urls.length>0">
+                                   <span ng-repeat="urls in busquedaGponline.urls">
+                                    <a href="{{urls.url}}" target="_blank"  class="btn btn-xs btn-success"><i class="fa fa-camera"></i> Plano</a>
+                                    </span> 
+                                 </span> 
+                                 
+                                 <span ng-if="busquedaGponline.fechaUltimoGP !='' && busquedaGponline.fechaUltimoGP !=null" class="label label-default">
+                                      Último GP: <span>{{busquedaGponline.fechaUltimoGP}} <button type="button" class="btn  btn-primary btn-xs btn-rad" ng-click="verGP()" style="padding: 1px 6px;"><i class="fa fa-search"></i></button></span>
+                                 </span>                         
+								</div>
+                            
+                        </div>
+                        
+            
+            
+            <div class="header">
+                <h4><i class="fa fa-building-o"></i> Datos de la Propiedad</h4>
+            </div>
+            <div class="content">
+                     
+                     <div class="row mt0 borderC-Bottom">
+                         <div class="col-md-4 col-sm-4 borderC-Left">
+                           <form class="form-horizontal">
+                              <div class="form-group mT-mB-0">
+                                <label class="col-sm-4 control-label">Borrador:</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static">{{busquedaGponline.datosPropiedad.borrador}}</p>
+                                </div>
+                              </div>
+                              
+                              <div class="form-group mT-mB-0">
+                                <label class="col-sm-4 control-label">Folio:</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static">{{busquedaGponline.datosPropiedad.folio}}</p>
+                                </div>
+                              </div>
+                              
+                              <div class="form-group mT-mB-0">
+                                <label class="col-sm-4 control-label">Rol:</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-repeat="roles in busquedaGponline.roles">{{roles.rol}}</p>
+                                </div>
+                              </div>
+                              
+                              <div class="form-group mB-5 mT-0">
+                                <label class="col-sm-4 control-label">Comuna: </label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static">{{busquedaGponline.datosPropiedad.comuna}}</p>
+                                </div>
+                              </div>
+                              
+                           </form>
+                         </div>
+                         
+                         <div class="col-md-8 col-sm-8">
+                         <form class="form-horizontal">
+                              <div class="form-group mT-mB-5">
+                                <label class="col-sm-2 control-label">Dirección:</label>
+                                <div class="col-sm-10">
+                                  <p class="form-control-static text-justify" ng-text-truncate="busquedaGponline.datosPropiedad.direccion" ng-tt-words-threshold="20"></p>
+                                </div>
+                              </div>
+                              
+                              <div class="form-group mT-mB-5">
+                                <label class="col-sm-2 control-label">Deslindes:</label>
+                                <div class="col-sm-10">
+                                  <p class="form-control-static text-justify" ng-text-truncate="busquedaGponline.datosPropiedad.deslinde" ng-tt-words-threshold="20"></p>
+                                  
+                                </div>
+                              </div>
+                              
+                               
+                              
+                          </form>    
+                         </div>
+                         
+                     </div>
+                        
+                        
+                        
+            </div>
+        </div>
+    </div>

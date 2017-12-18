@@ -1,0 +1,224 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="masInfoLiquidacionModal.html">
+
+<div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">×</button>
+        <h3>Car&aacute;tula {{liquidacionCaratula.caratulaDTO.numeroCaratula}}</h3>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+			
+					<div class="widget">
+	
+						<div class="widget-content">
+							<div class="form-horizontal borde">
+								<div class="row">
+	
+	
+									<div class="col-md-12">
+	                                    <!-- <form class="form-horizontal"> -->
+	                                       <div class="form-group">
+	                                          <label class="col-sm-3 control-label">#:</label>
+	                                            <div class="col-sm-9">
+	                                              <p class="form-control-static">
+	                                                <a id="numeroCaratula" ng-click="verEstadoCaratula(liquidacionCaratula.caratulaDTO.numeroCaratula)" target="blank" href="">{{liquidacionCaratula.caratulaDTO.numeroCaratula}}</a>
+	
+												<p class="detail-block text-left" id="txblock" ng-if="liquidacionCaratula.caratulaDTO.productoWebDTO.idTransaccion && liquidacionCaratula.caratulaDTO.productoWebDTO.idTransaccion!=''">
+													( Transacción <a ng-click="verTransaccion(liquidacionCaratula.caratulaDTO)" id="idTransaccion" target="_blank" href="">#{{liquidacionCaratula.caratulaDTO.productoWebDTO.idTransaccion}}</a> )
+												</p>
+	                                              </p>
+	                                            </div>
+	                                        </div>
+	
+	                                        <div class="form-group">
+	                                          <label class="col-sm-3 control-label">Fecha Creaci&oacute;n:</label>
+	                                            <div class="col-sm-9">
+	                                              <p class="form-control-static" id="fechaCreacion">
+	                                                {{liquidacionCaratula.caratulaDTO.fechaCreacion  | date: 'dd/MM/yyyy HH:mm:ss'}}
+	                                              </p>
+	                                            </div>
+	                                        </div>
+	                                
+	                                        <div class="form-group" id="tramiteblock">
+	                                          <label class="col-sm-3 control-label">Tr&aacute;mite:</label>
+	                                            <div class="col-sm-9">
+	                                              <p class="form-control-static" id="detalles">
+	                                                {{liquidacionCaratula.caratulaDTO.tipoFormularioDTO.descripcion}}
+												  <br />
+												{{liquidacionCaratula.caratulaDTO.productoWebDTO.descripcionProducto}}
+												<p class='detail-block text-left' style='font-weight: bold; margin-top: 8px;'><i class='fa fa-tasks'></i> Detalle</p> 
+												<p ng-repeat="texto in liquidacionCaratula.caratulaDTO.productoWebDTO.productoGlosa" class='detail-block text-left'>&bull; 
+													{{texto}}
+												</p>
+	                                              </p>
+	                                            </div>
+	                                        </div> 
+	
+										
+										<div class="form-group">
+											<table class="table table-bordered table-striped table-td13px">
+												<thead>
+													<tr>
+														<th colspan="3" style="text-align: center; background-color: #E7E7E7;"><i class="fa fa-file-text-o"></i> Tareas</th>
+													</tr>
+													<tr>
+														<th style="text-align: center;">Descripci&oacute;n</th>
+													</tr>
+												</thead>
+												<tbody id="tasks">
+													<tr ng-repeat="tarea in liquidacionCaratula.caratulaDTO.tareaDTOs">
+														<td style='text-align: center;'>{{tarea.descripcion}}</td>
+													</tr>	
+						 	
+													<tr ng-if="liquidacionCaratula.caratulaDTO.tareaDTOs==null || liquidacionCaratula.caratulaDTO.tareaDTOs.length==0">
+														<td style='text-align: center; font-style: italic;'>No hay tareas</td>
+													</tr>
+												</tbody>
+											</table>
+	
+										</div>									
+										
+										<div class="form-group">
+	                                          <label class="col-sm-3 control-label">Estado:</label>
+	                                            <div class="col-sm-9">
+	                                              <span class="label text-left" ng-class="liquidacionCaratula.caratulaDTO.estadoActualCaratulaDTO.descripcionEnFlujo=='En Proceso'? 'label-info' : liquidacionCaratula.caratulaDTO.estadoActualCaratulaDTO.descripcionEnFlujo=='Rechazada'? 'label-important' : 'label-success'" id="estado">{{liquidacionCaratula.caratulaDTO.estadoActualCaratulaDTO.descripcionEnFlujo}}</span> <br>
+												<p class="detail-block text-left" style="margin-top: 8px;" id="seccion"><i class='fa fa-angle-right'></i> {{liquidacionCaratula.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.descripcion}}</p>
+												<p class="detail-block text-left" id="fechaSeccion"><i class='fa fa-clock-o'></i> {{liquidacionCaratula.caratulaDTO.estadoActualCaratulaDTO.fechaMov }}</p>
+	                                            </div>
+	                                        </div>
+	
+	
+	
+										
+	
+										<div class="form-group">
+											<form class="form-horizontal" name="formDocumento" ng-submit="agregarDocumento()" >
+											<table class="table table-bordered table-striped table-td13px">
+												<thead>
+													<tr>
+													 <th colspan="3" style="text-align: center; background-color: #E7E7E7;"><i class="fa fa-file-o"></i> Documentos disponibles</th>
+													</tr>
+													<tr>
+														<th style="text-align: center;">Documento</th>
+														<th style="text-align: center;">Valor</th>
+														<th style="text-align: center;">Descargar</th>
+													</tr>
+												</thead>
+												<tbody id="docs">
+													<tr ng-repeat="papel in liquidacionCaratula.papeles">
+														<td style='text-align: center;'>{{papel.tipoDocumentoDTO.descripcion}}</td>
+														<td style='text-align: center;'>{{papel.valorDocumento==null?0:papel.valorDocumento | myCurrency}}</td>
+														<td style='text-align: center;'>
+															<a download ng-if="papel.tipoDocumentoDTO.codigo!=-1" class='btn btn-primary btn-xs' ng-click="downloadFirma(papel)" href><i class='fa fa-download'></i></a>
+															<input ng-if="papel.tipoDocumentoDTO.codigo==-1" ng-click="eliminarDocumento(papel)" type="button" value="Eliminar" class="btn btn-danger btn-xs"/>
+														</td>
+													</tr>
+													<tr ng-if="liquidacionCaratula.papeles==null || liquidacionCaratula.papeles.length==0">
+														<td colspan='3' style='text-align: center; font-style: italic;'>No hay documentos disponibles</td>
+													</tr>
+													<tr ng-if="liquidacionCaratula.hayBoleta">
+														<td style='text-align: center;'>
+														<i class='fa fa-download'></i> Boleta
+														</td><td></td>
+														<td style='text-align: center;'>
+															<a download class='btn btn-primary btn-xs' ng-click="downloadBoleta(liquidacionCaratula.numeroBoleta)" href>
+																<i class='fa fa-download'></i>
+															</a>
+														</td>
+													</tr>
+													<tr ng-if="liquidacionCaratula.papeles!=null && liquidacionCaratula.papeles.length>0">
+														<td style='text-align: center;'>
+															<strong>TOTAL</strong>
+														</td>
+														<td style='text-align: center;'><strong>{{ getTotalPapeles() | myCurrency }}</strong></td>
+														<td style='text-align: center;'>
+														</td>
+													</tr>
+													<tr>
+														<td colspan="3" style='text-align: center;'>
+															<strong>Agregar Documento</strong>
+														</td>
+													</tr>
+													<tr>
+														
+															<td style='text-align: center;'><input focus-input ="descripcionIsFocused" name="descripcion" enter-next="" required="" ng-model="nuevoDocumento.tipoDocumentoDTO.descripcion" type="text" /></td>
+															<td style='text-align: center;'>$ <input required="" ng-model="nuevoDocumento.valorDocumento" numbers-only-neg type="text" /></td>
+															<td style='text-align: center;'>
+																<button class="btn btn-primary btn-xs btn-rad"  type="submit">Agregar</button>
+															</td>
+														
+													</tr>
+	
+	
+	
+												</tbody>
+											</table>
+											</form>
+										</div>
+	
+	
+										<div class="form-group">
+											<table class="table table-bordered table-striped table-td13px">
+												<thead>
+													<tr>
+														<th colspan="3" style="text-align: center; background-color: #E7E7E7;"><i class="fa fa-usd"></i> Valores</th>
+													</tr>
+													<tr>
+														<th style="text-align: center;">Valor Pagado</th>
+														<th style="text-align: center;">Valor Real</th>
+														<th style="text-align: center;">Diferencia</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="text-align: center;" id="valorPagado">{{liquidacionCaratula.caratulaDTO.valorPagado | myCurrency}}</td>
+														<td style="text-align: center;" id="valorReal"><strong>{{liquidacionCaratula.caratulaDTO.valorReal | myCurrency}}</strong></td>
+														<td style="text-align: center;" id="diferencia">{{liquidacionCaratula.caratulaDTO.diferencia | myCurrency}}</td>
+													</tr>
+												</tbody>
+											</table>
+	
+										</div>
+	
+	                                   <!--  </form>-->
+	
+	
+	
+	
+									</div>
+	
+	
+								</div>
+	
+							</div>
+	
+						</div>
+	
+					</div>
+
+
+   		
+   		<div ng-if="states.buscar.isError" class="row mt35">
+	        <div class="col-md-6 col-md-offset-3">
+	            <div class="block-transparent">
+	                <div class="content">
+	                    <div class="text-center">
+	                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+	                        <p>{{states.buscar.msg}}</p>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>				
+			
+        </div>
+    </div>
+
+		<div class="modal-footer">			
+			<button ng-click="aprobarCaratula()" class="btn  btn-success" id="liquidacionOK" data-loading-text="Por favor espere..."><i class="fa fa-check"></i> Aprobar Liquidación</button>
+			<button ng-click="cancel()"  class="btn  btn-default btn-rad" type="button"  loading-state="isLoadingSolicitar" >Cerrar</button>
+		</div>
+
+<div ng-include="'views/transaccionModal.html'"></div>  
+</script>

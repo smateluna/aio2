@@ -1,0 +1,127 @@
+<div class="table-responsive">
+    <table class="hover table-curved">
+        <thead>
+        <tr>
+            <th>
+                #
+                                        <span class="pull-right">
+
+                                            <i class="fa fa-sort-desc"></i>
+                                        </span>
+            </th>
+            <th>
+                Fecha solicitud
+            </th>
+            <th>
+                Estado
+
+            </th>
+            <th>
+                Observación
+
+            </th>
+            <th>
+                Fecha estado
+
+            </th>
+
+            <th>
+                Foja
+
+            </th>
+            <th>
+                Número
+
+            </th>
+            <th>
+                Año
+
+            </th>
+            <th>
+                Bis
+
+            </th>
+            <th>
+                Tomo
+
+            </th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody infinite-scroll='loadMoreMis()' infinite-scroll-distance='2'>
+
+
+        <tr ng-repeat="sol in listaMis.data | filter: isSolicitudRevisada">
+            <td class="text-right">{{sol.idSolicitud}}</td>
+            <td class="text-center">{{sol.fechaSolicitud}}</td>
+            <td>
+                                 <span ng-if="sol.estadoDTO.idEstado==1" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                 <span ng-if="sol.estadoDTO.idEstado==2" class="label label-success">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==3" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                <span ng-if="sol.estadoDTO.idEstado==4" class="label label-default">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==5" class="label label-primary">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==6" class="label label-danger">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+
+                                 <span ng-if="sol.estadoDTO.idEstado==7" class="label label-manual">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+                                <span ng-if="sol.estadoDTO.idEstado==8" class="label label-warning">
+                                    {{sol.estadoDTO.descripcion}}
+                                </span>
+            </td>
+            <td>
+                                        <span ng-if="sol.observacionSolicitudDTO.titulo">
+                                        <span class="font-12">
+                                            <span class="subraya">{{sol.observacionSolicitudDTO.titulo}}</span>
+                                            {{sol.observacionSolicitudDTO.texto}}
+                                        </span>
+                                        </span>
+            </td>
+            <td class="text-center">{{sol.fechaEstado}}</td>
+            <td class="text-right">{{sol.foja}}</td>
+            <td class="text-right">{{sol.numero}}</td>
+            <td class="text-right">{{sol.ano}}</td>
+            <td class="text-center">
+                            <span ng-if="sol.bis==1">
+                                <i class="fa fa-check"></i>
+                            </span>
+            </td>
+            <td class="text-right">{{sol.tomo}}</td>
+            <td class="text-center">
+                <button ng-if="sol.estadoDTO.idEstado==2 || sol.estadoDTO.idEstado==5" ng-click="accionSolicitud('promiseUpdateSolicitudMis',sol)"
+                        class="btn btn-xs btn-primary btn-rad" tooltip="Ver inscripción" tooltip-placement="left">
+                    <i class="fa fa-search"></i>
+                </button>
+
+                <button ng-if="sol.estadoDTO.idEstado==3" ng-click="accionSolicitud('promiseUpdateSolicitudMis', sol)"
+                        class="btn btn-xs btn-danger btn-rad" tooltip="Quitar de la lista" tooltip-placement="left">
+                    <i class="fa fa-times"></i>
+                </button>
+            </td>
+        </tr>
+
+        <tr ng-if="!hayDataEnTablaMis()">
+            <td colspan="11" class="text-center text-italic">No hay registros.</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+

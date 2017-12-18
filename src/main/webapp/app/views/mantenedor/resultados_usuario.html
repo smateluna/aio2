@@ -1,0 +1,64 @@
+<div class="table-responsive">
+	<div class="header">
+        <h3> Usuarios 
+          <button type="button" class="pull-right btn  btn-primary btn-sm" ng-click="obtenerUsuarios()" tooltip="Refrescar" tooltip-placement="bottom">
+              <i class="fa fa-refresh"></i>
+           </button>
+        </h3>
+    </div>
+	<table class="hover table-curved">
+        <thead>
+        <tr>
+        	<th>
+                Nombre
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Perfil
+            </th>
+            <th>
+                Estado
+            </th>
+            <th class="text-center">
+            	Caratulas Distribuidas Hoy
+            </th>
+            <th class="text-center">
+            	Caratulas Asignadas
+            </th>
+            <th>
+                Redistribuir
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+	        <tr ng-repeat="sol in busquedaUsuario.resultados | filter: miPerfil">
+	        		<td class="text-left">{{sol.nombreUsuario}}</td>
+	         		<td class="text-left">{{sol.usuario}}</td>
+	         		<td class="text-left">{{sol.perfil}}</td>
+	         		<td class="text-left">
+	         			<div class="btn-group display-inline" data-toggle="buttons">
+					  		  
+							    <input type="button" ng-class="sol.estado ? 'btn btn-primary active' : 'btn btn-default'" name="options" id="option1" value="On" autocomplete="On" ng-click="cambiaEstadoUsuario(sol,true)"> 
+							  
+							    <input type="button" ng-class="sol.estado ? 'btn btn-default' : 'btn btn-primary active'" name="options" id="option2" value="Off" autocomplete="Off" ng-click="cambiaEstadoUsuario(sol,false)"> 
+
+						</div>
+					</td>
+					<td class="text-center">{{sol.cantidadcaratulas}}</td>
+					<td class="text-center">{{sol.cantidadasignada}}</td>
+				    <td class="text-left">
+	         			<div ng-show="!sol.estado" ng-if="userLoginSinCBRS==='mfarfan' || userLoginSinCBRS==='cbravo'">
+						    <button type="button" class="btn btn-primary btn-sm btn-rad" ng-click="redistribuirCaratulas(sol)">
+                            	<i class="fa fa-retweet"></i>
+                           	</button>
+						</div>
+					</td>  
+	        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- </div> -->
+
+
