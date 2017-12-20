@@ -200,6 +200,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			
 //			if(usuario!=null && !"".equals(usuario)){
 				usuario = usuario.replaceAll("CBRS\\\\", "");
