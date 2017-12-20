@@ -146,14 +146,13 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 	@SuppressWarnings({ "unchecked" })
 	public void getUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
-
 		JSONObject json = new JSONObject();
 		json.put("estado", false);	
 
 		try {		
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";			
 			json.put("nombreUsuario", usuario);
-			
+			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			//Propiedades AIO
 			json.put("sistema", CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 			json.put("anoArchivoNacional", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_ARCHIVO_NACIONAL")));
@@ -200,7 +199,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		try {		
 			
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			
+			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			
 //			if(usuario!=null && !"".equals(usuario)){
 				usuario = usuario.replaceAll("CBRS\\\\", "");
@@ -290,6 +289,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 //			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
 			JSONArray listaPerfiles = util.getPerfilesUsuario(usuario);
