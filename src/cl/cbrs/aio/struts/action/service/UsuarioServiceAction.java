@@ -291,6 +291,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		try {		
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 //			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
 			JSONArray listaPerfiles = util.getPerfilesUsuario(usuario);

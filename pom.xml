@@ -174,7 +174,7 @@
 			<groupId>org.jboss.logging</groupId>
 			<artifactId>jboss-logging</artifactId>
 			<version>3.1.4.GA</version>
-<scope>provided</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -669,7 +669,7 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-				   <encoding>iso-8859-1</encoding>
+					<encoding>iso-8859-1</encoding>
 				</configuration>
 			</plugin>
 			<plugin>

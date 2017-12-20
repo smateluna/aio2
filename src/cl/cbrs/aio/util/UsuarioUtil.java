@@ -63,7 +63,7 @@ public class UsuarioUtil {
 		String ip = TablaValores.getValor(TABLA_PARAMETROS, "IP_WS", "valor");
 		String port = TablaValores.getValor(TABLA_PARAMETROS, "PORT_WS", "valor");
 		JSONArray listaPerfiles = new JSONArray();
-
+         System.out.println("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario);
 //		System.out.println("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario);
 		
 		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario));
