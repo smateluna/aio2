@@ -90,38 +90,6 @@
 					<named-formatter name="COLOR-PATTERN" />
 				</formatter>
 			</console-handler>
-			<async-handler name="ASYNC">
-				<queue-length value="512" />
-				<overflow-action value="block" />
-				<subhandlers>
-					<handler name="CONSOLE" />
-				</subhandlers>
-			</async-handler>
-			<logger category="org.apache.tomcat.util.modeler">
-				<level name="WARN" />
-			</logger>
-			<logger category="com.arjuna.ats.arjuna">
-				<level name="ERROR" />
-			</logger>
-			<logger category="org.jboss.as.config">
-				<level name="DEBUG" />
-			</logger>
-			<logger category="sun.rmi">
-				<level name="WARN" />
-			</logger>
-			<logger category="jacorb">
-				<level name="WARN" />
-			</logger>
-			<logger category="jacorb.config">
-				<level name="ERROR" />
-			</logger>
-			
-			<logger category="cl.cbr.botondepagoweb.bo">
-			    <level name="DEBUG"/>
-			</logger>
-			<logger category="org.mongodb.driver">
-			      <level name="ERROR"/>
-			</logger>
 			<root-logger>
                 <level name="DEBUG"/>
             </root-logger>
