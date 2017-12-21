@@ -3,7 +3,7 @@
    	<dependencies>
     </dependencies>
     <exclusions>
-    <!--   <module name="org.apache.log4j" /> -->
+       <module name="org.apache.log4j" /> 
       <module name="io.netty" />
     </exclusions>
   </deployment>

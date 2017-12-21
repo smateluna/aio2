@@ -85,23 +85,20 @@
 	</management>
 	<profile>
 		<subsystem xmlns="urn:jboss:domain:logging:1.5">
-			<console-handler name="CONSOLE">
+			<periodic-rotating-file-handler name="FILE"
+				autoflush="true">
 				<formatter>
-					<named-formatter name="COLOR-PATTERN" />
+					<named-formatter name="PATTERN" />
 				</formatter>
-			</console-handler>
-			<async-handler name="ASYNC">
-				<queue-length value="512" />
-				<overflow-action value="block" />
-				<subhandlers>
-					<handler name="CONSOLE" />
-				</subhandlers>
-			</async-handler>
-			<logger category="org.apache.tomcat.util.modeler">
+				<file relative-to="jboss.server.log.dir" path="server.log" />
+				<suffix value=".yyyy-MM-dd" />
+				<append value="true" />
+			</periodic-rotating-file-handler>
+			<logger category="com.arjuna">
 				<level name="WARN" />
 			</logger>
-			<logger category="com.arjuna.ats.arjuna">
-				<level name="ERROR" />
+			<logger category="org.apache.tomcat.util.modeler">
+				<level name="WARN" />
 			</logger>
 			<logger category="org.jboss.as.config">
 				<level name="DEBUG" />
@@ -115,16 +112,12 @@
 			<logger category="jacorb.config">
 				<level name="ERROR" />
 			</logger>
-			
-			<logger category="cl.cbr.botondepagoweb.bo">
-			    <level name="DEBUG"/>
-			</logger>
-			<logger category="org.mongodb.driver">
-			      <level name="ERROR"/>
-			</logger>
 			<root-logger>
-                <level name="DEBUG"/>
-            </root-logger>
+				<level name="INFO" />
+				<handlers>
+					<handler name="FILE" />
+				</handlers>
+			</root-logger>
 			<formatter name="OPENSHIFT">
 				<custom-formatter module="org.jboss.logmanager.ext"
 					class="org.jboss.logmanager.ext.formatters.LogstashFormatter">
@@ -138,79 +131,86 @@
 			</formatter>
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:datasources:1.2">
-			  <datasources>
-                <datasource jndi-name="java:jboss/datasources/dsFlujo" pool-name="mssql-AlphaFlujoD-ds" enabled="true">
-                    <connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local;databaseName=flujo</connection-url>
-                    <driver>sqlserver</driver>
-                    <pool>
-                        <min-pool-size>5</min-pool-size>
-                        <max-pool-size>20</max-pool-size>
-                    </pool>
-                    <security>
-                        <user-name>sa</user-name>
-                        <password>sa</password>
-                    </security>
-                    <validation>
-                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
-                    </validation>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/dsFolioReal" pool-name="mssql-FolioReal-ds" enabled="true">
-                    <connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local;databaseName=folio_real</connection-url>
-                    <driver>sqlserver</driver>
-                    <pool>
-                        <min-pool-size>10</min-pool-size>
-                        <max-pool-size>30</max-pool-size>
-                        <prefill>false</prefill>
-                        <use-strict-min>false</use-strict-min>
-                        <flush-strategy>FailingConnectionOnly</flush-strategy>
-                    </pool>
-                    <security>
-                        <user-name>sa</user-name>
-                        <password>sa</password>
-                    </security>
-                    <validation>
-                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
-                    </validation>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/dsSigma" pool-name="mssql-SigmaFolioReal-ds" enabled="true">
-                    <connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local:1433;databaseName=Folio_Real</connection-url>
-                    <driver>sqlserver</driver>
-                    <pool>
-                        <min-pool-size>10</min-pool-size>
-                        <max-pool-size>30</max-pool-size>
-                        <prefill>false</prefill>
-                        <use-strict-min>false</use-strict-min>
-                        <flush-strategy>FailingConnectionOnly</flush-strategy>
-                    </pool>
-                    <security>
-                        <user-name>sa</user-name>
-                        <password>sa</password>
-                    </security>
-                    <validation>
-                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker"/>
-                    </validation>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/dsFolioMercantil" pool-name="dsFolioMercantil-ds" enabled="true">
-                    <connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local:1433;databaseName=Folio_Mercantil</connection-url>
-                    <driver>sqlserver</driver>
-                    <pool>
-                        <min-pool-size>10</min-pool-size>
-                        <max-pool-size>30</max-pool-size>
-                    </pool>
-                    <security>
-                        <user-name>sa</user-name>
-                        <password>sa</password>
-                    </security>
-                </datasource>
-                <drivers>
-                    <driver name="h2" module="com.h2database.h2">
-                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
-                    </driver>
-                    <driver name="sqlserver" module="com.jtds">
-                        <xa-datasource-class>net.sourceforge.jtds.jdbcx.JtdsDataSource</xa-datasource-class>
-                    </driver>
-                </drivers>
-            </datasources>
+			<datasources>
+				<datasource jndi-name="java:jboss/datasources/dsFlujo"
+					pool-name="mssql-AlphaFlujoD-ds" enabled="true">
+					<connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local;databaseName=flujo</connection-url>
+					<driver>sqlserver</driver>
+					<pool>
+						<min-pool-size>5</min-pool-size>
+						<max-pool-size>20</max-pool-size>
+					</pool>
+					<security>
+						<user-name>sa</user-name>
+						<password>sa</password>
+					</security>
+					<validation>
+						<valid-connection-checker
+							class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker" />
+					</validation>
+				</datasource>
+				<datasource jndi-name="java:jboss/datasources/dsFolioReal"
+					pool-name="mssql-FolioReal-ds" enabled="true">
+					<connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local;databaseName=folio_real</connection-url>
+					<driver>sqlserver</driver>
+					<pool>
+						<min-pool-size>10</min-pool-size>
+						<max-pool-size>30</max-pool-size>
+						<prefill>false</prefill>
+						<use-strict-min>false</use-strict-min>
+						<flush-strategy>FailingConnectionOnly</flush-strategy>
+					</pool>
+					<security>
+						<user-name>sa</user-name>
+						<password>sa</password>
+					</security>
+					<validation>
+						<valid-connection-checker
+							class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker" />
+					</validation>
+				</datasource>
+				<datasource jndi-name="java:jboss/datasources/dsSigma"
+					pool-name="mssql-SigmaFolioReal-ds" enabled="true">
+					<connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local:1433;databaseName=Folio_Real</connection-url>
+					<driver>sqlserver</driver>
+					<pool>
+						<min-pool-size>10</min-pool-size>
+						<max-pool-size>30</max-pool-size>
+						<prefill>false</prefill>
+						<use-strict-min>false</use-strict-min>
+						<flush-strategy>FailingConnectionOnly</flush-strategy>
+					</pool>
+					<security>
+						<user-name>sa</user-name>
+						<password>sa</password>
+					</security>
+					<validation>
+						<valid-connection-checker
+							class-name="org.jboss.jca.adapters.jdbc.extensions.mssql.MSSQLValidConnectionChecker" />
+					</validation>
+				</datasource>
+				<datasource jndi-name="java:jboss/datasources/dsFolioMercantil"
+					pool-name="dsFolioMercantil-ds" enabled="true">
+					<connection-url>jdbc:jtds:sqlserver://maipo.cbrs.local:1433;databaseName=Folio_Mercantil</connection-url>
+					<driver>sqlserver</driver>
+					<pool>
+						<min-pool-size>10</min-pool-size>
+						<max-pool-size>30</max-pool-size>
+					</pool>
+					<security>
+						<user-name>sa</user-name>
+						<password>sa</password>
+					</security>
+				</datasource>
+				<drivers>
+					<driver name="h2" module="com.h2database.h2">
+						<xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+					</driver>
+					<driver name="sqlserver" module="com.jtds">
+						<xa-datasource-class>net.sourceforge.jtds.jdbcx.JtdsDataSource</xa-datasource-class>
+					</driver>
+				</drivers>
+			</datasources>
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:deployment-scanner:1.1">
 			<deployment-scanner path="deployments"
@@ -218,7 +218,7 @@
 				auto-deploy-exploded="false" />
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:ee:1.2">
-			<spec-descriptor-property-replacement>false	</spec-descriptor-property-replacement>
+			<spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
 			<jboss-descriptor-property-replacement>true</jboss-descriptor-property-replacement>
 			<annotation-property-replacement>false</annotation-property-replacement>
 		</subsystem>
@@ -261,8 +261,9 @@
 			<timer-service thread-pool-name="default"
 				default-data-store="default-file-store">
 				<data-stores>
-					<file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir" />      
-						              <!-- ##DATASTORES## -->
+					<file-data-store name="default-file-store" path="timer-service-data"
+						relative-to="jboss.server.data.dir" />
+					<!-- ##DATASTORES## -->
 				</data-stores>
 			</timer-service>
 			<remote connector-ref="remoting-connector" thread-pool-name="default" />
@@ -293,42 +294,37 @@
 					<file-store />
 				</replicated-cache>
 				<replicated-cache name="sso" mode="SYNC" batching="true" />
-				<distributed-cache name="dist" mode="ASYNC" batching="true" l1-lifespan="0">
+				<distributed-cache name="dist" mode="ASYNC"
+					batching="true" l1-lifespan="0">
 					<file-store />
 				</distributed-cache>
 			</cache-container>
-			<cache-container name="ejb" aliases="sfsb sfsb-cache" default-cache="repl" module="org.jboss.as.clustering.ejb3.infinispan">
+			<cache-container name="ejb" aliases="sfsb sfsb-cache"
+				default-cache="repl" module="org.jboss.as.clustering.ejb3.infinispan">
 				<transport lock-timeout="60000" />
-				<replicated-cache name="repl" mode="ASYNC" batching="true">
+				<replicated-cache name="repl" mode="ASYNC"
+					batching="true">
 					<eviction strategy="LRU" max-entries="10000" />
 					<file-store />
 				</replicated-cache>
 				<!-- ~ Clustered cache used internally by EJB subsytem for managing the 
 					client-mapping(s) of ~ the socketbinding referenced by the EJB remoting connector -->
-				<replicated-cache name="remote-connector-client-mappings" 	mode="SYNC" batching="true" />
-				<distributed-cache name="dist" mode="ASYNC"	batching="true" l1-lifespan="0">
+				<replicated-cache name="remote-connector-client-mappings"
+					mode="SYNC" batching="true" />
+				<distributed-cache name="dist" mode="ASYNC"
+					batching="true" l1-lifespan="0">
 					<eviction strategy="LRU" max-entries="10000" />
 					<file-store />
 				</distributed-cache>
 			</cache-container>
-			<!-- <cache-container name="hibernate" default-cache="local-query" module="org.jboss.as.jpa.hibernate:4">
-				<transport lock-timeout="60000" />
-				<local-cache name="local-query">
-					<transaction mode="NONE" />
-					<eviction strategy="LRU" max-entries="10000" />
-					<expiration max-idle="100000" />
-				</local-cache>
-				<invalidation-cache name="entity" mode="SYNC">
-					<transaction mode="NON_XA" />
-					<eviction strategy="LRU" max-entries="10000" />
-					<expiration max-idle="100000" />
-				</invalidation-cache>
-
-				<replicated-cache name="timestamps" mode="ASYNC">
-					<transaction mode="NONE" />
-					<eviction strategy="NONE" />
-				</replicated-cache>
-			</cache-container> -->
+			<!-- <cache-container name="hibernate" default-cache="local-query" module="org.jboss.as.jpa.hibernate:4"> 
+				<transport lock-timeout="60000" /> <local-cache name="local-query"> <transaction 
+				mode="NONE" /> <eviction strategy="LRU" max-entries="10000" /> <expiration 
+				max-idle="100000" /> </local-cache> <invalidation-cache name="entity" mode="SYNC"> 
+				<transaction mode="NON_XA" /> <eviction strategy="LRU" max-entries="10000" 
+				/> <expiration max-idle="100000" /> </invalidation-cache> <replicated-cache 
+				name="timestamps" mode="ASYNC"> <transaction mode="NONE" /> <eviction strategy="NONE" 
+				/> </replicated-cache> </cache-container> -->
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:jaxrs:1.0" />
 		<subsystem xmlns="urn:jboss:domain:jca:1.1">
@@ -352,7 +348,8 @@
 			<cached-connection-manager />
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:jdr:1.0" />
-		<subsystem xmlns="urn:jboss:domain:jgroups:1.1"	default-stack="tcp">
+		<subsystem xmlns="urn:jboss:domain:jgroups:1.1"
+			default-stack="tcp">
 			<stack name="udp">
 				<transport type="UDP" socket-binding="jgroups-udp" />
 				<protocol type="openshift.KUBE_PING" />
@@ -409,117 +406,48 @@
 				<smtp-server outbound-socket-binding-ref="mail-smtp" />
 			</mail-session>
 		</subsystem>
-<!-- 		<subsystem xmlns="urn:jboss:domain:messaging:1.4">
-			<hornetq-server>
-				<cluster-password>${jboss.messaging.cluster.password:CHANGE ME!!}
-				</cluster-password>
-				<persistence-enabled>true</persistence-enabled>
-				<journal-type>NIO</journal-type>
-				<journal-min-files>2</journal-min-files>
-				<connectors>
-					<netty-connector name="netty" socket-binding="messaging" />
-					<netty-connector name="netty-throughput"
-						socket-binding="messaging-throughput">
-						<param key="batch-delay" value="50" />
-					</netty-connector>
-					<in-vm-connector name="in-vm" server-id="0" />
-				</connectors>
-				<acceptors>
-					<netty-acceptor name="netty" socket-binding="messaging" />
-					<netty-acceptor name="netty-throughput"
-						socket-binding="messaging-throughput">
-						<param key="batch-delay" value="50" />
-						<param key="direct-deliver" value="false" />
-					</netty-acceptor>
-					<in-vm-acceptor name="in-vm" server-id="0" />
-				</acceptors>
-				<broadcast-groups>
-					<broadcast-group name="bg-group1">
-						<jgroups-stack>tcp</jgroups-stack>
-						<jgroups-channel>hornetq-channel</jgroups-channel>
-						<broadcast-period>5000</broadcast-period>
-						<connector-ref>netty</connector-ref>
-					</broadcast-group>
-				</broadcast-groups>
-				<discovery-groups>
-					<discovery-group name="dg-group1">
-						<jgroups-stack>tcp</jgroups-stack>
-						<jgroups-channel>hornetq-channel</jgroups-channel>
-						<refresh-timeout>10000</refresh-timeout>
-					</discovery-group>
-				</discovery-groups>
-				<cluster-connections>
-					<cluster-connection name="my-cluster">
-						<address>jms</address>
-						<connector-ref>netty</connector-ref>
-						<discovery-group-ref discovery-group-name="dg-group1" />
-					</cluster-connection>
-				</cluster-connections>
-				<security-settings>
-					<security-setting match="#">
-						<permission type="send" roles="guest" />
-						<permission type="consume" roles="guest" />
-						<permission type="createNonDurableQueue" roles="guest" />
-						<permission type="deleteNonDurableQueue" roles="guest" />
-					</security-setting>
-				</security-settings>
-				<address-settings>
-					default for catch all
-					<address-setting match="#">
-						<dead-letter-address>jms.queue.DLQ</dead-letter-address>
-						<expiry-address>jms.queue.ExpiryQueue</expiry-address>
-						<redelivery-delay>0</redelivery-delay>
-						<redistribution-delay>1000</redistribution-delay>
-						<max-size-bytes>10485760</max-size-bytes>
-						<address-full-policy>PAGE</address-full-policy>
-						<page-size-bytes>2097152</page-size-bytes>
-						<message-counter-history-day-limit>10
-						</message-counter-history-day-limit>
-					</address-setting>
-				</address-settings>
-			<jms-connection-factories>
-					<connection-factory name="InVmConnectionFactory">
-						<connectors>
-							<connector-ref connector-name="in-vm" />
-						</connectors>
-						<entries>
-							<entry name="java:/ConnectionFactory" />
-						</entries>
-					</connection-factory>
-					<connection-factory name="RemoteConnectionFactory">
-						<connectors>
-							<connector-ref connector-name="netty" />
-						</connectors>
-						<entries>
-							<entry name="java:jboss/exported/jms/RemoteConnectionFactory" />
-						</entries>
-						<ha>true</ha>
-						<block-on-acknowledge>true</block-on-acknowledge>
-						<retry-interval>1000</retry-interval>
-						<retry-interval-multiplier>1.0</retry-interval-multiplier>
-						<reconnect-attempts>-1</reconnect-attempts>
-					</connection-factory>
-					<pooled-connection-factory name="hornetq-ra">
-						<transaction mode="xa" />
-						<connectors>
-							<connector-ref connector-name="in-vm" />
-						</connectors>
-						<entries>
-							<entry name="java:/JmsXA" />
-						</entries>
-					</pooled-connection-factory>
-				</jms-connection-factories>
-				<jms-destinations>
-					<jms-queue name="ExpiryQueue">
-						<entry name="java:/jms/queue/ExpiryQueue" />
-					</jms-queue>
-					<jms-queue name="DLQ">
-						<entry name="java:/jms/queue/DLQ" />
-					</jms-queue>
-
-				</jms-destinations>
-			</hornetq-server>
-		</subsystem> -->
+		<!-- <subsystem xmlns="urn:jboss:domain:messaging:1.4"> <hornetq-server> 
+			<cluster-password>${jboss.messaging.cluster.password:CHANGE ME!!} </cluster-password> 
+			<persistence-enabled>true</persistence-enabled> <journal-type>NIO</journal-type> 
+			<journal-min-files>2</journal-min-files> <connectors> <netty-connector name="netty" 
+			socket-binding="messaging" /> <netty-connector name="netty-throughput" socket-binding="messaging-throughput"> 
+			<param key="batch-delay" value="50" /> </netty-connector> <in-vm-connector 
+			name="in-vm" server-id="0" /> </connectors> <acceptors> <netty-acceptor name="netty" 
+			socket-binding="messaging" /> <netty-acceptor name="netty-throughput" socket-binding="messaging-throughput"> 
+			<param key="batch-delay" value="50" /> <param key="direct-deliver" value="false" 
+			/> </netty-acceptor> <in-vm-acceptor name="in-vm" server-id="0" /> </acceptors> 
+			<broadcast-groups> <broadcast-group name="bg-group1"> <jgroups-stack>tcp</jgroups-stack> 
+			<jgroups-channel>hornetq-channel</jgroups-channel> <broadcast-period>5000</broadcast-period> 
+			<connector-ref>netty</connector-ref> </broadcast-group> </broadcast-groups> 
+			<discovery-groups> <discovery-group name="dg-group1"> <jgroups-stack>tcp</jgroups-stack> 
+			<jgroups-channel>hornetq-channel</jgroups-channel> <refresh-timeout>10000</refresh-timeout> 
+			</discovery-group> </discovery-groups> <cluster-connections> <cluster-connection 
+			name="my-cluster"> <address>jms</address> <connector-ref>netty</connector-ref> 
+			<discovery-group-ref discovery-group-name="dg-group1" /> </cluster-connection> 
+			</cluster-connections> <security-settings> <security-setting match="#"> <permission 
+			type="send" roles="guest" /> <permission type="consume" roles="guest" /> 
+			<permission type="createNonDurableQueue" roles="guest" /> <permission type="deleteNonDurableQueue" 
+			roles="guest" /> </security-setting> </security-settings> <address-settings> 
+			default for catch all <address-setting match="#"> <dead-letter-address>jms.queue.DLQ</dead-letter-address> 
+			<expiry-address>jms.queue.ExpiryQueue</expiry-address> <redelivery-delay>0</redelivery-delay> 
+			<redistribution-delay>1000</redistribution-delay> <max-size-bytes>10485760</max-size-bytes> 
+			<address-full-policy>PAGE</address-full-policy> <page-size-bytes>2097152</page-size-bytes> 
+			<message-counter-history-day-limit>10 </message-counter-history-day-limit> 
+			</address-setting> </address-settings> <jms-connection-factories> <connection-factory 
+			name="InVmConnectionFactory"> <connectors> <connector-ref connector-name="in-vm" 
+			/> </connectors> <entries> <entry name="java:/ConnectionFactory" /> </entries> 
+			</connection-factory> <connection-factory name="RemoteConnectionFactory"> 
+			<connectors> <connector-ref connector-name="netty" /> </connectors> <entries> 
+			<entry name="java:jboss/exported/jms/RemoteConnectionFactory" /> </entries> 
+			<ha>true</ha> <block-on-acknowledge>true</block-on-acknowledge> <retry-interval>1000</retry-interval> 
+			<retry-interval-multiplier>1.0</retry-interval-multiplier> <reconnect-attempts>-1</reconnect-attempts> 
+			</connection-factory> <pooled-connection-factory name="hornetq-ra"> <transaction 
+			mode="xa" /> <connectors> <connector-ref connector-name="in-vm" /> </connectors> 
+			<entries> <entry name="java:/JmsXA" /> </entries> </pooled-connection-factory> 
+			</jms-connection-factories> <jms-destinations> <jms-queue name="ExpiryQueue"> 
+			<entry name="java:/jms/queue/ExpiryQueue" /> </jms-queue> <jms-queue name="DLQ"> 
+			<entry name="java:/jms/queue/DLQ" /> </jms-queue> </jms-destinations> </hornetq-server> 
+			</subsystem> -->
 		<subsystem xmlns="urn:jboss:domain:naming:1.4">
 			<remote-naming />
 		</subsystem>
@@ -551,17 +479,21 @@
 						<policy-module code="Delegating" flag="required" />
 					</authorization>
 				</security-domain>
-				 <security-domain name="website-domain" cache-type="default">
-                    <authentication>
-                        <login-module code="org.jboss.security.auth.spi.LdapLoginModule" flag="required">
-                            <module-option name="debug" value="true"/>
-                            <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
-                            <module-option name="java.naming.provider.url" value="ldap://192.168.100.170:389"/>
-                            <module-option name="java.naming.security.authentication" value="simple"/>
-                            <module-option name="matchOnUserDN" value="true"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
+				<security-domain name="website-domain" cache-type="default">
+					<authentication>
+						<login-module code="org.jboss.security.auth.spi.LdapLoginModule"
+							flag="required">
+							<module-option name="debug" value="true" />
+							<module-option name="java.naming.factory.initial"
+								value="com.sun.jndi.ldap.LdapCtxFactory" />
+							<module-option name="java.naming.provider.url"
+								value="ldap://192.168.100.170:389" />
+							<module-option name="java.naming.security.authentication"
+								value="simple" />
+							<module-option name="matchOnUserDN" value="true" />
+						</login-module>
+					</authentication>
+				</security-domain>
 				<security-domain name="jboss-ejb-policy" cache-type="default">
 					<authorization>
 						<policy-module code="Delegating" flag="required" />
@@ -578,23 +510,28 @@
 					<uuid />
 				</process-id>
 			</core-environment>
-			<recovery-environment socket-binding="txn-recovery-environment"	status-socket-binding="txn-status-manager" />
+			<recovery-environment socket-binding="txn-recovery-environment"
+				status-socket-binding="txn-status-manager" />
 			<coordinator-environment default-timeout="300" />
 			<!-- ##JDBC_STORE## -->
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:web:2.2"
 			default-virtual-server="default-host" native="false">
-			<connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http" />
+			<connector name="http" protocol="HTTP/1.1" scheme="http"
+				socket-binding="http" />
 			<!-- No HTTPS configuration discovered -->
-			<virtual-server name="default-host"	enable-welcome-root="false" />
+			<virtual-server name="default-host"
+				enable-welcome-root="false" />
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:webservices:1.2">
 			<modify-wsdl-address>true</modify-wsdl-address>
 			<wsdl-host>jbossws.undefined.host</wsdl-host>
 			<endpoint-config name="Standard-Endpoint-Config" />
 			<endpoint-config name="Recording-Endpoint-Config">
-				<pre-handler-chain name="recording-handlers" protocol-bindings="##SOAP11_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP ##SOAP12_HTTP_MTOM">
-					<handler name="RecordingHandler" class="org.jboss.ws.common.invocation.RecordingServerHandler" />
+				<pre-handler-chain name="recording-handlers"
+					protocol-bindings="##SOAP11_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP ##SOAP12_HTTP_MTOM">
+					<handler name="RecordingHandler"
+						class="org.jboss.ws.common.invocation.RecordingServerHandler" />
 				</pre-handler-chain>
 			</endpoint-config>
 			<client-config name="Standard-Client-Config" />
@@ -615,16 +552,24 @@
 			<inet-address value="${jboss.bind.address.unsecure:127.0.0.1}" />
 		</interface>
 	</interfaces>
-	<socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
-		<socket-binding name="management-native" interface="management"	    port="${jboss.management.native.port:9999}" />
-		<socket-binding name="management-http" interface="management"  port="${jboss.management.http.port:9990}" />
-		<socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9443}" />
+	<socket-binding-group name="standard-sockets"
+		default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
+		<socket-binding name="management-native" interface="management"
+			port="${jboss.management.native.port:9999}" />
+		<socket-binding name="management-http" interface="management"
+			port="${jboss.management.http.port:9990}" />
+		<socket-binding name="management-https" interface="management"
+			port="${jboss.management.https.port:9443}" />
 		<socket-binding name="http" port="8080" />
 		<socket-binding name="https" port="8443" />
-		<socket-binding name="jgroups-mping" port="0" multicast-address="${jboss.default.multicast.address:230.0.0.4}"	multicast-port="45700" />
+		<socket-binding name="jgroups-mping" port="0"
+			multicast-address="${jboss.default.multicast.address:230.0.0.4}"
+			multicast-port="45700" />
 		<socket-binding name="jgroups-tcp" port="7600" />
 		<socket-binding name="jgroups-tcp-fd" port="57600" />
-		<socket-binding name="jgroups-udp" port="55200"	multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45688" />
+		<socket-binding name="jgroups-udp" port="55200"
+			multicast-address="${jboss.default.multicast.address:230.0.0.4}"
+			multicast-port="45688" />
 		<socket-binding name="jgroups-udp-fd" port="54200" />
 		<socket-binding name="messaging" port="5445" />
 		<socket-binding name="messaging-throughput" port="5455" />
