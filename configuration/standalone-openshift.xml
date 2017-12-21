@@ -85,7 +85,7 @@
 	</management>
 	<profile>
 		<subsystem xmlns="urn:jboss:domain:logging:1.5">
-			<console-handler name="CONSOLE">
+			<console-handler name="CONSOLE" class="java.util.logging.ConsoleHandler">
 				<level name="INFO" />
 				<formatter>
 					<named-formatter name="COLOR-PATTERN" />
@@ -215,6 +215,10 @@
 					<driver name="sqlserver" module="com.jtds">
 						<xa-datasource-class>net.sourceforge.jtds.jdbcx.JtdsDataSource</xa-datasource-class>
 					</driver>
+						<driver name="sqlserver" module="com.microsoft.sqlserver">
+						<xa-datasource-class>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</xa-datasource-class>
+					</driver>
+					
 				</drivers>
 			</datasources>
 		</subsystem>
