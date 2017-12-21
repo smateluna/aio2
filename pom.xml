@@ -162,7 +162,7 @@
 		<dependency>
 			<groupId>cbrUtil</groupId>
 			<artifactId>cbrUtil</artifactId>
-			<version>2.0</version>
+			<version>2.2</version>
 
 		</dependency>
 		<!-- dependency> <groupId>log4j</groupId> <artifactId>log4j</artifactId> 
