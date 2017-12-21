@@ -317,6 +317,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			}
 						
 		} catch (Exception e) {
+			e.printStackTrace();
         	if(request.getSession()!=null){
         		request.getSession().invalidate();
         	}
