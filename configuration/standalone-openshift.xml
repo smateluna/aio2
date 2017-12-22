@@ -91,7 +91,7 @@
 					<named-formatter name="COLOR-PATTERN" />
 				</formatter>
 			</console-handler>
-			<periodic-rotating-file-handler name="FILE"
+			<!-- <periodic-rotating-file-handler name="FILE"
 				autoflush="true">
 				<formatter>
 					<named-formatter name="PATTERN" />
@@ -99,7 +99,7 @@
 				<file relative-to="jboss.server.log.dir" path="server.log" />
 				<suffix value=".yyyy-MM-dd" />
 				<append value="true" />
-			</periodic-rotating-file-handler>
+			</periodic-rotating-file-handler> -->
 			<logger category="com.arjuna">
 				<level name="WARN" />
 			</logger>
@@ -122,7 +122,7 @@
 				<level name="INFO" />
 				<handlers>
 					<handler name="CONSOLE" />
-					<handler name="FILE" />
+					<!-- <handler name="FILE" /> -->
 			</handlers>
 			</root-logger>
 			<formatter name="PATTERN">
