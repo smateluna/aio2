@@ -11,7 +11,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 
 import cl.cbrs.aio.certificado.GeneraCertificado;
 

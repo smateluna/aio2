@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 
@@ -215,11 +215,11 @@ public class FusionUpload extends HttpServlet {
 				}
 
 			} catch (InvalidPdfException e) {
-				logger.error("ERROR Fusionando",e.getMessage(),e);
+				logger.error("ERROR Fusionando",e);
 				respuesta.put("message", "ERROR: Archivo pdf invalido");
 				respuesta.put("status", false);
 			} catch (BadPasswordException e) {
-				logger.error("ERROR Fusionando",e.getMessage(),e);
+				logger.error("ERROR Fusionando",e);
 				respuesta.put("message", "ERROR: Archivo protegido con clave");
 				respuesta.put("status", false);
 			} catch (Exception ex) {

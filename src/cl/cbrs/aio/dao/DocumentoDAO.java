@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.util.locator.ServiceLocatorException;
