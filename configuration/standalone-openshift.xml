@@ -91,9 +91,6 @@
 					<named-formatter name="COLOR-PATTERN" />
 				</formatter>
 			</console-handler>
-			<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler">
-				<level name="INFO" />
-			</custom-handler>
 			<periodic-rotating-file-handler name="FILE"
 				autoflush="true">
 				<formatter>
