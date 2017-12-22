@@ -209,10 +209,7 @@
 					<driver name="h2" module="com.h2database.h2">
 						<xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
 					</driver>
-					<driver name="sqlserver" module="com.jtds">
-						<xa-datasource-class>net.sourceforge.jtds.jdbcx.JtdsDataSource</xa-datasource-class>
-					</driver>
-						<driver name="sqlserver" module="com.microsoft.sqlserver">
+					 <driver name="sqlserver" module="com.microsoft.sqlserver">
 						<xa-datasource-class>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</xa-datasource-class>
 					</driver>
 					
