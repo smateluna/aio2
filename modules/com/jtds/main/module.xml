@@ -4,7 +4,7 @@
     <resource-root path="jtds-1.2.6.jar"/>
   </resources>
   <dependencies>
-    <module name="javax.api"/>
-    <!--module name="javax.transaction.api"/-->
+       <module name="javax.api"/>
+       <module name="javax.transaction.api"/>
   </dependencies>
 </module>
