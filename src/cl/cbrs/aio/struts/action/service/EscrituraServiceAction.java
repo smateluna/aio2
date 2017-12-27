@@ -59,6 +59,7 @@ public class EscrituraServiceAction extends CbrsAbstractAction {
 			if(caratulaReq!=""){
 				int caratula = Integer.parseInt(caratulaReq);
 				String server = TablaValores.getValor("repertorioWeb.properties", "HOSTS", "HOST_ESCRITURAS");
+				logger.debug("SERVER    "+server);
 				String httpResponse = excuteHttp("http://"+server+"/documentos/do/caratulaService", "metodo=getCaratulaVersion&_dc=1339697228141&caratulap="+caratula+"&tipoDocumentop=1&tipoRegistrop=0&node=root");
 				//	            System.out.println("httpResponse "+httpResponse);
 				JSONParser parser = new JSONParser();
