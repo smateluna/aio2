@@ -4,6 +4,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
+	<version>2.0.0-beta</version>
 	<name>aio</name>
 	<repositories>
 		<repository>
@@ -578,6 +579,11 @@
 			<artifactId>iReport</artifactId>
 			<version>iReport</version>
 		</dependency>
+		   <dependency>
+				<groupId>net.sourceforge.barbecue</groupId>
+				<artifactId>barbecue</artifactId>
+				<version>1.5-beta1</version>
+			</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
