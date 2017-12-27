@@ -574,6 +574,11 @@
 			<artifactId>ezmorph</artifactId>
 			<version>1.0.4</version>
 		</dependency>
+		<dependency>
+			<groupId>iReport</groupId>
+			<artifactId>iReport</artifactId>
+			<version>iReport</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
