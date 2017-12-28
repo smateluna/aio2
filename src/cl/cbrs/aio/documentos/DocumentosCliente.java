@@ -204,6 +204,9 @@ public class DocumentosCliente {
 		}
 		
 		Client client = Client.create();
+		System.out.println("URL--->"+uriStrBuffer.toString());
+		LOGGER.debug("U R L   __>"+uriStrBuffer.toString());
+		
 		WebResource wr = client.resource(new URI(uriStrBuffer.toString()));
 		ClientResponse response = wr.type(MediaType.TEXT_HTML).get(ClientResponse.class);
 		
