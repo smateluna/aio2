@@ -1527,10 +1527,11 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	 public void downloadFirma(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) {
 	 	response.setContentType("application/pdf");
-	 	
+	 	logger.debug("Iniciando");
 	 	Boolean download = true;
 	 	
 		String documentoReq = request.getParameter("documento");
+		logger.debug(documentoReq);
 		if(request.getParameter("download")!=null)
 			download = new Boolean(request.getParameter("download"));
 		

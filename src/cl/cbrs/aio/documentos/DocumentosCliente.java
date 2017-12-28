@@ -88,7 +88,7 @@ public class DocumentosCliente {
 		HashMap<String, String> queryParams = new HashMap<String, String>();
 		if(fechaDocumento!=null)
 			queryParams.put("fechaDocumento", String.valueOf(fechaDocumento.getTime()));
-		System.out.println(SERVER_FIRMA +"---"+PORT_FIRMA+" -->"+pathParams+" "+queryParams);
+		LOGGER.debug(SERVER_FIRMA +"---"+PORT_FIRMA+" -->"+pathParams+" "+queryParams);
 		return (byte[])executeREST(SERVER_FIRMA, PORT_FIRMA, "file", "downloadFirma", pathParams, queryParams);
 	}	
 	
