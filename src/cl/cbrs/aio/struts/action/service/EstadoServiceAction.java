@@ -1523,7 +1523,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			logger.error(e.getMessage());
 		}		
 	}	
-	
+	@Deprecated 
 	 public void downloadFirma(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) {
 	 	response.setContentType("application/pdf");
@@ -1572,6 +1572,55 @@ public class EstadoServiceAction extends CbrsAbstractAction {
         
         
     } 	
+	 public void downloadFirma2(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+	            HttpServletResponse response) {
+		 	response.setContentType("application/pdf");
+		 	logger.debug("Iniciando");
+		 	Boolean download = true;
+		 	
+			String documentoReq = request.getParameter("documento");
+			logger.debug(documentoReq);
+			if(request.getParameter("download")!=null)
+				download = new Boolean(request.getParameter("download"));
+			
+			ServletOutputStream out = null;
+
+			try {
+				//JSONParser jsonParser = new JSONParser();
+				//JSONObject documentoJSON = (JSONObject)jsonParser.parse(documentoReq); 
+				String nombreArchivop = request.getParameter("nombreArchivo"); //documentoJSON.get("nombreArchivo").toString();  
+				String rutFirmadorp = request.getParameter("rutFirmador");//documentoJSON.get("rutFirmador").toString();
+				String fecha=request.getParameter("fechaDocumento");
+				Date fechap = null;
+				if(fecha!=null)
+					fechap = new Date(new Long(fecha));
+				
+				String firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
+				
+				DocumentosCliente documentosCliente = new DocumentosCliente();
+				byte[] archivo = documentosCliente.downloadFirma(nombreArchivop, firmador, fechap);
+
+				if(download)
+					response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivop);
+				
+				out = response.getOutputStream();			    
+	         	out.write(archivo, 0, archivo.length);
+	         	out.flush();
+	     
+	            if(out != null)
+	                  out.close();
+	        } catch(HTTPException e){
+	            logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
+	            request.setAttribute("error", "Archivo no encontrado.");	        	
+	        } catch (Exception e) {
+	            logger.error("Error al buscar documento: " + e.getMessage(),e);
+	            request.setAttribute("error", "Archivo no encontrado.");
+	        } finally{
+	            if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
+	        }
+	        
+	        
+	    } 	
 	
 	public void existeEscritura(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
