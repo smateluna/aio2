@@ -112,7 +112,7 @@ app.controller('NominaCtaCteCtrl', function ($scope,$timeout,$window,solicitudes
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento2&nombreArchivo='+documentoEntrega.numero+".pdf"+"&idTipoDocumento=12&idReg=0"; //JSON.stringify(documento);
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
