@@ -1487,6 +1487,47 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	        }
 	        
 	        
+	    }
+	 public void downloadDocumento2(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+	            HttpServletResponse response) {
+//		 	response.setContentType("application/pdf");
+		 	
+		 	
+			String documentoReq = request.getParameter("documento");
+			
+			ServletOutputStream out = null;
+
+			try {
+				JSONParser jsonParser = new JSONParser();
+				//JSONObject documentoJSON = (JSONObject)jsonParser.parse(documentoReq);
+				Integer idTipoDocumentop = Integer.parseInt(request.getParameter("idTipoDocumento").toString()); 
+				String nombreArchivop = request.getParameter("nombreArchivo").toString(); 
+				Integer idRegp = request.getParameter("idReg")==null?0:Integer.parseInt(request.getParameter("idReg").toString()); 
+				Date fechap = null;
+				if(request.getParameter("fechaDocumento")!=null)
+					fechap = new Date(new Long(request.getParameter("fechaDocumento")));
+				
+				DocumentosCliente documentosCliente = new DocumentosCliente();
+				byte[] archivo = documentosCliente.downloadDocumento(idTipoDocumentop, idRegp, nombreArchivop, fechap);
+
+				response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivop);
+				out = response.getOutputStream();			    
+	         	out.write(archivo, 0, archivo.length);
+	         	out.flush();
+	     
+	            if(out != null)
+	                  out.close();
+	        } catch(HTTPException e){
+	            logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
+	            request.setAttribute("error", "Archivo no encontrado.");	        	
+	        } catch (Exception e) {
+	            logger.error("Error al buscar documento: " + e.getMessage(),e);
+	            request.setAttribute("error", "Archivo no encontrado.");
+	        } finally{
+	            if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
+	        }
+	        
+	        
 	    } 		
 	
 	public void existeFirma(ActionMapping mapping, ActionForm form,
