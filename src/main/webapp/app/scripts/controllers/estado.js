@@ -938,7 +938,7 @@ app
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma2&nombreArchivo='+documentoEntrega.nombreArchivoVersion+'&fechaDocumento='+documentoEntrega.fechaDocumento+'&rutFirmador='+documentoEntrega.usuario;
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma2&nombreArchivo='+documentoEntrega.nombreArchivoVersion+'&fechaDocumento='+documentoEntrega.fechaPdf+'&rutFirmador='+documentoEntrega.usuario;
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
