@@ -17,7 +17,6 @@ public class MySentryClientFactory extends DefaultSentryClientFactory {
     public SentryClient createSentryClient(Dsn dsn) {
     	System.out.println("DSN---->"+dsn);
         SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
-
         /*
         Create and use the ForwardedAddressResolver, which will use the
         X-FORWARDED-FOR header for the remote address if it exists.
