@@ -15,6 +15,7 @@ import io.sentry.event.helper.HttpEventBuilderHelper;
 public class MySentryClientFactory extends DefaultSentryClientFactory {
     @Override
     public SentryClient createSentryClient(Dsn dsn) {
+    	System.out.println("DSN---->"+dsn);
         SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
 
         /*
