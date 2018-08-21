@@ -228,7 +228,7 @@
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:2.0">
             <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}" auto-deploy-exploded="false"/>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:ee:4.0">
+       <!-- <subsystem xmlns="urn:jboss:domain:ee:4.0">
             <spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
             <concurrent>
                 <context-services>
@@ -250,7 +250,7 @@
                               managed-executor-service="java:jboss/ee/concurrency/executor/default"
                               managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default"
                               managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
-        </subsystem>
+        </subsystem>-->
         <subsystem xmlns="urn:jboss:domain:ejb3:5.0">
             <session-bean>
                 <stateful default-access-timeout="5000" cache-ref="distributable" passivation-disabled-cache-ref="simple"/>
