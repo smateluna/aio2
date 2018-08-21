@@ -97,11 +97,12 @@
                 </formatter>
             </console-handler>
           <custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler" module="io.sentry">
-               <level name="WARN"/>
+               <level name="ERROR"/>
           </custom-handler>
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
+	    	
             <logger category="org.jboss.as.config">
                 <level name="DEBUG"/>
             </logger>
