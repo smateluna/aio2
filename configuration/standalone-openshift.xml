@@ -96,6 +96,9 @@
                     <named-formatter name="COLOR-PATTERN"/>
                 </formatter>
             </console-handler>
+          <custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler" module="io.sentry">
+               <level name="WARN"/>
+          </custom-handler>
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
@@ -109,6 +112,7 @@
                 <level name="INFO"/>
                 <handlers>
                     <handler name="CONSOLE"/>
+	           <handler name="SENTRY"/>
                 </handlers>
             </root-logger>
             <formatter name="OPENSHIFT">
