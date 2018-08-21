@@ -429,7 +429,7 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:messaging-activemq:2.0">
+     <!--   <subsystem xmlns="urn:jboss:domain:messaging-activemq:2.0">
                 <server name="default">
         <cluster password="${jboss.messaging.cluster.password:CHANGE ME!!}"/>
         <security-setting name="#">
@@ -457,7 +457,7 @@
         <connection-factory name="RemoteConnectionFactory" ha="true" block-on-acknowledge="true" reconnect-attempts="-1" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
         <pooled-connection-factory name="activemq-ra" transaction="xa" connectors="in-vm" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory"/>
     </server>
-        </subsystem>
+        </subsystem>-->
         <subsystem xmlns="urn:jboss:domain:modcluster:3.0">
             <mod-cluster-config advertise-socket="modcluster" connector="ajp">
                 <dynamic-load-provider>
