@@ -4,7 +4,7 @@
     </dependencies>
     <exclusions>
     <!--    <module name="org.apache.log4j" /> --> 
-      <module name="io.netty" />
+     <!-- <module name="io.netty" />-->
     </exclusions>
   </deployment>
   </jboss-deployment-structure>
