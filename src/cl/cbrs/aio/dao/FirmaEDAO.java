@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 
 public class FirmaEDAO extends AbstractJdbcDao {	

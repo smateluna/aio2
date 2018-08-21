@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import freemarker.template.Configuration;

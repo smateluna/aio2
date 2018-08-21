@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;

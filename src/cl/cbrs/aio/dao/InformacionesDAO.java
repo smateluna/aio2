@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.util.locator.ServiceLocatorException;

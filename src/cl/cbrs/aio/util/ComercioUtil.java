@@ -2,7 +2,7 @@ package cl.cbrs.aio.util;
 
 import java.rmi.RemoteException;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.foliomercantil.vo.EstadoCaratulaVO;

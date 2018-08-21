@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.util.locator.ServiceLocator;
 import cl.cbr.util.locator.ServiceLocatorException;

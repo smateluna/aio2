@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import javax.xml.ws.http.HTTPException;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.util.TablaValores;
 

@@ -3,7 +3,7 @@ package cl.cbrs.aio.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.util.ErroresUtil;

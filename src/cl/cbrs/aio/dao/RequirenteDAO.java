@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 
 import cl.cbr.common.exception.GeneralException;

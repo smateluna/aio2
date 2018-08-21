@@ -2,7 +2,7 @@ package cl.cbrs.aio.util;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.util.GeneralException;
 import cl.cbrs.funcionarios.delegate.WsFuncionariosDelegate;

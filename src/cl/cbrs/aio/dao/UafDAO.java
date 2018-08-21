@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.util.locator.ServiceLocatorException;

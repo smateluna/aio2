@@ -5,7 +5,7 @@ import java.util.Date;
 
 import javax.xml.ws.http.HTTPException;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;

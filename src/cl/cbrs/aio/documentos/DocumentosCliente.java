@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 

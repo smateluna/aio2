@@ -1,6 +1,6 @@
 package cl.cbrs.aio.util;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
