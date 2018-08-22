@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 
 import cl.cbrs.aio.dto.CierreCtasCtesFinalDTO;
 import cl.cbrs.aio.dto.RecepcionPlanoDTO;

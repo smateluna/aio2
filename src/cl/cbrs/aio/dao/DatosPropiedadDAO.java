@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 
 import cl.cbr.common.exception.BussinesException;
 import cl.cbr.util.ErroresUtil;

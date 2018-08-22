@@ -2,7 +2,7 @@ package cl.cbrs.aio.util;
 
 import java.util.List;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 
 import cl.cbrs.aio.dto.AnotacionDTO;
