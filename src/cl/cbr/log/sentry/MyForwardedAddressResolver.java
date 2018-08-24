@@ -17,12 +17,14 @@ public class MyForwardedAddressResolver implements RemoteAddressResolver {
     private BasicRemoteAddressResolver basicRemoteAddressResolver = new BasicRemoteAddressResolver();
 
     private static String firstAddress(String csvAddrs) {
+    	System.out.println();
         List<String> ips = Arrays.asList(csvAddrs.split(","));
         return ips.get(0).trim();
     }
 
     public String getRemoteAddress(HttpServletRequest request) {
-        String forwarded = request.getHeader("X-REAL-IP");
+    	System.out.println("RESOLVIENDO REQUEST"+request);
+    	  String forwarded = request.getHeader("X-REAL-IP");
         return !Util.isNullOrEmpty(forwarded) ? firstAddress(forwarded) : this.basicRemoteAddressResolver.getRemoteAddress(request);
     }
 }
