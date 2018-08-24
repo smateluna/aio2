@@ -656,7 +656,7 @@
                 
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
-                    
+                    <filter-ref name="resolve-local-name-filter"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
                     <http-invoker security-realm="ApplicationRealm"/>
@@ -670,6 +670,7 @@
                 <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
             </handlers>
             <filters>
+            	<expression-filter name="resolve-local-name-filter" expression="resolve-local-name"/>
                 <response-header name="server-header" header-name="Server" header-value="JBoss-EAP/7"/>
                 <response-header name="x-powered-by-header" header-name="X-Powered-By" header-value="Undertow/1"/>
             </filters>
