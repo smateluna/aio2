@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
@@ -12,7 +12,7 @@
 	</properties>
 	<scm>
 		<connection>scm:git:https://github.com/conservador/aio.git</connection>
-		<tag>HEAD</tag>
+		<tag>v1.0.1</tag>
 	</scm>
 	<repositories>
 		<repository>
