@@ -709,11 +709,12 @@
 					<pushReleases>true</pushReleases>
 					<keepBranch>false</keepBranch>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<noTag>true</noTag>
+					<noTag>false</noTag>
 					<allowUntracked>true</allowUntracked>
 					<pullDevelop>true</pullDevelop>
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
+					<nodeploy>true</nodeploy>	
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
