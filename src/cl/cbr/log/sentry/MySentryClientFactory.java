@@ -17,7 +17,6 @@ public class MySentryClientFactory extends DefaultSentryClientFactory {
         SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
         MyForwardedAddressResolver myForwardedAddressResolver = new MyForwardedAddressResolver();
         sentryClient.addBuilderHelper(new HttpEventBuilderHelper(myForwardedAddressResolver));
-
         sentryClient.addBuilderHelper(new ContextBuilderHelper(sentryClient));
         return configureSentryClient(sentryClient, dsn);
     }
