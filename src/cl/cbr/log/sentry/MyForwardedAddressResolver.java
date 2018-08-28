@@ -9,13 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Proyecto: aio Creado por: evillar Fecha: 26-12-2017
+ * Proyecto: aio Creado por: fpincheira Fecha: 26-12-2017
  */
 public class MyForwardedAddressResolver implements RemoteAddressResolver {
 	private BasicRemoteAddressResolver basicRemoteAddressResolver = new BasicRemoteAddressResolver();
 
 	private static String firstAddress(String csvAddrs) {
-		System.out.println("Resolviendo direccion");
 		List<String> ips = Arrays.asList(csvAddrs.split(","));
 		return ips.get(0).trim();
 	}
