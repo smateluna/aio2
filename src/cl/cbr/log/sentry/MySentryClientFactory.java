@@ -9,7 +9,7 @@ import io.sentry.event.helper.HttpEventBuilderHelper;
 /**
  * Proyecto: aio
  * Creado por: jaguileram
- * Fecha: 22-09-2017
+ * Fecha: 23-09-2017
  */
 public class MySentryClientFactory extends DefaultSentryClientFactory {
     @Override
@@ -17,7 +17,6 @@ public class MySentryClientFactory extends DefaultSentryClientFactory {
         SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
         MyForwardedAddressResolver myForwardedAddressResolver = new MyForwardedAddressResolver();
         sentryClient.addBuilderHelper(new HttpEventBuilderHelper(myForwardedAddressResolver));
-
         sentryClient.addBuilderHelper(new ContextBuilderHelper(sentryClient));
         return configureSentryClient(sentryClient, dsn);
     }
