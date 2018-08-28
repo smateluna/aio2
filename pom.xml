@@ -714,7 +714,7 @@
 					<pullDevelop>true</pullDevelop>
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
-					<nodeploy>true</nodeploy>	
+					<noDeploy>true</noDeploy>	
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
