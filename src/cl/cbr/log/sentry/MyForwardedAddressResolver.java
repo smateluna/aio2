@@ -15,7 +15,6 @@ public class MyForwardedAddressResolver implements RemoteAddressResolver {
 	private BasicRemoteAddressResolver basicRemoteAddressResolver = new BasicRemoteAddressResolver();
 
 	private static String firstAddress(String csvAddrs) {
-		System.out.println("Resolviendo direccion");
 		List<String> ips = Arrays.asList(csvAddrs.split(","));
 		return ips.get(0).trim();
 	}
