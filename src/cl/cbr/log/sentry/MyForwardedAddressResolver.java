@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Proyecto: aio
- * Creado por: jaguileram
+ * Creado por: evillar
  * Fecha: 26-12-2017
  */
 public class MyForwardedAddressResolver implements RemoteAddressResolver {
