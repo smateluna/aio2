@@ -9,22 +9,21 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Proyecto: aio
- * Creado por: evillar
- * Fecha: 26-12-2017
+ * Proyecto: aio Creado por: evillar Fecha: 26-12-2017
  */
 public class MyForwardedAddressResolver implements RemoteAddressResolver {
-    private BasicRemoteAddressResolver basicRemoteAddressResolver = new BasicRemoteAddressResolver();
+	private BasicRemoteAddressResolver basicRemoteAddressResolver = new BasicRemoteAddressResolver();
 
-    private static String firstAddress(String csvAddrs) {
-    	System.out.println("Resolviendo direccion");
-        List<String> ips = Arrays.asList(csvAddrs.split(","));
-        return ips.get(0).trim();
-    }
+	private static String firstAddress(String csvAddrs) {
+		System.out.println("Resolviendo direccion");
+		List<String> ips = Arrays.asList(csvAddrs.split(","));
+		return ips.get(0).trim();
+	}
 
-    public String getRemoteAddress(HttpServletRequest request) {
-    	System.out.println("RESOLVIENDO REQUEST"+request);
-    	  String forwarded = request.getHeader("X-REAL-IP");
-        return !Util.isNullOrEmpty(forwarded) ? firstAddress(forwarded) : this.basicRemoteAddressResolver.getRemoteAddress(request);
-    }
+	public String getRemoteAddress(HttpServletRequest request) {
+		System.out.println("RESOLVIENDO REQUEST" + request);
+		String forwarded = request.getHeader("X-REAL-IP");
+		return !Util.isNullOrEmpty(forwarded) ? firstAddress(forwarded)
+				: this.basicRemoteAddressResolver.getRemoteAddress(request);
+	}
 }
