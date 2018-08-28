@@ -9,7 +9,7 @@ import io.sentry.event.helper.HttpEventBuilderHelper;
 /**
  * Proyecto: aio
  * Creado por: jaguileram
- * Fecha: 22-09-2017
+ * Fecha: 23-09-2017
  */
 public class MySentryClientFactory extends DefaultSentryClientFactory {
     @Override
