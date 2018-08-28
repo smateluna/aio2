@@ -702,18 +702,17 @@
 				<artifactId>jgitflow-maven-plugin</artifactId>
 				<version>1.0-m5.1</version>
 				<configuration>
-					<configuration>
 						<username>evillar@conservador.cl</username>
 						<password>Morande440</password>
-					</configuration>
 					<pushReleases>true</pushReleases>
 					<keepBranch>false</keepBranch>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<noTag>true</noTag>
+					<noTag>false</noTag>
 					<allowUntracked>true</allowUntracked>
 					<pullDevelop>true</pullDevelop>
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
+					<noDeploy>true</noDeploy>	
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
