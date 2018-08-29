@@ -761,7 +761,8 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			JSONObject respuesta = caratulaEstadoUtil.estadoReporteJSON(caratulaEstadoDTO, numeroCaratula);
 			JSONObject data = (JSONObject)respuesta.get("data");
 			ServletOutputStream out = response.getOutputStream();
-
+         System.out.println("DATA--->"+data.toJSONString());
+         
 			bout = new ByteArrayOutputStream();
 
 			HashMap<String, Object> map = new HashMap<String, Object>();
