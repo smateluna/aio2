@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
@@ -713,7 +713,7 @@
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
 					<noDeploy>true</noDeploy>
-					<noReleaseBuild>true</noReleaseBuild>
+					<noReleaseBuild>false</noReleaseBuild>
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
