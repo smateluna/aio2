@@ -20,7 +20,6 @@ public class MyForwardedAddressResolver implements RemoteAddressResolver {
 	}
 
 	public String getRemoteAddress(HttpServletRequest request) {
-		System.out.println("RESOLVIENDO REQUEST" + request);
 		String forwarded = request.getHeader("X-REAL-IP");
 		return !Util.isNullOrEmpty(forwarded) ? firstAddress(forwarded)
 				: this.basicRemoteAddressResolver.getRemoteAddress(request);
