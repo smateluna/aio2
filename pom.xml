@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
@@ -702,56 +702,37 @@
 				<artifactId>jgitflow-maven-plugin</artifactId>
 				<version>1.0-m5.1</version>
 				<configuration>
-						<username>evillar@conservador.cl</username>
-						<password>Morande440</password>
+					<username>evillar@conservador.cl</username>
+					<password>Morande440</password>
 					<pushReleases>true</pushReleases>
 					<keepBranch>false</keepBranch>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<noTag>false</noTag>
+					<noTag>true</noTag>
 					<allowUntracked>true</allowUntracked>
 					<pullDevelop>true</pullDevelop>
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
-					<noDeploy>true</noDeploy>	
+					<noDeploy>true</noDeploy>
+					<noReleaseBuild>true</noReleaseBuild>
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
+						<featureBranchPrefix>feature/</featureBranchPrefix>
+						<releaseBranchPrefix>release/</releaseBranchPrefix>
+						<hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
 					</flowInitContext>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.9.1</version>
-					</dependency>
-				</dependencies>
-			</plugin> -->
-			<!-- <plugin>
-				<groupId>org.jboss.as.plugins</groupId>
-				<artifactId>jboss-as-maven-plugin</artifactId>
-				<version>7.7.Final</version>
-				<configuration>
-					<timeout>80000</timeout>
-					<username>${JBOSS_USER}</username>
-					<password>${JBOSS_PASS}</password>
-					<hostname>${JBOSS_HOST}</hostname> put syour IP or hostname
-					<port>${JBOSS_PORT}</port>
-				</configuration>
-				<executions>
-					<execution>
-						<id>deploy-jar</id>
-						<phase>install</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-release-plugin</artifactId> 
+				<version>2.5</version> <dependencies> <dependency> <groupId>org.apache.maven.scm</groupId> 
+				<artifactId>maven-scm-provider-gitexe</artifactId> <version>1.9.1</version> 
+				</dependency> </dependencies> </plugin> -->
+			<!-- <plugin> <groupId>org.jboss.as.plugins</groupId> <artifactId>jboss-as-maven-plugin</artifactId> 
+				<version>7.7.Final</version> <configuration> <timeout>80000</timeout> <username>${JBOSS_USER}</username> 
+				<password>${JBOSS_PASS}</password> <hostname>${JBOSS_HOST}</hostname> put 
+				syour IP or hostname <port>${JBOSS_PORT}</port> </configuration> <executions> 
+				<execution> <id>deploy-jar</id> <phase>install</phase> <goals> <goal>deploy</goal> 
+				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 </project>
