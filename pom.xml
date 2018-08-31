@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.9-SNAPSHOT</version>
+	<version>1.0.9</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
