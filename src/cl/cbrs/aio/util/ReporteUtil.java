@@ -44,7 +44,8 @@ public class ReporteUtil {
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
 		else
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
-		
+		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
+		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
 		JasperReport report = JasperCompileManager.compileReport(jd);
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(tareas);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
