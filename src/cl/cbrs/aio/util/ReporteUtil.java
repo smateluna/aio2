@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cl.cbr.util.TablaValores;
+import cl.cbrs.aio.dto.estado.BitacoraDTO;
+import cl.cbrs.aio.dto.estado.IngresoEgresoDTO;
+import cl.cbrs.aio.dto.estado.MovimientoDTO;
+import cl.cbrs.aio.dto.estado.TareaDTO;
+import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -16,13 +22,8 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import cl.cbr.util.TablaValores;
-import cl.cbrs.aio.dto.estado.BitacoraDTO;
-import cl.cbrs.aio.dto.estado.IngresoEgresoDTO;
-import cl.cbrs.aio.dto.estado.MovimientoDTO;
-import cl.cbrs.aio.dto.estado.TareaDTO;
-import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 
 public class ReporteUtil {
 	
@@ -44,11 +45,12 @@ public class ReporteUtil {
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
 		else
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath+"EstadoAIO.jasper");
+		
 		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
-		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
-		JasperReport report = JasperCompileManager.compileReport(jd);
+		System.out.println(jasperPath +"EstadoAIO.jasper");// TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
+		//JasperReport report = JasperCompileManager.compileReport(jd);
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(tareas);
-		System.out.println(jd.getName());
 		System.out.println(map.toString());
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 		jasperPrintList.add(jasperPrint);
