@@ -713,7 +713,7 @@
 					<pullMaster>true</pullMaster>
 					<allowSnapshots>true</allowSnapshots>
 					<noDeploy>true</noDeploy>
-					<noReleaseBuild>false</noReleaseBuild>
+					<noReleaseBuild>true</noReleaseBuild>
 					<flowInitContext>
 						<masterBranchName>master</masterBranchName>
 						<developBranchName>develop</developBranchName>
