@@ -48,6 +48,8 @@ public class ReporteUtil {
 		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
 		JasperReport report = JasperCompileManager.compileReport(jd);
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(tareas);
+		System.out.println(jd.getName());
+		System.out.println(map.toString());
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 		jasperPrintList.add(jasperPrint);
 
