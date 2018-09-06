@@ -8,7 +8,8 @@
 	 <%@ page session="true"%>
 	
 	 <% 
-		 session.invalidate(); 
+		 //session.invalidate(); 
+		 request.logout();
 		 
 	 %>
 	 <jsp:forward page="../index.html"/>
