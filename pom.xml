@@ -594,6 +594,13 @@
 			<artifactId>barbecue</artifactId>
 			<version>1.5-beta1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
+<dependency>
+    <groupId>org.keycloak</groupId>
+    <artifactId>keycloak-core</artifactId>
+    <version>4.0.0.Final</version>
+    <scope>provided</scope>
+</dependency>
 	</dependencies>
 	<profiles>
 		<profile>

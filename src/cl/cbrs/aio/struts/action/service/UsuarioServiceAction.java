@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dto.PermisoDTO;
@@ -150,16 +151,14 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		JSONObject json = new JSONObject();
 		json.put("estado", false);	
 
-		Enumeration<String> enu =request.getSession().getAttributeNames();
 
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";	
-			System.out.println("Obteniendo datos de usuario..."+usuario);
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+		usuario =context.getIdToken().getPreferredUsername();
+			
+		System.out.println("Obteniendo datos de usuario..."+usuario);
 			try {		
-				String item= enu.nextElement();
-				for (  ; enu.hasMoreElements();item = enu.nextElement()) {
-					System.out.println("Attributo"+item);
-
-				}
+			
 			json.put("nombreUsuario", usuario);
 			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			//Propiedades AIO
