@@ -112,8 +112,9 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		json.put("estado", false);	
 
 		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			usuario = usuario.replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
 			UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
 			usuarioAIO.setNombre(usuario);
 			usuarioAIO.setPath(request.getParameter("path"));
@@ -153,8 +154,8 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 
 		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-		String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-		usuario =context.getIdToken().getPreferredUsername();
+		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+		String usuario =context.getIdToken().getPreferredUsername();
 			
 		System.out.println("Obteniendo datos de usuario..."+usuario);
 			try {		
@@ -206,8 +207,9 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			
 //			if(usuario!=null && !"".equals(usuario)){
@@ -297,8 +299,9 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		json.put("status", false);	
 
 		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 //			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
