@@ -155,7 +155,8 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";	
 			System.out.println("Obteniendo datos de usuario..."+usuario);
 			try {		
-				for (String item= enu.nextElement() ; enu.hasMoreElements();) {
+				String item= enu.nextElement();
+				for (  ; enu.hasMoreElements();item = enu.nextElement()) {
 					System.out.println("Attributo"+item);
 
 				}
