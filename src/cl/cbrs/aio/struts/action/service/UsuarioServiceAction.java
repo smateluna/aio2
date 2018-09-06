@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -149,8 +150,15 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		JSONObject json = new JSONObject();
 		json.put("estado", false);	
 
-		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";			
+		Enumeration<String> enu =request.getSession().getAttributeNames();
+
+			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";	
+			System.out.println("Obteniendo datos de usuario..."+usuario);
+			try {		
+				for (String item= enu.nextElement() ; enu.hasMoreElements();) {
+					System.out.println("Attributo"+item);
+
+				}
 			json.put("nombreUsuario", usuario);
 			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			//Propiedades AIO
