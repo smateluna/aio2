@@ -618,7 +618,7 @@
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
                 </security-domain>
-                		<security-domain name="website-domain" cache-type="default">
+                		<!-- security-domain name="website-domain" cache-type="default">
 					<authentication>
 						<login-module code="org.jboss.security.auth.spi.LdapLoginModule"
 							flag="required">
@@ -632,7 +632,7 @@
 							<module-option name="matchOnUserDN" value="true" />
 						</login-module>
 					</authentication>
-				</security-domain>
+				</security-domain-->
             </security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:singleton:1.0">
