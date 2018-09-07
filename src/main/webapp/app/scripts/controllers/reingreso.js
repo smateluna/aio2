@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService, $log, reingresoService,caratulaService, $modal, $modalStack, $routeParams) {
+app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService, $log, reingresoService,caratulaService, $modal, $modalStack, $routeParams, $sce, $rootScope) {
 
 
 	$scope.submitted = false;
@@ -17,7 +17,6 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 	}, 500);
 
 	$scope.buscarCaratula = function(){
-
 		$scope.openLoadingModal('Buscando carátula #'+$scope.req.numeroCaratula+'...', '');
 
 		var promise = reingresoService.getCaratula($scope.req.numeroCaratula);
@@ -25,6 +24,7 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 			$scope.closeModal();
 			if(data.estado===null){
 			}else if(data.estado){
+
 				$scope.data = data;
 				$scope.dataOriginal = angular.copy($scope.data);
 
@@ -109,9 +109,17 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 						$scope.raiseSuccess(data.msg);
 						$timeout(function(){
 							$scope.closeModal();
+							if(data.reingresoGP){
+								$scope.verEstadoCaratula(data.reingresoGP);
+//								$scope.urlPDF = $sce.trustAsResourceUrl('../do/service/reingreso?metodo=imprimirReingresoGP&caratula='+data.reingresoGP);
+//								$timeout(function(){
+//									 $scope.printReingresoGP();
+//								},8000);
+								$scope.printReingresoGPCaratula(data.reingresoGP);
+							}
 						},2000);
 					}
-					
+
 					$scope.limpiar();
 					
 					
@@ -125,7 +133,21 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 		} else {
 			$scope.formEditar.submitted = true;
 		}
-	};
+	};	
+	
+	$scope.printReingresoGPCaratula = function(caratula) {
+		$scope.openLoadingModal('Generando pdf...', '');
+		$scope.urlPDF = $sce.trustAsResourceUrl('../do/service/reingreso?metodo=imprimirReingresoGP&caratula='+caratula);
+		$timeout(function(){
+			 $scope.printReingresoGP();
+			 $scope.closeModal();
+		},4000);
+	}	
+	
+	$scope.printReingresoGP = function() {
+	    window.frames["pdfReingreso"].focus();
+	    window.frames["pdfReingreso"].print();
+	}		
 
 	$scope.limpiar = function(){
 		$scope.reset();
@@ -351,6 +373,21 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 		}
 
 	};
+	
+	$scope.verEstadoCaratula = function(numeroCaratula){
+		$modal.open({
+			templateUrl: 'estadoIndiceModal.html',
+			backdrop: 'static',
+			windowClass: 'modal modal-dialog-xl', 
+			controller: 'EstadoIndiceModalCtrl',
+			size: 'lg',
+			resolve: {  
+				numeroCaratula : function(){
+					return parseInt(numeroCaratula);
+				}
+			}
+		});
+	}; 	
 	
 	$scope.$watch('data.caratulaDTO.tipoFormularioDTO', function() {
 		$scope.llenaComboWorkFlow();

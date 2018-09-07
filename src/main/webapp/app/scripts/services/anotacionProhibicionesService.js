@@ -4,9 +4,9 @@ app.factory('AnotacionProhibicionesService', function ($http, $q) {
 
   // Public API here
   return {
-    addAnotacion: function (idInscripcion, acto, texto, caratula, repertorio, version) {
+    addAnotacion: function (idInscripcion, acto, texto, caratula, repertorio, version, fechaRepertorio, borrador) {
 
-      var paramsObj = 'metodo=addAnotacion&idInscripcion='+idInscripcion+'&acto='+encodeURIComponent(acto)+'&texto='+encodeURIComponent(texto)+'&caratula='+caratula+'&repertorio='+repertorio+'&version='+version ;
+      var paramsObj = 'metodo=addAnotacion&idInscripcion='+idInscripcion+'&acto='+encodeURIComponent(acto)+'&texto='+encodeURIComponent(texto)+'&caratula='+caratula+'&repertorio='+repertorio+'&version='+version+'&borrador='+borrador ;
 
       var deferred = $q.defer();
 

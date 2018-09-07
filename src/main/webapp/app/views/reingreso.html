@@ -75,14 +75,33 @@
 				  </div>                
                </div>
            </div>
-           <!--fin row-->                        
+           <!--fin row-->    
+           
+           <div class="row" ng-if="data.reingresoGP!=null">   
+               <div role="alert" class="alert alert-danger col-md-9 col-xs-offset-2">
+               Esta car&aacute;tula corresponde a un reingreso GP de la car&aacute;tula <a href="" ng-click="verEstadoCaratula(data.reingresoGP.caratulaOriginal)">{{data.reingresoGP.caratulaOriginal}}</a> y no puede ser reingresada.                            
+               </div>
+           </div>
+           <div class="row" ng-if="data.reingresosGP!=null">   
+               <div role="alert" class="alert alert-danger col-md-9 col-xs-offset-2">
+               		Esta car&aacute;tula tiene {{data.reingresosGP.length}} reingreso<span ng-if="data.reingresosGP.length>1">s</span> GP. &Uacute;ltima car&aacute;tula generada: <a href="" ng-click="verEstadoCaratula(data.reingresosGP[0].caratulaNueva)">{{data.reingresosGP[0].caratulaNueva}}</a> - {{data.reingresosGP[0].fecha}} <a href="" tooltip="imprimir reingreso" ng-click="printReingresoGPCaratula(data.reingresosGP[0].caratulaNueva)"> <i class="fa fa-print"></i></a>                          
+               		<p ng-show="data.reingresosGP.length>1 && !allReingresos" style="text-align:right"><a href="" ng-click="allReingresos = !allReingresos">ver todo</a></p>
+               		<p ng-show="allReingresos" style="text-align:right"><a href="" ng-click="allReingresos = !allReingresos">ver menos</a></p>
+               </div>
+               <div role="alert" class="alert alert-danger col-md-9 col-xs-offset-2" ng-show="allReingresos")>
+               		<div ng-repeat="sol in data.reingresosGP">
+               			Car&aacute;tula generada: <a href="" ng-click="verEstadoCaratula(sol.caratulaNueva)">{{sol.caratulaNueva}}</a> - {{sol.fecha}} <a href="" tooltip="imprimir reingreso" ng-click="printReingresoGPCaratula(sol.caratulaNueva)"> <i class="fa fa-print"></i></a>								
+               		</div>                           
+               </div>               
+           </div>           
+           <!--fin row-->                                
            
          </div>
          <!--fin panel body-->
     </div>   
   </div>
-<form role="form" name="formReingresar" id="formReingresar" ng-submit="reingresarCaratula()">   
-   <div class="col-md-6">   	
+<form role="form" name="formReingresar" id="formReingresar" ng-submit="reingresarCaratula()" >   
+   <div class="col-md-6" ng-if="data.reingresoGP==null">   	
 	      <div class="panel panel-default">
 	         <div class="panel-heading">
 					<h4 class="panel-title">Datos de Reingreso</h4>
@@ -170,7 +189,8 @@
 	           <!--fin row-->          
 	            <div class="row mt20">   
 	               <div class="col-md-8 col-xs-offset-2">
-	                 <button type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid" >Reingresar</button>
+	                 <button ng-if="data.caratulaDTO.tipoFormularioDTO.id!=5 || data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo!='10' || subPermisos['reingreso'].indexOf('REINGRESO_GP') < 0" type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null" >Reingresar</button>
+	                 <button ng-if="data.caratulaDTO.tipoFormularioDTO.id==5 && data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo=='10' && subPermisos['reingreso'].indexOf('REINGRESO_GP') >= 0" type="submit" class="btn btn-success" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null" >Reingreso GP</button>
 	                 <button type="button" class="btn btn-default" ng-click="limpiar()">Limpiar</button>
 	               </div>
 	           </div>
@@ -191,11 +211,14 @@
 
 </div>
 
+<iframe id="pdfReingreso" name="pdfReingreso" style="display: none;" ng-src="{{urlPDF}}"></iframe>
+
 
 <div ng-include="'views/mensajeModal.html'"></div>
 <div ng-include="'views/loadingModal.html'"></div>
 <div ng-include="'views/rechazoModal.html'"></div>
 <div ng-include="'views/comentariosCaratula.html'"></div>
 <div ng-include="'views/documentosEntregaModal.html'"></div>
+<div ng-include="'views/estadoIndiceModal.html'"></div>
 
    

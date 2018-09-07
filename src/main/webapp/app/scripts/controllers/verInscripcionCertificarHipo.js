@@ -161,9 +161,9 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 
 			});
 
-		if(($scope.userLoginSinCBRS=='mfarfan' || $scope.userLoginSinCBRS=='jopazo' || $scope.userLoginSinCBRS=='hegonzalez') && $scope.data.inscripcionDigitalDTO.ano<2014){
+		if(($scope.userLoginSinCBRS=='jbelmar') && $scope.data.inscripcionDigitalDTO.ano<$rootScope.aioParametros.anoDigitalHipotecas){
 			$scope.parametros.rehaceImagen='1';
-		}else if((!tieneanotacion2 && $scope.data.estado.rehacerImagen) && $scope.data.inscripcionDigitalDTO.ano<2014){
+		}else if((!tieneanotacion2 && $scope.data.estado.rehacerImagen) && $scope.data.inscripcionDigitalDTO.ano<$rootScope.aioParametros.anoDigitalHipotecas){
 			$scope.parametros.rehaceImagen='1';
 		}else{
 			$scope.parametros.rehaceImagen='0';
@@ -270,9 +270,12 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 			windowClass: 'modal',
 			controller: 'RehacerImagenModalCtrl',
 			resolve: {
-			dataImagen: function(){
-			return dataImagen;
-		}
+				dataImagen: function(){
+					return dataImagen;
+				},
+				servicioCertificacion: function(){
+					return certificacionHipotecasService;
+				}
 		}
 		});
 	};

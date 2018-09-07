@@ -32,7 +32,7 @@ public class NotaElectronicaUtil {
 	
 	private static final Logger logger = Logger.getLogger(NotaElectronicaUtil.class);
 	
-	public InputStream getNotasInscripcion(AnotacionVO[] listaNotas,Long foja,String numero,Long anno) throws BussinesException {
+	public InputStream getNotasInscripcion(List<AnotacionVO> listaNotas,Long foja,String numero,Long anno) throws BussinesException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			Document document = new Document(new Rectangle(20, 50, 645, 910), 120, 120, 50, 50);
@@ -49,11 +49,9 @@ public class NotaElectronicaUtil {
 
 			if(listaNotas!=null){
 
-				document.add(getCellfna("FOJA ["+foja+"] NUMERO ["+ numero +"] AÑO ["+anno+"]"));
-
-				for(int i = listaNotas.length-1; i>=0; i--){            			
-
-					AnotacionVO anotacion = listaNotas[i];
+				document.add(getCellfna("FOJA ["+foja+"] NUMERO ["+ numero +"] AÑO ["+anno+"]"));				
+					
+				for(AnotacionVO anotacion : listaNotas){
 
 					//Anotacion internas o eliminadas no haga nada
 					if(3 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion() || 7 == anotacion.getEstadoAnotacionVo().getIdEstado()){
@@ -62,7 +60,10 @@ public class NotaElectronicaUtil {
 
 					String inscrito=""; 
 
-					String texto = anotacion.getTexto();
+					String texto="";
+					if(anotacion.getCaratula()!=null)
+						texto += "Carátula: "+anotacion.getCaratula()+"<br>";
+					texto+=anotacion.getTexto();
 
 					if (anotacion.getTexto()!=null){
 						//	            			txt=anotacion.getTexto().replaceAll("\\n", "");
@@ -86,7 +87,7 @@ public class NotaElectronicaUtil {
 						acto=StringUtil.reemplazaTodo(acto, "Transmitido:", "Transmisión");
 						acto=StringUtil.reemplazaTodo(acto, "Transferencia:", "Transferencia");
 						acto=StringUtil.reemplazaTodo(acto, "REPERTORIO", "Repertorio");
-						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicacíon");
+						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicación");
 					}
 
 					if(1 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion()){
@@ -115,8 +116,9 @@ public class NotaElectronicaUtil {
 						}	
 					}
 					else if(2 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion()){
-						if((2 == anotacion.getEstadoAnotacionVo().getIdEstado() || 4 == anotacion.getEstadoAnotacionVo().getIdEstado() || 3 == anotacion.getEstadoAnotacionVo().getIdEstado()) && anotacion.getNombreUsuarioFirmador()!=null && StringUtils.isNotBlank(anotacion.getNombreUsuarioFirmador().trim()))
+						if((2 == anotacion.getEstadoAnotacionVo().getIdEstado() || 4 == anotacion.getEstadoAnotacionVo().getIdEstado() || 3 == anotacion.getEstadoAnotacionVo().getIdEstado()) && anotacion.getNombreUsuarioFirmador()!=null && StringUtils.isNotBlank(anotacion.getNombreUsuarioFirmador().trim())){							
 							texto = texto.trim() + " " + anotacion.getNombreUsuarioFirmador().trim()+".";
+						}
 					}
 
 					if(!acto.equalsIgnoreCase("Repertorio") && (null!=anotacion.getRepertorio() && null!=anotacion.getCaratula())){
@@ -130,7 +132,9 @@ public class NotaElectronicaUtil {
 							anoRepertorio="-"+year;
 						}
 							
-						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto; 
+//						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto; 
+						texto = texto.replaceFirst("Carátula: "+anotacion.getCaratula()+"<br>", "");
+						texto = "Carátula: "+anotacion.getCaratula()+", Repertorio: "+anotacion.getRepertorio()+anoRepertorio+(texto.equals("")?"":"<br>"+texto);
 					}
 
 					if(!acto.equalsIgnoreCase("Repertorio"))
@@ -181,7 +185,7 @@ public class NotaElectronicaUtil {
 		}
 	}
 	
-	public InputStream getNotasInscripcion(cl.cbrs.inscripciondigitalh.vo.AnotacionVO[] listaNotas,Long foja,String numero,Long anno) throws BussinesException {
+	public InputStream getNotasInscripcionH(List<cl.cbrs.inscripciondigitalh.vo.AnotacionVO> listaNotas,Long foja,String numero,Long anno) throws BussinesException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			Document document = new Document(new Rectangle(20, 50, 645, 910), 120, 120, 50, 50);
@@ -197,9 +201,7 @@ public class NotaElectronicaUtil {
 
 				document.add(getCellfna("FOJA ["+foja+"] NUMERO ["+ numero +"] AÑO ["+anno+"]"));
 
-				for(int i = listaNotas.length-1; i>=0; i--){            			
-
-					cl.cbrs.inscripciondigitalh.vo.AnotacionVO anotacion = listaNotas[i];
+				for(cl.cbrs.inscripciondigitalh.vo.AnotacionVO anotacion : listaNotas){
 
 					//Anotacion internas o eliminadas no haga nada
 					if(3 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion() || 7 == anotacion.getEstadoAnotacionVo().getIdEstado()){
@@ -207,7 +209,10 @@ public class NotaElectronicaUtil {
 					}
 
 					String inscrito=""; 
-					String texto = anotacion.getTexto();
+					String texto="";
+					if(anotacion.getCaratula()!=null)
+						texto += "Carátula: "+anotacion.getCaratula()+"<br>";
+					texto+=anotacion.getTexto();
 
 					if (anotacion.getTexto()!=null){
 						texto=StringUtil.reemplazaTodo(texto, "PROHIBICION: A", "");
@@ -230,7 +235,7 @@ public class NotaElectronicaUtil {
 						acto=StringUtil.reemplazaTodo(acto, "Transmitido:", "Transmisión");
 						acto=StringUtil.reemplazaTodo(acto, "Transferencia:", "Transferencia");
 						acto=StringUtil.reemplazaTodo(acto, "REPERTORIO", "Repertorio");
-						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicacíon");
+						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicación");
 					}
 
 					if(1 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion()){
@@ -269,7 +274,9 @@ public class NotaElectronicaUtil {
 //						    int year = cal.get(Calendar.YEAR);
 //							anoRepertorio="-"+year;
 //						}							
-						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto; 
+//						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto;
+						texto=texto.replaceFirst("Carátula: "+anotacion.getCaratula()+"<br>", "");
+						texto = "Carátula: "+anotacion.getCaratula()+", Repertorio: "+anotacion.getRepertorio()+anoRepertorio+(texto.equals("")?"":"<br>"+texto);
 					}
 
 					if(!acto.equalsIgnoreCase("Repertorio"))
@@ -318,7 +325,7 @@ public class NotaElectronicaUtil {
 		}
 	}	
 	
-	public InputStream getNotasInscripcion(cl.cbrs.inscripciondigitalph.vo.AnotacionVO[] listaNotas,Long foja,String numero,Long anno) throws BussinesException {
+	public InputStream getNotasInscripcionPH(List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> listaNotas,Long foja,String numero,Long anno) throws BussinesException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			Document document = new Document(new Rectangle(20, 50, 645, 910), 120, 120, 50, 50);
@@ -334,9 +341,7 @@ public class NotaElectronicaUtil {
 
 				document.add(getCellfna("FOJA ["+foja+"] NUMERO ["+ numero +"] AÑO ["+anno+"]"));
 
-				for(int i = listaNotas.length-1; i>=0; i--){            			
-
-					cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacion = listaNotas[i];
+				for(cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacion : listaNotas){
 
 					//Anotacion internas o eliminadas no haga nada
 					if(3 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion() || 7 == anotacion.getEstadoAnotacionVo().getIdEstado()){
@@ -344,7 +349,10 @@ public class NotaElectronicaUtil {
 					}
 
 					String inscrito=""; 
-					String texto = anotacion.getTexto();
+					String texto="";
+					if(anotacion.getCaratula()!=null)
+						texto += "Carátula: "+anotacion.getCaratula()+"<br>";
+					texto+=anotacion.getTexto();
 
 					if (anotacion.getTexto()!=null){
 						texto=StringUtil.reemplazaTodo(texto, "PROHIBICION: A", "");
@@ -367,7 +375,7 @@ public class NotaElectronicaUtil {
 						acto=StringUtil.reemplazaTodo(acto, "Transmitido:", "Transmisión");
 						acto=StringUtil.reemplazaTodo(acto, "Transferencia:", "Transferencia");
 						acto=StringUtil.reemplazaTodo(acto, "REPERTORIO", "Repertorio");
-						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicacíon");
+						acto=StringUtil.reemplazaTodo(acto, "Adjudicado", "Adjudicación");
 					}
 
 					if(1 == anotacion.getTipoAnotacionVo().getIdTipoAnotacion()){
@@ -406,7 +414,9 @@ public class NotaElectronicaUtil {
 //						    int year = cal.get(Calendar.YEAR);
 //							anoRepertorio="-"+year;
 //						}							
-						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto; 
+//						texto = "Repertorio: "+anotacion.getRepertorio()+anoRepertorio+", Caratula: "+anotacion.getCaratula()+"<br>"+texto;
+						texto=texto.replaceFirst("Carátula: "+anotacion.getCaratula()+"<br>", "");
+						texto = "Carátula: "+anotacion.getCaratula()+", Repertorio: "+anotacion.getRepertorio()+anoRepertorio+(texto.equals("")?"":"<br>"+texto);
 					}
 
 					if(!acto.equalsIgnoreCase("Repertorio"))

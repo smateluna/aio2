@@ -54,7 +54,7 @@
 			            </th>
 						<th>
 						<span ng-if="caratulafuera.caratula.codSeccion!='16'">
-			                Redistribuir
+			                Acciones
 			            </span>    
 			            </th>
 			        </tr>
@@ -87,7 +87,7 @@
                                         </button>
 					       			  </a>  
 								</span> 
-								<button ng-if="caratulafuera.caratula.codSeccion=='16'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="imprimeCaratula(caratulafuera.caratula)" tooltip="Imprimir Car&aacute;la" tooltip-placement="top">
+								<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="imprimeCaratula(caratulafuera.caratula)" tooltip="Imprimir Car&aacute;la" tooltip-placement="top">
 	                               			<i class="fa fa-print"></i>
 	                            </button>   
 								
@@ -120,20 +120,27 @@
               <div class="tab-content">     
 			
 				<div class="header">
-			        <h3> Car&aacute;tulas Asignadas <small class="vertAM"><span class="badge ng-scope ng-binding">{{busquedaTareas.data.caratulas.length}}</span></small>
-                    
+			        <h3> Car&aacute;tulas Asignadas <small class="vertAM"><span class="badge ng-scope ng-binding">{{paginacionTareas.todos.length}}</span></small>
+
+                   
                      <button ng-disabled="!hayCaratulaSeleccionada()" type="button" class="btn btn-primary pull-right" tooltip="Debe seleccionar filas" tooltip-placement="top" ng-click="distribuir()">
                        Distribuir
 	                 </button>  
+                     <button ng-disabled="!hayCaratulaSeleccionada()" type="button" class="btn btn-primary pull-right" tooltip="Debe seleccionar filas" tooltip-placement="top" ng-click="imprimirSeleccion()">
+                       Imprimir
+	                 </button>  	                 
                   </h3> 
 			    </div>
 			    
 			    <div class="row mb10">
                      
-			    	<div class="col-md-3 col-sm-3">
-			    		<input ng-model="filterExpr" placeholder="Filtrar..." class="form-control">
+			    	<div class="col-md-4 col-sm-4">
+			    		<input ng-model="filterExpr" placeholder="Filtrar..." class="">
+		    			<button ng-if="perfil=='ALZADOR'" type="button" class="btn  btn-primary btn-sm" ng-click="customFilter1()" tooltip="Refrescar" tooltip-placement="bottom">
+                        	alzamiento web
+                        </button>
 			    	</div>
-			    	<div class="col-md-5 col-sm-5 col-lg-6" align="right">				       
+			    	<div class="col-md-5 col-sm-5 " align="right">				       
                            <label style="margin-top: 6px;">Auto Refrescar:</label>
                      </div>
                      <div class="col-md-4 col-sm-4 col-lg-3" style="display: inline-flex;">      
@@ -149,7 +156,7 @@
 					      	5 minutos
 				        	</option>
 				        </select>	
-			    		<button type="button" class="pull-right btn  btn-primary btn-sm" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="bottom">
+			    		<button type="button" class="pull-right btn  btn-primary btn-sm" ng-click="buscarLiquidaciones()" tooltip="Refrescar" tooltip-placement="bottom">
                           <i class="fa fa-refresh"></i>
                         </button>
 			    		
@@ -162,7 +169,7 @@
 				<table class="hover table-curved">
 			        <thead>
 			        <tr>
-                        <th>Selec.</th>
+                        <th><input type="checkbox" class="icheckbox_square-blue" ng-click="checkAll()" ng-model="selectedAll" /></th>
 			        	<th ng-class="busquedaTareas.predicate == 'numeroCaratula' ? 'bgColor-th' : ''">
 			                Car&aacute;tula <a ng-click="busquedaTareas.predicate = 'numeroCaratula'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
 			            </th>
@@ -172,29 +179,20 @@
 			            <th ng-class="busquedaTareas.predicate == 'tipoFormularioDTO.id' ? 'bgColor-th' : ''">
 			                Tipo <a ng-click="busquedaTareas.predicate = 'tipoFormularioDTO.id'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
 			            </th>
-			            <th ng-class="busquedaTareas.predicate == 'inscripcionDigitalDTO.foja' ? 'bgColor-th' : ''" >
-			                Foja <a ng-click="busquedaTareas.predicate = 'inscripcionDigitalDTO.foja'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
-			            </th>
-			            <th ng-class="busquedaTareas.predicate == 'inscripcionDigitalDTO.numero' ? 'bgColor-th' : ''">
-			                N&uacute;mero <a ng-click="busquedaTareas.predicate = 'inscripcionDigitalDTO.numero'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
-			            </th>
-			            <th ng-class="busquedaTareas.predicate == 'inscripcionDigitalDTO.ano' ? 'bgColor-th' : ''">
-			                A&ntilde;o <a ng-click="busquedaTareas.predicate = 'inscripcionDigitalDTO.ano'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
-			            </th>
-			            <th ng-class="busquedaTareas.predicate == 'inscripcionDigitalDTO.bis' ? 'bgColor-th' : ''">
-			                Bis <a ng-click="busquedaTareas.predicate = 'inscripcionDigitalDTO.bis'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
-			            </th>
+			            <th ng-if="busquedaTareas.data.hayInscripcion" ng-class="busquedaTareas.predicate == 'inscripcionDigitalDTO.numero' ? 'bgColor-th' : ''" >
+			                Inscripci&oacute;n <a ng-click="busquedaTareas.predicate = 'inscripcionDigitalDTO.numero'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
+			            </th>			            
 			            <th class="text-center" ng-class="busquedaTareas.predicate == 'estadoActualCaratulaDTO.descripcionEnFlujo' ? 'bgColor-th' : ''">
 			                Secci&oacute;n <a ng-click="busquedaTareas.predicate = 'estadoActualCaratulaDTO.seccionDTO.descripcion'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
 			            </th>			            
 			            <th ng-class="busquedaTareas.predicate == 'estadoActualCaratulaDTO.fechaMov' ? 'bgColor-th' : ''">
 			                Fecha Secci&oacute;n <a ng-click="busquedaTareas.predicate = 'estadoActualCaratulaDTO.fechaMov'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
 			            </th>
-			            <th class="text-center" ng-class="busquedaTareas.predicate == 'estado' ? 'bgColor-th' : ''">
+			            <th ng-if="busquedaTareas.data.tieneRepertorio" class="text-center" ng-class="busquedaTareas.predicate == 'estado' ? 'bgColor-th' : ''">
 			                Estado <a ng-click="busquedaTareas.predicate = 'estado'; busquedaTareas.reverse = !busquedaTareas.reverse" href=""><i class="fa fa-sort"></i></a>
 			            </th>
 			            
-			            <th class="text-center">Acciones              
+			            <th class="text-center">&nbsp;              
 			            </th>
 			        </tr>
 			        </thead>
@@ -213,10 +211,13 @@
 			        				<br />
 			        				{{sol.productoWebDTO.descripcionProducto}}
 				        		</td>
-				        		<td class="text-left">{{sol.inscripcionDigitalDTO.foja}}</td>
-				        		<td class="text-left">{{sol.inscripcionDigitalDTO.numero}}</td>
-				        		<td class="text-left">{{sol.inscripcionDigitalDTO.ano}}</td>
-				        		<td class="text-center"><span ng-show="sol.inscripcionDigitalDTO.bis===1"><i class="fa fa-check"></i></span></td>				        		
+				        		<td class="text-left" ng-if="busquedaTareas.data.hayInscripcion">
+				        			{{sol.inscripcionDigitalDTO.foja}}-{{sol.inscripcionDigitalDTO.numero}}-{{sol.inscripcionDigitalDTO.ano}} {{sol.inscripcionDigitalDTO.bis===1?'bis':''}}
+				        			<button type="button" class="btn btn-primary btn-xs btn-rad"
+										ng-click="verTitulo(sol.inscripcionDigitalDTO, sol.numeroCaratula)">
+										<i class="fa fa-search"></i>
+									</button>
+				        		</td>				        						        	
 				        		<td class="text-center">
 				        			<span class="label label-info">{{sol.estadoActualCaratulaDTO.descripcionEnFlujo}}</span>
 									<p class="detail-block-td" style="margin-top: 3px;">
@@ -225,35 +226,23 @@
 									</p>	
 								</td>			        		
 								<td class="text-left">{{sol.estadoActualCaratulaDTO.fechaMov}}</td>
-								<td class="text-center">
+								<td ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'" class="text-center">
 									<span ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===1">OK</span>
                                     <span ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===0">Falta Doc.</span>
 								</td>
 				        		<td class="text-center">
-				        			
-	                           			<button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C2' || sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C3'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verInscripcionCertificar(sol)" tooltip="Revisar y Certificar" tooltip-placement="top">
-	                               			<i class="fa fa-file-text-o"></i>
-	                           			</button>
-	                           			<button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='RL'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="masInfoLiquidacion(sol)" tooltip="Informaci&#243;n Liquidaci&#243;n Car&#225;tula" tooltip-placement="top"> 
-	                           				<i class="fa fa-info-circle"></i>
-	                           			</button>	
-	                           			<a ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='23' || sol.estadoActualCaratulaDTO.seccionDTO.codigo=='27' || sol.estadoActualCaratulaDTO.seccionDTO.codigo=='B5'" href="cbrsVisor:{{sol.numeroCaratula}}">
-	                           				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="NÃºmero de CarÃ¡tula" tooltip-placement="top"> 
-                                             <i class="fa fa-file-text-o"></i></button>
-	                           			</a>     
-	                           			<button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="obtenerEscritura(sol)" tooltip="Obtener Escritura" tooltip-placement="top">
-	                               			<i class="fa fa-download"></i>
-	                           			</button>        
-	                           			<!-- <button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===1" ng-click="verDocumentoEstudio(sol)" class="btn btn-primary btn-xs btn-rad" alt="ver documento"><i class="fa fa-file-pdf-o"></i> </button> -->              			
-	                    			    <span ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===1 && subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">
-							              	  <a  href="cbrsVisor:{{sol.numeroCaratula}}">
-							       				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> 
-                                                  <i class="fa fa-pencil"></i></button>
-							       			  </a>  
-								        </span>
-								        <button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="imprimeCaratula(sol)" tooltip="Imprimir Car&aacute;tula" tooltip-placement="top">
-	                               			<i class="fa fa-print"></i>
-	                            		</button>   
+									    <div class="btn-group">
+									      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Acciones <span class="caret"></span></button>
+									      <ul class="dropdown-menu" role="menu">
+									      	<li><a href="" ng-click="verEscritura(sol)"><i class="fa fa-file-pdf-o"></i> Ver Escritura</a></li>
+									      	<li><a href="" ng-click="imprimeCaratula(sol)"><i class="fa fa-print"></i> Imprimir Car&aacute;tula</a></li>
+									      	<li class="divider"></li>
+									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C2' || sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C3'"><a href="" ng-click="verInscripcionCertificar(sol)"><i class="fa fa-file-text-o"></i> Revisar y Certificar</a></li>
+									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='RL'"><a href="" ng-click="masInfoLiquidacion(sol)"><i class="fa fa-info-circle"></i> Mas Info Liquidacion</a></li>
+										    <li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'"><a href="" ng-click="obtenerEscritura(sol)"><i class="fa fa-download"></i> Obtener Escritura</a></li>										    
+										    <li ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-pencil"></i> Editar Escritura</a></li>
+										  </ul>
+									    </div>             			
 	                    		</td>
 				        </tr>
 				        
@@ -273,11 +262,14 @@
 			        </tbody>
 			    </table>
               </div>
-                
+              
                 <div align="right" class="mb10 mT-10">
+                    <button ng-disabled="!hayCaratulaSeleccionada()" type="button" class="btn btn-primary" tooltip="Debe seleccionar filas" tooltip-placement="bottom" ng-click="imprimirSeleccion()">
+                      Imprimir
+	                </button>                
                     <button ng-disabled="!hayCaratulaSeleccionada()" type="button" class="btn btn-primary" tooltip="Debe seleccionar filas" tooltip-placement="bottom" ng-click="distribuir()">
                       Distribuir
-	                </button>  
+	                </button>    	                
                 </div>
 			
 			<!-- Fin Listado -->

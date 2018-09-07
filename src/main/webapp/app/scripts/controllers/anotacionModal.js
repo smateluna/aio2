@@ -50,6 +50,7 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 			if(data.status===null){
 			}else if(data.status){
 				$scope.tipos = data.listaTiposAnotaciones;        
+				$scope.cambioTipo();
 				//var userData = Usuario.getData();
 
 				var dataSaveTipo = {
@@ -75,6 +76,12 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 			selectedTipo: {nombreAnotacion: "Texto Libre", valorAnotacion: "0", tipoAnotacion: "libre"},
 			caratula: null,
 			repertorio: null,
+			borrador: null,
+			repertorioNotarial: null,
+			fechaNotario: null,
+			foja: null,
+			numero: null,
+			ano: null,
 			texto: null,
 			fecha: null,
 			version: null,
@@ -134,14 +141,22 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 	$scope.cambioTipo = function(){
 		$scope.anotacion.caratula = null;
 		$scope.anotacion.repertorio = null;
+		$scope.anotacion.repertorioNotarial = null;
+		$scope.anotacion.borrador = null;
+		$scope.anotacion.fechaNotario = null;
+		$scope.anotacion.foja = null;
+		$scope.anotacion.numero = null;
+		$scope.anotacion.ano = null;
 		$scope.anotacion.texto = null;
 		$scope.anotacion.version = null;
 
-		if($scope.anotacion.selectedTipo.valorAnotacion == 0){
+		if($scope.anotacion.selectedTipo.valorAnotacion == 0 || $scope.anotacion.selectedTipo.valorAnotacion == 20){
 			$scope.doFocus(true, 'texto');
+			$scope.soloTexto = true;
 
 		}else{
 			$scope.doFocus(true, 'caratula');
+			$scope.soloTexto = false;
 		}
 	};
 
@@ -166,22 +181,36 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 		var acto = $scope.anotacion.selectedTipo.nombreAnotacion;
 
 		//logica por anotacion
-		if($scope.anotacion.selectedTipo.valorAnotacion == 0){
-			$scope.agregaAnotacion($scope.idInscripcion, 'Anotaci\u00F3n', $scope.anotacion.texto, null, null, null, null);
+		if($scope.soloTexto){
+			if(acto=="Texto Libre")
+				acto='Anotaci\u00F3n';
+			$scope.agregaAnotacion($scope.idInscripcion, acto, $scope.anotacion.texto, null, null, null, null, null);
 		} else{
 			var fecha = moment($scope.anotacion.fecha, 'YYYY-MM-DD').format('LL');
-			var texto = acto+'<br>C: '+$scope.anotacion.caratula+'<br>REP.: '+$scope.anotacion.repertorio;
+			var texto = acto+'<br>C: '+$scope.anotacion.caratula+'<br>REP. CBRS: '+$scope.anotacion.repertorio;
+			if($scope.parametros.registro=='proh'){
+				if($scope.anotacion.borrador!=null)
+					texto +="<br>B.: "+$scope.anotacion.borrador;
+				if($scope.anotacion.repertorioNotarial!=null)
+					texto +="<br>REP. NOT.: "+$scope.anotacion.repertorioNotarial;			
+				if($scope.anotacion.fechaNotario!=null){
+					var fechaNotario = moment($scope.anotacion.fechaNotario, 'YYYY-MM-DD').format('LL');
+					texto +="<br>FECHA NOT.: "+fechaNotario;
+				}
+				if($scope.anotacion.foja!=null && $scope.anotacion.numero!=null && $scope.anotacion.ano!=null)
+					texto +="<br>F:"+$scope.anotacion.foja+" N:"+$scope.anotacion.numero+" A:"+$scope.anotacion.ano;
+			}
 
 			if($scope.anotacion.texto!=null && $scope.anotacion.texto!="")
 				texto += '<br>'+$scope.anotacion.texto;
 			texto += '<br>FECHA: '+fecha + '.<br><label></label>';
 
-			$scope.agregaAnotacion($scope.idInscripcion, acto, texto, $scope.anotacion.caratula, $scope.anotacion.repertorio, $scope.anotacion.version, $scope.anotacion.fecha);
+			$scope.agregaAnotacion($scope.idInscripcion, acto, texto, $scope.anotacion.caratula, $scope.anotacion.repertorio, $scope.anotacion.version, $scope.anotacion.fecha, $scope.anotacion.borrador);
 		}					
 
 	};
 
-	$scope.agregaAnotacion = function(idIns, acto, text, caratula, repertorio, version, fecha){
+	$scope.agregaAnotacion = function(idIns, acto, text, caratula, repertorio, version, fecha, borrador){
 		$scope.savingAnotacion = true;
 
 		$scope.anotacionStatus = {
@@ -190,7 +219,7 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 				msg: null
 		};
 
-		var promise = $scope.servicioAnotacion.addAnotacion(idIns, acto, text, caratula, repertorio, version, fecha);
+		var promise = $scope.servicioAnotacion.addAnotacion(idIns, acto, text, caratula, repertorio, version, fecha, borrador);
 		promise.then(function(data) {
 			if(data.status===null){
 				$window.location.href = $window.location.protocol+'//'+$window.location.host+$window.location.pathname;
@@ -448,7 +477,7 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 			$scope.puedeGuardar = true;
 			$scope.enProceso=true;
 
-			var promise = borradorService.obtenerTitulosAnteriores($scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano);
+			var promise = borradorService.obtenerTitulosAnteriores($scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
 			promise.then(function(data) {
 				if(data.status===null){
 				}else if(data.status){
@@ -456,7 +485,7 @@ app.controller('AnotacionModalCtrl', function ($rootScope, $scope, $modalInstanc
 
 					if(data.listaTitulosAnteriores.length>0){
 						for( var i = 0; i < data.listaTitulosAnteriores.length; i++ ) {
-							if(data.listaTitulosAnteriores[i].estado.tieneRechazo || data.listaTitulosAnteriores[i].consultaDocumentoDTO.tipoDocumento!=8)
+							if(data.listaTitulosAnteriores[i].consultaDocumentoDTO.tipoDocumento!=8)//&& data.listaTitulosAnteriores[i].estado.tieneRechazo || 
 								$scope.puedeGuardar = false;
 							$scope.titulos.push({'Selected':data.listaTitulosAnteriores[i].vigente, 'foja':data.listaTitulosAnteriores[i].foja, 'numero': data.listaTitulosAnteriores[i].numero, 'anio':data.listaTitulosAnteriores[i].ano,'vigente':data.listaTitulosAnteriores[i].vigente, 'id':$scope.titulos.length+1, 'idInscripcion':data.listaTitulosAnteriores[i].idInscripcion, 'flag':'' , 'consultaDocumentoDTO': data.listaTitulosAnteriores[i].consultaDocumentoDTO});
 						}

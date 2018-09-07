@@ -9,12 +9,13 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dto.PermisoDTO;
@@ -111,8 +112,9 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		json.put("estado", false);	
 
 		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			usuario = usuario.replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
 			UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
 			usuarioAIO.setNombre(usuario);
 			usuarioAIO.setPath(request.getParameter("path"));
@@ -140,34 +142,29 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			json.writeJSONString(response.getWriter());
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}		
 	}
 	
 
 	@SuppressWarnings({ "unchecked" })
 	public void getUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
-
 		JSONObject json = new JSONObject();
 		json.put("estado", false);	
 
-		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";			
-			json.put("nombreUsuario", usuario);
+
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+		String usuario =context.getIdToken().getPreferredUsername();
 			
+		System.out.println("Obteniendo datos de usuario..."+usuario);
+			try {		
+			
+			json.put("nombreUsuario", usuario);
+			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			//Propiedades AIO
 			json.put("sistema", CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 			json.put("anoArchivoNacional", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_ARCHIVO_NACIONAL")));
-			json.put("anoDigitalPropiedades", 2014);
-			json.put("anoDigitalHipotecas", 2018);
-			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROPIEDADES")!=null)
-				json.put("anoDigitalPropiedades", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROPIEDADES")));
-			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_HIPOTECAS")!=null)
-				json.put("anoDigitalHipotecas", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_HIPOTECAS")));
-			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROHIBICIONES")!=null)
-				json.put("anoDigitalProhibiciones", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROHIBICIONES")));
-			if(CacheAIO.CACHE_CONFIG_AIO.get("FOJAS_DIGITAL_PROHIBICIONES")!=null)
-				json.put("fojasDigitalProhibiciones", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("FOJAS_DIGITAL_PROHIBICIONES")));	
 
 			json.put("modulo", (String) request.getSession().getAttribute("modulo"));
 			json.put("grupo", (String) request.getSession().getAttribute("grupo"));
@@ -210,8 +207,10 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			
 //			if(usuario!=null && !"".equals(usuario)){
 				usuario = usuario.replaceAll("CBRS\\\\", "");
@@ -240,7 +239,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 					//Verifico si perfil aplica para atencion de modulos - RG
 					String valor = TablaValores.getValor("aio.parametros", "perfiles_atencion_publico", perfil.toLowerCase());
 					if(null!=valor && valor.equals("1")){
-						userIpAddress = getIpUsuario(request);
+						userIpAddress = request.getRemoteAddr();
 						//modulo;activo(boolean);grupo;
 						activoAtencion = Boolean.parseBoolean(TablaValores.getValor("aio.parametros", userIpAddress, "activo"));
 						if(null!=activoAtencion){
@@ -290,24 +289,6 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		}		
 	}
 	
-	public String getIpUsuario(HttpServletRequest request){
-		
-		String ip = request.getHeader("x-real-ip");
-		
-		if(ip==null){
-			ip = request.getRemoteAddr();
-		}
-		
-//		Enumeration<String> headerNames = request.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String headerName = headerNames.nextElement();
-//            String headerValue = request.getHeader(headerName);
-//            System.out.println("Header Name: " + headerName + " Header Value: " + headerValue);
-//        }
-		
-		return ip;
-	}
-	
 	@SuppressWarnings({ "unchecked" })
 	public void getPerfilesUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
@@ -318,7 +299,10 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		json.put("status", false);	
 
 		try {		
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			 System.out.println("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 //			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
 			JSONArray listaPerfiles = util.getPerfilesUsuario(usuario);
@@ -344,6 +328,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			}
 						
 		} catch (Exception e) {
+			e.printStackTrace();
         	if(request.getSession()!=null){
         		request.getSession().invalidate();
         	}

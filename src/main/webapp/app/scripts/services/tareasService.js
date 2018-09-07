@@ -194,6 +194,25 @@ app.factory('tareasService', function ($http, $q) {
                });
 
              return deferred.promise;     
+   	    },      
+   	    getGlosaDocumento: function (codAlpha) {
+             var paramsObj = {metodo: 'getGlosaDocumento', codAlpha:codAlpha};
+
+             var deferred = $q.defer();
+
+             $http({
+               method: 'GET',
+               url: '../do/service/tareas',
+               params: paramsObj
+             }).
+               success(function(data, status, headers, config){
+                 deferred.resolve(data);
+               }).
+               error(function(data, status, headers, config){
+                 deferred.reject(status);
+               });
+
+             return deferred.promise;     
    	    }
 	  };
   });

@@ -740,17 +740,17 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 			status = true;
 
 		} catch (GeneralException e1) {
-			logger.error(e1);
+			logger.error(e1.getMessage(),e1);
 
 			status = false;
 			msg = "Se ha detectado un problema en el servidor.";	
 		} catch (UnsupportedEncodingException e) {
-			logger.error(e);
+			logger.error(e.getMessage(),e);
 
 			status = false;
 			msg = "Se ha detectado un problema, comunicar area soporte.";	
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(),e);
 
 			status = false;
 			msg = "Se ha detectado un problema, comunicar area soporte.";
@@ -1114,7 +1114,9 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 				estadoCaratulaVO.setResponsable(funcionarioResponsableVO);	
 				
 				SeccionVO seccionVO = new SeccionVO();
-				if(inscripcionCitadaVO.getRegistro().equals(2))
+				if(inscripcionCitadaVO.getRegistro().equals(3))
+					seccionVO.setCodigo("P0"); //En Proceso Copia Electronica PH
+				else if(inscripcionCitadaVO.getRegistro().equals(2))
 					seccionVO.setCodigo("C9"); //En Proceso Copia Electronica H
 				else
 					seccionVO.setCodigo("C4"); //En Proceso Copia Electronica
@@ -1223,7 +1225,9 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 				estadoCaratulaVO.setResponsable(funcionarioResponsableVO);	
 
 				SeccionVO seccionVO = new SeccionVO();
-				if(ins[0].getRegistro().equals(2))
+				if(ins[0].getRegistro().equals(3))
+					seccionVO.setCodigo("P0"); 
+				else if(ins[0].getRegistro().equals(2))
 					seccionVO.setCodigo("C9"); 
 				else
 					seccionVO.setCodigo("C4"); 
@@ -1514,7 +1518,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 			status = false;
 			msg = "Se ha detectado un problema en el servidor.";	
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(),e);
 
 			status = false;
 			msg = "Se ha detectado un problema, comunicar area soporte.";

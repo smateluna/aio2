@@ -33,10 +33,13 @@
         <extension module="org.wildfly.extension.request-controller"/>
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
+	<extension module="org.keycloak.keycloak-adapter-subsystem"/>
     </extensions>
     
     <system-properties>
         <property name="http.nonProxyHosts" value="*"/> 
+        <property name="javax.net.ssl.trustStorePassword" value="trustme"/>
+        <property name="javax.net.ssl.trustStore" value="/opt/truststore/truststore.jks"/>
     </system-properties>
 
     <management>
@@ -615,7 +618,7 @@
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
                 </security-domain>
-                		<security-domain name="website-domain" cache-type="default">
+                		<!-- security-domain name="website-domain" cache-type="default">
 					<authentication>
 						<login-module code="org.jboss.security.auth.spi.LdapLoginModule"
 							flag="required">
@@ -629,7 +632,7 @@
 							<module-option name="matchOnUserDN" value="true" />
 						</login-module>
 					</authentication>
-				</security-domain>
+				</security-domain-->
             </security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:singleton:1.0">
@@ -688,6 +691,17 @@
             <client-config name="Standard-Client-Config"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:weld:4.0"/>
+ <subsystem xmlns="urn:jboss:domain:keycloak:1.1">
+<secure-deployment name="aio.war">
+    <realm>aio</realm>
+    <auth-server-url>https://secure-sso-sso-ocp.vm-lnx-ocp-inf-vip01.cbrs.local/auth</auth-server-url>
+    <public-client>true</public-client>
+    <ssl-required>EXTERNAL</ssl-required>
+    <resource>aio-oidc</resource>
+</secure-deployment>
+
+  </subsystem>
+
     </profile>
     <interfaces>
         <interface name="management">
