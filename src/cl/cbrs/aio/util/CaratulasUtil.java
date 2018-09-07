@@ -1,5 +1,6 @@
 package cl.cbrs.aio.util;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,10 +11,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.google.gson.JsonObject;
-
 import cl.cbr.botondepagoweb.vo.TransaccionWebVO;
-import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dao.RegistroDAO;
 import cl.cbrs.aio.dto.CaratulaDTO;
 import cl.cbrs.aio.dto.EstadoActualCaratulaDTO;
@@ -27,7 +25,6 @@ import cl.cbrs.aio.dto.TransaccionWebDTO;
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.dto.estado.FuncionarioDTO;
 import cl.cbrs.aio.dto.estado.RegistroDTO;
-import cl.cbrs.aio.dto.firmaElectronica.CertificadoFNADTO;
 import cl.cbrs.aio.dto.firmaElectronica.RegistroFirmaElectronicaDTO;
 import cl.cbrs.aio.dto.firmaElectronica.TipoDocumentoDTO;
 import cl.cbrs.aio.servlet.CacheAIO;
@@ -485,6 +482,7 @@ public class CaratulasUtil {
 			bitacoraOrigenVO.setDescripcion(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 			bitacoraCaratulaVO.setBitacoraOrigenVO(bitacoraOrigenVO );
 			bitacoraCaratulaVO.setFecha(new Date());			
+			
 			bitacoraCaratulaVO.setObservacion(observacion);
 
 			bitacoraCaratulaVO.setNumeroCaratula(numeroCaratula);
@@ -696,7 +694,11 @@ public class CaratulasUtil {
 		if(papeles!=null && papeles.length>0){
 			ArrayList<RegistroFirmaElectronicaDTO> listaPapeles = new ArrayList<RegistroFirmaElectronicaDTO>();
 			for(RegistroFirmaElectronicaVO registroFirmaElectronicaVO: papeles){
-				Boolean noMostrar=false;
+				Long codigo = registroFirmaElectronicaVO.getTipoDocumentoVO().getCodigo();
+
+				//Notas Propiedad, Hipoteca y Prohibiciones no deben mostrarse
+				if(codigo==16L || codigo==17L || codigo==18L)
+					continue;
 				
 				if( (registroFirmaElectronicaVO.getVigente()!=null && registroFirmaElectronicaVO.getVigente().intValue()==1) && 
 						(registroFirmaElectronicaVO.getEnviado()!=null && registroFirmaElectronicaVO.getEnviado().intValue()==1) &&
@@ -715,40 +717,37 @@ public class CaratulasUtil {
 						tipoDocumentoDTO.setDescripcion(registroFirmaElectronicaVO.getTipoDocumentoVO().getDescripcion());
 						registroFirmaElectronicaDTO.setTipoDocumentoDTO(tipoDocumentoDTO );
 
-
 						//							try{
-						String sufijo = "";
+//						String sufijo = "";
 
-						String[] datosCertificado = registroFirmaElectronicaVO.getNombreArchivoVersion().split("_");
-						if(tipoDocumentoDTO.getCodigo().equals(22L)){
+//						String[] datosCertificado = registroFirmaElectronicaVO.getNombreArchivoVersion().split("_");
+//						if(tipoDocumentoDTO.getCodigo().equals(22L)){
 							
-							String tipoCertificado = registroFirmaElectronicaVO.getNombreArchivoVersion().split("-")[0].split("_")[4];
-							sufijo = " - " + TablaValores.getValor("certificacion_matriceria.parametros", new StringBuilder("CERT_").append(tipoCertificado).toString(), "valor");
-							if (!datosCertificado[3].equals("0"))
-								sufijo = " (copia Escritura)";
+//							String tipoCertificado = registroFirmaElectronicaVO.getNombreArchivoVersion().split("-")[0].split("_")[4];
+//							sufijo = " - " + TablaValores.getValor("certificacion_matriceria.parametros", new StringBuilder("CERT_").append(tipoCertificado).toString(), "valor");
+//							if (!datosCertificado[3].equals("0"))
+//								sufijo = " (copia Escritura)";
 
 							//									Long idCertificado = Long.parseLong(registroFirmaElectronicaDTO.getNombreArchivoVersion().split("_")[2]);									
 							//									RegistroDAO registroDAO = new RegistroDAO();
 							//									ArrayList<CertificadoFNADTO> certificadoFNADTOs = registroDAO.obtenerCertificadoFNA(idCertificado);
 							//									registroFirmaElectronicaDTO.setCertificadoFNADTOs(certificadoFNADTOs);
-						}
+//						}
 						//							} catch(Exception e){
 						//								logger.error("Error al obtener idCertificado: " + e.getMessage(),e);
 						//							}
 						
-						if(tipoDocumentoDTO.getCodigo()==16 || tipoDocumentoDTO.getCodigo()==17 || tipoDocumentoDTO.getCodigo()==18)
-							noMostrar=true;
+//						if(tipoDocumentoDTO.getCodigo()==16 || tipoDocumentoDTO.getCodigo()==17 || tipoDocumentoDTO.getCodigo()==18)
+//							noMostrar=true;
 						
 					}
 
 					//Buscar glosa documento
-					RegistroDAO registroDAO = new RegistroDAO();
-					String glosa = registroDAO.obtenerGlosaCobroMaeCertificacion(registroFirmaElectronicaVO.getCodArchivoAlpha());
-					registroFirmaElectronicaDTO.setGlosaCobroCertificado(glosa);
-
-					//Notas Propiedad, Hipoteca y Prohibiciones no deben mostrarse
-					if(!noMostrar)
-						listaPapeles.add(registroFirmaElectronicaDTO);						
+//					RegistroDAO registroDAO = new RegistroDAO();
+//					String glosa = registroDAO.obtenerGlosaCobroMaeCertificacion(registroFirmaElectronicaVO.getCodArchivoAlpha());
+//					registroFirmaElectronicaDTO.setGlosaCobroCertificado(glosa);
+					
+					listaPapeles.add(registroFirmaElectronicaDTO);						
 				}				
 			}
 
@@ -756,4 +755,27 @@ public class CaratulasUtil {
 
 		}
 	}	
+	
+	public String getGlosaDocumento(String codAlpha){
+		RegistroDAO registroDAO = new RegistroDAO();
+		String glosa = "";
+		try{
+			glosa = registroDAO.obtenerGlosaCobroMaeCertificacion(codAlpha);
+		} catch(Exception e){
+			logger.error(e.getMessage(),e);
+		}
+		return glosa;
+	}
+	
+	private String cambiaEncoding(String campo) throws UnsupportedEncodingException{
+		String campoConEncoding=new String("");
+		if(null!=campo){
+			if(!"".equals(campo)){
+				campoConEncoding = new String(campo.getBytes(),"UTF-8");
+			}
+		}
+		
+		return campoConEncoding;
+		
+	}
 }

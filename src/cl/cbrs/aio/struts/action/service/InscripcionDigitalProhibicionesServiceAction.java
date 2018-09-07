@@ -5,10 +5,11 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.DateFormat;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -16,19 +17,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import cl.cbr.util.GeneralException;
+import cl.cbr.util.locator.ServiceLocatorException;
 import cl.cbrs.aio.dao.AnteriorDAO;
+import cl.cbrs.aio.dao.FolioRealDAO;
 import cl.cbrs.aio.documentos.DocumentosCliente;
 import cl.cbrs.aio.dto.BorradorDTO;
 import cl.cbrs.aio.dto.ConsultaDocumentoDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
+import cl.cbrs.aio.dto.SolicitudDTO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.AnotacionUtil;
 import cl.cbrs.aio.util.BorradoresUtil;
@@ -36,11 +40,12 @@ import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ConstantesDigital;
 import cl.cbrs.aio.util.ConverterVoToDtoMachine;
 import cl.cbrs.aio.util.InscripcionDigitalUtil;
+import cl.cbrs.aio.util.SolicitudConverter;
 import cl.cbrs.borrador.delegate.WsBorradorDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
 import cl.cbrs.documentos.constantes.ConstantesDocumentos;
 import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalPHDelegate;
-import cl.cbrs.inscripciondigital.util.ConstantesInscripcionDigital;
+import cl.cbrs.inscripciondigitalph.vo.SolicitudVO;
 
 public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAction {
 
@@ -56,7 +61,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			HttpServletResponse response){
 		return null; //this.init(mapping, form, request, response);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void getInscripcion(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -103,7 +108,8 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		//generales
 		Boolean status = false;
 		String msg = "";
-		Boolean seDigitalizoEnElDia = false;
+		List<SolicitudVO> solicitudVOs;
+		SolicitudDTO solicitudDTO = null;
 
 		//estado
 		Boolean estadoFna = false;
@@ -141,6 +147,14 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 
 				if(estadoTieneRechazo){
 					status = true;
+					//traigo solicitudes rechazadas para ver el motivo
+					solicitudVOs = digitalDelegate.obtenerSolicitudesPorFojaNumAno(foja, numero, ano, bisi,3L);
+					if(solicitudVOs==null)
+						solicitudVOs = digitalDelegate.obtenerSolicitudesPorFojaNumAno(foja, numero, ano, bisi,6L);
+
+					SolicitudConverter solicitudConverter = new SolicitudConverter();
+					if(solicitudVOs!=null)
+						solicitudDTO=solicitudConverter.getSolicitudDTO(solicitudVOs.get(0));
 				}else{						
 					InscripcionDigitalUtil digitalUtil = new InscripcionDigitalUtil();
 					consultaDocumentoDTO = digitalUtil.getConsultaDocumentoDTO(foja, numeroS, ano, bis, 3);
@@ -170,8 +184,8 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 
 								inscripcionDigitalDTO = converter.getInscripcionDigitalDTO(true, inscripcionDigitalVO);
 
-								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
-								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
+								FolioRealDAO folioRealDAO = new FolioRealDAO();
+								contadorBorrador = folioRealDAO.getCantidadBorradoresDesdePH(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
 								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
 								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
@@ -180,43 +194,34 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 								if(inscripcionDigitalDTO.getFechaActualizacion()!=null){
 									Date fechaActual = new Date();
 									SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy"); 
-								    String fechaActualizacionIns = formateador.format(inscripcionDigitalDTO.getFechaActualizacion());
-								    String fechaSistema = formateador.format(fechaActual);
-								    if(fechaSistema.compareTo(fechaActualizacionIns)==0){
-								    	rehacerImagen=true;
-								    }
+									String fechaActualizacionIns = formateador.format(inscripcionDigitalDTO.getFechaActualizacion());
+									String fechaSistema = formateador.format(fechaActual);
+									if(fechaSistema.compareTo(fechaActualizacionIns)==0){
+										rehacerImagen=true;
+									}
 								}
-							    
+
 								estadoEsAnoDigital = true;
 								status = true;															
 							}else if(consultaDocumentoDTO.getTipoDocumento() == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_REFERENCIAL ||
 									consultaDocumentoDTO.getTipoDocumento() == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_ORIGINAL){
 								//es referencial
 
-								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
-								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
+								FolioRealDAO folioRealDAO = new FolioRealDAO();
+								contadorBorrador = folioRealDAO.getCantidadBorradoresDesdePH(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
 								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
 								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
 								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
 
 								estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);
-								
-								DateFormat formateador = new SimpleDateFormat("yyyy-MM-dd"); 
-								String fechaArchivo = formateador.format(consultaDocumentoDTO.getFechaArchivo());
-								String fechaActual = formateador.format(new Date());
-								
-								if(fechaArchivo.compareTo(fechaActual)==0)
-									seDigitalizoEnElDia=true;
-								
+
 								status = true;
 							}else{
 								//tipo de documento desconocido
 								msg = "Tipo de documento desconocido. Tipo:"+consultaDocumentoDTO.getTipoDocumento();
 							}
 						}else{										
-//							estadoFna = digitalUtil.consultaIndice(foja, numero, ano);	
-							
 							estadoFna = digitalUtil.consultaIndiceProhibiciones(foja, numero, ano);
 							estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);							
 							status = true;
@@ -232,9 +237,15 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			} catch (cl.cbr.common.exception.GeneralException e) {
 				log.error(e);
 				msg = "Se ha detectado un problema en el servidor.";
+			} catch (SQLException e) {
+				log.error(e);
+				msg = "Se ha detectado un problema en el servidor.";
+			} catch (ServiceLocatorException e) {
+				log.error(e);
+				msg = "Se ha detectado un problema en el servidor.";
 			}	
 		}
-		
+
 		String urlGpOnline = ConstantesDigital.getParametro("URL_GP_ONLINE");
 
 		String sesion = request.getUserPrincipal().getName();
@@ -262,7 +273,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		respuesta.put("inscripcionSiguienteDTO", inscripcionSiguienteDTO);
 		respuesta.put("consultaDocumentoDTO", consultaDocumentoDTO);
 		respuesta.put("contadores", contadores);
-		respuesta.put("seDigitalizoEnElDia", seDigitalizoEnElDia);
+		respuesta.put("solicitudDTO", solicitudDTO);
 
 		try {
 			respuesta.writeJSONString(response.getWriter());
@@ -270,8 +281,8 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			logger.error(e);
 		}
 	}
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	public void getInscripcionParaDigital(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -407,9 +418,9 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			logger.error(e);
 		}
 	}	
-	
-	
-	
+
+
+
 	@SuppressWarnings("unchecked")
 	public void getInscripcionSimple(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -635,9 +646,9 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 
 	public void getJPG(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
-		
+
 		DocumentosCliente documentosCliente = new DocumentosCliente();
-		
+
 		String page = request.getParameter("p");
 		String fojasReq = request.getParameter("fojas");
 		String numeroReq = request.getParameter("numero");
@@ -700,7 +711,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			Boolean bis = "true".equalsIgnoreCase(bisReq)? true : false;
 
 			BorradoresUtil borradoresUtil = new BorradoresUtil();					
-			borradores = borradoresUtil.getBorradores(foja.intValue(), numero, ano.shortValue(), bis);
+			borradores = borradoresUtil.getBorradoresDesdePH(foja.intValue(), numero, ano.shortValue(), bis);
 
 			status = true;
 
@@ -721,8 +732,8 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			logger.error(e);
 		}
 	}
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	public void obtenerRepertorios(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -746,12 +757,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 
 			BorradoresUtil borradoresUtil = new BorradoresUtil();					
 			borradores = borradoresUtil.getBorradores(foja.intValue(), numero, ano.shortValue(), bis);
-			
-			
-			//WsRepertorioClienteDelegate wsRepertorioClienteDelegate = new WsRepertorioClienteDelegate();
-			
-			
-		
+
 			status = true;
 
 		} catch (Exception e) {
@@ -824,208 +830,388 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			logger.error(e);
 		}
 	}
-	
-	 @SuppressWarnings("unchecked")
-	    public void getInscripcionJPG(ActionMapping mapping, ActionForm form,
-	                HttpServletRequest request, HttpServletResponse response) {
-	          response.setContentType("text/json");
 
-	          JSONObject json = new JSONObject();
-	          json.put("status", false);
-	          json.put("msg", "");    
-	          
-	          JSONObject res = new JSONObject();
+	@SuppressWarnings("unchecked")
+	public void getInscripcionJPG(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/json");
 
-	          ConsultaDocumentoDTO dto = new ConsultaDocumentoDTO();           
-	          String fojaReq = request.getParameter("foja");
-	          String numeroReq = request.getParameter("numero");
-	          String anoReq = request.getParameter("ano");
-	          String bisReq = request.getParameter("bis");
-	          Boolean tienerechazo = false;
-	          Boolean anodigital = false;
-	          
-	          try{
-	                Long foja = Long.parseLong(fojaReq);
-	                Long numero = Long.parseLong(numeroReq);
-	                Long ano = Long.parseLong(anoReq);
-	                Boolean bis = "true".equalsIgnoreCase(bisReq)? true : false;
-	                int bisInt = "true".equalsIgnoreCase(bisReq)? 1 : 0;
-	                
-	                InscripcionDigitalUtil digitalUtil = new InscripcionDigitalUtil();
-	                dto = digitalUtil.getConsultaDocumentoDTO(foja, numero, ano, bis, 3);
-	                WsInscripcionDigitalPHDelegate delegate = new WsInscripcionDigitalPHDelegate();
-	                anodigital = delegate.validaAnosDigitales(foja, numeroReq, ano);
-	                tienerechazo = delegate.solicitudTieneRechazo(foja, numeroReq, ano,bisInt);
-	                 
-	                if(dto!=null)               
-	                      json.put("status", true);
-	                                            
-	                
-	          }catch (GeneralException e) {
+		JSONObject json = new JSONObject();
+		json.put("status", false);
+		json.put("msg", "");    
 
-	          }catch (Exception e){
-	                
-	          }
-	          
-	          res.put("consultaDocumentoDTO", dto);
-	          res.put("tienerechazo", tienerechazo);
-	          res.put("anodigital", anodigital);
-	          json.put("res", res);
+		JSONObject res = new JSONObject();
 
-	          try {
-	                json.writeJSONString(response.getWriter());
-	          } catch (IOException e) {
-	        	  logger.error(e.getMessage(),e);
-	          }           
-	    }   
-	 
-	 public void verInscripcionCertificar(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-	            HttpServletResponse response) {
+		ConsultaDocumentoDTO dto = new ConsultaDocumentoDTO();           
+		String fojaReq = request.getParameter("foja");
+		String numeroReq = request.getParameter("numero");
+		String anoReq = request.getParameter("ano");
+		String bisReq = request.getParameter("bis");
+		Boolean tienerechazo = false;
+		Boolean anodigital = false;
 
-		 	String caratulap = request.getParameter("caratula");
-			String registro = request.getParameter("registro");
-	        String pathArchivo= "";   
-	        byte[] buffer = null;
-	        
-	        Integer caratula = null;
-			try {
-				caratula = Integer.parseInt(caratulap);
-			} catch (Exception e1) {
+		try{
+			Long foja = Long.parseLong(fojaReq);
+			Long numero = Long.parseLong(numeroReq);
+			Long ano = Long.parseLong(anoReq);
+			Boolean bis = "true".equalsIgnoreCase(bisReq)? true : false;
+			int bisInt = "true".equalsIgnoreCase(bisReq)? 1 : 0;
 
-			}
-	        
-	   	 	try {
-   	 			pathArchivo = ConstantesInscripcionDigital.getParametro("PATH")+"/"+caratula+".pdf";
-				
-			} catch (Exception e1) {
-				logger.error("Error al buscar documento: " + e1.getMessage(),e1);
-	            request.setAttribute("error", "Problema al encontrar nombre archivo.");
-			}
-	   	 	
-	        
-	        ServletOutputStream out = null;
+			InscripcionDigitalUtil digitalUtil = new InscripcionDigitalUtil();
+			dto = digitalUtil.getConsultaDocumentoDTO(foja, numero, ano, bis, 3);
+			WsInscripcionDigitalPHDelegate delegate = new WsInscripcionDigitalPHDelegate();
+			anodigital = delegate.validaAnosDigitales(foja, numeroReq, ano);
+			tienerechazo = delegate.solicitudTieneRechazo(foja, numeroReq, ano,bisInt);
 
-	        try {    
-	            out = response.getOutputStream();                                            
-	            
-	            response.setContentType("application/pdf");
-	            
-	            if(!registro.equals("com")){
-	                FileInputStream file = new FileInputStream(pathArchivo);
-	                    
-	                buffer = new byte[1024];
-	                int bytesRead = 0;
-	              
-	                do{
-	                    bytesRead = file.read(buffer, 0, buffer.length);
-	                    out.write(buffer, 0, bytesRead);
-	                }while (bytesRead == buffer.length);
-	            }else{
-	            	if(null!=buffer)
-	            		out.write(buffer, 0, buffer.length);
-	            }
+			if(dto!=null)               
+				json.put("status", true);
 
-	            
-	            out.flush();
-	            
-	            if(out != null)
-	                  out.close();
-	        } catch (Exception e) {
-	            logger.error("Error al buscar documento: " + e.getMessage(),e);
-	            request.setAttribute("error", "Archivo no encontrado.");
-	        } finally{
-	            if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
-	        }
-	        
-	    }
-	 
-	 @SuppressWarnings("unchecked")
-		public void getAnotacionParaRevision(ActionMapping mapping, ActionForm form,
-				HttpServletRequest request, HttpServletResponse response) {
 
-			JSONObject respuesta = new JSONObject();
-			Boolean status = false;
-			String msg = "";
+		}catch (GeneralException e) {
 
-			JSONArray anotaciones = new JSONArray();
+		}catch (Exception e){
 
-			String fojainiReq = request.getParameter("fojaini");
-			String fojafinReq = request.getParameter("fojafin");
-			String anoReq = request.getParameter("ano");
-
-			try{
-				Long fojaini = Long.parseLong(fojainiReq);
-				Long fojafin = Long.parseLong(fojafinReq);
-				Long ano = Long.parseLong(anoReq);
-
-				AnotacionUtil anotacionUtil = new AnotacionUtil();					
-				anotaciones = anotacionUtil.getAnotaciones(fojaini, fojafin, ano);
-			
-				status = true;
-
-			} catch (Exception e) {
-				logger.error(e);
-
-				status = false;
-				msg = "Se ha detectado un problema, comunicar area soporte.";
-			}
-
-			respuesta.put("anotaciones", anotaciones);
-			respuesta.put("status", status);
-			respuesta.put("msg", msg);
-
-			try {
-				respuesta.writeJSONString(response.getWriter());
-			} catch (IOException e) {
-				logger.error(e);
-			}
 		}
-	 
-	 @SuppressWarnings("unchecked")
-		public void actualizaEstadoAnotacion(ActionMapping mapping, ActionForm form,
-				HttpServletRequest request, HttpServletResponse response) {
 
-			JSONObject respuesta = new JSONObject();
-			Boolean status = false;
-			String msg = "";
+		res.put("consultaDocumentoDTO", dto);
+		res.put("tienerechazo", tienerechazo);
+		res.put("anodigital", anodigital);
+		json.put("res", res);
 
-			JSONArray anotaciones = new JSONArray();
+		try {
+			json.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e.getMessage(),e);
+		}           
+	}   
 
-			String anotacionIdReq = request.getParameter("anotacion");
+	@SuppressWarnings("unchecked")
+	public void existeDocumentoReg(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response){
 
-			try{
-				Long anotacionId = Long.parseLong(anotacionIdReq);
+		String fojap = request.getParameter("foja");
+		String numerop = request.getParameter("numero");
+		String anop = request.getParameter("ano");	
+		String registro = request.getParameter("registro");
 
-				WsInscripcionDigitalPHDelegate delegate = new WsInscripcionDigitalPHDelegate();
-				
-				cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacion = delegate.obtenerAnotacion(anotacionId);
-				
-				cl.cbrs.inscripciondigitalph.vo.EstadoAnotacionVO estadoAnotacionVo = anotacion.getEstadoAnotacionVo();
-				estadoAnotacionVo.setIdEstado(ANOTACION_FOLIADA);
-				
-				anotacion.setEstadoAnotacionVo(estadoAnotacionVo);
-				
-				delegate.actualizarAnotacion(anotacion);
-				
-				status = true;
+		JSONObject respuesta = new JSONObject();        
+		DocumentosCliente documentosCliente = new DocumentosCliente();
 
-			} catch (Exception e) {
-				logger.error(e);
+		try {
+			Long foja = Long.parseLong(fojap);
+			Long numero = Long.parseLong(numerop);
+			Long ano = Long.parseLong(anop);
+			Date fecha = new SimpleDateFormat("yyyy").parse(anop);
 
-				status = false;
-				msg = "Se ha detectado un problema, comunicar area soporte.";
-			}
+			Integer idReg=1;
+			String prefijo = "";
+			if(registro.equals("hip")){
+				idReg=2;
+				prefijo = "HIPO ";
+			} else if(registro.equals("proh")){
+				idReg=3;
+				prefijo = "PROH ";
+			} 
 
-			respuesta.put("anotaciones", anotaciones);
-			respuesta.put("status", status);
-			respuesta.put("msg", msg);
+			respuesta = documentosCliente.existeDocumento(ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO, idReg, prefijo+foja+"_"+numero+"_"+ano+".pdf", fecha);
+			if(!(Boolean)respuesta.get("hayDocumento"))
+				respuesta = documentosCliente.existeDocumento(ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO, idReg, prefijo+foja+"_ "+numero+"_ "+ano+".pdf", fecha);   	 			
 
-			try {
-				respuesta.writeJSONString(response.getWriter());
-			} catch (IOException e) {
-				logger.error(e);
-			}
+
+		} catch (HTTPException e) {
+			logger.error("Error HTTP codigo " + e.getStatusCode(), e);
+		} catch (Exception e1) {
+			logger.error("Error al buscar documento: " + e1.getMessage(),e1);
+			request.setAttribute("error", "Problema al encontrar nombre archivo.");
 		}
-	 
-	 
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+
+	}		 
+
+	public void verDocumentoReg(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		String fojap = request.getParameter("foja");
+		String numerop = request.getParameter("numero");
+		String anop = request.getParameter("ano");	
+		String registro = request.getParameter("registro");
+		byte[] buffer = null;
+
+		DocumentosCliente documentosCliente = new DocumentosCliente();
+
+		try {
+			Long foja = Long.parseLong(fojap);
+			Long numero = Long.parseLong(numerop);
+			Long ano = Long.parseLong(anop);
+			Date fecha = new SimpleDateFormat("yyyy").parse(anop);
+
+			Integer idReg=1;
+			String prefijo = "";
+			if(registro.equals("hip")){
+				idReg=2;
+				prefijo = "HIPO ";
+			} else if(registro.equals("proh")){
+				idReg=3;
+				prefijo = "PROH ";
+			} 
+
+			buffer = documentosCliente.downloadDocumento(ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO, idReg, prefijo+foja+"_"+numero+"_"+ano+".pdf", fecha);
+			if(buffer==null || buffer.length==0)
+				buffer = documentosCliente.downloadDocumento(ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO, idReg, prefijo+foja+"_ "+numero+"_ "+ano+".pdf", fecha);
+
+		} catch (HTTPException e) {
+			logger.error("Error HTTP codigo " + e.getStatusCode(), e);
+		} catch (Exception e1) {
+			logger.error("Error al buscar documento: " + e1.getMessage(),e1);
+			request.setAttribute("error", "Problema al encontrar nombre archivo.");
+		}
+
+
+		ServletOutputStream out = null;
+
+		try {    
+			out = response.getOutputStream();                                            	            
+			response.setContentType("application/pdf");
+
+			if(null!=buffer)
+				out.write(buffer, 0, buffer.length);
+
+			out.flush();
+
+			if(out != null)
+				out.close();
+		} catch (Exception e) {
+			logger.error("Error al buscar documento: " + e.getMessage(),e);
+			request.setAttribute("error", "Archivo no encontrado.");
+		} finally{
+			if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
+		}
+
+	}
+
+	public void verInscripcionCertificar(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		String caratulap = request.getParameter("caratula");
+		String pathArchivo= "";   
+		byte[] buffer = null;
+
+		Integer caratula = null;
+		try {
+			caratula = Integer.parseInt(caratulap);
+		} catch (Exception e1) {
+
+		}
+
+		try {
+			pathArchivo = cl.cbrs.inscripciondigitalph.util.ConstantesInscripcionDigital.getParametro("PATH")+"/"+caratula+".pdf";
+
+		} catch (Exception e1) {
+			logger.error("Error al buscar documento: " + e1.getMessage(),e1);
+			request.setAttribute("error", "Problema al encontrar nombre archivo.");
+		}
+
+
+		ServletOutputStream out = null;
+
+		try {    
+			out = response.getOutputStream();                                            
+
+			response.setContentType("application/pdf");
+
+                FileInputStream file = new FileInputStream(pathArchivo);
+                    
+                buffer = new byte[1024];
+                int bytesRead = 0;
+              
+                do{
+                    bytesRead = file.read(buffer, 0, buffer.length);
+                    out.write(buffer, 0, bytesRead);
+                }while (bytesRead == buffer.length);
+	            
+
+
+			out.flush();
+
+			if(out != null)
+				out.close();
+		} catch (Exception e) {
+			logger.error("Error al buscar documento: " + e.getMessage(),e);
+			request.setAttribute("error", "Archivo no encontrado.");
+		} finally{
+			if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public void actualizaEstadoAnotacion(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		JSONObject respuesta = new JSONObject();
+		Boolean status = false;
+		String msg = "";
+
+		JSONArray anotaciones = new JSONArray();
+
+		String anotacionIdReq = request.getParameter("anotacion");
+
+		try{
+			Long anotacionId = Long.parseLong(anotacionIdReq);
+
+			WsInscripcionDigitalPHDelegate delegate = new WsInscripcionDigitalPHDelegate();
+
+			cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacion = delegate.obtenerAnotacion(anotacionId);
+
+			cl.cbrs.inscripciondigitalph.vo.EstadoAnotacionVO estadoAnotacionVo = anotacion.getEstadoAnotacionVo();
+			estadoAnotacionVo.setIdEstado(ANOTACION_FOLIADA);
+
+			anotacion.setEstadoAnotacionVo(estadoAnotacionVo);
+
+			delegate.actualizarAnotacion(anotacion);
+
+			status = true;
+
+		} catch (Exception e) {
+			logger.error(e);
+
+			status = false;
+			msg = "Se ha detectado un problema, comunicar area soporte.";
+		}
+
+		respuesta.put("anotaciones", anotaciones);
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void getResumenNotas(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		JSONObject respuesta = new JSONObject();
+		Boolean status = false;
+		String msg = "";
+
+		JSONArray anotaciones = new JSONArray();
+
+		String caratulap = request.getParameter("caratula");
+		String borradorp = request.getParameter("borrador");
+		String foliop = request.getParameter("folio");	
+
+		Long caratula = null;
+		try {
+			caratula = Long.parseLong(caratulap);
+		} catch (Exception e1) {
+
+		}
+		Integer borrador = null;
+		try {
+			borrador = Integer.parseInt(borradorp);
+		} catch (Exception e1) {
+
+		}
+		Integer folio = null;
+		try {
+			folio = Integer.parseInt(foliop);
+		} catch (Exception e1) {
+
+		}
+
+		try{
+
+			AnotacionUtil anotacionUtil = new AnotacionUtil();					
+			anotaciones = anotacionUtil.getAnotacionesResumen(caratula,borrador,folio);
+
+			status = true;
+
+		} catch (Exception e) {
+			logger.error(e);
+
+			status = false;
+			msg = "Se ha detectado un problema, comunicar area soporte.";
+		}
+
+		respuesta.put("anotaciones", anotaciones);
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}
+
+	public void getNotas(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		String fojap = request.getParameter("foja");
+		String numerop = request.getParameter("numero");
+		String anop = request.getParameter("ano");	
+		String bisp = request.getParameter("bis");
+
+		JSONObject respuesta = new JSONObject();
+		JSONArray anotaciones = new JSONArray();
+
+		Boolean status = false;
+		String msg = "";
+
+		Long foja = null;
+		try {
+			foja = Long.parseLong(fojap);
+		} catch (Exception e1) {
+
+		}
+
+		Long ano = null;
+		try {
+			ano = Long.parseLong(anop);
+		} catch (Exception e1) {
+
+		}
+
+		Boolean bis = false;
+		if("true".equals(bisp)){
+			bis = true;	
+		}
+
+		try {
+
+			AnotacionUtil anotacionUtil = new AnotacionUtil();					
+			anotaciones = anotacionUtil.getAnotacionesInscripcionProhibiciones(foja, numerop, ano, bis);
+
+			status = true;
+
+		} catch (Exception e1) {
+			logger.error("Error al obtener notas: " + e1.getMessage(),e1);
+			request.setAttribute("error", "Error al obtener notas.");
+
+			status = false;
+			msg = "Error al obtener notas.";
+		}
+
+		respuesta.put("anotaciones", anotaciones);
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+
+	}
+
 }

@@ -39,8 +39,8 @@ app.factory('borradorService', function ($http, $q) {
           });
 
         return deferred.promise;
-      },obtenerTitulosAnteriores: function (foja,numero,ano) {
-        var paramsObj = {metodo: 'obtenerTitulosAnteriores', foja:foja, numero:numero, ano:ano};
+      },obtenerTitulosAnteriores: function (foja,numero,ano,bis) {
+        var paramsObj = {metodo: 'obtenerTitulosAnteriores', foja:foja, numero:numero, ano:ano, bis:bis};
 
         var deferred = $q.defer();
 

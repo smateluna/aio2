@@ -26,9 +26,9 @@ app.directive('myHeader', function () {
 		},
 		controller: function($scope, socketService,indiceService, $rootScope, $timeout, $modal){
 
-			$rootScope.$watch($rootScope.userIpAddress, function(newValue,oldValue){
-				console.log($rootScope.userIpAddress);
-			});
+//			$rootScope.$watch($rootScope.userIpAddress, function(newValue,oldValue){
+//				console.log($rootScope.userIpAddress);
+//			});
 			
 //			var mytimeout=null;
 			

@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.14</version>
+	<version>1.0.15</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
@@ -73,9 +73,9 @@
 
 		</dependency>
 		<dependency>
-			<groupId>wsInscripcionDigitalPHCliente</groupId>
+<groupId>cl.cbrs.wsclient</groupId>
 			<artifactId>wsInscripcionDigitalPHCliente</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 
 		</dependency>
 		<dependency>
@@ -85,7 +85,7 @@
 
 		</dependency>
 		<dependency>
-			<groupId>commonInscripcionDigitalPH</groupId>
+                        <groupId>cl.cbrs.common</groupId>
 			<artifactId>commonInscripcionDigitalPH</artifactId>
 			<version>1.0.0</version>
 

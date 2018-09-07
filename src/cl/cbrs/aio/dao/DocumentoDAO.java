@@ -35,8 +35,8 @@ public class DocumentoDAO extends AbstractJdbcDao {
 					+ "WHERE CARATULA = "+caratulap
 					+ " AND VERSION=" + versionp
 					+ " AND ID_TIPO_DOCUMENTO = " + idTipoDocumentop
-					+ " AND ID_REG = 0 "
-					+ " AND VIGENTE = 1 ";
+					+ " AND ID_REG = 0 ";
+//					+ " AND VIGENTE = 1 ";
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			

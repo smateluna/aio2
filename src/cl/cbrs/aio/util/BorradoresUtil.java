@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 
+import cl.cbrs.aio.dao.FolioRealDAO;
 import cl.cbrs.aio.dto.BorradorDTO;
 import cl.cbrs.borrador.delegate.WsBorradorDelegate;
 import cl.cbrs.borrador.vo.FolioRealVO;
@@ -26,6 +27,24 @@ public class BorradoresUtil {
 
 		try {
 			proRealVOList = wsBorradorDelegate.obtenerBorradores(foja, numero, ano, bis);
+			
+			borradores = getJSONArrayBorradorDTO(proRealVOList);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+		
+		return borradores;
+	}
+	
+	public JSONArray getBorradoresDesdePH(Integer fojaph, Integer numeroph, Short anoph, Boolean bisph){
+		
+		FolioRealDAO folioRealDAO = new FolioRealDAO();						
+		List<ProrealVO> proRealVOList;
+		JSONArray borradores = new JSONArray();
+
+		try {
+			proRealVOList = folioRealDAO.getBorradoresDesdePH(fojaph, numeroph, anoph, bisph);
 			
 			borradores = getJSONArrayBorradorDTO(proRealVOList);
 

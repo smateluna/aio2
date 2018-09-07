@@ -1,7 +1,17 @@
 'use strict';
 
-app.controller('SidebarCtrl', function ($scope, $location) {
+app.controller('SidebarCtrl', function ($scope, $location, localStorageService) {
+	
+  $scope.colorBarra='default-color';	
+  var color = localStorageService.get('colorBarra');
+  if(color)
+	  $scope.colorBarra=color;
 
+  $scope.cambiarColor = function(estilo){
+	  $scope.colorBarra=estilo;
+	  localStorageService.set('colorBarra', $scope.colorBarra);
+  }
+  
   $scope.getClass = function (path) {
     //return ($location.path().substr(0, path.length) === path);
 	  return ($location.path() === path);

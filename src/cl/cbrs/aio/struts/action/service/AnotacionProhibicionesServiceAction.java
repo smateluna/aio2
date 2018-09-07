@@ -2,19 +2,22 @@ package cl.cbrs.aio.struts.action.service;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -22,12 +25,12 @@ import cl.cbr.util.GeneralException;
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.servlet.CacheAIO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
+import cl.cbrs.aio.util.NotaElectronicaUtil;
 import cl.cbrs.delegate.repertorio.WsRepertorioClienteDelegate;
+import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalDelegate;
+import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalHDelegate;
 import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalPHDelegate;
 import cl.cbrs.inscripciondigital.vo.AnotacionVO;
-import cl.cbrs.inscripciondigital.vo.EstadoAnotacionVO;
-import cl.cbrs.inscripciondigital.vo.InscripcionDigitalVO;
-import cl.cbrs.inscripciondigital.vo.TipoAnotacionVO;
 import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 import cl.cbrs.wsusuarios.ServiciosUsuariosDelegate;
 import cl.cbrs.wsusuarios.ws.request.LoginUsuarioRequest;
@@ -55,9 +58,11 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 		String texto = request.getParameter("texto");
 		String idInscripcionp = request.getParameter("idInscripcion");
 		String repertoriop = request.getParameter("repertorio");
+		String borradorp = request.getParameter("borrador");
 		String caratulap = request.getParameter("caratula");
 		String acto = request.getParameter("acto");
 		String versionp = request.getParameter("version");
+//		String fechaRepertoriop = request.getParameter("fechaRepertorio");
 
 		JSONObject respuesta = new JSONObject();
 
@@ -79,6 +84,13 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 
 		}
 		
+		Integer borrador = null;
+		try {
+			borrador = Integer.parseInt(borradorp);
+		} catch (Exception e1) {
+
+		}		
+		
 		Long caratula = null;
 		try {
 			caratula = Long.parseLong(caratulap);
@@ -92,7 +104,14 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 		} catch (Exception e1) {
 
 		}
-			
+		
+//		Date fechaRepertorio = null;
+//		try {
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			fechaRepertorio = sdf.parse(fechaRepertoriop);
+//		} catch (Exception e1) {
+//
+//		}
 		
 		String usuarioCreador = request.getUserPrincipal().getName();
 
@@ -111,6 +130,7 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 			anotacionVO.setNombreUsuarioCreador(usuarioCreador);
 			anotacionVO.setTexto(texto);
 			anotacionVO.setActo(acto);
+			anotacionVO.setBorrador(borrador);
 			
 			if(caratula!=null && repertorio!=0){
 				anotacionVO.setRepertorio(repertorio);
@@ -130,6 +150,21 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 			cl.cbrs.inscripciondigitalph.vo.TipoAnotacionVO tipoAnotacionVo =  new cl.cbrs.inscripciondigitalph.vo.TipoAnotacionVO();
 			cl.cbrs.inscripciondigitalph.vo.EstadoAnotacionVO estadoAnotacionVO = new cl.cbrs.inscripciondigitalph.vo.EstadoAnotacionVO();
 			
+			if(listaNotasCache.isEmpty()){
+				//Obtener tipos anotacion de property
+				String strTipoAnotacion = "TIPOS_ANOTACION.";
+				int i=0;
+				while(TablaValores.getValor(PARAMETROS_LIBROS, strTipoAnotacion+i, "valor")!=null){
+					String tipo = TablaValores.getValor(PARAMETROS_LIBROS, strTipoAnotacion+i, "tipo").trim();
+					String nombre = TablaValores.getValor(PARAMETROS_LIBROS, strTipoAnotacion+i, "nombre").trim();
+					
+					//Agregar las de tipo nota a listaNotasCache
+					if("nota".equalsIgnoreCase(tipo) && !listaNotasCache.contains(nombre.toUpperCase()))
+						listaNotasCache.add(nombre.toUpperCase());
+				
+					i++;
+				}
+			}			
 			
 			if(listaNotasCache.contains(acto.toUpperCase())){
 				//NOTAS
@@ -156,6 +191,7 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 			anotacionVO.setEstadoAnotacionVo(estadoAnotacionVO);	
 
 			anotacionVO.setFechaCreacion(new Date());
+//			anotacionVO.setFechaRepertorio(fechaRepertorio);
 
 			try {
 				digitalDelegate.agregarAnotacion(anotacionVO);
@@ -285,6 +321,9 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 						String nombre = TablaValores.getValor(PARAMETROS_LIBROS, strTipoAnotacion+i, "nombre").trim();
 						String valor = TablaValores.getValor(PARAMETROS_LIBROS, strTipoAnotacion+i, "valor").trim();
 						
+						//Agregar las de tipo nota a listaNotasCache
+						if("nota".equalsIgnoreCase(tipo) && !listaNotasCache.contains(nombre.toUpperCase()))
+							listaNotasCache.add(nombre.toUpperCase());
 						//Tipos por perfil
 						if(perfilesUsuario.contains(perfil.toUpperCase())){
 							JSONObject tipoAnotacionJSON = new JSONObject();
@@ -293,10 +332,6 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 							tipoAnotacionJSON.put("valorAnotacion", valor);
 							
 							listaTiposAnotacionJSON.add(tipoAnotacionJSON);
-							
-							//Agregar las de tipo nota a listaNotasCache
-							if("nota".equalsIgnoreCase(tipo) && !listaNotasCache.contains(nombre.toUpperCase()))
-								listaNotasCache.add(nombre.toUpperCase());
 						}
 						
 						//Se agregan tipos "libres", que no necesitan de un perfil
@@ -482,7 +517,53 @@ public class AnotacionProhibicionesServiceAction extends CbrsAbstractAction {
 			logger.error(e);
 		}		
 	}
+		
+	public void printNotas(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {	
+
+		String fojasP = request.getParameter("fojas");
+		String numeroP = request.getParameter("numero");
+		String anoP = request.getParameter("ano");
+		String bisP = request.getParameter("bis");
+		String registroP = request.getParameter("registro");
+		
+		ServletOutputStream out = null;
+		response.setContentType("application/pdf");
+		
+		try {
+			NotaElectronicaUtil notaElectronicaUtil = new NotaElectronicaUtil();
+			WsInscripcionDigitalDelegate digitalDelegate = new WsInscripcionDigitalDelegate();
+			WsInscripcionDigitalHDelegate digitalHDelegate = new WsInscripcionDigitalHDelegate();
+			WsInscripcionDigitalPHDelegate digitalPHDelegate = new WsInscripcionDigitalPHDelegate();
+			InputStream in = null;
+			
+			if(registroP.toLowerCase().equals("prop")){					
+				List<AnotacionVO> listaAnotaciones = digitalDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcion(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
+			} else if(registroP.toLowerCase().equals("hip")){								
+				List<cl.cbrs.inscripciondigitalh.vo.AnotacionVO> listaAnotaciones = digitalHDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcionH(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
+			} else{								
+				List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> listaAnotaciones = digitalPHDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcionPH(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
+			}
+			
+			out = response.getOutputStream();			    
+			out.write(IOUtils.toByteArray(in));
+         	out.flush();
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			
+		} finally{
+            if(out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					log.error(e.getMessage(),e);
+				}
+		}
+	}
 	
-	
+
 
 }

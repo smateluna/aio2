@@ -63,7 +63,7 @@ public class UsuarioUtil {
 		String ip = TablaValores.getValor(TABLA_PARAMETROS, "IP_WS", "valor");
 		String port = TablaValores.getValor(TABLA_PARAMETROS, "PORT_WS", "valor");
 		JSONArray listaPerfiles = new JSONArray();
-         System.out.println("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario);
+
 //		System.out.println("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario);
 		
 		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/UsuariosRest/usuario/loginUsuario/"+CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA")+"/"+usuario));
@@ -76,6 +76,14 @@ public class UsuarioUtil {
 		}
 		
 		return listaPerfiles;
+	}
+	
+	public ArrayList<String> getSubPermisosUsuarioModulo(ArrayList<PermisoDTO> listaPermisos, String modulo) throws Exception{
+		for(PermisoDTO permisoDTO: listaPermisos){
+			if(permisoDTO.getTitulo().equalsIgnoreCase(modulo))
+				return permisoDTO.getSubPermisos();
+		}
+		return null;
 	}
 
 	public ArrayList<PermisoDTO> getPermisosUsuario(String usuario, String perfil, UsuarioPerfilVO usuarioPerfilVO) throws Exception{
@@ -137,6 +145,8 @@ public class UsuarioUtil {
 				permisos.add(getPermisoCertificacion(moduloVO.getRecursos()));
 			else if("CERTIFICACION HIPOTECAS".equalsIgnoreCase(modulo))
 				permisos.add(getPermisoCertificacionHipotecas(moduloVO.getRecursos()));			
+			else if("CERTIFICACION PROHIBICIONES".equalsIgnoreCase(modulo))
+				permisos.add(getPermisoCertificacionProhibiciones(moduloVO.getRecursos()));
 			else if("REPERTORIO".equalsIgnoreCase(modulo))
 				permisos.add(getPermisoRepertorio(moduloVO.getRecursos()));
 			else if("GPONLINE".equalsIgnoreCase(modulo))
@@ -410,7 +420,7 @@ public class UsuarioUtil {
 		dto.setTitulo("Digital Hipotecas");
 		dto.setPath("/digitalHipotecas");
 		dto.setIcono("fa-desktop");
-		dto.setEstilo("color: DarkRed");
+		dto.setEstilo("color: #ca5959");
 
 		ArrayList<String> subPermisos = new ArrayList<String>();
 		for(RecursoVO recurso : recursos){
@@ -427,7 +437,7 @@ public class UsuarioUtil {
 		dto.setTitulo("Digital Prohibiciones");
 		dto.setPath("/digitalProhibiciones");
 		dto.setIcono("fa-desktop");
-		dto.setEstilo("color: DarkGreen ");
+		dto.setEstilo("color:#2f962f ");
 
 		ArrayList<String> subPermisos = new ArrayList<String>();
 		for(RecursoVO recurso : recursos){
@@ -491,6 +501,22 @@ public class UsuarioUtil {
 		dto.setId("certificadoHipotecas");
 		dto.setTitulo("Certificación Hipotecas");
 		dto.setPath("/certificacionHipotecas");
+		dto.setIcono("fa-check-circle");
+
+		ArrayList<String> subPermisos = new ArrayList<String>();
+		for(RecursoVO recurso : recursos){
+			subPermisos.add(recurso.getNombreRecurso().trim());
+		}	   
+		dto.setSubPermisos(subPermisos); 
+
+		return dto;
+	};	
+	
+	private PermisoDTO getPermisoCertificacionProhibiciones(RecursoVO[] recursos){
+		PermisoDTO dto = new PermisoDTO();
+		dto.setId("certificadoProhibiciones");
+		dto.setTitulo("Certificación Prohibiciones");
+		dto.setPath("/certificacionProhibiciones");
 		dto.setIcono("fa-check-circle");
 
 		ArrayList<String> subPermisos = new ArrayList<String>();

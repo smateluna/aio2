@@ -33,6 +33,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Rectangle;
@@ -59,8 +60,10 @@ import cl.cbrs.aio.dto.DocumentoDTO;
 import cl.cbrs.aio.dto.LiquidacionCaratulaDTO;
 import cl.cbrs.aio.dto.LiquidacionTemporalDTO;
 import cl.cbrs.aio.dto.LiquidacionTemporalIdDTO;
+import cl.cbrs.aio.dto.PermisoDTO;
 import cl.cbrs.aio.dto.ProductoReceptorEmailDTO;
 import cl.cbrs.aio.dto.ProductoWebDTO;
+import cl.cbrs.aio.dto.ReingresoGPDTO;
 import cl.cbrs.aio.dto.TransaccionWebDTO;
 import cl.cbrs.aio.dto.estado.CaratulaEstadoDTO;
 import cl.cbrs.aio.dto.estado.CuentaCorrienteDTO;
@@ -69,6 +72,8 @@ import cl.cbrs.aio.servlet.CacheAIO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.aio.util.CaratulasUtil;
+import cl.cbrs.aio.util.FuncionarioSeccionUtil;
+import cl.cbrs.aio.util.UsuarioUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CtaCteVO;
@@ -82,6 +87,7 @@ import cl.cbrs.cuentacorriente.delegate.WsCuentaCorrienteClienteDelegate;
 import cl.cbrs.delegate.botondepago.WsBotonDePagoClienteDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
 import cl.cbrs.firmaelectronica.delagate.ClienteWsFirmadorDelegate;
+import cl.cbrs.funcionarios.vo.FuncionariosSeccionVO;
 import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 
 public class TareasServiceAction extends CbrsAbstractAction {
@@ -114,17 +120,18 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		//JSONArray resultado = new JSONArray();
 		ArrayList<CaratulaDTO> resultado = new ArrayList<CaratulaDTO>();
+		Boolean hayInscripcion = false;
+		Boolean tieneRepertorio = false;
 		Boolean status = false;
 		String msg = "";
-
-		List<CaratulaVO> caratulaVOs = null;
+		List<CaratulaVO> caratulaVOs = null;		
 
 		try {
 			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
 
 			WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
 			CaratulasUtil caratulasUtil = new CaratulasUtil();
-
+			
 			caratulaVOs = caratulaClienteDelegate.obtenerCaratulasPorSeccionUsuario(null, usuario);
 
 			//Excepcion: El usuario marojas debe visualizar las caratulas en seccion C2 asignadas a rquense
@@ -163,11 +170,58 @@ public class TareasServiceAction extends CbrsAbstractAction {
 					}
 				}
 			}
-
+			
+			//Caratuas Reingresos GP pendientes - Solo si el usuario tiene recurso REINGRESO_GP
+	    	ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
+	    	UsuarioUtil util = new UsuarioUtil();
+	    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "tareas");
+			if(subPermisos.contains("REINGRESO_GP")){
+				FuncionarioSeccionUtil funcionarioSeccionUtil = new FuncionarioSeccionUtil();
+				FuncionariosSeccionVO funcionarioSeccion = funcionarioSeccionUtil.obtenerFuncionarioVO(usuario);
+				
+				if(funcionarioSeccion!=null && funcionarioSeccion.getTabFuncionariosVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()!=null){
+					Client client = Client.create();
+					Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
+					String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
+					String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
+					WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/obtenerReingresosGPPendienteSeccion/"+funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()));
+					ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
+					com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
+		
+					if(statusRespuesta.getStatusCode() == 200){
+						JSONArray reingresosGP = (JSONArray) getResponse(clientResponse);
+						if(caratulaVOs==null)
+							caratulaVOs = new ArrayList<CaratulaVO>();
+						for(int i=0; i<reingresosGP.size(); i++){					
+							ReingresoGPDTO reingresoGPDTO = gson.fromJson(reingresosGP.get(i).toString(), ReingresoGPDTO.class);
+							Integer caratulaNueva = reingresoGPDTO.getCaratulaNueva();
+							CaratulaVO caratula = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratulaNueva.longValue());
+							caratulaVOs.add(caratula);
+						}				
+					} else{
+						//TODO warning error al cargar tareas de reingresos
+					}
+				}
+			}
+			
 			if(caratulaVOs!=null && caratulaVOs.size()>0){
 				for(CaratulaVO caratulaVO: caratulaVOs){
 					CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaVO);
 					resultado.add(caratulaDTO);
+					
+					if(caratulaDTO.getInscripcionDigitalDTO()!=null && 
+						caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null &&
+						!caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(0L) 
+//						&& caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO()!=null && 
+//						caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getId()!=null &&
+//						!caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getId().equals(0)
+						)
+						hayInscripcion=true;
+					if(caratulaDTO.getEstadoActualCaratulaDTO()!=null &&
+							caratulaDTO.getEstadoActualCaratulaDTO().getSeccionDTO()!=null &&
+							caratulaDTO.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo()!=null &&
+							caratulaDTO.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("16"))
+							tieneRepertorio=true;
 				}
 			}
 
@@ -184,6 +238,8 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		}
 
 		respuesta.put("caratulas", resultado);
+		respuesta.put("hayInscripcion", hayInscripcion);
+		respuesta.put("tieneRepertorio", tieneRepertorio);
 		respuesta.put("status", status);
 		respuesta.put("msg", msg);
 
@@ -276,7 +332,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				//Buscar si la caratula esta en cierre ctas corrientes
 				FlujoDAO flujoDAO = new FlujoDAO();
 				CierreCtasCtesFinalDTO ctasCtesFinalDTO = flujoDAO.getCierreFinalCaratula(numeroCaratula);
-				if(ctasCtesFinalDTO!=null && caratulaVO.getCodigo()!=null){
+				if(ctasCtesFinalDTO!=null && caratulaVO.getCodigo()!=null && caratulaVO.getCodigo()!=0){
 					estaIngresadaCtaCte=true;
 					CtaCteVO ctaCteVO =  caratulaClienteDelegate.obtenerCtaCte(caratulaVO.getCodigo());
 					if(ctaCteVO!=null){				
@@ -305,7 +361,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 					//						}
 				}	
 
-				if(1==caratulaVO.getCanal().getId()){
+				if(caratulaVO.getCanal()!=null && 1==caratulaVO.getCanal().getId()){
 					Client client = Client.create();
 					String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
 					String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
@@ -364,6 +420,41 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		respuesta.put("caratulaLiquidada", caratulaLiquidada);
 		respuesta.put("caratulaPendienteEntregaDoc", caratulaPendienteEntregaDoc);
 		respuesta.put("documentosLiquidacion", documentosLiquidacion);
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}		
+	
+	@SuppressWarnings({ "unchecked" })
+	public void getGlosaDocumento(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/json");
+
+		String codAlpha = (String)request.getParameter("codAlpha");
+
+		JSONObject respuesta = new JSONObject();
+		
+		Boolean status = false;		
+		String msg = "";
+		String glosa = "";
+
+		try {			
+				CaratulasUtil caratulasUtil = new CaratulasUtil();
+				glosa = caratulasUtil.getGlosaDocumento(codAlpha);				
+				status = true;			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			status = false;
+			msg = "Se ha detectado un problema, intente nuevamente. Si el problema persiste comunicarse con soporte";
+		}
+
+		respuesta.put("glosaDocumento", glosa);
 		respuesta.put("status", status);
 		respuesta.put("msg", msg);
 
@@ -627,10 +718,10 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				funcionarioEnviaVO.setRutFuncionario(rutUsuario);
 				estadoCaratulaVO.setEnviadoPor(funcionarioEnviaVO);
 
-				if(caratulaVO.getCodigo()!=null)
-					funcionarioResponsableVO.setRutFuncionario("083367725");//pedro pablo torres (ctas ctes)
+				if(caratulaVO.getCodigo()!=null && caratulaVO.getCodigo().intValue()!=0)
+					funcionarioResponsableVO.setRutFuncionario("99999999");//Escrituras Web (ctas ctes)			Solicitado por RBennett
 				else				
-					funcionarioResponsableVO.setRutFuncionario("078437413");//manuel perez osorio
+					funcionarioResponsableVO.setRutFuncionario("180906703");//Belen Poblete 					Solicitado por RBennett
 				estadoCaratulaVO.setResponsable(funcionarioResponsableVO);	
 
 				seccionVO.setCodigo("08"); //entrega de docs

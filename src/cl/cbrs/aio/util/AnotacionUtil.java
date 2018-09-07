@@ -11,6 +11,7 @@ import cl.cbrs.aio.dto.InscripcionDigitalDTO;
 import cl.cbrs.aio.dto.TipoAnotacionDTO;
 import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalDelegate;
 import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalHDelegate;
+import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalPHDelegate;
 import cl.cbrs.inscripciondigital.vo.AnotacionVO;
 import cl.cbrs.inscripciondigital.vo.EstadoAnotacionVO;
 import cl.cbrs.inscripciondigital.vo.InscripcionDigitalVO;
@@ -103,13 +104,28 @@ public class AnotacionUtil {
 		}
 		
 		return anotaciones;
-	}	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONArray getJSONArrayAnotacionDTOProhibiciones(List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> anotacionVOList){
+		JSONArray anotaciones = new JSONArray();
+		
+		if(anotacionVOList!=null && anotacionVOList.size()>0){
+			
+			for(cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacionVO: anotacionVOList){
+				anotaciones.add(this.getAnotacionDTO(anotacionVO));
+			}
+		}
+		
+		return anotaciones;
+	}
 	
 	public AnotacionDTO getAnotacionDTO(AnotacionVO anotacionVO){
 		AnotacionDTO anotacionDTO = new AnotacionDTO();
 
 		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
 		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setActo(anotacionVO.getActo());
 		
@@ -144,6 +160,7 @@ public class AnotacionUtil {
 
 		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
 		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setActo(anotacionVO.getActo());
 		
@@ -169,6 +186,39 @@ public class AnotacionUtil {
 		anotacionDTO.setFolio(anotacionVO.getFolio());		
 //		anotacionDTO.setFechaAprobacion(anotacionVO.getFechaAprobacion());
 //		anotacionDTO.setNombreUsuarioAprobador(anotacionVO.getNombreUsuarioAprobador());
+		
+		return anotacionDTO;
+	}	
+	
+	public AnotacionDTO getAnotacionDTO(cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacionVO){
+		AnotacionDTO anotacionDTO = new AnotacionDTO();
+
+		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
+		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
+		anotacionDTO.setTexto(anotacionVO.getTexto());
+		anotacionDTO.setActo(anotacionVO.getActo());
+		
+		cl.cbrs.inscripciondigitalph.vo.InscripcionDigitalVO  inscripcionDigitalByIdInscripcionDestinoVo = anotacionVO.getInscripcionDigitalByIdInscripcionDestinoVo();
+		InscripcionDigitalDTO inscripcionDigitalByIdInscripcionDestinoDTO = this.getInscripcionDigitalDTO(false, inscripcionDigitalByIdInscripcionDestinoVo);
+		
+		anotacionDTO.setInscripcionDigitalByIdInscripcionDestinoDTO(inscripcionDigitalByIdInscripcionDestinoDTO);
+		
+		cl.cbrs.inscripciondigitalph.vo.InscripcionDigitalVO  inscripcionDigitalByIdInscripcionOrigenVo = anotacionVO.getInscripcionDigitalByIdInscripcionOrigenVo();
+		InscripcionDigitalDTO inscripcionDigitalByIdInscripcionOrigenDTO = this.getInscripcionDigitalDTO(false, inscripcionDigitalByIdInscripcionOrigenVo);
+		
+		anotacionDTO.setInscripcionDigitalByIdInscripcionOrigenDTO(inscripcionDigitalByIdInscripcionOrigenDTO);		
+		anotacionDTO.setEstadoAnotacionDTO(this.getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo()));
+		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));		
+		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
+		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
+		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
+		anotacionDTO.setCaratula(anotacionVO.getCaratula());
+		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
+		anotacionDTO.setRepertorio(anotacionVO.getRepertorio());
+		anotacionDTO.setBorrador(anotacionVO.getBorrador());
+		anotacionDTO.setDireccion(anotacionVO.getDireccion());
+		anotacionDTO.setFolio(anotacionVO.getFolio());		
 		
 		return anotacionDTO;
 	}	
@@ -225,7 +275,20 @@ public class AnotacionUtil {
 		}
 
 		return dto;	
-	}	
+	}
+	
+	public InscripcionDigitalDTO getInscripcionDigitalDTO(boolean conAnotacion, cl.cbrs.inscripciondigitalph.vo.InscripcionDigitalVO vo){
+		InscripcionDigitalDTO dto = new InscripcionDigitalDTO();
+		
+		if(vo!=null){
+			dto.setFoja(vo.getFoja());
+			dto.setNumero(vo.getNumero());
+			dto.setAno(vo.getAno());
+			dto.setBis(vo.getBis());	
+		}
+
+		return dto;	
+	}
 	
 	public JSONArray getAnotacionesInscripcion(Long foja, String numero, Long ano, Boolean bis){
 		WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();						
@@ -263,6 +326,24 @@ public class AnotacionUtil {
 		return anotaciones;
 	}
 	
+	public JSONArray getAnotacionesInscripcionProhibiciones(Long foja, String numero, Long ano, Boolean bis){
+		WsInscripcionDigitalPHDelegate wsInscripcionDigitalPHDelegate = new WsInscripcionDigitalPHDelegate();
+		List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> anotacionVOList;
+		JSONArray anotaciones = new JSONArray();
+
+		try {
+
+			anotacionVOList = wsInscripcionDigitalPHDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);
+			
+			anotaciones = getJSONArrayAnotacionDTOProhibiciones(anotacionVOList);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+		
+		return anotaciones;
+	}
+	
 	public EstadoAnotacionDTO getEstadoAnotacionDTO(EstadoAnotacionVO estadoAnotacionVO){
 		EstadoAnotacionDTO dto = new EstadoAnotacionDTO();
 		
@@ -285,6 +366,17 @@ public class AnotacionUtil {
 		return dto;	
 	}
 	
+	public EstadoAnotacionDTO getEstadoAnotacionDTO(cl.cbrs.inscripciondigitalph.vo.EstadoAnotacionVO estadoAnotacionVO){
+		EstadoAnotacionDTO dto = new EstadoAnotacionDTO();
+		
+		if(estadoAnotacionVO!=null){
+			dto.setIdEstado(estadoAnotacionVO.getIdEstado());
+			dto.setDescripcion(estadoAnotacionVO.getDescripcion());
+		}
+
+		return dto;	
+	}
+	
 	public TipoAnotacionDTO getTipoAnotacionDTO(TipoAnotacionVO tipoAnotacionVO){
 		TipoAnotacionDTO dto = new TipoAnotacionDTO();
 		
@@ -297,6 +389,17 @@ public class AnotacionUtil {
 	}
 	
 	public TipoAnotacionDTO getTipoAnotacionDTO(cl.cbrs.inscripciondigitalh.vo.TipoAnotacionVO tipoAnotacionVO){
+		TipoAnotacionDTO dto = new TipoAnotacionDTO();
+		
+		if(tipoAnotacionVO!=null){
+			dto.setIdTipoAnotacion(tipoAnotacionVO.getIdTipoAnotacion());
+			dto.setDescripcion(tipoAnotacionVO.getDescripcion());
+		}
+
+		return dto;	
+	}	
+	
+	public TipoAnotacionDTO getTipoAnotacionDTO(cl.cbrs.inscripciondigitalph.vo.TipoAnotacionVO tipoAnotacionVO){
 		TipoAnotacionDTO dto = new TipoAnotacionDTO();
 		
 		if(tipoAnotacionVO!=null){

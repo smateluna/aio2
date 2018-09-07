@@ -37,34 +37,16 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 				$scope.liquidacionCaratula.caratulaLiquidada = data.caratulaLiquidada;
 				$scope.liquidacionCaratula.caratulaPendienteEntregaDoc = data.caratulaPendienteEntregaDoc;
 				$scope.liquidacionCaratula.documentosLiquidacion = data.documentosLiquidacion;
-				$scope.liquidacionCaratula.busqueda = true;
+				$scope.liquidacionCaratula.busqueda = true; 		
 
-				//Buscar Escrituras					
-				var promise = estadoService
-				.getDocumentos(
-						caratula,
-				'ESCRITURAS');
-				promise
-				.then(
-						function(data) {
-							if (data.status === null) {
-
-							} else if (data.success) {
-								if(data.children.length>0)
-									$scope.liquidacionCaratula.escritura = data.children[0].children[0];
-
-								$scope.liquidacionCaratula.statusDocumentos = data.success;
-
-							} else {
-								$scope
-								.raiseErr(data.errormsg);
-							}
-						},
-						function(reason) {
-							$scope
-							.raiseErr('No se ha podido establecer comunicación con el servidor.');
-						});		  		
-
+				$scope.contadorPapel =0;
+				for(var i = 0; i < $scope.liquidacionCaratula.papeles.length; i++){
+					var papel =$scope.liquidacionCaratula.papeles[i];
+					if(papel!=null && papel.codArchivoAlpha!=null){
+						papel.glosaCobroCertificado = $scope.getGlosa(papel);
+					}
+					
+				}
 			}else{
 				$scope.raiseErr(data.msg);
 			}
@@ -73,7 +55,8 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 			$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
 		});			
 
-		$scope.obtenerBitacoraCaratula();
+		$scope.obtenerBitacoraCaratula();			
+		$scope.buscarEscritura();
 
 	}; 
 	
@@ -95,6 +78,56 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		}, function(reason) {
 			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
 		});
+	};
+	
+	$scope.getGlosa = function (papel) {
+		var promise = tareasService.getGlosaDocumento(papel.codArchivoAlpha);
+		promise.then(function(data) {
+
+			if(data.status===null){
+
+			}else if(data.status){
+				papel.glosaCobroCertificado = data.glosaDocumento;
+				$scope.contadorPapel++;
+			}else{
+				$scope.raiseErr('No se pudo obtener glosa documento', data.msg);
+			}
+		}, function(reason) {
+			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+		});
+	};	
+	
+	$scope.buscarEscritura = function(){
+		var promise = estadoService
+		.getDocumentos(
+				$scope.caratula,
+		'ESCRITURAS');
+		promise
+		.then(
+				function(data) {
+					if (data.status === null) {
+
+					} else if (data.success) {
+						if(data.children.length>0){
+							for ( var i = 0; i < data.children.length; i++){
+								if(data.children[i].children[0].vigente){
+									$scope.escritura = data.children[i].children[0];
+									break;
+								}
+							}
+						}
+
+						$scope.statusEscritura = data.success;
+
+					} else {
+						$scope
+						.raiseErr(data.errormsg);
+					}
+				},
+				function(reason) {
+					$scope
+					.raiseErr('No se ha podido establecer comunicación con el servidor.');
+				});			
 	};
 
 	$scope.limpiar = function(){
@@ -525,5 +558,28 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 	$scope.myRightButton = function () {
         alert('!!! first function call!');
 	};
+	
+	$scope.stringIsNumber = function(s) {
+		var x = +s;
+		return x.toString() === s;
+	};
+	
+	$timeout(function() {
+		//init
+		if ($routeParams.caratula !== undefined) {
+			//Si caratula viene en el request, buscar
+			if ($scope.stringIsNumber($routeParams.caratula)
+					&& $routeParams.caratula.length <= 10) {
+				
+				$scope.caratula = $routeParams.caratula;
+
+				$timeout(function() {
+					$scope.buscarCaratula();
+				}, 500);
+			} 
+		}
+
+		$scope.doFocus('numeroCaratula');
+	}, 500);	
 
 });

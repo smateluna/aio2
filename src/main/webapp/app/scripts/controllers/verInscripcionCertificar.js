@@ -270,9 +270,12 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 			windowClass: 'modal',
 			controller: 'RehacerImagenModalCtrl',
 			resolve: {
-			dataImagen: function(){
-			return dataImagen;
-		}
+				dataImagen: function(){
+					return dataImagen;
+				},
+				servicioCertificacion: function(){
+					return certificacionService;
+				}
 		}
 		});
 	};

@@ -884,6 +884,10 @@ margin-bottom: 20px;
     text-decoration: line-through !important;
 }
 
+.nota-resaltada{
+    background-color: #f9b3b3;
+}
+
 .nohay{
     margin-top: 5px;
     text-align: center;

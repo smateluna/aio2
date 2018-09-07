@@ -1114,7 +1114,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			anotaciones = anotacionUtil.getAnotaciones(fojaini, fojafin, ano);
 			
 			LibrosPropiedadesDAO dao = new LibrosPropiedadesDAO();
-			if(dao.obtenerDespachoCuadernillo(cuadernillo)!=null)
+			if(dao.obtenerDespachoCuadernillo(cuadernillo, ano.intValue())!=null)
 				respuesta.put("tieneDespacho", true);
 
 			status = true;
@@ -1371,6 +1371,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			HttpServletResponse response) {
 
 		String cuadernillop = request.getParameter("cuadernillo");
+		String anop = request.getParameter("ano");
 
 		JSONObject respuesta = new JSONObject();
 
@@ -1378,9 +1379,11 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		String msg = "";
 
 		Integer cuadernillo = null;
+		Integer ano = null;
 		try {
 			LibrosPropiedadesDAO librosPropiedadesDAO = new LibrosPropiedadesDAO();
 			cuadernillo = Integer.parseInt(cuadernillop);
+			ano = Integer.parseInt(anop);
 			String usuario = request.getUserPrincipal().getName();
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			
@@ -1388,6 +1391,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			dto.setCuadernillo(cuadernillo);
 			dto.setFecha(new Date());
 			dto.setUsuario(usuario);
+			dto.setAno(ano);
 			librosPropiedadesDAO.agregarDespachoCuadernillo(dto);
 			status = true;
 			

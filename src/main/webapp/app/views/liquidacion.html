@@ -42,8 +42,7 @@
 						    </span>
 							
 							
-							<div class="row mt0"> 
-							
+							<div class="row mt0"> 							
 							  <div class="col-md-4" style="display: inline-flex;">
 							     <label style="padding-right: 7px;">Car&aacute;tula:</label>
 							     <p>
@@ -56,8 +55,7 @@
 	                               <span class="detail-block text-left" ng-if="liquidacionCaratula.caratulaDTO.idCanal===1">CAJA</span>
                                    <span class="detail-block text-left" ng-if="liquidacionCaratula.caratulaDTO.idCanal===2">WEB</span> -->
 													
-	                             </p>
-	                             
+	                             </p>	                             
 							   </div>
 							   
 							   <div class="col-md-3" align="left" style="display:inline-flex;" id="txblock">
@@ -67,11 +65,9 @@
 							   
 							   <div class="col-md-3" align="left" style="display:inline-flex;" id="txblock">
 							      <label>Escritura:</label>
-								  <button ng-disabled="liquidacionCaratula.escritura==undefined" ng-click="verDocumentoEstudio(liquidacionCaratula.escritura)" class="btn btn-xs btn-primary" tooltip="Ver Documento" tooltip-placement="top"><i class="fa fa-file-pdf-o"></i></button>
-							   </div>
-							
-							</div>
-										
+								  <button ng-disabled="escritura==undefined" ng-click="verDocumentoEstudio(escritura)" class="btn btn-xs btn-primary" tooltip="Ver Documento" tooltip-placement="top"><i class="fa fa-file-pdf-o"></i></button>
+							   </div>							
+							</div>									
 		</div>
 	
 	    <div class="modal-body" ng-hide="liquidacionCaratula.busqueda" style="border: 1px solid #e4e4e4; background: #fdfdfd;">
@@ -193,16 +189,9 @@
 		                </div>
 		            </div>
 		        </div>
-		    </div>				
-				
-	      
+		    </div>									     
 	    </div>
-
 	</div>
-	
-	
-	
-	
 	
 	<div ng-if="liquidacionCaratula.status">
 
@@ -223,7 +212,15 @@
 											<table class="table table-bordered table-striped table-td13px">
 												<thead>
 													<tr>
-													 <th colspan="4" style="text-align: center; background-color: #E7E7E7;"><i class="fa fa-file-o"></i> Documentos disponibles</th>
+													 <th colspan="4" style="text-align: center; background-color: #E7E7E7;"><i class="fa fa-file-o"></i> Documentos disponibles
+													 <div class="row mt0" ng-if="liquidacionCaratula.papeles.length>50 && contadorPapel<liquidacionCaratula.papeles.length"> 
+			    										<div class="col-md-12">
+													 		<div class="label label-warning mensaje-label" >
+																Procesando {{contadorPapel}} de {{liquidacionCaratula.papeles.length}} documentos
+				   											</div>
+				   										</div>
+				   									</div>
+				   									 </th>
 													</tr>
 													<tr>
 														<th style="text-align: center;">Documento</th>
@@ -233,7 +230,7 @@
 													</tr>
 												</thead>
 												<tbody id="docs">
-													<tr ng-repeat="papel in liquidacionCaratula.papeles | filter: {tipoDocumentoDTO: '!Notas'}">
+													<tr ng-repeat="papel in liquidacionCaratula.papeles | filter: {tipoDocumentoDTO: '!Nota'}">
 														<td style='text-align: center;'>{{papel.tipoDocumentoDTO.descripcion}}
 															<!-- <p ng-repeat="certificado in papel.certificadoFNADTOs">
 							                                    <span ng-switch on="certificado.registro">
@@ -311,11 +308,8 @@
 															<td style='text-align: center;'>$ <input required="" ng-model="nuevoDocumento.valor" numbers-only-neg type="number" /></td>
 															<td style='text-align: center;' colspan="2">
 																<button class="btn btn-primary btn-xs btn-rad" ng-click="agregarDocumento(nuevoDocumento.nombre, nuevoDocumento.valor, liquidacionCaratula.caratulaDTO.numeroCaratula)"  type="button">Agregar</button>
-															</td>
-														
-													</tr>	 											
-	
-	
+															</td>														
+													</tr>	 												
 												</tbody>
 											</table>
 											</form>
@@ -346,10 +340,6 @@
 										</div>
 	
 	                                   <!--  </form>-->
-	
-	
-	
-	
 									</div>
 	
 	
@@ -415,7 +405,7 @@
 	
 	
 
-<div ng-include="'views/transaccionModal.html'"></div>	    
+	<div ng-include="'views/transaccionModal.html'"></div>	    
    		
    		<div ng-if="states.buscar.isError" class="row mt35">
 	        <div class="col-md-6 col-md-offset-3">

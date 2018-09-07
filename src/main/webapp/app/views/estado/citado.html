@@ -5,7 +5,7 @@
         </span>
 
         Citado</div>
-    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CITADO') >= 0 && data.status!=null && !anulada">
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CITADO')>=0 && data.status!=null && !anulada && data.res.caratulaDTO.citadoDTOs.length==1">
         <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openCitadoModal()">
             <i class="fa fa-edit"></i>  Editar datos
         </button>
@@ -14,74 +14,63 @@
 
 
         <form class="form-inline" role="form">
-            <fieldset>
-                <div class="row row-estado">
-                    <div class="col-sm-12">
-                        <div class="form-group form-group-estado">
-                            <label class="estado-title-field">Registro</label>
-                            <div class="form-control-static">
-                                <p class="estado-display-field">
-                                    <span ng-switch on="data.res.caratulaDTO.citadoDTO.registroDTO.id">
-                                        <span ng-switch-when="1">Propiedad</span>
-                                        <span ng-switch-when="2">Hipotecas</span>
-                                        <span ng-switch-when="3">Prohibiciones</span>
+        
+        
+    <div class="panel-body no-padding" ng-hide="area.collapsed">
+        <table class="table hover table-bordered">
+            <thead>
+            <tr>
+                <th class="estado-table-title">Registro</th>
+                <th class="estado-table-title">Foja</th>
+                <th class="estado-table-title">Número</th>
+                <th class="estado-table-title">Año</th>
+                <th class="estado-table-title">Bis</th>
+                <th class="estado-table-title">Ver</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="sol in data.res.caratulaDTO.citadoDTOs">
+                <td class="estado-table-td">                                    
+                					<span ng-switch on="sol.registroDTO.id">
+                                        <span ng-switch-when="1" class="label label-prop label-registro">Propiedad</span>
+                                        <span ng-switch-when="2" class="label label-hipo label-registro">Hipotecas</span>
+                                        <span ng-switch-when="3" class="label label-proh label-registro">Prohibiciones</span>
                                         <span ng-switch-when="4">Comercio</span>
                                         <span ng-switch-when="5">Aguas</span>
                                         <span ng-switch-default></span>
                                     </span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-estado">
-                            <label class="estado-title-field">Foja</label>
-                            <div class="form-control-static">
-                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.foja}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-estado">
-                            <label class="estado-title-field">Número</label>
-                            <div class="form-control-static">
-                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.numero}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-estado">
-                            <label class="estado-title-field">Año</label>
-                            <div class="form-control-static">
-                                <p class="estado-display-field">{{data.res.caratulaDTO.citadoDTO.ano}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-estado">
-                            <label class="estado-title-field">Bis</label>
-                            <div class="form-control-static">
+                </td>
+                <td class="estado-table-td">{{sol.foja}}</td>
+                <td class="estado-table-td">{{sol.numero}}</td>
+                <td class="estado-table-td">{{sol.ano}}</td>
+                <td class="estado-table-td">
                                 <p class="estado-display-field">
-
-                                    <i ng-if="data.res.caratulaDTO.citadoDTO.bis" class="fa fa-check"></i>
-
+                                    <i ng-if="sol.bis" class="fa fa-check"></i>
                                 </p>
-                            </div>
-                        </div>
-						<div class="form-group form-group-estado">
-							<label class="estado-title-field">
-								Ver
-							</label>
-							<div class="form-control-static">
+                </td>
+                <td class="estado-table-td">							
+                			<div class="form-control-static">
 								<button type="button" class="btn btn-primary btn-sm btn-rad"
-									ng-click="verTitulo(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===1">
+									ng-click="verTitulo(sol)" ng-show="sol.registroDTO.id===1">
 									<i class="fa fa-search"></i>
 								</button>
 								<button type="button" class="btn btn-primary btn-sm btn-rad"
-									ng-click="verTipoImagenHipo(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===2">
+									ng-click="verTipoImagenHipo(sol)" ng-show="sol.registroDTO.id===2">
 									<i class="fa fa-search"></i>
 								</button>
 								<button type="button" class="btn btn-primary btn-sm btn-rad"
-									ng-click="verTipoImagenProh(data.res.caratulaDTO.citadoDTO)" ng-show="data.res.caratulaDTO.citadoDTO.registroDTO.id===3">
+									ng-click="verTipoImagenProh(sol)" ng-show="sol.registroDTO.id===3">
 									<i class="fa fa-search"></i>
 								</button>
 							</div>
-						</div>
-					</div>
-                </div>
-            </fieldset>
+				</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>        
+        
+        
+            
         </form>
     </div>
 </div>

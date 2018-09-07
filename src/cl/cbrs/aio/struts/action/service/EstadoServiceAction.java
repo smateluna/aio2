@@ -1,14 +1,18 @@
 package cl.cbrs.aio.struts.action.service;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -18,15 +22,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+
 import cl.cbr.common.exception.GeneralException;
+import cl.cbr.util.ErroresUtil;
 import cl.cbr.util.RUTUtil;
 import cl.cbr.util.SendMail;
 import cl.cbr.util.StringUtil;
@@ -761,8 +774,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			JSONObject respuesta = caratulaEstadoUtil.estadoReporteJSON(caratulaEstadoDTO, numeroCaratula);
 			JSONObject data = (JSONObject)respuesta.get("data");
 			ServletOutputStream out = response.getOutputStream();
-         System.out.println("DATA--->"+data.toJSONString());
-         
+
 			bout = new ByteArrayOutputStream();
 
 			HashMap<String, Object> map = new HashMap<String, Object>();
@@ -904,114 +916,199 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 		}	
 		
 		CaratulaEstadoUtil caratulaEstadoUtil = new CaratulaEstadoUtil();
-		WsCaratulaClienteDelegate delegate = new WsCaratulaClienteDelegate();
-
-		ByteArrayOutputStream bout = null;
+		WsCaratulaClienteDelegate delegate = new WsCaratulaClienteDelegate();		
+		
 		try {
-			Long numeroCaratula = new Long(ncaratula);
-			
-			CaratulaVO caratulaVO = delegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), numeroCaratula);
-			CaratulaEstadoDTO caratulaEstadoDTO = caratulaEstadoUtil.getCaratulaEstadoDTO(caratulaVO);
-			JSONObject respuesta = caratulaEstadoUtil.estadoReporteJSON(caratulaEstadoDTO, numeroCaratula);
-			JSONObject data = (JSONObject)respuesta.get("data");
 			ServletOutputStream out = response.getOutputStream();
-
-			bout = new ByteArrayOutputStream();
-
-			HashMap<String, Object> map = new HashMap<String, Object>();
-
-			map.put("fechaReporte", fechaReporte);
-			map.put("ncaratula", ""+data.get("ncaratula"));
-			map.put("fechaIngreso", ""+data.get("fechaIngreso"));
-			map.put("nform", ""+data.get("nform"));
-			map.put("tform", ""+data.get("tform"));
-			map.put("vtasado", ""+data.get("vtasado"));
-			map.put("vpagado", ""+data.get("vpagado"));
-			map.put("vreal", ""+data.get("vreal"));
-			map.put("diferencia", ""+data.get("diferencia"));
-			map.put("repertorio", ""+data.get("repertorio"));
-
-			map.put("rut", ""+data.get("rut2"));
-			map.put("nombres", ""+data.get("nombres"));
-			map.put("apellidop", ""+data.get("apaterno"));
-			map.put("apellidom", ""+data.get("amaterno"));			
-			map.put("email", ""+data.get("email"));
-			map.put("giro", ""+data.get("giro"));			
-			map.put("direccion", ""+data.get("direccion"));
-
-			map.put("telefono", ""+data.get("telefono"));
-			map.put("ccc", ""+data.get("ccc"));
-
-			map.put("codigocc", ""+data.get("codigocc"));
-			map.put("rutcc", ""+data.get("rutcc"));
-			map.put("institucion", ""+data.get("institucion"));
-
-			map.put("seccionActual", ""+data.get("seccionActual"));
-			map.put("fechaActual", ""+data.get("fechaActual"));
-
-			map.put("obs", ""+data.get("obs"));
-			
-			map.put("citadoFoja", ""+data.get("citadoFoja"));
-			map.put("citadoNum", ""+data.get("citadoNum"));
-			map.put("citadoAno", ""+data.get("citadoAno"));
-			map.put("citadoRegistroNombre", ""+data.get("citadoRegistroNombre"));
-
-
-			if("1".equals(""+data.get("canal"))){
-				map.put("canal", "Caja");				
-			}else if("2".equals(""+data.get("canal"))){
-				map.put("canal", "Web");				
-			}else{
-				map.put("canal", "-");				
-			}
-			
-			String detalle = "";
-			
-			if(caratulaVO!=null){
-				ProductoVO productoVO = caratulaVO.getProducto();
-				if(productoVO != null){
-					ProductoGlosaVO[] listaProductoGlosa= caratulaVO.getProducto().getListaProductoGlosaVO();
-					if(listaProductoGlosa!=null){
-						for(ProductoGlosaVO prodGlosaVO : listaProductoGlosa){
-							detalle +=prodGlosaVO.getGlosa()+"\n";
+			String[] caratulas = ncaratula.split(",");
+			List<InputStream> listaCarautlas = new ArrayList<InputStream>();
+			for(int i=0; i<caratulas.length; i++){
+				Long numeroCaratula = new Long(caratulas[i]);
+				
+				CaratulaVO caratulaVO = delegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), numeroCaratula);
+				CaratulaEstadoDTO caratulaEstadoDTO = caratulaEstadoUtil.getCaratulaEstadoDTO(caratulaVO);
+				JSONObject respuesta = caratulaEstadoUtil.estadoReporteJSON(caratulaEstadoDTO, numeroCaratula);
+				JSONObject data = (JSONObject)respuesta.get("data");								
+	
+				HashMap<String, Object> map = new HashMap<String, Object>();
+	
+				map.put("fechaReporte", fechaReporte);
+				map.put("ncaratula", ""+data.get("ncaratula"));
+				map.put("fechaIngreso", ""+data.get("fechaIngreso"));
+				map.put("nform", ""+data.get("nform"));
+				map.put("tform", ""+data.get("tform"));
+				map.put("vtasado", ""+data.get("vtasado"));
+				map.put("vpagado", ""+data.get("vpagado"));
+				map.put("vreal", ""+data.get("vreal"));
+				map.put("diferencia", ""+data.get("diferencia"));
+				map.put("repertorio", ""+data.get("repertorio"));
+	
+				map.put("rut", ""+data.get("rut2"));
+				map.put("nombres", ""+data.get("nombres"));
+				map.put("apellidop", ""+data.get("apaterno"));
+				map.put("apellidom", ""+data.get("amaterno"));			
+				map.put("email", ""+data.get("email"));
+				map.put("giro", ""+data.get("giro"));			
+				map.put("direccion", ""+data.get("direccion"));
+	
+				map.put("telefono", ""+data.get("telefono"));
+				map.put("ccc", ""+data.get("ccc"));
+	
+				map.put("codigocc", ""+data.get("codigocc"));
+				map.put("rutcc", ""+data.get("rutcc"));
+				map.put("institucion", ""+data.get("institucion"));
+	
+				map.put("seccionActual", ""+data.get("seccionActual"));
+				map.put("fechaActual", ""+data.get("fechaActual"));
+	
+				map.put("obs", ""+data.get("obs"));
+				
+				map.put("citadoFoja", ""+data.get("citadoFoja"));
+				map.put("citadoNum", ""+data.get("citadoNum"));
+				map.put("citadoAno", ""+data.get("citadoAno"));
+				map.put("citadoRegistroNombre", ""+data.get("citadoRegistroNombre"));
+	
+	
+				if("1".equals(""+data.get("canal"))){
+					map.put("canal", "Caja");				
+				}else if("2".equals(""+data.get("canal"))){
+					map.put("canal", "Web");				
+				}else{
+					map.put("canal", "-");				
+				}
+				
+				String detalle = "";
+				
+				if(caratulaVO!=null){
+					ProductoVO productoVO = caratulaVO.getProducto();
+					if(productoVO != null){
+						ProductoGlosaVO[] listaProductoGlosa= caratulaVO.getProducto().getListaProductoGlosaVO();
+						if(listaProductoGlosa!=null){
+							for(ProductoGlosaVO prodGlosaVO : listaProductoGlosa){
+								detalle +=prodGlosaVO.getGlosa()+"\n";
+							}
 						}
 					}
 				}
+	
+				map.put("detalle", detalle);
+	
+				//TAREAS
+				ArrayList<TareaDTO> tareas = (ArrayList<TareaDTO>)data.get("tareas");
+	
+				HashMap<String, String> map2 = new HashMap<String, String>();
+				map2.put("fechaReporte", fechaReporte);
+				map2.put("ncaratula", ""+data.get("ncaratula"));	
+	
+				//REPERTORIO
+				WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
+				List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);			
+	
+				if("pdf".equals(tipo))
+					response.setContentType("application/pdf");
+				
+				ByteArrayOutputStream bout = new ByteArrayOutputStream();
+				bout = ReporteUtil.export(map, tareas, repertorioVOs, map2, null, tipo, null, hayIngresoEgreso, null);
+				InputStream is = new ByteArrayInputStream(bout.toByteArray());
+				listaCarautlas.add(is);							
 			}
-
-			map.put("detalle", detalle);
-
-			//TAREAS
-			ArrayList<TareaDTO> tareas = (ArrayList<TareaDTO>)data.get("tareas");
-
-			HashMap<String, String> map2 = new HashMap<String, String>();
-			map2.put("fechaReporte", fechaReporte);
-			map2.put("ncaratula", ""+data.get("ncaratula"));	
-
-			//REPERTORIO
-			WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
-			List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);			
-
-			if("pdf".equals(tipo))
-				response.setContentType("application/pdf");
-
-			bout = ReporteUtil.export(map, tareas, repertorioVOs, map2, null, tipo, null, hayIngresoEgreso, null);
-
-			out.write(bout.toByteArray());	
-
-			out.flush();
+			merge(listaCarautlas, out);
 			
 			if(out != null)
 	           	out.close();
-			 
+
 		} catch (IOException e) {
 			logger.error("Error IO al generar PDF: " + e.getMessage(), e);
 		} catch (JRException e) {
 			logger.error("Error JRE al generar PDF: " + e.getMessage(), e);
 		} catch (GeneralException e) {
 			logger.error("Error General al generar PDF: " + e.getMessage(), e);
+		} catch (DocumentException e) {
+			logger.error("Error Documento al fusionar PDFs: " + e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error("Error General al generar PDF: " + e.getMessage(), e);
 		}
 	}
+	
+	private void merge(List<InputStream> streamOfPDFFiles, OutputStream outputStream) throws Exception,
+	DocumentException {
+
+		Rectangle pageSize1 = new Rectangle(0, 0, 660, 990);
+
+		Document document = new Document(pageSize1);
+
+
+		InputStream pdf = null;
+		try {
+
+			List<InputStream> pdfs = streamOfPDFFiles;
+			List<PdfReader> readers = new ArrayList<PdfReader>();
+			int totalPages = 0;
+			Iterator<InputStream> iteratorPDFs = pdfs.iterator();
+
+			while (iteratorPDFs.hasNext()) {
+				pdf = iteratorPDFs.next();
+				PdfReader pdfReader = new PdfReader(pdf);
+				readers.add(pdfReader);
+				totalPages += pdfReader.getNumberOfPages();
+
+			}
+
+			PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+			document.open();
+			PdfContentByte cb = writer.getDirectContent(); // Holds the PDF
+
+			PdfImportedPage page;
+			int currentPageNumber = 0;
+			int pageOfCurrentReaderPDF = 0;
+			Iterator<PdfReader> iteratorPDFReader = readers.iterator();
+
+			while (iteratorPDFReader.hasNext()) {
+				PdfReader pdfReader = iteratorPDFReader.next();
+
+				while (pageOfCurrentReaderPDF < pdfReader.getNumberOfPages()) {
+					document.newPage();
+
+					pageOfCurrentReaderPDF++;
+					currentPageNumber++;
+					page = writer.getImportedPage(pdfReader, pageOfCurrentReaderPDF);
+
+					cb.addTemplate(page, 0, 0);
+
+				}
+				pageOfCurrentReaderPDF = 0;
+			}
+
+			outputStream.flush();
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			throw e;
+		}
+		finally {
+			if (document.isOpen()) {
+				document.close();
+				try {
+					for (Iterator iterator = streamOfPDFFiles.iterator(); iterator.hasNext();) {
+						InputStream inputStream = (InputStream) iterator.next();
+						try {
+							inputStream.close();
+						}
+						catch (Exception e) {
+							logger.error(e.getMessage(),e);
+						}
+					}
+					outputStream.close();
+				}
+				catch (Exception e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(pdf!=null)
+				pdf.close();
+		}
+	}	
 	
 	@SuppressWarnings({ "unchecked" })
 	public void getDocumentosEntrega(ActionMapping mapping, ActionForm form,
@@ -1488,47 +1585,6 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	        }
 	        
 	        
-	    }
-	 public void downloadDocumento2(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-	            HttpServletResponse response) {
-//		 	response.setContentType("application/pdf");
-		 	
-		 	
-			String documentoReq = request.getParameter("documento");
-			
-			ServletOutputStream out = null;
-
-			try {
-				JSONParser jsonParser = new JSONParser();
-				//JSONObject documentoJSON = (JSONObject)jsonParser.parse(documentoReq);
-				Integer idTipoDocumentop = Integer.parseInt(request.getParameter("idTipoDocumento").toString()); 
-				String nombreArchivop = request.getParameter("nombreArchivo").toString(); 
-				Integer idRegp = request.getParameter("idReg")==null?0:Integer.parseInt(request.getParameter("idReg").toString()); 
-				Date fechap = null;
-				if(request.getParameter("fechaDocumento")!=null)
-					fechap = new Date(new Long(request.getParameter("fechaDocumento")));
-				
-				DocumentosCliente documentosCliente = new DocumentosCliente();
-				byte[] archivo = documentosCliente.downloadDocumento(idTipoDocumentop, idRegp, nombreArchivop, fechap);
-
-				response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivop);
-				out = response.getOutputStream();			    
-	         	out.write(archivo, 0, archivo.length);
-	         	out.flush();
-	     
-	            if(out != null)
-	                  out.close();
-	        } catch(HTTPException e){
-	            logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
-	            request.setAttribute("error", "Archivo no encontrado.");	        	
-	        } catch (Exception e) {
-	            logger.error("Error al buscar documento: " + e.getMessage(),e);
-	            request.setAttribute("error", "Archivo no encontrado.");
-	        } finally{
-	            if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
-	        }
-	        
-	        
 	    } 		
 	
 	public void existeFirma(ActionMapping mapping, ActionForm form,
@@ -1565,15 +1621,14 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			logger.error(e.getMessage());
 		}		
 	}	
-	@Deprecated 
+	
 	 public void downloadFirma(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) {
 	 	response.setContentType("application/pdf");
-	 	logger.debug("Iniciando");
+	 	
 	 	Boolean download = true;
 	 	
 		String documentoReq = request.getParameter("documento");
-		logger.debug(documentoReq);
 		if(request.getParameter("download")!=null)
 			download = new Boolean(request.getParameter("download"));
 		
@@ -1614,55 +1669,6 @@ public class EstadoServiceAction extends CbrsAbstractAction {
         
         
     } 	
-	 public void downloadFirma2(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-	            HttpServletResponse response) {
-		 	response.setContentType("application/pdf");
-		 	logger.debug("Iniciando");
-		 	Boolean download = true;
-		 	
-			String documentoReq = request.getParameter("documento");
-			logger.debug(documentoReq);
-			if(request.getParameter("download")!=null)
-				download = new Boolean(request.getParameter("download"));
-			
-			ServletOutputStream out = null;
-
-			try {
-				//JSONParser jsonParser = new JSONParser();
-				//JSONObject documentoJSON = (JSONObject)jsonParser.parse(documentoReq); 
-				String nombreArchivop = request.getParameter("nombreArchivo"); //documentoJSON.get("nombreArchivo").toString();  
-				String rutFirmadorp = request.getParameter("rutFirmador");//documentoJSON.get("rutFirmador").toString();
-				String fecha=request.getParameter("fechaDocumento");
-				Date fechap = null;
-				if(fecha!=null)
-					fechap = new Date(new Long(fecha));
-				
-				String firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
-				
-				DocumentosCliente documentosCliente = new DocumentosCliente();
-				byte[] archivo = documentosCliente.downloadFirma(nombreArchivop, firmador, fechap);
-
-				if(download)
-					response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivop);
-				
-				out = response.getOutputStream();			    
-	         	out.write(archivo, 0, archivo.length);
-	         	out.flush();
-	     
-	            if(out != null)
-	                  out.close();
-	        } catch(HTTPException e){
-	            logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
-	            request.setAttribute("error", "Archivo no encontrado.");	        	
-	        } catch (Exception e) {
-	            logger.error("Error al buscar documento: " + e.getMessage(),e);
-	            request.setAttribute("error", "Archivo no encontrado.");
-	        } finally{
-	            if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
-	        }
-	        
-	        
-	    } 	
 	
 	public void existeEscritura(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -1732,7 +1738,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			Long numeroCaratula = Long.parseLong(caratulaReq);
 			String rutFuncionario = (String)request.getSession().getAttribute("rutUsuario");
 			rutFuncionario = StringUtil.rellenaPorLaIzquierda(rutFuncionario, 9, '0');
-//			motivoReq = cambiaEncoding(motivoReq);
+//			comentarioReq = cambiaEncoding(comentarioReq);
 			
 			if(comentarioReq!=null && !"".equals(comentarioReq.trim())){
 				BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(numeroCaratula, rutFuncionario, comentarioReq, categoria);

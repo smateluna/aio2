@@ -84,6 +84,10 @@ app.controller('DigitalCtrl', function ($rootScope, $scope, $timeout, $location,
 
 		$scope.doFocus('foja');
 	};
+	
+	$scope.esMalCitadaDesde = function() {
+		return (!$scope.solicita.estado.fna && $scope.busquedaTitulo.ano >= $rootScope.aioParametros.anoDigitalPropiedades);
+	};
 
 	$scope.buscarTitulo = function(){
 		var foja = $scope.busquedaTitulo.foja,
@@ -116,7 +120,7 @@ app.controller('DigitalCtrl', function ($rootScope, $scope, $timeout, $location,
 					//tiene rechazo
 					$scope.openSolicitar();
 
-				}else if(!data.consultaDocumentoDTO.hayDocumento){
+				}else if(!data.consultaDocumentoDTO.hayDocumento && !$scope.esMalCitadaDesde()){
 					//no tiene imagen y es solicitable 1
 
 					//TODO: no tiene imagen y es solicitable
@@ -136,6 +140,8 @@ app.controller('DigitalCtrl', function ($rootScope, $scope, $timeout, $location,
 					//esta digitalizada 3
 
 					digitalModel.setDataState(data);
+					$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
+				}else {
 					$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
 				}
 

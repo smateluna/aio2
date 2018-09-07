@@ -81,6 +81,10 @@
 			type="cl.cbrs.aio.struts.action.service.EstadoServiceAction" validate="false">
 		</action>
 		
+		<action parameter="metodo" path="/service/util"
+			type="cl.cbrs.aio.struts.action.service.UtilServiceAction" validate="false">
+		</action>		
+		
 		<action parameter="metodo" path="/service/anexo"
 			type="cl.cbrs.aio.struts.action.service.AnexoServiceAction" validate="false">
 		</action>	
@@ -146,6 +150,11 @@
 			type="cl.cbrs.aio.struts.action.service.CertificacionHipotecasServiceAction"
 			validate="false">
 		</action>		
+		
+		<action parameter="metodo" path="/service/certificacionProhibiciones"
+			type="cl.cbrs.aio.struts.action.service.CertificacionProhibicionesServiceAction"
+			validate="false">
+		</action>
 		
 		<action parameter="metodo" path="/service/desbloqueo"
 			type="cl.cbrs.aio.struts.action.service.DesbloqueoServiceAction" validate="false">

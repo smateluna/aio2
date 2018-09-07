@@ -880,7 +880,7 @@ app
 	$scope.verTipoImagenProh = function(titulo) {
 
 		var bis = titulo.bis == 1 ? true : false;
-		$rootScope.go('/verInscripcionReg/proh/' + titulo.foja
+		$rootScope.go('/verInscripcion/proh/' + titulo.foja
 			+ '/' + titulo.numero + '/' + titulo.ano + '/'
 			+ bis + '/estado');
 	};
@@ -911,7 +911,7 @@ app
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento2&nombreArchivo='+documentoEntrega.numero+".pdf"+"&idTipoDocumento=12&idReg=0"; //JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ JSON.stringify(documento);
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
@@ -927,7 +927,7 @@ app
 	$scope.downloadFirma = function(documentoEntrega) {
 		var documento ={
 			"nombreArchivo": documentoEntrega.nombreArchivoVersion,
-			"fechaDocumento": documentoEntrega.fechaPdf,
+			"fechaDocumento": documentoEntrega.fechaFirma,
 			"rutFirmador": documentoEntrega.usuario
 		};
 		
@@ -938,7 +938,7 @@ app
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma2&nombreArchivo='+documentoEntrega.nombreArchivoVersion+'&fechaDocumento='+documentoEntrega.fechaPdf+'&rutFirmador='+documentoEntrega.usuario;
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ JSON.stringify(documento);
 				} else {
 					$scope
 					.raiseErr(data.errormsg);

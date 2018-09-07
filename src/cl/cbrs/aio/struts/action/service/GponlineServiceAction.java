@@ -803,7 +803,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		respuesta.put("prohibicionesVigentes", listaProhibicionesJSON);
 		
 		} catch(Exception e){
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(),e);
 		}
 	}
 	

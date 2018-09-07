@@ -28,8 +28,8 @@ public abstract class AbstractJdbcDao {
 
     /**
      * Retorna conexion a base de datos 'Flujo'
-     * @return {@link Connection}
-     * @throws cl.cbr.common.exception.GeneralException
+     * @return
+     * @throws Exception
      */
     protected Connection conexionFlujo() throws GeneralException{
     	

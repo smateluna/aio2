@@ -9,7 +9,7 @@ public class CaratulaEstadoDTO implements JSONAware{
 	
 	private DatosFormularioDTO datosFormularioDTO;
 	private ProductoWebDTO productoWebDTO;
-	private CitadoDTO citadoDTO;
+	private ArrayList<CitadoDTO> citadoDTOs;
 	private EstadoActualDTO estadoActualDTO;
 	private ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs;
 	private ArrayList<MovimientoDTO> movimientoDTOs;
@@ -50,15 +50,15 @@ public class CaratulaEstadoDTO implements JSONAware{
 		
 		sb.append(",");
 		
-		sb.append("\"citadoDTO\"");
-		sb.append(":");
-
-		if(this.citadoDTO!=null){
-			sb.append(this.citadoDTO.toJSONString());
-		}else{
-			sb.append("null");				
+		JSONArray citadoDTOsJSONArray = new JSONArray();
+		if(this.citadoDTOs!=null){
+			for(CitadoDTO citadoDTO : this.citadoDTOs){				
+				citadoDTOsJSONArray.add(citadoDTO);
+			}
 		}
-		
+		sb.append("\"citadoDTOs\"");
+		sb.append(":");
+		sb.append(citadoDTOsJSONArray);		
 		sb.append(",");
 		
 		sb.append("\"estadoActualDTO\"");
@@ -144,9 +144,7 @@ public class CaratulaEstadoDTO implements JSONAware{
 
 		sb.append("\"bitacoraDTOs\"");
 		sb.append(":");
-
-		sb.append(bitacoraDTOsJSONArray);
-		
+		sb.append(bitacoraDTOsJSONArray);		
 		sb.append(",");
 		
 		JSONArray tareaDTOsJSONArray = new JSONArray();
@@ -173,14 +171,6 @@ public class CaratulaEstadoDTO implements JSONAware{
 
 	public void setDatosFormularioDTO(DatosFormularioDTO datosFormularioDTO) {
 		this.datosFormularioDTO = datosFormularioDTO;
-	}
-
-	public CitadoDTO getCitadoDTO() {
-		return citadoDTO;
-	}
-
-	public void setCitadoDTO(CitadoDTO citadoDTO) {
-		this.citadoDTO = citadoDTO;
 	}
 
 	public EstadoActualDTO getEstadoActualDTO() {
@@ -253,5 +243,13 @@ public class CaratulaEstadoDTO implements JSONAware{
 
 	public ArrayList<RepertorioDTO> getRepertorioDTOs() {
 		return repertorioDTOs;
+	}
+
+	public ArrayList<CitadoDTO> getCitadoDTOs() {
+		return citadoDTOs;
+	}
+
+	public void setCitadoDTOs(ArrayList<CitadoDTO> citadoDTOs) {
+		this.citadoDTOs = citadoDTOs;
 	}
 }

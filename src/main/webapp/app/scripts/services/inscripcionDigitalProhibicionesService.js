@@ -209,9 +209,27 @@ app.factory('inscripcionDigitalProhibicionesService', function ($http, $q) {
             deferred.reject(status);
           });
 
-        return deferred.promise;
-      },existeDocumentoReg:function (foja, numero, ano, registro) {
-          var paramsObj = {metodo: 'existeDocumentoReg', foja: foja, numero: numero, ano: ano, registro: registro};
+			return deferred.promise;
+		},getResumenNotas:function (caratula,borrador,folio) {
+			var paramsObj = {metodo: 'getResumenNotas', caratula:caratula,borrador:borrador,folio:folio};
+
+			var deferred = $q.defer();
+
+			$http({
+				method: 'GET',
+				url: '../do/service/inscripcionDigitalProhibiciones',
+				params: paramsObj
+			}).
+			success(function(data, status, headers, config){
+				deferred.resolve(data);
+			}).
+			error(function(data, status, headers, config){
+				deferred.reject(status);
+			});
+
+			return deferred.promise;
+		},existeDocumentoReg:function (foja, numero, ano, registro) {
+			var paramsObj = {metodo: 'existeDocumentoReg', foja: foja, numero: numero, ano: ano, registro: registro};
 
           var deferred = $q.defer();
 
@@ -227,8 +245,26 @@ app.factory('inscripcionDigitalProhibicionesService', function ($http, $q) {
               deferred.reject(status);
             });
 
-          return deferred.promise;
-        }
-    
-  };
+			return deferred.promise;
+		},getNotas:function (foja,numero,ano,bis) {
+			var paramsObj = {metodo: 'getNotas', foja:foja,numero:numero,ano:ano,bis:bis};
+
+			var deferred = $q.defer();
+
+			$http({
+				method: 'GET',
+				url: '../do/service/inscripcionDigitalProhibiciones',
+				params: paramsObj
+			}).
+			success(function(data, status, headers, config){
+				deferred.resolve(data);
+			}).
+			error(function(data, status, headers, config){
+				deferred.reject(status);
+			});
+
+			return deferred.promise;
+		}
+
+	};
 });

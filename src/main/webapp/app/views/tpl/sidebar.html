@@ -2,8 +2,8 @@
 <!-- Collapse Toggle -->
 <div class="cl-toggle"><i class="fa fa-reorder"></i></div>
 
-<!-- Menu Items -->
-<div class="cl-navblock">
+<!-- Menu Items estilo colores  default-color, blue-color, dark-color -->
+<div class="cl-navblock" ng-class="colorBarra">
     <div class="menu-space">
         <div class="content">
 
@@ -35,6 +35,12 @@
         </div>
     </div>
     <div class="text-right collapse-button" style="padding:7px 9px;">
-        <button id="sidebar-collapse" class="btn btn-default" style=""><i style="color:#fff;" class="fa fa-angle-left"></i></button>
+    	<div class="floatLeft">
+    	
+    	<a ng-if="colorBarra!='default-color'" ng-click="cambiarColor('default-color')" class="fa fa-square fa-2x cWhite" tooltip="Cambiar menu claro" tooltip-placement="right"></a>
+    	<a ng-if="colorBarra!='blue-color'" ng-click="cambiarColor('blue-color')" class="fa fa-square fa-2x cBlue2" tooltip="Cambiar menu Azul" tooltip-placement="right"></a>
+    	<a ng-if="colorBarra!='dark-color'" ng-click="cambiarColor('dark-color')" class="fa fa-square fa-2x cBlack" tooltip="Cambiar menu Negro" tooltip-placement="right"></a>
+    	</div>
+        <button id="sidebar-collapse" class="btn btn-default"><i style="color:#fff;" class="fa fa-angle-left"></i></button>
     </div>
 </div>

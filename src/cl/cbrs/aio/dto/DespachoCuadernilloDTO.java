@@ -19,6 +19,7 @@ public class DespachoCuadernilloDTO implements JSONAware, Serializable{
 	private Date fecha;
 	private String usuario;
 	private Integer cuadernillo;
+	private Integer ano;
 
 	public DespachoCuadernilloDTO(){
 
@@ -57,6 +58,11 @@ public class DespachoCuadernilloDTO implements JSONAware, Serializable{
 		sb.append("\"cuadernillo\"");
 		sb.append(":");
 		sb.append(this.cuadernillo);
+		sb.append(",");	
+		
+		sb.append("\"ano\"");
+		sb.append(":");
+		sb.append(this.ano);
 
 		
 
@@ -95,6 +101,14 @@ public class DespachoCuadernilloDTO implements JSONAware, Serializable{
 
 	public void setCuadernillo(Integer cuadernillo) {
 		this.cuadernillo = cuadernillo;
+	}
+
+	public Integer getAno() {
+		return ano;
+	}
+
+	public void setAno(Integer ano) {
+		this.ano = ano;
 	}
 
 	

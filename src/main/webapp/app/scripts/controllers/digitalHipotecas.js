@@ -83,6 +83,10 @@ app.controller('DigitalHipotecasCtrl', function ($rootScope, $scope, $timeout, $
 
     $scope.doFocus('foja');
   };
+  
+	$scope.esMalCitadaDesde = function() {
+		return (!$scope.solicita.estado.fna && $scope.busquedaTitulo.ano >= $rootScope.aioParametros.anoDigitalHipotecas);
+	};  
 
   $scope.buscarTitulo = function(){
     var foja = $scope.busquedaTitulo.foja,
@@ -114,37 +118,29 @@ app.controller('DigitalHipotecasCtrl', function ($rootScope, $scope, $timeout, $
           //tiene rechazo
           $scope.openSolicitar();
 
-        }else if(!data.estado.fna){
         	
-        	$scope.openSolicitar();   
         
-        }else if(!data.consultaDocumentoDTO.hayDocumento){
+        }else if(!data.consultaDocumentoDTO.hayDocumento && !$scope.esMalCitadaDesde()){
           //no tiene imagen y es solicitable 1
-
           //TODO: no tiene imagen y es solicitable
-
           $scope.openSolicitar();
-
-
         }else if(data.consultaDocumentoDTO.hayDocumento &&
           (data.consultaDocumentoDTO.tipoDocumento===9 || data.consultaDocumentoDTO.tipoDocumento===10)){
           //tiene imagen y es solicitable 2
 
           //TODO: ver referencial o solicitar?
 
-          if(data.seDigitalizoEnElDia){
-        	digitalHipotecasModel.setDataState(data);
-          	$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
-          }else{	
           	$scope.openSolicitar();
-          }
+
 
         }else if(data.consultaDocumentoDTO.hayDocumento && data.consultaDocumentoDTO.tipoDocumento===8){
           //esta digitalizada 3
 
         	digitalHipotecasModel.setDataState(data);
           $scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
-        }
+        }else {
+			$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
+		}
 
       }else{
         $scope.raiseErr('titulo','Problema detectado', data.msg);

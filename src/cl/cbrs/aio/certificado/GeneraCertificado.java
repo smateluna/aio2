@@ -70,6 +70,7 @@ public class GeneraCertificado {
 	public static String INSCRIPCION_SIN_VIGENCIA= "12";
 	public static String REG_PROPIEDADES= "Propiedad";
 	public static String REG_HIPOTECAS= "Hipoteca";
+	public static String REG_PROHIBICIONES= "Interdicciones y Prohibiciones de Enajenar";
 	public static String ERROR_DE_OFICINA= "13";
 
 	public void crearCertificado(CaratulaVO caratulaVO, boolean firmar, boolean enParte,String tipo, String usuario) throws Exception {
@@ -106,6 +107,51 @@ public class GeneraCertificado {
 				nombreDocumento = "CPS_" + caratulaVO.getNumeroCaratula()+ ".pdf";
 				prefijo = "CPS_";
 			}
+			
+			if(caratulaVO.getInscripciones()!=null && caratulaVO.getInscripciones()[0]!=null 
+					&& caratulaVO.getInscripciones()[0].getRegistro()!=null 
+					&& caratulaVO.getInscripciones()[0].getRegistro().intValue()==2)
+			{
+				if(tipo.equals(INS_CON_VIGENCIA.toString())){
+					nombreDocumento = "CHV_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CHV_";
+				}else if(tipo.equals(INS_SIN_VIGENCIA.toString())){
+					nombreDocumento = "CHS_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CHS_";
+				}else if(tipo.equals(ERROR_DE_OFICINA)){
+					nombreDocumento = "CEH_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CEH_";
+				}else if(caratulaVO.getTipoFormulario().getTipo().equals(INS_CON_VIGENCIA)){
+					nombreDocumento = "CHV_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CHV_";
+				}else if(caratulaVO.getTipoFormulario().getTipo().equals(INS_SIN_VIGENCIA)){
+					nombreDocumento = "CHS_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CHS_";
+				}				
+			}
+			
+			if(caratulaVO.getInscripciones()!=null && caratulaVO.getInscripciones()[0]!=null 
+					&& caratulaVO.getInscripciones()[0].getRegistro()!=null 
+					&& caratulaVO.getInscripciones()[0].getRegistro().intValue()==3)
+			{
+				if(tipo.equals(INS_CON_VIGENCIA.toString())){
+					nombreDocumento = "CXV_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CXV_";
+				}else if(tipo.equals(INS_SIN_VIGENCIA.toString())){
+					nombreDocumento = "CXS_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CXS_";
+				}else if(tipo.equals(ERROR_DE_OFICINA)){
+					nombreDocumento = "CEX_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CEX_";
+				}else if(caratulaVO.getTipoFormulario().getTipo().equals(INS_CON_VIGENCIA)){
+					nombreDocumento = "CXV_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CXV_";
+				}else if(caratulaVO.getTipoFormulario().getTipo().equals(INS_SIN_VIGENCIA)){
+					nombreDocumento = "CXS_" + caratulaVO.getNumeroCaratula()+ ".pdf";
+					prefijo = "CXS_";
+				}				
+			}
+				
 
 			logger.debug("nombreDocumento:"+nombreDocumento);
 			//TODO cambiar a llamada a webservice
@@ -328,7 +374,9 @@ public class GeneraCertificado {
 			parametros1.put("NUMERO", ins[0].getNumero().toString());
 			parametros1.put("ANO", ins[0].getAno().toString());
 			parametros1.put("BIS", bis);
-			if(caratulaVO.getInscripciones()[0].getRegistro() == 2)
+			if(caratulaVO.getInscripciones()[0].getRegistro() == 3)
+				parametros1.put("REGISTRO", REG_PROHIBICIONES);
+			else if(caratulaVO.getInscripciones()[0].getRegistro() == 2)
 				parametros1.put("REGISTRO", REG_HIPOTECAS);
 			else
 				parametros1.put("REGISTRO", REG_PROPIEDADES);

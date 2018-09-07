@@ -3,7 +3,7 @@
 app.controller('CitadoModalCtrl', function ($log, $rootScope, $scope, $modal, $modalInstance, $modalStack, $window, $timeout, data, estadoService) {
 
 	$scope.data = data;
-	$scope.inscripcion = angular.copy($scope.data.res.caratulaDTO.citadoDTO);
+	$scope.inscripcion = angular.copy($scope.data.res.caratulaDTO.citadoDTOs[0]);
 	$scope.listaRegistros = [
 	    {id:1, descripcion:'Propiedad'},
 	    {id:2, descripcion:'Hipotecas'},
@@ -28,7 +28,7 @@ app.controller('CitadoModalCtrl', function ($log, $rootScope, $scope, $modal, $m
       if(data.status==null){
 
       }else if(data.status){
-    	$scope.data.res.caratulaDTO.citadoDTO = $scope.inscripcion;
+    	$scope.data.res.caratulaDTO.citadoDTOs[0] = $scope.inscripcion;
     	$scope.data.res.caratulaDTO.bitacoraDTOs.unshift(data.bitacoraDTO);
 		$scope.closeModal();
         $scope.openMensajeModal('success','Datos citado modificados exitosamente', '',  false, null);

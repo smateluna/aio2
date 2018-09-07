@@ -516,10 +516,10 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 	public void printNotas(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {	
 
-		String idNotasP = request.getParameter("idNotas");
 		String fojasP = request.getParameter("fojas");
 		String numeroP = request.getParameter("numero");
 		String anoP = request.getParameter("ano");
+		String bisP = request.getParameter("bis");
 		String registroP = request.getParameter("registro");
 		
 		ServletOutputStream out = null;
@@ -533,32 +533,14 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 			InputStream in = null;
 			
 			if(registroP.toLowerCase().equals("prop")){					
-				ArrayList<AnotacionVO> listaAnotaciones = new ArrayList<AnotacionVO>();
-				String[] idNotas = idNotasP.split(",");
-				for(int i=0; i<idNotas.length; i++){
-					AnotacionVO anotacionVO = digitalDelegate.obtenerAnotacion(new Long(idNotas[i]));
-					listaAnotaciones.add(anotacionVO);
-				}
-				AnotacionVO[] anotaciones = listaAnotaciones.toArray(new AnotacionVO[listaAnotaciones.size()]);
-				in = notaElectronicaUtil.getNotasInscripcion(anotaciones, new Long(fojasP), numeroP, new Long(anoP));
+				List<AnotacionVO> listaAnotaciones = digitalDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcion(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
 			} else if(registroP.toLowerCase().equals("hip")){								
-				ArrayList<cl.cbrs.inscripciondigitalh.vo.AnotacionVO> listaAnotaciones = new ArrayList<cl.cbrs.inscripciondigitalh.vo.AnotacionVO>();
-				String[] idNotas = idNotasP.split(",");
-				for(int i=0; i<idNotas.length; i++){
-					cl.cbrs.inscripciondigitalh.vo.AnotacionVO anotacionVO = digitalHDelegate.obtenerAnotacion(new Long(idNotas[i]));
-					listaAnotaciones.add(anotacionVO);
-				}
-				cl.cbrs.inscripciondigitalh.vo.AnotacionVO[] anotaciones = listaAnotaciones.toArray(new cl.cbrs.inscripciondigitalh.vo.AnotacionVO[listaAnotaciones.size()]);
-				in = notaElectronicaUtil.getNotasInscripcion(anotaciones, new Long(fojasP), numeroP, new Long(anoP));
+				List<cl.cbrs.inscripciondigitalh.vo.AnotacionVO> listaAnotaciones = digitalHDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcionH(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
 			} else{								
-				ArrayList<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> listaAnotaciones = new ArrayList<cl.cbrs.inscripciondigitalph.vo.AnotacionVO>();
-				String[] idNotas = idNotasP.split(",");
-				for(int i=0; i<idNotas.length; i++){
-					cl.cbrs.inscripciondigitalph.vo.AnotacionVO anotacionVO = digitalPHDelegate.obtenerAnotacion(new Long(idNotas[i]));
-					listaAnotaciones.add(anotacionVO);
-				}
-				cl.cbrs.inscripciondigitalph.vo.AnotacionVO[] anotaciones = listaAnotaciones.toArray(new cl.cbrs.inscripciondigitalph.vo.AnotacionVO[listaAnotaciones.size()]);
-				in = notaElectronicaUtil.getNotasInscripcion(anotaciones, new Long(fojasP), numeroP, new Long(anoP));
+				List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> listaAnotaciones = digitalPHDelegate.obtenerAnotacionesInscripcion(new Long(fojasP), numeroP, new Long(anoP), new Boolean(bisP));
+				in = notaElectronicaUtil.getNotasInscripcionPH(listaAnotaciones, new Long(fojasP), numeroP, new Long(anoP));
 			}
 			
 			out = response.getOutputStream();			    

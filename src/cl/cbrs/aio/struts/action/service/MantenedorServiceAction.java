@@ -119,6 +119,29 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 						usuarios.add(fila);
 					}
 				}	
+			}
+			
+			//cbrlogin - Certificador Prohibiciones
+			requestUsuario.setSistema(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+			requestUsuario.setNombrePerfil("CERTIFICADOR PROHIBICIONES");
+
+			usuarioResponse = delegate.obtenerUsuariosPerfil(requestUsuario);
+
+			listaUsuariosVOs = usuarioResponse.getUsuarioPerfil();
+			if(listaUsuariosVOs!=null){ 
+				if(listaUsuariosVOs.length>0){
+					for(int i=0;i<listaUsuariosVOs.length;i++){
+						UsuarioPerfilVO usuarioPerfilVO = listaUsuariosVOs[i];
+						JSONObject fila = new JSONObject();
+						fila.put("usuario", usuarioPerfilVO.getUsuario());
+						fila.put("estado", usuarioPerfilVO.isActivo());
+						fila.put("perfil", usuarioPerfilVO.getPerfil());
+						fila.put("nombreUsuario", usuarioPerfilVO.getNombreUsuario());
+						fila.put("cantidadcaratulas", usuarioPerfilVO.getCantidadCaratulas());
+						fila.put("cantidadasignada", usuarioPerfilVO.getCantidadAsignadas());
+						usuarios.add(fila);
+					}
+				}	
 			}			
 			
 			status = true;
@@ -204,7 +227,14 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 		try{
 			nombreUsuario = nombreUsuario.trim();
 			perfil = perfil.trim();
-			String seccion = perfil.equalsIgnoreCase("CERTIFICADOR")? "C3":"CH";
+			String seccion = "";
+			
+			if(perfil.equalsIgnoreCase("CERTIFICADOR"))
+				seccion="C3";
+			else if(perfil.equalsIgnoreCase("CERTIFICADOR HIPOTECAS"))
+				seccion="CH";
+			else if(perfil.equalsIgnoreCase("CERTIFICADOR PROHIBICIONES"))
+				seccion="P1";
 			
 			//cbrlogin
 			ServiciosUsuariosDelegate delegateUsuario = new ServiciosUsuariosDelegate();
@@ -219,8 +249,10 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 						distribuirCertPropRequest.setCaratulaVO(caratulaVO);
 						DistribuirCertPropResponse distribuirCertPropResponse = delegateUsuario.distribuirCertProp(distribuirCertPropRequest);
 						rutUsuarioAsignado = distribuirCertPropResponse.getRut();
-					} else{
+					} else if(perfil.equalsIgnoreCase("CERTIFICADOR HIPOTECAS")){
 						rutUsuarioAsignado = distribuirCertHipo();
+					} else if(perfil.equalsIgnoreCase("CERTIFICADOR PROHIBICIONES")){
+						rutUsuarioAsignado = distribuirCertProh();
 					}
 					
 					
@@ -285,6 +317,25 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 		
 		return rut;
 	}	
+	
+	private String distribuirCertProh() throws Exception{
+		
+		Client client = Client.create();
+		String ip = TablaValores.getValor(TABLA_PARAMETROS, "IP_WS", "valor");
+		String port = TablaValores.getValor(TABLA_PARAMETROS, "PORT_WS", "valor");
+		
+		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/UsuariosRest/usuario/distribuirCertProh"));
+
+		ClientResponse clientResponse = wr.type(MediaType.TEXT_HTML).get(ClientResponse.class);
+		com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
+
+		String rut = null;
+		if(statusRespuesta.getStatusCode() == 200){
+			rut = getResponse(clientResponse).toString();
+		}
+		
+		return rut;
+	}		
 	
 	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
 		Object respuesta = null;

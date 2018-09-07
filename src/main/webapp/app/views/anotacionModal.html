@@ -13,53 +13,84 @@
                 </select>
 
             </div>
-            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion==0">
+            <div class="form-group" ng-if="soloTexto">
                 <label for="texto">Texto</label>
                 <textarea class="form-control" rows="7" ng-model="anotacion.texto" id="texto" name="texto" focus-input ="textoIsFocused"
                           loading-state="savingAnotacion" required="required"></textarea>
             </div>
 
-            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+            <div class="form-group" ng-if="!soloTexto">
                <div class="row">
-               <div class="col-md-12">
-                <label for="caratula" style="display: block;"> Carátula <span class="peque pull-right">Versión</span>
-                </label>
-                </div>
+               		<div class="col-md-12">
+                		<label for="caratula" style="display: block;"> Carátula <span class="peque pull-right">Versión</span>
+                		</label>
+               		</div>
               </div>
            
-            <div class="row">
-               <div class="col-md-10">
+              <div class="row">
+               	<div class="col-md-10">
                   <input type="text" class="form-control" ng-model="anotacion.caratula" id="caratula" loading-state="savingAnotacion"
                        name="caratula" placeholder="" maxlength="8" numbers-only="numbers-only" focus-input ="caratulaIsFocused" required="required" ng-blur="getRepertorioCaratula()">
                 </div>
                 <div class="col-md-2">
 				<input type="text" class="form-control" ng-model="anotacion.version" id="version" loading-state="savingAnotacion"
-                       name="version" placeholder="" maxlength="3" numbers-only="numbers-only">
-                  
+                       name="version" placeholder="" maxlength="3" numbers-only="numbers-only">                  
                  </div>
               </div>
-
             </div>
 
-            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+            <div class="form-group" ng-if="!soloTexto">
                 <label for="repertorio"> Repertorio
                 </label> <input type="text" class="form-control" ng-model="anotacion.repertorio" id="repertorio" loading-state="savingAnotacion"
                                 name="repertorio" placeholder="" maxlength="8" numbers-only="numbers-only" required="required">
             </div>
 
-            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=3 && anotacion.selectedTipo.valorAnotacion!=4 && anotacion.selectedTipo.valorAnotacion!=11">
+			<!-- opciones para prohibiciones -->
+			<div ng-if="parametros.registro=='proh' && !soloTexto">
+            	<div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0 && anotacion.selectedTipo.valorAnotacion!=19">
+                	<label for="fechaNotario"> Fecha Notario
+                	</label> <input type="date" class="form-control" ng-model="anotacion.fechaNotario" id="fechaNotario" loading-state="savingAnotacion"
+                                name="fechaNotario" placeholder="">
+            	</div>
+
+            	<div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0 && anotacion.selectedTipo.valorAnotacion!=19">
+                	<label for="repertorio"> Repertorio Notarial
+                	</label> <input type="text" class="form-control" ng-model="anotacion.repertorioNotarial" id="borrador" loading-state="savingAnotacion"
+                                name="borrador" placeholder="" numbers-only="numbers-only">
+            	</div>
+
+            	<div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0 && anotacion.selectedTipo.valorAnotacion==19">
+                	<label for="inscripciones"> Inscripci&oacute;n</label>
+					<div>
+                		Fojas: <input type="text" style="width:100px" ng-model="anotacion.foja" id="foja" loading-state="savingAnotacion" name="foja" placeholder="" numbers-only="numbers-only" required="required">
+                		N&uacute;mero: <input type="text" style="width:100px" ng-model="anotacion.numero" id="foja" loading-state="savingAnotacion" name="numero" placeholder="" numbers-only="numbers-only" required="required">
+						A&ntilde;o: <input type="text" style="width:100px" ng-model="anotacion.ano" id="ano" loading-state="savingAnotacion" name="ano" placeholder="" numbers-only="numbers-only" required="required">
+					</div>
+            	</div>
+
+            	<div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+                	<label for="repertorio"> Borrador
+                	</label> <input type="text" class="form-control" ng-model="anotacion.borrador" id="borrador" loading-state="savingAnotacion"
+                                name="borrador" placeholder="" numbers-only="numbers-only">
+            	</div>
+			</div>
+
+
+
+
+            <div class="form-group" ng-if="!soloTexto && anotacion.selectedTipo.valorAnotacion!=0 && anotacion.selectedTipo.valorAnotacion!=3 && anotacion.selectedTipo.valorAnotacion!=4 && anotacion.selectedTipo.valorAnotacion!=11">
                 <label for="repertorio"> Texto Libre </label>
                 <textarea class="form-control" rows="2" ng-model="anotacion.texto" id="textoRep" name="textoRep" focus-input ="textoRepIsFocused"
                           loading-state="savingAnotacion"></textarea> 
             </div>
 
-            <div class="form-group" ng-if="anotacion.selectedTipo.valorAnotacion!=0">
+            <div class="form-group" ng-if="!soloTexto">
                 <label for="fecha"> Fecha
                 </label> <input type="date" class="form-control" ng-model="anotacion.fecha" id="fecha" loading-state="savingAnotacion"
                                 name="repertorio" placeholder="" required="required">
             </div>
 			
-			<div class="form-group">
+			<div class="form-group" ng-if="parametros.registro=='prop'">
 		   	  <label><input type="checkbox" ng-click="titulosanteriores()" ng-model="anotacion.anotacionMasiva" class="icheck"> Anotación Masiva</label> 
 			</div>
 		</div>
@@ -119,7 +150,8 @@
 												{{titulo.anio}}												
 											</td>
 											<td class="text-left">
-												<button tooltip="Ver" ng-if="titulo.consultaDocumentoDTO.hayDocumento==true && titulo.consultaDocumentoDTO.tipoDocumento==8" type="button" class="btn btn-primary btn-xs"
+												<!--<button tooltip="Ver" ng-if="titulo.consultaDocumentoDTO.hayDocumento==true && titulo.consultaDocumentoDTO.tipoDocumento==8" type="button" class="btn btn-primary btn-xs"-->
+												<button tooltip="Ver" type="button" class="btn btn-primary btn-xs"
 													ng-click="verInscripcion(titulo)"
 													ng-show="titulo.idInscripcion!=''">
 													<i class="fa fa-search"></i>

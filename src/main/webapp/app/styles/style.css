@@ -714,7 +714,6 @@ body.modal-open,
 }
 /*Vertical Navigation*/
 .cl-sidebar {
-  background: #272930;
   position: absolute;
   width: 216px;
   z-index: 501;
@@ -740,16 +739,18 @@ body.modal-open,
 .cl-vnavigation .parent a {
   background: url("../images/arrow.png") no-repeat scroll right 14px top 18px transparent;
 }
-.cl-vnavigation li a {
+/* .cl-vnavigation li a {
 display: block;
 padding: 12px 15px 12px 15px;
 color: #ACACAC;
+color: #363b44;
 font-size: 14px;
 white-space: nowrap;
 font-family: 'allerregular';
-}
+} */
 .cl-vnavigation li a:hover {
-  color: #E0E0E0;
+    color: #838a98;
+    background: #f5f5f5;
 }
 /*Collapsed Sidebar*/
 .sb-collapsed .cl-sidebar {
@@ -799,14 +800,14 @@ font-family: 'allerregular';
 }
 
 
-.cl-sidebar .collapse-button {
-  background: #1F2126;
-  position: fixed;
-  width: 216px;
+/* .cl-sidebar .collapse-button {
+  background: #4d7ac1;
+    position: fixed;
+    width: 216px;
     transition: width 0.2s;
-  bottom: 0;
-  border-top: 1px solid #131519;
-  box-shadow: 0 1px 0 #2A2C31 inset;
+    bottom: 0;
+    border-top: 1px solid #4d7ac1;
+    box-shadow: 0 1px 0 #385396 inset;
 }
 .cl-sidebar .collapse-button .search {
   width: 155px;
@@ -823,21 +824,21 @@ font-family: 'allerregular';
   margin: 0 !important;
   background: transparent;
   box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1) inset;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border:1px solid rgb(195, 195, 206);
   border-radius: 2px;
 }
 .cl-sidebar .collapse-button button:hover {
-  background: #23252A;
-}
-#cl-wrapper.fixed-menu .menu-space {
+  background: #6995da;
+    border: 1px solid #4c7ac2;
+} */
+/* #cl-wrapper.fixed-menu .menu-space {
   position: fixed;
   width: 216px;
-    transition: width 0.2s;
-
-    /*background: #272930;*/
-
-    background: #384047;
-}
+  transition: width 0.2s;
+  background: #272930;
+  border-right: 1px solid #c7c7c7;
+  background:#ffffff;
+} */
 #cl-wrapper.fixed-menu .menu-space .content {
   outline: none;
 }
@@ -956,12 +957,13 @@ font-family: 'allerregular';
 	
 */
 /*End Collapsed*/
-.cl-vnavigation li a i {
+/* .cl-vnavigation li a i {
   text-align: center;
   width: 20px;
   font-size: 14px;
   margin-right: 7px;
-}
+  color: #6a83ad;
+} */
 .cl-vnavigation li a span {
   display: inline-block;
 }
@@ -1004,7 +1006,7 @@ font-family: 'allerregular';
   border-left: 1px solid #2494F2;
 }
 .cl-vnavigation .selected:hover a {
-  background-color:#475c80;
+  background-color:#dfe1e4;
 }
 .cl-vnavigation .selected:hover ul a {
   background-color: #1A1C20;
@@ -5601,10 +5603,10 @@ ul.timeline li > .date {
   .cl-vnavigation .parent a {
     background: none;
   }
-  .cl-vnavigation li a i {
+  /* .cl-vnavigation li a i {
     margin: 0;
     font-size: 17px;
-  }
+  } */
   .cl-vnavigation li a span {
     opacity: 0;
     width: 0;
@@ -6013,4 +6015,253 @@ margin-bottom: 3px;
 	margin-top: 5px;
 	font-family: allerregular;
 	font-weight: normal; 
+}
+.prop-color .primary-heading{
+	background: black !important;
+}
+.prop-color .primary-heading h1{
+	color: white !important;
+	margin-top: 6px;
+    margin-bottom: 06px;
+}
+.propProh-color .primary-heading{
+	background: #57a057 !important;
+}
+.propProh-color .primary-heading h1{
+	color: white !important;
+	margin-top: 6px;
+    margin-bottom: 06px;
+}
+
+.propHipo-color .primary-heading{
+	background: #ea5050 !important;
+}
+.propHipo-color .primary-heading h1{
+	color: white !important;
+	margin-top: 6px;
+    margin-bottom: 06px;
+}
+
+
+/* menú */
+#cl-wrapper.fixed-menu .menu-space {
+    position: fixed;
+    width: 216px;
+    transition: width 0.2s;
+}
+.cl-vnavigation li a {
+    display: block;
+    padding: 12px 15px 12px 15px;
+    font-size: 14px;
+    white-space: nowrap;
+    font-family: 'allerregular';
+}
+.cl-vnavigation li a i {
+    text-align: center;
+    width: 20px;
+    font-size: 14px;
+    margin-right: 7px;
+}
+
+.cl-sidebar .collapse-button {
+    position: fixed;
+    width: 216px;
+    transition: width 0.2s;
+    bottom: 0;
+}
+.cl-sidebar .collapse-button .search {
+  width: 155px;
+  display: inline-block;
+  margin-right: 3px;
+  border-radius: 2px;
+  height: 33px;
+  font-size: 11px;
+}
+.cl-sidebar .collapse-button button {
+  margin: 0 !important;
+  background: transparent;
+  border-radius: 2px;
+}
+
+
+/*default*/
+
+#cl-wrapper.fixed-menu .default-color .menu-space {
+    border-right: 1px solid #c7c7c7;
+    background: #ffffff;
+}
+.default-color .cl-vnavigation li a {
+	color: #363b44;
+}
+.default-color .cl-vnavigation li a i {
+	color: #6a83ad;
+}
+.default-color .cl-vnavigation li.selected a {
+    color: #000000;
+    background-color: #d7dde4;
+    border-top: 1px solid #abc2da;
+    border-bottom: 1px solid #abc2da;
+}
+.default-color .cl-vnavigation li a:hover {
+    color: #4e5563;
+    background: #d7dde5de;
+}
+
+.default-color .collapse-button {
+    background: #4d7ac1;
+    border-top: 1px solid #4d7ac1;
+    box-shadow: 0 1px 0 #385396 inset;
+}
+
+.default-color .collapse-button .search {
+  background: none repeat scroll 0 0 #13151D;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.15) inset;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.default-color .collapse-button button {
+  box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1) inset;
+  border:1px solid rgb(56, 96, 158);
+}
+.default-color .collapse-button button:hover {
+  background: #6995da;
+  border: 1px solid #4c7ac2;
+}
+
+
+/*dark*/
+
+#cl-wrapper.fixed-menu .dark-color .menu-space {
+    background: #2f323c;
+    border-right: 1px solid #c7c7c7;
+}
+
+.dark-color .cl-vnavigation li a {
+    color: #ACACAC;
+}
+.dark-color .cl-vnavigation li a i {
+    color: #6b7079;
+}
+.dark-color .cl-vnavigation li.selected a {
+    color: #d6d6d6;
+    background-color: #4e5b6f;
+    border-bottom: 1px solid #626e7d;
+    border-top: 1px solid #626e7d;
+}
+.dark-color .cl-vnavigation li a:hover {
+    color: #aaaaaa;
+    background: #3d404e;
+}
+.dark-color .cl-vnavigation .selected:hover a {
+    background-color: #414d5f;
+}
+
+.dark-color .collapse-button {
+    background: #4e5d73;
+    border-top: 1px solid #808182;
+    box-shadow:0 1px 0 #4b5361 inset;
+}
+
+.dark-color .collapse-button .search {
+  background: none repeat scroll 0 0 #13151D;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.15) inset;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.dark-color .collapse-button button {
+  box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1) inset;
+  border:1px solid rgb(124, 134, 150);
+}
+.dark-color .collapse-button button:hover {
+  background: #7388a9;
+  border: 1px solid #425a80;
+}
+
+/*blue*/
+
+#cl-wrapper.fixed-menu .blue-color .menu-space {
+    border-right: 1px solid #325792;
+    background: #385d98;
+}
+
+.blue-color .cl-vnavigation li a {
+    color: #b8c9e6;
+}
+.blue-color .cl-vnavigation li a i {
+    color: #7d95bd;
+}
+.blue-color .cl-vnavigation li.selected a {
+    color: #e6ecf5;
+    background-color: #2e476f;
+    border-bottom: 1px solid #4f70a5;
+    border-top: 1px solid #4f70a5;
+}
+.blue-color .cl-vnavigation li a:hover {
+    color: #c8d5ef;
+    background: #5478b3;
+}
+.blue-color .cl-vnavigation .selected:hover a {
+    background-color: #496ba0;
+}
+
+
+.blue-color .cl-sidebar .collapse-button {
+    background: #223554;
+    border-top: 1px solid #09121f;
+    box-shadow: 0 1px 0 #385396 inset;
+}
+.blue-color .cl-sidebar .collapse-button button {
+    box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1) inset;
+    border: 1px solid rgb(139, 142, 146);
+}
+
+.blue-color .cl-sidebar .collapse-button button:hover {
+    background: #304871;
+    border: 1px solid #4c76b9;
+}
+.blue-color .collapse-button {
+    background: #2b4369;
+    border-top: 1px solid #5271a7;
+    box-shadow: 0 1px 0 #354256 inset;
+}
+
+.blue-color .collapse-button .search {
+  background: none repeat scroll 0 0 #13151D;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.15) inset;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.blue-color .collapse-button button {
+  box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1) inset;
+  border:1px solid rgb(88, 120, 171);
+}
+.blue-color .collapse-button button:hover {
+ background: #496ea9;
+    border: 1px solid #293e5f;
+}
+
+.cBlack{
+  color: black;
+}
+.cBlack:hover{
+  color: black;
+  cursor:pointer;
+}
+.cBlue2{
+  color:#a8c9ff;
+}
+.cBlue2:hover{
+  color:#a8c9ff;
+  cursor:pointer;
+}
+.cWhite{
+   color: white;
+}
+.cWhite:hover{
+   color: white;
+   cursor:pointer;
+}
+
+.floatLeft{
+	float: left;
 }

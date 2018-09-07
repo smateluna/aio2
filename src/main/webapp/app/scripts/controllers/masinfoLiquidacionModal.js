@@ -33,7 +33,7 @@ app.controller('masInfoLiquidacionModalCtrl', function ($rootScope, $scope,$rout
 	$scope.downloadFirma = function(documentoEntrega) {console.log(documentoEntrega);
 		var documento ={
 			"nombreArchivo": documentoEntrega.nombreArchivoVersion,
-			"fechaDocumento": documentoEntrega.fechaPdf,
+			"fechaDocumento": documentoEntrega.fechaFirma,
 			"rutFirmador": documentoEntrega.usuario
 		};
 		

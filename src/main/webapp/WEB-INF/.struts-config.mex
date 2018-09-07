@@ -28,6 +28,7 @@
   <StrutsActivity path="/do/service/carteles" location="650,1450" dimension="316,96" />
   <StrutsActivity path="/do/service/distribucion" location="50,1650" dimension="338,96" />
   <StrutsActivity path="/do/service/certificacion" location="650,1650" dimension="341,96" />
+  <StrutsActivity path="/do/service/certificacionHipotecas" location="1550,2250" dimension="394,96" />
   <StrutsActivity path="/do/service/desbloqueo" location="350,2450" dimension="337,96" />
   <StrutsActivity path="/do/service/tareas" location="650,2050" dimension="308,96" />
   <StrutsActivity path="/do/service/uaf" location="1250,1850" dimension="292,96" />
@@ -42,7 +43,7 @@
   <StrutsActivity path="/login/index.jsp" location="1250,1250" dimension="113,51" />
   <StrutsActivity path="/l" location="1250,1450" dimension="38,51" />
   <StrutsActivity path="/app/index.html\#/gponline" location="1250,1650" dimension="180,51" />
-  <StrutsActivity path="/do/service/certificacionHipotecas" />
+  <StrutsActivity path="/do/service/util" />
   <StrutsTransition id="/do/service/gponline,gponline,/app/index.html#/gponline,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="211,1898" />

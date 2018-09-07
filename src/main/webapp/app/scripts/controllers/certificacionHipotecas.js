@@ -427,4 +427,19 @@ app.controller('CertificacionHipotecasCtrl', function ($scope,$timeout,$rootScop
 	      $scope.raiseErr('buscar','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
 	    });
 	};
+	
+	$scope.verEstadoCaratula = function(numeroCaratula){
+		$modal.open({
+			templateUrl: 'estadoIndiceModal.html',
+			backdrop: 'static',
+			windowClass: 'modal modal-dialog-xl', 
+			controller: 'EstadoIndiceModalCtrl',
+			size: 'lg',
+			resolve: {  
+				numeroCaratula : function(){
+					return parseInt(numeroCaratula);
+				}
+			}
+		});
+	}; 	
 });

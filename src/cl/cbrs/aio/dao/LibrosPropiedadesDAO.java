@@ -30,7 +30,7 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 		try {
 			conn = this.conexionFlujo();
 	
-			String sql = "select ID, CUADERNILLO, USUARIO, FECHA from Libros_Propiedades.dbo.DESPACHO_CUADERNILLO " +
+			String sql = "select ID, CUADERNILLO, ANO, USUARIO, FECHA from Libros_Propiedades.dbo.DESPACHO_CUADERNILLO " +
 			"where fecha>='" + sdf.format(fechaIni) + " 00:00:00' and fecha <='" + sdf.format(fechaFin) + " 23:59:59'";
 	
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -42,12 +42,14 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 				String usuario = rs.getString("USUARIO");
 				Date fecha = rs.getTimestamp("FECHA");
 				Integer cuadernillo = rs.getInt("CUADERNILLO");
+				Integer ano = rs.getInt("ANO");
 				
 				DespachoCuadernilloDTO despachoCuadernilloDTO = new DespachoCuadernilloDTO();
 				despachoCuadernilloDTO.setId(id);
 				despachoCuadernilloDTO.setCuadernillo(cuadernillo);
 				despachoCuadernilloDTO.setFecha(fecha);
 				despachoCuadernilloDTO.setUsuario(usuario);
+				despachoCuadernilloDTO.setAno(ano);
 				
 				listaDespachoCuadernilloDTO.add(despachoCuadernilloDTO);
 			}           
@@ -70,7 +72,7 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 		return listaDespachoCuadernilloDTO;
 	}  	
 	
-	public DespachoCuadernilloDTO obtenerDespachoCuadernillo(Integer cuadernillo) throws Exception{
+	public DespachoCuadernilloDTO obtenerDespachoCuadernillo(Integer cuadernillo, Integer ano) throws Exception{
 		DespachoCuadernilloDTO despachoCuadernilloDTO = null;
 		Connection conn = null;
 		ResultSet rs = null;
@@ -79,7 +81,7 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 			conn = this.conexionFlujo();
 	
 			String sql = "select ID, CUADERNILLO, USUARIO, FECHA from Libros_Propiedades.dbo.DESPACHO_CUADERNILLO " +
-			"where cuadernillo=" + cuadernillo;
+			"where cuadernillo=" + cuadernillo + " and ano="+ano;
 	
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
@@ -95,6 +97,7 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 				despachoCuadernilloDTO.setCuadernillo(cuadernillo);
 				despachoCuadernilloDTO.setFecha(fecha);
 				despachoCuadernilloDTO.setUsuario(usuario);
+				despachoCuadernilloDTO.setAno(ano);
 			}           
 		} finally {
 			if (conn != null) {
@@ -122,8 +125,9 @@ public class LibrosPropiedadesDAO extends AbstractJdbcDao {
 		try {
 			conn = this.conexionFlujo();
 			String sql = "insert into Libros_Propiedades.dbo.DESPACHO_CUADERNILLO ( " +
-						"CUADERNILLO, USUARIO, FECHA) VALUES ( " +
+						"CUADERNILLO, ANO, USUARIO, FECHA) VALUES ( " +
 						dto.getCuadernillo() + ", " +
+						dto.getAno() + ", " +
 						"'" + dto.getUsuario() + "', " +
 						"'" + sdf.format(dto.getFecha())+"'"+
 						")";

@@ -1,8 +1,8 @@
 'use strict';
 
 app.controller('ModificaAnotacionModalCtrl', function ($rootScope, $scope, $sce, $modalInstance, $timeout, $window, $modalStack,
-                                                taOptions,inscripcionDigitalService, AnotacionService,nota,inscripcionDigitalDTO,anotaciones,notas,origen, paginacionNotas) {
-
+                                                taOptions,inscripcionDigitalService, inscripcionDigitalHipotecasService, inscripcionDigitalProhibicionesService, AnotacionService, AnotacionHipotecasService, AnotacionProhibicionesService,nota,inscripcionDigitalDTO,anotaciones,notas,origen, paginacionNotas) {
+																																				
   $scope.servicioAnotacion = origen=="digital"?AnotacionService:origen=="digitalHipotecas"?AnotacionHipotecasService:AnotacionProhibicionesService;
   $scope.servicioInscripcion = origen=="digital"?inscripcionDigitalService:origen=="digitalHipotecas"?inscripcionDigitalHipotecasService:inscripcionDigitalProhibicionesService;
 	
@@ -95,7 +95,7 @@ app.controller('ModificaAnotacionModalCtrl', function ($rootScope, $scope, $sce,
       msg: null
     };
     
-    var promise = AnotacionService.modificaAnotacion($scope.anotacion.texto,$scope.anotacion.caratula,$scope.anotacion.version,nota.idAnotacion);
+    var promise = $scope.servicioAnotacion.modificaAnotacion($scope.anotacion.texto,$scope.anotacion.caratula,$scope.anotacion.version,nota.idAnotacion);
     promise.then(function(data) {
       if(data.status===null){
         $window.location.href = $window.location.protocol+'//'+$window.location.host+$window.location.pathname;

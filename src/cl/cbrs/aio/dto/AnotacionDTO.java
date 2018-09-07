@@ -23,6 +23,7 @@ public class AnotacionDTO implements JSONAware, Serializable{
 	private Date fechaFirma;
 	private Date fechaAprobacion;
 	private Long idAnotacion;
+	private Long idNota;
 	private Long idUsuarioCreador;
 	private Long idUsuarioFirmador;
 	private InscripcionDigitalDTO inscripcionDigitalByIdInscripcionDestinoDTO;
@@ -188,10 +189,13 @@ public class AnotacionDTO implements JSONAware, Serializable{
 	
 		sb.append("\"idAnotacion\"");
 		sb.append(":");
-
 		sb.append(this.idAnotacion);
-
 		sb.append(",");	
+		
+		sb.append("\"idNota\"");
+		sb.append(":");
+		sb.append(this.idNota);
+		sb.append(",");			
 		
 		sb.append("\"tipoAnotacionDTO\"");
 		sb.append(":");
@@ -490,5 +494,13 @@ public class AnotacionDTO implements JSONAware, Serializable{
 
 	public void setFolio(Integer folio) {
 		this.folio = folio;
+	}
+
+	public Long getIdNota() {
+		return idNota;
+	}
+
+	public void setIdNota(Long idNota) {
+		this.idNota = idNota;
 	}
 }

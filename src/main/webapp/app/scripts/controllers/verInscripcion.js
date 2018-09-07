@@ -13,7 +13,8 @@ app
 		inscripcionDigitalService, inscripcionDigitalHipotecasService, borradorService,inscripcionDigitalProhibicionesService, 
 		indiceService, 
 		digitalModel, digitalHipotecasModel, digitalProhibicionesModel,filterFilter) {
-
+		
+		$scope.reverseNotas=$routeParams.reverseNotas;
 		$scope.hoy = moment().format('DD/MM/YYYY');
 		$scope.data = {};
 		$scope.anotaciones = [];
@@ -86,6 +87,14 @@ app
 		$scope.servicioAnotacion = $scope.parametros.registro=="prop"?AnotacionService:$scope.parametros.registro=="hip"?AnotacionHipotecasService:AnotacionProhibicionesService;
 		$scope.modeloDigital = $scope.parametros.registro=="prop"?digitalModel:$scope.parametros.registro=="hip"?digitalHipotecasModel:digitalProhibicionesModel;	
 		$scope.inscripcionDigital = $scope.parametros.registro=="prop"?"inscripcionDigital":$scope.parametros.registro=="hip"?"inscripcionDigitalHipotecas":"inscripcionDigitalProhibiciones";
+		
+		$timeout(function(){
+			if($rootScope.aioParametros!==undefined){
+				$scope.anoDigital = $scope.parametros.registro=="prop"?$rootScope.aioParametros.anoDigitalPropiedades:$scope.parametros.registro=="hip"?$rootScope.aioParametros.anoDigitalHipotecas:$rootScope.aioParametros.anoDigitalProhibiciones;
+				$scope.fojasDigital = $scope.parametros.registro=="proh"?$rootScope.aioParametros.fojasDigitalProhibiciones:0;
+			}
+		}, 100);
+	
 
 		$scope.izquierdaStatus = {
 			anotaciones : true,
@@ -293,8 +302,8 @@ app
 			return ($scope.data.estado.tieneRechazo);
 		};
 
-		$scope.esMalCitadaDesde2014 = function() {
-			return (!$scope.data.estado.fna && $scope.data.inscripcionDigitalDTO.ano >= 2014);
+		$scope.esMalCitadaDesde = function() {
+			return (!$scope.data.estado.fna && $scope.data.inscripcionDigitalDTO.ano >= $scope.anoDigital && $scope.data.inscripcionDigitalDTO.foja >= $scope.fojasDigital);
 		};
 
 		$scope.hayDocumento = function() {
@@ -411,12 +420,7 @@ app
 		
 		
 		$scope.imprimirNotas = function() {
-			var anotaciones = [];
-			angular.forEach(
-				$scope.notas, function(obj) {
-					anotaciones.push(obj.idAnotacion);
-				});
-			$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/anotacion?metodo=printNotas&idNotas='+anotaciones+'&fojas='+$scope.parametros.foja+'&numero='+$scope.parametros.numero+'&ano='+$scope.parametros.ano+'&registro='+$scope.parametros.registro+'&download=false','popupNotas','width=800,height=600');
+			$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/anotacion?metodo=printNotas&fojas='+$scope.parametros.foja+'&numero='+$scope.parametros.numero+'&ano='+$scope.parametros.ano+'&bis='+$scope.parametros.bis+'&registro='+$scope.parametros.registro+'&download=false','popupNotas','width=800,height=600');			
 		};		
 
 		$scope.modificarAnotacion = function(nota) {
@@ -740,7 +744,7 @@ app
 
 		$scope.inicia = function() {
 			if (!$scope.tieneRechazo()
-					&& !$scope.esMalCitadaDesde2014()
+					&& !$scope.esMalCitadaDesde()
 					&& $scope.hayDocumento() && $scope.hayPaginas()) {
 
 				var foja = $scope.data.inscripcionDigitalDTO.foja, numero = $scope.data.inscripcionDigitalDTO.numero, ano = $scope.data.inscripcionDigitalDTO.ano, bis = $scope.data.inscripcionDigitalDTO.bis, estado = $scope.data.consultaDocumentoDTO.tipoDocumento, registro = $scope.parametros.registro;

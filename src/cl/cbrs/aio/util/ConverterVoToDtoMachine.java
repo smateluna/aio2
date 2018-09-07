@@ -217,6 +217,7 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
 		anotacionDTO.setFechaFirma(anotacionVO.getFechaFirma());
 		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setIdUsuarioCreador(anotacionVO.getIdUsuarioCreador());
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
@@ -265,6 +266,7 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
 		anotacionDTO.setFechaFirma(anotacionVO.getFechaFirma());
 		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setIdUsuarioCreador(anotacionVO.getIdUsuarioCreador());
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
@@ -313,6 +315,7 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setFechaCreacion(anotacionVO.getFechaCreacion());
 		anotacionDTO.setFechaFirma(anotacionVO.getFechaFirma());
 		anotacionDTO.setIdAnotacion(anotacionVO.getIdAnotacion());
+		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setIdUsuarioCreador(anotacionVO.getIdUsuarioCreador());
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
