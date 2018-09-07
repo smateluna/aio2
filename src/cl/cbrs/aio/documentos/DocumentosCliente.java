@@ -88,7 +88,7 @@ public class DocumentosCliente {
 		HashMap<String, String> queryParams = new HashMap<String, String>();
 		if(fechaDocumento!=null)
 			queryParams.put("fechaDocumento", String.valueOf(fechaDocumento.getTime()));
-		LOGGER.debug(SERVER_FIRMA +"---"+PORT_FIRMA+" -->"+pathParams+" "+queryParams);
+		
 		return (byte[])executeREST(SERVER_FIRMA, PORT_FIRMA, "file", "downloadFirma", pathParams, queryParams);
 	}	
 	
@@ -204,9 +204,6 @@ public class DocumentosCliente {
 		}
 		
 		Client client = Client.create();
-		System.out.println("URL--->"+uriStrBuffer.toString());
-		LOGGER.debug("U R L   __>"+uriStrBuffer.toString());
-		
 		WebResource wr = client.resource(new URI(uriStrBuffer.toString()));
 		ClientResponse response = wr.type(MediaType.TEXT_HTML).get(ClientResponse.class);
 		

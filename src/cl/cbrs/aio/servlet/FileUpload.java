@@ -163,7 +163,8 @@ public class FileUpload extends HttpServlet {
 		    try {
 		      field.setBoolean(o, value);
 		    } catch (IllegalAccessException iae) {
-		     logger.error(iae);
+		      // The call to setAccessible() should have stopped this from happening.  If it didn't then we are probably running in
+		      // some more strict container or virtual machine.
 		      throw new RuntimeException(iae);
 		    }
 		  }	 	

@@ -68,7 +68,7 @@ public class CaratulaEstadoUtil {
 
 		DatosFormularioDTO datosFormularioDTO = getDatosFormulario(caratula);
 		ProductoWebDTO productoWebDTO = getProductoWebDTOLite(caratula);
-		CitadoDTO citadoDTO = getCitadoDTO(caratula);
+		ArrayList<CitadoDTO> citadoDTO = getCitadoDTO(caratula);
 		EstadoActualDTO estadoActualDTO = getEstadoActualDTO(caratula);
 		ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs = getIngresoEgresoDTO(caratula.getNumeroCaratula());
 		CuentaCorrienteDTO cuentaCorrienteDTO = getCuentaCorrienteDTO(caratula.getCodigo());
@@ -80,7 +80,7 @@ public class CaratulaEstadoUtil {
 
 		caratulaEstadoDTO.setDatosFormularioDTO(datosFormularioDTO);
 		caratulaEstadoDTO.setProductoWebDTO(productoWebDTO);
-		caratulaEstadoDTO.setCitadoDTO(citadoDTO);
+		caratulaEstadoDTO.setCitadoDTOs(citadoDTO);
 		caratulaEstadoDTO.setEstadoActualDTO(estadoActualDTO);
 		caratulaEstadoDTO.setIngresoEgresoDTOs(ingresoEgresoDTOs);
 		caratulaEstadoDTO.setMovimientoDTOs(movimientoDTOs);
@@ -500,33 +500,37 @@ public class CaratulaEstadoUtil {
 		return estadoActualDTO;
 	}
 
-	private CitadoDTO getCitadoDTO(CaratulaVO caratula){
-		CitadoDTO citadoDTO = new CitadoDTO();
+	private ArrayList<CitadoDTO> getCitadoDTO(CaratulaVO caratula){
+		ArrayList<CitadoDTO> citadoDTOs = new ArrayList<CitadoDTO>();
 
 		if(caratula.getInscripciones()!=null && caratula.getInscripciones().length>0){
-			InscripcionCitadaVO citadaVO = caratula.getInscripciones()[0];
-
-			citadoDTO.setAno(citadaVO.getAno());
-			citadoDTO.setFoja(citadaVO.getFoja());
-			citadoDTO.setNumero(citadaVO.getNumero());
-			citadoDTO.setBis(citadaVO.getBis());
-
-			if(citadaVO.getRegistro()!=null){
-				RegistroDTO registroDTO = new RegistroDTO();
+			for(int i=0; i<caratula.getInscripciones().length; i++){
+				InscripcionCitadaVO citadaVO = caratula.getInscripciones()[i];
+				CitadoDTO citadoDTO = new CitadoDTO();
+				citadoDTO.setAno(citadaVO.getAno());
+				citadoDTO.setFoja(citadaVO.getFoja());
+				citadoDTO.setNumero(citadaVO.getNumero());
+				citadoDTO.setBis(citadaVO.getBis());
 	
-				registroDTO.setId(citadaVO.getRegistro());
-				switch(citadaVO.getRegistro()){
-					case 1: registroDTO.setDescripcion("Propiedad"); break;
-					case 2: registroDTO.setDescripcion("Hipotecas"); break;
-					case 3: registroDTO.setDescripcion("Prohibiciones"); break;
-					case 4: registroDTO.setDescripcion("Comercio"); break;
-					case 5: registroDTO.setDescripcion("Aguas"); break;
+				if(citadaVO.getRegistro()!=null){
+					RegistroDTO registroDTO = new RegistroDTO();
+		
+					registroDTO.setId(citadaVO.getRegistro());
+					switch(citadaVO.getRegistro()){
+						case 1: registroDTO.setDescripcion("Propiedad"); break;
+						case 2: registroDTO.setDescripcion("Hipotecas"); break;
+						case 3: registroDTO.setDescripcion("Prohibiciones"); break;
+						case 4: registroDTO.setDescripcion("Comercio"); break;
+						case 5: registroDTO.setDescripcion("Aguas"); break;
+					}
+		
+					citadoDTO.setRegistroDTO(registroDTO);
 				}
-	
-				citadoDTO.setRegistroDTO(registroDTO);
+				
+				citadoDTOs.add(citadoDTO);
 			}
 		}
-		return citadoDTO;
+		return citadoDTOs;
 	}
 
 	private ProductoWebDTO getProductoWebDTOLite(CaratulaVO caratula){
@@ -969,17 +973,18 @@ public class CaratulaEstadoUtil {
 					}
 				}				
 
-				if(caratulaEstadoDTO.getCitadoDTO()!=null){
-					if(caratulaEstadoDTO.getCitadoDTO().getFoja()!=null && 
-							caratulaEstadoDTO.getCitadoDTO().getNumero()!=null && 
-							caratulaEstadoDTO.getCitadoDTO().getAno()!=null){
-						data.put("citadoFoja", caratulaEstadoDTO.getCitadoDTO().getFoja());
-						data.put("citadoNum", caratulaEstadoDTO.getCitadoDTO().getNumero());								
-						data.put("citadoAno", caratulaEstadoDTO.getCitadoDTO().getAno());		
+				if(caratulaEstadoDTO.getCitadoDTOs()!=null && caratulaEstadoDTO.getCitadoDTOs().size()>0){
+					CitadoDTO citadoDTO = caratulaEstadoDTO.getCitadoDTOs().get(0);
+					if(citadoDTO.getFoja()!=null && 
+							citadoDTO.getNumero()!=null && 
+									citadoDTO.getAno()!=null){
+						data.put("citadoFoja", citadoDTO.getFoja());
+						data.put("citadoNum", citadoDTO.getNumero());								
+						data.put("citadoAno", citadoDTO.getAno());		
 
-						if(caratulaEstadoDTO.getCitadoDTO().getRegistroDTO()!=null){
-							data.put("citadoRegistro", caratulaEstadoDTO.getCitadoDTO().getRegistroDTO().getId());		
-							data.put("citadoRegistroNombre", caratulaEstadoDTO.getCitadoDTO().getRegistroDTO().getDescripcion());
+						if(citadoDTO.getRegistroDTO()!=null){
+							data.put("citadoRegistro", citadoDTO.getRegistroDTO().getId());		
+							data.put("citadoRegistroNombre", citadoDTO.getRegistroDTO().getDescripcion());
 						}
 						data.put("hayCitado", true);
 					}

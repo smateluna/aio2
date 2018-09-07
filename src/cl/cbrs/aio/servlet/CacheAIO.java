@@ -2,6 +2,7 @@ package cl.cbrs.aio.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,7 @@ public class CacheAIO extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static HashMap<Integer, ReglaReingresoDTO> CACHE_REGLAS_REINGRESO = new HashMap<Integer, ReglaReingresoDTO>();
+	public static ArrayList<ReglaReingresoDTO> CACHE_REGLAS_REINGRESO = new ArrayList<ReglaReingresoDTO>();
 	public static HashMap<String, String> CACHE_CONFIG_AIO = new HashMap<String, String>();
 
 	/**
@@ -63,9 +64,10 @@ public class CacheAIO extends HttpServlet {
 		out.println("<br>");
 		
 		out.println("<h3>Reglas reingreso</h3>");
-		for (Integer key: CACHE_REGLAS_REINGRESO.keySet()){			
-			out.println(key + ": [" + ToStringBuilder.reflectionToString(CACHE_REGLAS_REINGRESO.get(key), ToStringStyle.SHORT_PREFIX_STYLE)+"] <br>");
-		}		
+		int i=1;
+		for (ReglaReingresoDTO key: CACHE_REGLAS_REINGRESO){			
+			out.println(i++ + ": [" + ToStringBuilder.reflectionToString(key, ToStringStyle.SHORT_PREFIX_STYLE)+"] <br>");
+		}	
 		
 	}
 
@@ -91,28 +93,7 @@ public class CacheAIO extends HttpServlet {
 	 */
 	public void init() throws ServletException {
 		
-		System.out.println("Cargando reglas de reingreso...");
-		try {
-				for( int i=1; i<=10; i++){
-					System.out.println("Cargando regla de reingreso " + i +" de 10");					
-					String seccion = TablaValores.getValor("reingreso.parametros", "TIPO_FORMULARIO_"+i,  "seccion" );
-					String idEstado = TablaValores.getValor("reingreso.parametros", "TIPO_FORMULARIO_"+i,  "estado" );
-					String idUsuario = TablaValores.getValor("reingreso.parametros", "TIPO_FORMULARIO_"+i,  "usuario" );
-					String rutFuncionario = TablaValores.getValor("reingreso.parametros", "TIPO_FORMULARIO_"+i,  "rut_funcionario" );
-					String registro = TablaValores.getValor("reingreso.parametros", "TIPO_FORMULARIO_"+i,  "registro" );
-					ReglaReingresoDTO reglaReingresoDTO = new ReglaReingresoDTO();
-					reglaReingresoDTO.setCodSeccion(seccion);
-					reglaReingresoDTO.setIdEstado(!"".equals(idEstado)?new Integer(idEstado):null);
-					reglaReingresoDTO.setIdTipoFormulario(i);
-					reglaReingresoDTO.setIdUsuarioComercio(!"".equals(idUsuario)?new Integer(idUsuario):null);
-					reglaReingresoDTO.setRegistro(registro);
-					reglaReingresoDTO.setRutFuncionario(rutFuncionario);
-						
-					CACHE_REGLAS_REINGRESO.put(i, reglaReingresoDTO);
-				}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		cargaReglasReingreso();
 		
 		System.out.println("Cargando configuracion AIO");
 		try{
@@ -122,12 +103,23 @@ public class CacheAIO extends HttpServlet {
 			
 			String sistema = TablaValores.getValor("aio.parametros", "SISTEMA",  "valor" );
 			String anoArchivoNacional = TablaValores.getValor("aio.parametros", "ANO_ARCHIVO_NACIONAL",  "valor" );
+			String anoDigitalPropiedades = TablaValores.getValor("aio.parametros", "ANO_DIGITAL_PROPIEDADES",  "valor" );
+			String anoDigitalHipotecas = TablaValores.getValor("aio.parametros", "ANO_DIGITAL_HIPOTECAS",  "valor" );
+			String anoDigitalProhibiciones = TablaValores.getValor("aio.parametros", "ANO_DIGITAL_PROHIBICIONES",  "valor" );
+			String fojasDigitalProhibiciones = TablaValores.getValor("aio.parametros", "FOJAS_DIGITAL_PROHIBICIONES",  "valor" );
 			
 			if(sistema!=null && !"".equals(sistema))
 				CACHE_CONFIG_AIO.put("SISTEMA", sistema);
 			if(anoArchivoNacional!=null && !"".equals(anoArchivoNacional))
 				CACHE_CONFIG_AIO.put("ANO_ARCHIVO_NACIONAL", anoArchivoNacional);
-						
+			if(anoDigitalPropiedades!=null && !"".equals(anoDigitalPropiedades))
+				CACHE_CONFIG_AIO.put("ANO_DIGITAL_PROPIEDADES", anoDigitalPropiedades);
+			if(anoDigitalHipotecas!=null && !"".equals(anoDigitalHipotecas))
+				CACHE_CONFIG_AIO.put("ANO_DIGITAL_HIPOTECAS", anoDigitalHipotecas);
+			if(anoDigitalProhibiciones!=null && !"".equals(anoDigitalProhibiciones))
+				CACHE_CONFIG_AIO.put("ANO_DIGITAL_PROHIBICIONES", anoDigitalProhibiciones);
+			if(fojasDigitalProhibiciones!=null && !"".equals(fojasDigitalProhibiciones))
+				CACHE_CONFIG_AIO.put("FOJAS_DIGITAL_PROHIBICIONES", fojasDigitalProhibiciones);				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -138,6 +130,35 @@ public class CacheAIO extends HttpServlet {
 		}
 			
 		
+	}
+
+	public static void cargaReglasReingreso() {
+		System.out.println("Cargando reglas de reingreso...");
+		try {
+				int i=1;
+				CACHE_REGLAS_REINGRESO.clear();
+				while( TablaValores.getValor("reingreso.parametros", "R_"+i,  "tipo_formulario" )!=null ){
+					System.out.println("Cargando regla de reingreso " + i);					
+					String seccion = TablaValores.getValor("reingreso.parametros", "R_"+i,  "seccion" );
+					String idEstado = TablaValores.getValor("reingreso.parametros", "R_"+i,  "estado" );
+					String idUsuario = TablaValores.getValor("reingreso.parametros", "R_"+i,  "usuario" );
+					String rutFuncionario = TablaValores.getValor("reingreso.parametros", "R_"+i,  "rut_funcionario" );
+					String registro = TablaValores.getValor("reingreso.parametros", "R_"+i,  "registro" );
+					String tipoFormulario = TablaValores.getValor("reingreso.parametros", "R_"+i,  "tipo_formulario" );
+					ReglaReingresoDTO reglaReingresoDTO = new ReglaReingresoDTO();
+					reglaReingresoDTO.setCodSeccion(seccion);
+					reglaReingresoDTO.setIdEstado(!"".equals(idEstado)?new Integer(idEstado):null);
+					reglaReingresoDTO.setIdTipoFormulario(new Integer(tipoFormulario));
+					reglaReingresoDTO.setIdUsuarioComercio(!"".equals(idUsuario)?new Integer(idUsuario):null);
+					reglaReingresoDTO.setRegistro(registro);
+					reglaReingresoDTO.setRutFuncionario(rutFuncionario);
+						
+					CACHE_REGLAS_REINGRESO.add(reglaReingresoDTO);
+					i++;
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

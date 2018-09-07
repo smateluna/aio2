@@ -282,8 +282,8 @@ app.factory('inscripcionDigitalService', function ($http, $q) {
     	  });
 
     	  return deferred.promise;
-      },despacharCuadernillo:function (cuadernillo) {
-    	  var paramsObj = {metodo: 'despacharCuadernillo', cuadernillo:cuadernillo};
+      },despacharCuadernillo:function (cuadernillo, ano) {
+    	  var paramsObj = {metodo: 'despacharCuadernillo', cuadernillo:cuadernillo, ano:ano};
 
     	  var deferred = $q.defer();
 

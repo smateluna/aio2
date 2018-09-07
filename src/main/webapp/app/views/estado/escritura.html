@@ -28,7 +28,7 @@
                 </button>
               </td>
               <td ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">
-              	  <a  href="cbrsVisor:{{req.numeroCaratula}}">
+              	  <a  href="cbrsVisor:{{req.numeroCaratula}}" ng-if="$first">
        				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> <i class="fa fa-pencil"></i></button>
        			  </a>  
 	          </td>
@@ -48,16 +48,9 @@
                    <i class="fa fa-file-pdf-o"></i> 
                 </button>
               </td>
-              <td ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">
-              	  <a  href="cbrsVisor:{{req.numeroCaratula}}">
-       				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> <i class="fa fa-pencil"></i></button>
-       			  </a>  
+              <td>              	  
 	          </td>
-	          <td ng-if="subPermisos['estado'].indexOf('ELIMINAR_ESCRITURA') >= 0">
-				<button ng-show="escritura.vigente" class="btn btn-danger btn-xs"
-					ng-click="removeVersion(escritura)" tooltip="Eliminar" tooltip-placement="top">
-					<i class="fa fa-trash-o"></i>
-				</button>	          
+	          <td>	          
 	          </td>
             </tr>            
             </tbody>

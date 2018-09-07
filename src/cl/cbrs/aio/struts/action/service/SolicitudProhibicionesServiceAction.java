@@ -468,8 +468,42 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 				ConsultaDocumentoDTO consultaDocumentoDTO = digitalUtil.getConsultaDocumentoDTO(foja, numero, ano, bisInscripcion, 3);
 	
 				if(consultaDocumentoDTO!=null){  //tengo respuesta?				
+					
+					if(consultaDocumentoDTO.getHayDocumento()){ //tengo papel?
+						
+						int tipoDocumento = consultaDocumentoDTO.getTipoDocumento();
+						
+						//que tipo de papel tengo?
+						if(tipoDocumento == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO){
+							
+							estado.put("tipo", ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO);
+							estado.put("descripcion", "VERSIONADA");
 
-						Boolean fna = digitalUtil.consultaIndice(foja, numerop, ano);
+							status = true;
+							
+						}else if(tipoDocumento == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_REFERENCIAL || 
+								tipoDocumento == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_ORIGINAL){
+							
+							String descripcion = "";
+							
+							if(tipoDocumento == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_REFERENCIAL){
+								descripcion = "REFERENCIAL";
+							}else{
+								descripcion = "ORIGINAL";
+							}
+							
+							estado.put("tipo", tipoDocumento);
+							estado.put("descripcion", descripcion);
+
+							Boolean esDigital = digitalDelegate.validaAnosDigitales(foja, numerop, ano);						
+							estado.put("esAnoDigital", esDigital);		
+							
+							status = true;						
+						}else{
+							msg = "Tipo de documento desconocido. Tipo: "+tipoDocumento;
+						}
+					}else{ //tengo respuesta, pero no tengo papel de ningún tipo
+						Boolean fna = digitalUtil.consultaIndiceProhibiciones(foja, numerop, ano);
 
 						estado.put("fna", fna);
 
@@ -516,6 +550,10 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 							}							
 						}
 					}
+				}else{
+					msg = "Problemas consultando documento.";
+				}
+		
 
 			} catch (Exception e1) {
 				log.error(e1);

@@ -88,6 +88,7 @@ app.controller('RevisionNotasCtrl', function ($scope,$timeout,$rootScope,solicit
 				$scope.busquedaRevisionNotas.tieneDespacho = data.tieneDespacho;
 				$scope.busquedaRevisionNotas.data = data;
 				$scope.busquedaRevisionNotas.resultado_cuadernillo = $scope.busquedaRevisionNotas.cuadernillo;
+				$scope.busquedaRevisionNotas.ano_cuadernillo = ano;
 				if($scope.busquedaRevisionNotas.resultados.length>0){
 					$scope.makeTodos(data.anotaciones);
 				}
@@ -136,6 +137,8 @@ app.controller('RevisionNotasCtrl', function ($scope,$timeout,$rootScope,solicit
 	
 	$scope.despacharCuadernillo = function(){
 		var cuadernillo = $scope.busquedaRevisionNotas.resultado_cuadernillo;
+		var ano = $scope.busquedaRevisionNotas.ano_cuadernillo;
+		console.log(cuadernillo,ano);
 		
 		if(confirm("¿Está seguro que desea despachar el cuadernillo " + cuadernillo + "?")){
 			
@@ -143,7 +146,7 @@ app.controller('RevisionNotasCtrl', function ($scope,$timeout,$rootScope,solicit
 			if(cuadernillo){
 				$scope.openLoadingModal( 'Buscando Rango Cuadernillo...', '');
 	
-				var promise = inscripcionDigitalService.despacharCuadernillo(cuadernillo);
+				var promise = inscripcionDigitalService.despacharCuadernillo(cuadernillo, ano);
 				promise.then(function(data) {
 					$scope.closeModal();
 					if(data.status===null){

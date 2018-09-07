@@ -191,8 +191,8 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 		String msg = "";
 
 		try{
-			ServicioIndiceConservadoresDelegate delegate= new ServicioIndiceConservadoresDelegate();
-			conservadores = delegate.obtenerCBRSDisponibles();
+//			ServicioIndiceConservadoresDelegate delegate= new ServicioIndiceConservadoresDelegate();
+//			conservadores = delegate.obtenerCBRSDisponibles();
 
 			status = true;
 

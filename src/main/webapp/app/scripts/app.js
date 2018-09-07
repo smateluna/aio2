@@ -1,8 +1,8 @@
 'use strict';
 
-var versionAIO = 'AIO Version 1.4 13/12/2017\n'
+var versionAIO = 'AIO Version 1.4 25/07/2018\n'
 	+'----------------------------\n'
-	+'fix anotaciones hipotecas\n';
+	+'mejoras reingreso gp';
 
 var app = angular
 .module('aioApp', [
@@ -129,6 +129,10 @@ app.config(function ($routeProvider, $compileProvider) {
 		templateUrl: 'views/verInscripcionCertificarHipo.html',
 		controller: 'VerInscripcionCertificarHipoCtrl'
 	})
+	.when('/verInscripcionCertificarProh/:registro/:caratula/:foja/:numero/:ano/:bis/:fechaDoc/:rehaceImagen/:idtipoFormulario/:origen', {
+		templateUrl: 'views/verInscripcionCertificarProh.html',
+		controller: 'VerInscripcionCertificarProhCtrl'
+	})
 	.when('/verVistaPreviaPlantilla/:caratula/:prefijo/:origen', {
 		templateUrl: 'views/verVistaPreviaPlantilla.html',
 		controller: 'VerVistaPreviaPlantillaCtrl'
@@ -188,6 +192,10 @@ app.config(function ($routeProvider, $compileProvider) {
 	.when('/certificacionHipotecas', {
 		templateUrl: 'views/certificacionHipotecas.html',
 		controller: 'CertificacionHipotecasCtrl'
+	})
+	.when('/certificacionProhibiciones', {
+		templateUrl: 'views/certificacionProhibiciones.html',
+		controller: 'CertificacionProhibicionesCtrl'
 	})
 	.when('/certificacionenparte', {
 		templateUrl: 'views/certificacionenparte.html',
@@ -539,8 +547,13 @@ app.run(function($rootScope, $location, Usuario, $log, $modalStack, amMoment, $w
 			//Parametros AIO
 			$rootScope.aioParametros = {
 					'sistema': data.sistema,
-					'anoArchivoNacional': data.anoArchivoNacional
+					'anoArchivoNacional': data.anoArchivoNacional,	
+					'anoDigitalPropiedades': data.anoDigitalPropiedades,
+					'anoDigitalHipotecas': data.anoDigitalHipotecas,
+					'anoDigitalProhibiciones': data.anoDigitalProhibiciones,
+					'fojasDigitalProhibiciones': data.fojasDigitalProhibiciones
 			};
+		
 
 		}else{
 			$location.path('/home/sa');

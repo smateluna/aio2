@@ -21,7 +21,8 @@
 .fixed-heading {
     background-color: #edeff0;
     position: fixed;
-    max-width: 1430px;
+    /* max-width: 1430px; */
+    max-width: 2430px;
     /*opacity: 0.9;*/
     top: 0;
     left: 56px;
@@ -40,7 +41,8 @@
 }
 
 .grid-container {
-    max-width: 1430px;
+/*     max-width: 1430px; */
+    max-width: 2430px;
     position: relative;
 }
 
@@ -149,8 +151,10 @@ ul.usuario li{
 }
 
 .cl-vnavigation li.selected a{
-    color: #E0E0E0;
-    background-color:#43526d;
+    color: #000000;
+    background-color: #f1f1f1;
+    border-top: 1px solid #e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
 }
 
 .subraya{
