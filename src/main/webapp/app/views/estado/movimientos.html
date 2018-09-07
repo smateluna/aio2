@@ -21,7 +21,7 @@
             </tr>
             </thead>
             <tbody >
-            <tr ng-repeat="mov in data.res.caratulaDTO.movimientoDTOs" ng-class="{'danger':mov.seccionDTO.id==='63'}">
+            <tr ng-repeat="mov in data.res.caratulaDTO.movimientoDTOs" ng-class="{'danger':mov.seccionDTO.id==='63'||mov.seccionDTO.id==='RG'}">
                 <td class="estado-table-td">{{mov.fecha}}</td>
                 <td class="estado-table-td">{{mov.seccionDTO.descripcion}}</td>
                 <td class="estado-table-td">{{mov.responsable.nombre}} {{mov.responsable.apellidoPaterno}}</td>

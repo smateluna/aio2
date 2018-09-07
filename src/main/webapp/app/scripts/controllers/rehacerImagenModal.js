@@ -4,9 +4,10 @@
 
 'use strict';
 
-app.controller('RehacerImagenModalCtrl', function ($scope, $modalInstance, $modalStack, $modal, $log, $timeout, $window, $rootScope, dataImagen, certificacionService) {
+app.controller('RehacerImagenModalCtrl', function ($scope, $modalInstance, $modalStack, $modal, $log, $timeout, $window, $rootScope, dataImagen, servicioCertificacion) {
 
   $scope.dataImagen = dataImagen;
+  $scope.servicioCertificacion = servicioCertificacion;
   
   $scope.states = {
       isLoading: false,
@@ -34,7 +35,7 @@ app.controller('RehacerImagenModalCtrl', function ($scope, $modalInstance, $moda
   $scope.saveRehacerImagen = function () {
 	    $scope.openLoadingModal('Enviado a Rehacer...', '');
 		var motivo = $scope.rehacerImagen.motivo;
-		var promise = certificacionService.rehacerImagen($scope.dataImagen.numeroCaratula, $scope.dataImagen.foja,$scope.dataImagen.numero,$scope.dataImagen.ano,$scope.dataImagen.bis,motivo);
+		var promise = servicioCertificacion.rehacerImagen($scope.dataImagen.numeroCaratula, $scope.dataImagen.foja,$scope.dataImagen.numero,$scope.dataImagen.ano,$scope.dataImagen.bis,motivo);
 		promise.then(function(data) {
 			$scope.closeModal();
 		    if(data.status===null){

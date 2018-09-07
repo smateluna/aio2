@@ -138,7 +138,7 @@
 			        <tbody>
 				        <!--<tr ng-repeat="sol in busquedaCertificacion.resultados | orderBy:predicate:reverse">
 				        --><tr ng-repeat="sol in filtered = (busquedaCertificacion.resultados | filter:filterExpr | orderBy:busquedaCertificacion.predicate:busquedaCertificacion.reverse)">
-				        		<td class="text-left">{{sol.caratula}}</td>
+				        		<td class="text-left"><a href="" ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
 				        		<td class="text-left">{{sol.tipoFormulario}}</td>
 				        		<td class="text-left">{{sol.foja}}</td>
 				        		<td class="text-left">{{sol.numero}}</td>
@@ -210,3 +210,4 @@
 <div ng-include="'views/masInfoindiceModal.html'"></div>
 <div ng-include="'views/mensajeModal.html'"></div>
 <div ng-include="'views/loadingModal.html'"></div>   
+<div ng-include="'views/estadoIndiceModal.html'"></div>

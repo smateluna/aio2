@@ -10,7 +10,7 @@ app.filter('startFrom', function () {
 	};
 });
 
-app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, $interval, $filter, $modal, $modalStack, $routeParams, tareasService, tareasModel, caratulaService,filterFilter) {
+app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, $interval, $filter, $modal, $window, $modalStack, $routeParams, tareasService, estadoService, tareasModel, caratulaService,filterFilter) {
 
 	$scope.busquedaTareas = tareasModel.getBusquedaTareas();
 	
@@ -21,8 +21,9 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		filteredTodos: [],
 		todos: []
 	}
-	
+//	$scope.listaCaratulas = [];
 	$scope.paginacionTareas = angular.copy($scope.paginacionMaster);
+	$scope.paginacionTareas.todos=[];
 	
 	$scope.buscarLiquidaciones = function(){	
 		$scope.openLoadingModal('Buscando carátulas...', '');	
@@ -32,10 +33,9 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 			if(data.estado===null){
 			}else if(data.status){
 				$scope.busquedaTareas.data = data;
-				//$scope.busquedaTareas.caratulas = data.caratulas;
-				//$scope.fechaRehacerImagen = data.FECHA_REHACER_IMAGEN;
-				
-				$scope.makeTodos();
+//				$scope.listaCaratulas= data.caratulas;
+
+				$scope.makeTodos(data.caratulas);
 			}else{
 				$scope.raiseErr(data.msg);
 			}
@@ -45,22 +45,22 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		});		  
 	}
 
-	$scope.refrescar = function(){
-		$scope.openLoadingModal('Actualizando...', '');
-		var promise = tareasService.obtenerCaratulasPorUsuario();
-		promise.then(function(data) {
-			$scope.closeModal();
-			if(data.status===null){
-			}else if(data.status){
-				$scope.busquedaTareas.data = data;
-			}else{
-				$scope.setErr('data.msg', data.msg);
-
-			}
-		}, function(reason) {
-			$scope.setErr('Problema contactando al servidor.', '');
-		});
-	}; 
+//	$scope.refrescar = function(){
+//		$scope.openLoadingModal('Actualizando...', '');
+//		var promise = tareasService.obtenerCaratulasPorUsuario();
+//		promise.then(function(data) {
+//			$scope.closeModal();
+//			if(data.status===null){
+//			}else if(data.status){
+//				$scope.busquedaTareas.data = data;
+//			}else{
+//				$scope.setErr('data.msg', data.msg);
+//
+//			}
+//		}, function(reason) {
+//			$scope.setErr('Problema contactando al servidor.', '');
+//		});
+//	}; 
 
 	$scope.redistribuirCaratula = function(inscripcion){
 		$scope.openLoadingModal('Redistribuyendo...', '');
@@ -89,6 +89,16 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		$location.path('/distribucion/').search({'caratulas': JSON.stringify(caratulasDistribucion)});
 	};
 	
+	$scope.imprimirSeleccion = function(){
+		var caratulasImpresion = [];
+		for(var i in $scope.busquedaTareas.data.caratulas){
+			if($scope.busquedaTareas.data.caratulas[i].check)
+				caratulasImpresion.push($scope.busquedaTareas.data.caratulas[i].numeroCaratula);			
+		};
+		var caratulas = {"numeroCaratula":caratulasImpresion.join(",")};
+		$scope.imprimeCaratula(caratulas);
+	};	
+	
 	$scope.hayCaratulaSeleccionada = function(){
 		var caratulasDistribucion = [];
 		if($scope.busquedaTareas.data!=undefined)
@@ -116,7 +126,6 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 			if(data.status===null){
 
 			}else if(data.status){
-
 				$scope.caratulafuera.caratula = data.caratula;
 				$scope.caratulafuera.status = data.status;
 				$scope.caratulafuera.muestra = data.muestra;
@@ -154,7 +163,59 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 
 	$scope.verCbrsVisor = function(caratula){
 		$rootScope.go('cbrsVisor:'+caratula.numeroCaratula);
-	};     
+	};    
+	
+	$scope.verTitulo = function(titulo, caratula) {
+		
+		if(titulo.registro==null){
+			console.log("workaround");
+			var promise = estadoService.getEstado(caratula);
+			promise.then(function(data) {
+				$scope.closeModal();
+				if(data.status===null){
+
+				}else if(data.status){
+					if(data.res.caratulaDTO.citadoDTOs!=null && data.res.caratulaDTO.citadoDTOs.length==1 && data.res.caratulaDTO.citadoDTOs[0].registroDTO!=null && data.res.caratulaDTOs.citadoDTO[0].registroDTO.id!=undefined){
+						titulo.registro=data.res.caratulaDTO.citadoDTOs[0].registroDTO.id;
+						$scope.verInscripcion(titulo);
+					} else
+						$scope.raiseErr('No se pudo determinar registro de la inscripción');
+				}else{
+					$scope.raiseErr('buscar','Problema detectado', data.msg);
+				}
+			}, function(reason) {
+				$scope.raiseErr('buscar','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+			});
+			
+		}else{
+			$scope.verInscripcion(titulo);
+		}
+
+	};	
+	
+	$scope.verInscripcion = function(titulo) {
+
+		var bis = titulo.bis == 1 ? true : false,                      
+		                          estado = '0';
+		var registro = 'prop';
+		switch(titulo.registro) {
+		    case 1:
+		    	registro = 'prop';
+		        break;
+		    case 2:
+		    	registro = 'hipo';
+		        break;
+		    case 3:
+		    	registro = 'proh';
+		        break;	
+		    default:
+		    	registro = 'prop';	        
+		}
+	
+		$rootScope.go('/verInscripcion/'+registro+'/' + titulo.foja + '/'
+			+ titulo.numero + '/' + titulo.ano + '/' + bis
+			+ '/tareas/' + estado);
+	};	
 
 	$scope.verEstadoCaratula = function(numeroCaratula){
 		$modal.open({
@@ -230,11 +291,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		if (top) {
 			$modalStack.dismiss(top.key);
 		}
-	};
-
-	$timeout(function(){
-		$scope.buscarLiquidaciones();
-	}, 500);      
+	};  
 
 	$scope.obtenerEscritura = function (sol) {
 
@@ -250,11 +307,11 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		}
 		});
 		
-		myModal.result.then(function () {
-			$scope.buscarLiquidaciones();
-		}, function () {
-			$scope.buscarLiquidaciones();
-		});
+//		myModal.result.then(function () {
+//			$scope.buscarLiquidaciones();
+//		}, function () {
+//			$scope.buscarLiquidaciones();
+//		});
 	};
 	
 	$scope.obtenerEscrituraPorFuera = function (caratula) {
@@ -271,16 +328,153 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		}
 		});
 		
-		myModal.result.then(function () {
-			$scope.buscarLiquidaciones();
-		}, function () {
-			$scope.buscarLiquidaciones();
-		});
+//		myModal.result.then(function () {
+//			$scope.buscarLiquidaciones();
+//		}, function () {
+//			$scope.buscarLiquidaciones();
+//		});
 	};
 	
-	$scope.verDocumentoEstudio = function(sol){
-		$rootScope.go('/verEscrituraEstudio/'+sol.numeroCaratula+'/tareas');
+	$scope.verDocumentoEstudio = function(caratula) {
+
+		var escri = $scope.buscarEscritura(caratula.numeroCaratula);
+	
+//		var documento ={
+//			"nombreArchivo": escritura.nombreArchivoVersion,
+//			"idTipoDocumento": escritura.idTipoDocumento,
+//			"idReg": escritura.idReg,
+//			"fechaDocumento": escritura.fechaProcesa
+//		};		
+//		
+//		//existe documento
+//		var promise = estadoService
+//		.existeDocumento(documento);
+//		promise
+//		.then(
+//			function(data) {
+//				if (data.hayDocumento) {
+//					//download documento
+//					$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ $scope.req.numeroCaratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','','width=800,height=600');
+//
+//				} else {
+//					$scope
+//					.raiseErr(data.errormsg);
+//				}
+//			},
+//			function(reason) {
+//				$scope
+//				.raiseErr('No se ha podido establecer comunicación con el servidor.');
+//			});		
+
 	};
+	
+	$scope.editarEscritura = function(caratula){
+		var escritura = null;
+		var promise = estadoService
+		.getDocumentos(
+				caratula,
+			'ESCRITURAS');
+		promise
+		.then(
+			function(data) {
+				if (data.status === null) {
+				} else if (data.success) {
+					if(data.children!=undefined && data.children.length>0){
+						for ( var i = 0; i < data.children.length; i++){
+							if(data.children[i].children[0].vigente){
+								escritura = data.children[i].children[0];
+								location.href = "cbrsVisor:"+caratula;
+								break;
+							}
+						}
+						if(escritura==null)
+							$scope.raiseErr("Carátula no tiene escritura vigente");
+					} else
+						$scope.raiseErr("Carátula no tiene escritura");						
+				} else {
+					$scope.raiseErr(data.errormsg);
+				}
+			},
+			function(reason) {
+				$scope
+				.raiseErr('No se ha podido establecer comunicación con el servidor.');
+			});	
+	}
+	
+	$scope.verEscritura = function(caratula){
+		var escritura = null;
+		var promise = estadoService
+		.getDocumentos(
+				caratula.numeroCaratula,
+			'ESCRITURAS');
+		promise
+		.then(
+			function(data) {
+				if (data.status === null) {
+				} else if (data.success) {
+					if(data.children!=undefined && data.children.length>0){
+						for ( var i = 0; i < data.children.length; i++){
+							if(data.children[i].children[0].vigente){
+								escritura = data.children[i].children[0];
+								var documento ={
+									"nombreArchivo": escritura.nombreArchivoVersion,
+									"idTipoDocumento": escritura.idTipoDocumento,
+									"idReg": escritura.idReg,
+									"fechaDocumento": escritura.fechaProcesa
+								};		
+
+								//existe documento
+								var promise = estadoService
+								.existeDocumento(documento);
+								promise
+								.then(
+									function(data) {
+										if (data.hayDocumento) {
+											//download documento
+											$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ escritura.caratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','','width=800,height=600');
+						
+										} else {
+											$scope
+											.raiseErr(data.errormsg);
+										}
+									},
+									function(reason) {
+										$scope
+										.raiseErr('No se ha podido establecer comunicación con el servidor.');
+									});									
+							}
+						}
+						if(escritura==null)
+							$scope.raiseErr("Carátula no tiene escritura vigente");
+					} else
+						$scope.raiseErr("Carátula no tiene escritura");
+				} else {
+					$scope.raiseErr(data.errormsg);
+				}
+			},
+			function(reason) {
+				$scope
+				.raiseErr('No se ha podido establecer comunicación con el servidor.');
+			});		
+	}	
+	
+	$scope.checkAll = function () {console.log("checkAll");
+
+		if (!$scope.selectedAll) {
+			$scope.selectedAll = true;
+		} else {
+			$scope.selectedAll = false;
+		}
+
+		angular.forEach($scope.filtered, function (caratula) {
+			caratula.check = $scope.selectedAll;
+		});
+
+	};	
+	
+	$scope.customFilter1 = function(){
+		$scope.filterExpr = {"canalTexto":"WEB", "tipoFormularioDTO": {"idDescripcion":6}};
+	}
 
 	$scope.imprimeCaratula = function(sol) {
 		$modal.open( {
@@ -299,11 +493,11 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 
 	};
 	
-	$scope.makeTodos = function() {
+	$scope.makeTodos = function(data) {
 
 		$scope.paginacionTareas = angular.copy($scope.paginacionMaster);
 
-		$scope.paginacionTareas.todos=$scope.busquedaTareas.data.caratulas;
+		$scope.paginacionTareas.todos=data;
 
 		var begin = (($scope.paginacionTareas.currentPage - 1) * $scope.paginacionTareas.numPerPage)
 		, end = begin + $scope.paginacionTareas.numPerPage;
@@ -316,8 +510,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 	
 	// $watch search to update pagination
 	$scope.$watch('filterExpr', function (newVal, oldVal) {
-		
-		if(newVal!=undefined && oldVal!=undefined){
+		if(newVal!=undefined){
 			$scope.filtered = filterFilter($scope.busquedaTareas.data.caratulas, newVal);
 			$scope.paginacionTareas.todos = $scope.filtered;
 			$scope.paginacionTareas.currentPage = 1;
@@ -336,6 +529,14 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 	  $scope.start();
     });
 	
+	$timeout(function(){
+		$scope.buscarLiquidaciones();
+	}, 500);    
+	
+//	$timeout(function(){				  
+//		$scope.refrescar();
+//	}, 500);
+	
 	var promise;
     
     $scope.start = function() {
@@ -345,7 +546,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
       // store the interval promise
       if($scope.busquedaTareas.tiemporefresco!=0){
       			promise = $interval(function(){
-      						$scope.refrescar();
+      						$scope.buscarLiquidaciones();
    						  }.bind(this), $scope.busquedaTareas.tiemporefresco*60000);
       }
       
@@ -360,7 +561,6 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
    
     $scope.$on('$destroy', function() {
     	$scope.stop(); 
-//    	console.log('saliendo de tareas');
     });
 
 });

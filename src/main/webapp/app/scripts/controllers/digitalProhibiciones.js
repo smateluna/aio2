@@ -83,6 +83,10 @@ app.controller('DigitalProhibicionesCtrl', function ($rootScope, $scope, $timeou
 
     $scope.doFocus('foja');
   };
+  
+	$scope.esMalCitadaDesde = function() {
+		return (!$scope.solicita.estado.fna && $scope.busquedaTitulo.ano >= $rootScope.aioParametros.anoDigitalProhibiciones && $scope.busquedaTitulo.foja >= $rootScope.aioParametros.fojasDigitalProhibiciones);
+	};   
 
   $scope.buscarTitulo = function(){
     var foja = $scope.busquedaTitulo.foja,
@@ -108,16 +112,14 @@ app.controller('DigitalProhibicionesCtrl', function ($rootScope, $scope, $timeou
         $scope.solicita.bis = data.inscripcionDigitalDTO.bis;
         $scope.solicita.consultaDocumentoDTO = data.consultaDocumentoDTO;
         $scope.solicita.estado = data.estado;
-
+        
         if(data.estado.tieneRechazo){
           //tiene rechazo
           $scope.openSolicitar();
 
-        }else if(!data.estado.fna){
         	
-        	$scope.openSolicitar();   
         
-        }else if(!data.consultaDocumentoDTO.hayDocumento){
+        }else if(!data.consultaDocumentoDTO.hayDocumento && !$scope.esMalCitadaDesde()){
           //no tiene imagen y es solicitable 1
 
           //TODO: no tiene imagen y es solicitable
@@ -125,25 +127,23 @@ app.controller('DigitalProhibicionesCtrl', function ($rootScope, $scope, $timeou
           $scope.openSolicitar();
 
 
-        }else if(data.consultaDocumentoDTO.hayDocumento &&
+        }else if(data.consultaDocumentoDTO.hayDocumento && 
           (data.consultaDocumentoDTO.tipoDocumento===9 || data.consultaDocumentoDTO.tipoDocumento===10)){
           //tiene imagen y es solicitable 2
 
           //TODO: ver referencial o solicitar?
 
-          if(data.seDigitalizoEnElDia){
-        	digitalProhibicionesModel.setDataState(data);
-          	$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
-          }else{	
           	$scope.openSolicitar();
-          }
+
 
         }else if(data.consultaDocumentoDTO.hayDocumento && data.consultaDocumentoDTO.tipoDocumento===8){
           //esta digitalizada 3
 
           digitalProhibicionesModel.setDataState(data);
           $scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
-        }
+        }else {
+			$scope.verTitulo({foja: foja, numero: numero, ano: ano, bis: bisN});
+		}
 
       }else{
         $scope.raiseErr('titulo','Problema detectado', data.msg);
@@ -399,7 +399,7 @@ app.controller('DigitalProhibicionesCtrl', function ($rootScope, $scope, $timeou
   };
 
   $scope.isSolicitudRevisada = function(sol){
-    return sol.estadoDTO.idEstado!==6;
+    return sol.estadoDTO.idEstado!==6 && sol.estadoDTO.idEstado!==5;
   };
 
 

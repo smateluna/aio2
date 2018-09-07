@@ -215,11 +215,11 @@ public class FusionUpload extends HttpServlet {
 				}
 
 			} catch (InvalidPdfException e) {
-				logger.error("ERROR Fusionando",e);
+				logger.error(e.getMessage(), e);
 				respuesta.put("message", "ERROR: Archivo pdf invalido");
 				respuesta.put("status", false);
 			} catch (BadPasswordException e) {
-				logger.error("ERROR Fusionando",e);
+				logger.error(e.getMessage());
 				respuesta.put("message", "ERROR: Archivo protegido con clave");
 				respuesta.put("status", false);
 			} catch (Exception ex) {

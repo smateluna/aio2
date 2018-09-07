@@ -69,7 +69,7 @@
 
 
 			<div class="panel panel-default"
-				ng-if="!errorObj.hay && (tieneRechazo() || esMalCitadaDesde2014())">
+				ng-if="!errorObj.hay && (tieneRechazo() || esMalCitadaDesde())">
 
 				<div class="panel-body solicitar-inscripcion-body">
 					<div class="solicitar-mensaje">
@@ -89,7 +89,7 @@
 							Esta misma solicitud de foja, número, año y bis, ya ha sido
 							realizada anteriormente y fue rechazada por título mal citado.
 						</p>
-						<p ng-if="esMalCitadaDesde2014()">
+						<p ng-if="esMalCitadaDesde()">
 							La inscripción buscada no ha sido encontrada en nuestros
 							registros.
 						</p>
@@ -100,7 +100,7 @@
 
 
 			<div class="panel panel-default"
-				ng-if="!errorObj.hay && !tieneRechazo() && !esMalCitadaDesde2014() && hayDocumento()  && !hayPaginas()">
+				ng-if="!errorObj.hay && !tieneRechazo() && !esMalCitadaDesde() && hayDocumento()  && !hayPaginas()">
 
 				<div class="panel-body solicitar-inscripcion-body">
 					<div class="solicitar-mensaje">
@@ -124,7 +124,7 @@
 
 
 			<div class="panel panel-default"
-				ng-if="!errorObj.hay && !tieneRechazo() && !esMalCitadaDesde2014() && !hayDocumento()">
+				ng-if="!errorObj.hay && !tieneRechazo() && !esMalCitadaDesde() && !hayDocumento()">
 				<div class="panel-body solicitar-inscripcion-body">
 					<div class="solicitar-mensaje">
 						<h4>
@@ -274,7 +274,7 @@
 										</div>
 									</div>
 									<div class="anotacion-contenido"
-										ng-class="{'nota-eliminada': anotacion.estadoAnotacionDTO.idEstado==7}">
+										ng-class="{'nota-eliminada': anotacion.estadoAnotacionDTO.idEstado==7, 'nota-resaltada': anotacion.acto=='Alzamiento Total'||anotacion.acto=='Aclaratoria'}">
 										<span ng-bind-html="anotacion.texto"></span>
 										<span ng-if="!anotacion.caratula"> <br>Santiago,
 											{{anotacion.fechaCreacion | myMoment:'DD/MM/YYYY
@@ -357,7 +357,7 @@
 					</div>
 				</div>
 
-				<div ng-if="aioParametros.sistema!='AIO AGUAS'">
+				<div ng-if="aioParametros.sistema!='AIO AGUAS' && parametros.registro=='prop'">
 					<div class="panel panel-default"
 						ng-class="{'margin-top-30': esVersionado()}">
 						<div class="panel-heading">
@@ -907,7 +907,7 @@
 
 							<!--<div class="anotacion-wrapper"	ng-repeat="nota in notas track by nota.idAnotacion">-->
 							<div class="anotacion-wrapper"
-								ng-repeat="nota in filtered = (notas | filter:paginacionNotas.filterExprNotas | startFrom:(paginacionNotas.currentPage-1)*paginacionNotas.numPerPage | limitTo:paginacionNotas.numPerPage)">
+								ng-repeat="nota in filtered = (notas | orderBy:'idAnotacion':reverseNotas |  filter:paginacionNotas.filterExprNotas | startFrom:(paginacionNotas.currentPage-1)*paginacionNotas.numPerPage | limitTo:paginacionNotas.numPerPage )">
 
 								<div class="anotacion-modify"
 									ng-if="nota.estadoAnotacionDTO.idEstado==1 && nota.nombreUsuarioCreador.toUpperCase()==data.sesion.toUpperCase()">
@@ -950,9 +950,9 @@
 									</div>
 
 									<div class="borrador-field"
-										ng-if="nota.tipoAnotacionDTO.idTipoAnotacion==1 && nota.inscripcionDigitalByIdInscripcionOrigenDTO.foja
+										ng-if="nota.estadoAnotacionDTO.idEstado!=1 && nota.tipoAnotacionDTO.idTipoAnotacion==1 && nota.inscripcionDigitalByIdInscripcionOrigenDTO.foja
                     && nota.inscripcionDigitalByIdInscripcionOrigenDTO.numero && nota.inscripcionDigitalByIdInscripcionOrigenDTO.ano">
-										<a
+										<a 
 											ng-click="verInscripcion(nota.inscripcionDigitalByIdInscripcionOrigenDTO)">
 
 											Inscrito a Fojas
@@ -1004,7 +1004,7 @@
 										</div>
 
 										<div>
-											<i class="fa fa-calendar" tooltip="Fecha Aprobacion"></i>
+											<i class="fa fa-calendar" tooltip="Fecha Aprobación"></i>
 											{{nota.fechaAprobacion}}
 										</div>
 									</div>
@@ -1036,11 +1036,16 @@
 												{{nota.borrador}} </a>
 										</div>
 										<div>
-											Id Nota:
+											Id Nota Electr&oacute;nica:
 											<span ng-if="nota.idAnotacion"> {{nota.idAnotacion}} </span>
 											<span ng-if="!nota.idAnotacion"> - </span>
 										</div>
-										<div>
+										<div ng-if="nota.idNota">
+											Id Nota F&iacute;sica:
+											<span ng-if="nota.idAnotacion"> {{nota.idNota}} </span>
+											<span ng-if="!nota.idAnotacion"> - </span>
+										</div>										
+										<div ng-if="nota.direccion">
 											<i class="fa fa-map-marker" tooltip="Dirección"></i>
 											<span ng-if="nota.direccion">{{nota.direccion}}</span>
 											<span ng-if="!nota.direccion"> -</span>
