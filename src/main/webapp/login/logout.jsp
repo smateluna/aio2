@@ -8,7 +8,7 @@
 	 <%@ page session="true"%>
 	
 	 <% 
-		 //session.invalidate(); 
+		 session.invalidate(); 
 		 request.logout();
 		 
 	 %>
