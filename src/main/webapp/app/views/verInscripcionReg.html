@@ -76,8 +76,7 @@
 	<div class="columna-notas">
 
 		<!-- comienza solicitud masiva pre-caratula -->
-		<div class="panel panel-default" style="border-radius: 0;"
-			ng-show="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'">
+		<div class="panel panel-default" style="border-radius: 0;">
 			<div class="panel-heading">
 				<h4 class="panel-title" style="padding: 5px;">
 					<div class="pull-left">
@@ -171,7 +170,7 @@
 													ng-show="titulo.foja && titulo.numero && titulo.anio">
 													<i class="fa fa-search"></i>
 												</button>
-												<button type="button" class="btn btn-danger btn-xs"
+												<button type="button" class="btn btn-danger btn-xs" ng-show="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES' || perfil=='NOTERO'"
 													ng-click="removeRow(titulo)">
 													<i class="fa fa-trash-o"></i>
 												</button> 
