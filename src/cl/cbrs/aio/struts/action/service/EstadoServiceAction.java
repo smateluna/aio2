@@ -130,6 +130,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			
 
 		} catch (Exception e) {
+			logger.error(e);
 			json.put("msg", "Problemas en servidor obteniendo causales rechazo");
 		}
 
@@ -742,6 +743,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 		try {
 			json.writeJSONString(response.getWriter());
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}		
 	}	
