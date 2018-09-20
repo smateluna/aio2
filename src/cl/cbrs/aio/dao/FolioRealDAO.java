@@ -172,6 +172,7 @@ public class FolioRealDAO extends AbstractJdbcDao {
 				lista.add(dto);
 			}           
 		}catch (SQLException e) {
+			logger.error(e);
 			throw e;		
 		}finally {
 			if (conn != null) {
