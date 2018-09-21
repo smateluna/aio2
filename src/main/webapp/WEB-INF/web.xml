@@ -154,7 +154,7 @@
     
       
    <session-config>
-      <session-timeout>420</session-timeout>
+      <session-timeout>-1</session-timeout>
    </session-config>
    <error-page>
     <error-code>404</error-code>
