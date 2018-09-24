@@ -113,7 +113,7 @@
                 <level name="ERROR"/>
             </logger>
             <root-logger>
-                <level name="ERROR"/>
+                <level name="INFO"/>
                 <handlers>
                     <handler name="CONSOLE"/>
                 </handlers>
