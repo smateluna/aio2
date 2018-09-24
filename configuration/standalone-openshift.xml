@@ -649,7 +649,6 @@
                 </process-id>
             </core-environment>
             <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager" recovery-listener="true"/>
-            
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:undertow:4.0">
             <buffer-cache name="default"/>
