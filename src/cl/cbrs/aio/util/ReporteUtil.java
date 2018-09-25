@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.dto.estado.IngresoEgresoDTO;
@@ -28,7 +30,8 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class ReporteUtil {
 	
 	private final static String jasperPath = TablaValores.getValor("jasper.parametros", "path" , "valor");
-
+	private final static Logger logger= Logger.getLogger(ReporteUtil.class);
+			
 	public ReporteUtil(){
 
 	}
@@ -36,7 +39,8 @@ public class ReporteUtil {
 	public static ByteArrayOutputStream export (HashMap<String, Object> map, ArrayList<TareaDTO> tareas, List<RepertorioVO> repertorioVOs, HashMap<String, String> map2, 
 			ArrayList<MovimientoDTO> historial, String tipo, ArrayList<BitacoraDTO> bitacora, 
 			boolean hayIngresoEgreso, ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs) throws JRException{
-		
+		try{
+			System.out.println("GENREANDO REPORTEEEEEEEE");
 		List<JasperPrint> jasperPrintList  = new ArrayList<JasperPrint>();
 		JasperDesign jd = null;
 		
@@ -93,7 +97,12 @@ public class ReporteUtil {
 			exporter.exportReport();	
 		}
 
-		return out;	
+		return out;
+		}catch(Exception e){
+			logger.error(e);
+			throw e;
+		}
+		
 	}
 
 
