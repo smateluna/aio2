@@ -126,6 +126,12 @@
 			<artifactId>esapi</artifactId>
 			<version>2.1.0.1</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commonNotario</groupId>
@@ -175,14 +181,6 @@
 			<version>2.2</version>
 
 		</dependency>
-		<!-- dependency> <groupId>log4j</groupId> <artifactId>log4j</artifactId> 
-			<version>1.2.15</version> <exclusions> <exclusion> <groupId>com.sun.jmx</groupId> 
-			<artifactId>jmxri</artifactId> </exclusion> <exclusion> <groupId>com.sun.jdmk</groupId> 
-			<artifactId>jmxtools</artifactId> </exclusion> <exclusion> <groupId>javax.jms</groupId> 
-			<artifactId>jms</artifactId> </exclusion> </exclusions> </dependency -->
-		<!-- <dependency> <groupId>org.jboss.logging</groupId> <artifactId>jboss-logging</artifactId> 
-			<version>3.1.4.GA</version> </dependency> -->
-
 		<dependency>
 			<groupId>cl.cbrs.common</groupId>
 			<artifactId>commonEntregaEnLinea</artifactId>
@@ -194,12 +192,24 @@
 			<artifactId>BoletaElectronicaCommon</artifactId>
 			<version>1.0.0</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>cl.cbrs.common</groupId>
 			<artifactId>commonUsuario</artifactId>
 			<version>1.0.0</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>WSUsuariosCliente</groupId>
@@ -327,6 +337,12 @@
 			<artifactId>wsCaratulaCliente</artifactId>
 			<version>1.0.0</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commonIndice</groupId>
@@ -351,6 +367,12 @@
 			<artifactId>wsClienteEntregaEnLinea</artifactId>
 			<version>1.0.0</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>jpedal_lgpl</groupId>
@@ -441,6 +463,12 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>4.7.2</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>wsdl4j</groupId>
@@ -512,6 +540,12 @@
 			<artifactId>wro4j-extensions</artifactId>
 			<version>1.4.5</version>
 
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-discovery</groupId>
