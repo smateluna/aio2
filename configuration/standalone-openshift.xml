@@ -104,10 +104,9 @@
 					<named-formatter name="COLOR-PATTERN" />
 				</formatter>
 			</console-handler>
-			<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler"
-				module="io.sentry">
+		<!-- 	<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler"	module="io.sentry">
 				<level name="ERROR" />
-			</custom-handler>
+			</custom-handler> -->
 			<periodic-rotating-file-handler name="FILE"
 				autoflush="true">
 				<formatter>
@@ -129,7 +128,7 @@
 			<root-logger>
 				<level name="INFO" />
 				<handlers>
-				   <handler name="SENTRY" />
+				  <!--  <handler name="SENTRY" /> -->
 					<handler name="CONSOLE" />
 					<handler name="FILE" />
 				</handlers>
