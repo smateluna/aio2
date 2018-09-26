@@ -1,7 +1,7 @@
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
   <deployment>
    	<dependencies>
-   	 <!--  <module name="io.sentry"></module> -->
+   	  <module name="io.sentry"></module>
     </dependencies>
     <!-- <exclusions>
       <module name="org.apache.log4j" /> 
