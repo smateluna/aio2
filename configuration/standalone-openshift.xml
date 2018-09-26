@@ -40,6 +40,7 @@
 		<property name="http.nonProxyHosts" value="*" />
 		<property name="javax.net.ssl.trustStorePassword" value="trustme" />
 		<property name="javax.net.ssl.trustStore" value="/opt/truststore/truststore.jks" />
+		<property name="stacktrace.app.packages" value="cl.cbrs,cl.cbr"/>
 	</system-properties>
 
 	<management>
