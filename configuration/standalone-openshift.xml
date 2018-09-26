@@ -106,7 +106,7 @@
 			</console-handler>
 			<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler"
 				module="io.sentry">
-				<level name="WARN" />
+				<level name="ERROR" />
 			</custom-handler>
 			<periodic-rotating-file-handler name="FILE"
 				autoflush="true">
