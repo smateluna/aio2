@@ -107,6 +107,9 @@
 			<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler"
 				module="io.sentry">
 				<level name="WARN" />
+				<properties>
+				 <property name="stacktrace.app.packages" value="cl.cbrs,cl.cbr"/>
+				</properties>
 			</custom-handler>
 			<periodic-rotating-file-handler name="FILE"
 				autoflush="true">
@@ -122,6 +125,9 @@
 			</logger>
 			<logger category="org.jboss.as.config">
 				<level name="DEBUG" />
+			</logger>
+			<logger category="sun.rmi">
+				<level name="WARN" />
 			</logger>
 			<logger category="sun.rmi">
 				<level name="WARN" />
