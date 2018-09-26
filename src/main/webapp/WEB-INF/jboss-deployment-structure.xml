@@ -1,10 +1,11 @@
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
   <deployment>
    	<dependencies>
+   	 <!--  <module name="io.sentry"></module> -->
     </dependencies>
-    <exclusions>
+    <!-- <exclusions>
       <module name="org.apache.log4j" /> 
       <module name="io.netty" />
-    </exclusions>
+    </exclusions> -->
   </deployment>
   </jboss-deployment-structure>
