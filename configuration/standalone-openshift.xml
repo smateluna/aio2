@@ -104,15 +104,10 @@
 					<named-formatter name="COLOR-PATTERN" />
 				</formatter>
 			</console-handler>
-			<!--
 			<custom-handler name="SENTRY" class="io.sentry.jul.SentryHandler"
 				module="io.sentry">
 				<level name="WARN" />
-				<properties>
-				 <property name="stacktrace.app.packages" value="cl.cbrs,cl.cbr"/>
-				</properties>
 			</custom-handler>
-			-->
 			<periodic-rotating-file-handler name="FILE"
 				autoflush="true">
 				<formatter>
@@ -134,7 +129,7 @@
 			<root-logger>
 				<level name="INFO" />
 				<handlers>
-				   <!-- <handler name="SENTRY" />-->
+				   <handler name="SENTRY" />
 					<handler name="CONSOLE" />
 					<handler name="FILE" />
 				</handlers>
