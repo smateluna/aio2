@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -753,6 +754,10 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	@SuppressWarnings("unchecked")
 	public void getEstadoReporte(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		SimpleDateFormat sdfReporte = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		//KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+		//String usuario =context.getIdToken().getPreferredUsername();
+		
 		Date fecha = new Date();
 		String fechaReporte = sdfReporte.format(fecha);
 
@@ -883,7 +888,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 			if("pdf".equals(tipo))
 				response.setContentType("application/pdf");	
-			MDC.put("extra_key", "extra_value");
+			//MDC.put("extra_key", "extra_value");
 			bout = ReporteUtil.export(map, tareas, repertorioVOs, map2, historial, tipo, bitacoraCaratulaVOs, hayIngresoEgreso, ingresoEgresoDTOs);
 
 			out.write(bout.toByteArray());	
