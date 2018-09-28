@@ -82,6 +82,8 @@ import cl.cbrs.delegate.repertorio.WsRepertorioClienteDelegate;
 import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
 
 public class EstadoServiceAction extends CbrsAbstractAction {
 
@@ -881,7 +883,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 			if("pdf".equals(tipo))
 				response.setContentType("application/pdf");	
-
+			MDC.put("extra_key", "extra_value");
 			bout = ReporteUtil.export(map, tareas, repertorioVOs, map2, historial, tipo, bitacoraCaratulaVOs, hayIngresoEgreso, ingresoEgresoDTOs);
 
 			out.write(bout.toByteArray());	
