@@ -85,6 +85,7 @@ import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.log4j.MDC;
 import org.apache.log4j.NDC;
+import org.apache.shiro.util.ThreadContext;
 
 public class EstadoServiceAction extends CbrsAbstractAction {
 
@@ -884,8 +885,11 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);			
 			
 			//INGRESOS - EGRESOS
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
 			ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs = (ArrayList<IngresoEgresoDTO>)data.get("ingresoEgreso"); //caratulaEstadoDTO.getIngresoEgresoDTOs();//DataManager.getIngresoEgreso(Integer.valueOf(ncaratula));
-
+			ThreadContext.put("usuario", usuario);
 			if("pdf".equals(tipo))
 				response.setContentType("application/pdf");	
 			//MDC.put("extra_key", "extra_value");
