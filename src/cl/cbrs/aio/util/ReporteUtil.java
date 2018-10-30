@@ -49,7 +49,7 @@ public class ReporteUtil {
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
 		else
 			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath+"EstadoAI.jasper");
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath+"EstadoAIO.jasper");
 		
 		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
 		System.out.println(jasperPath +"EstadoAIO.jasper");// TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
