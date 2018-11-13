@@ -587,7 +587,7 @@
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.6</version>
-
+			<scope>compile</scope>	
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -628,13 +628,12 @@
 			<artifactId>barbecue</artifactId>
 			<version>1.5-beta1</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.keycloak</groupId>
+		    <artifactId>keycloak-core</artifactId>
+		    <version>4.5.0.Final</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
-<dependency>
-    <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-core</artifactId>
-    <version>4.0.0.Final</version>
-    <scope>provided</scope>
-</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
