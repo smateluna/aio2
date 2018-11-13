@@ -14,7 +14,6 @@ import io.sentry.event.helper.HttpEventBuilderHelper;
 public class MySentryClientFactory extends DefaultSentryClientFactory {
     @Override
     public SentryClient createSentryClient(Dsn dsn) {
-    	System.out.println("CREANDO FACTORY!!!!!----> "+dsn.toString());
         SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
         MyForwardedAddressResolver myForwardedAddressResolver = new MyForwardedAddressResolver();
         sentryClient.addBuilderHelper(new HttpEventBuilderHelper(myForwardedAddressResolver));
