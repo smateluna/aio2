@@ -242,7 +242,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 						fila.put("valor", valorCaratula);
 						tramites.add(fila2);
 						//				TITULO_10
-						valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Título Ultimos 10 Años", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
+						valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Tï¿½tulo Ultimos 10 Aï¿½os", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
 						JSONObject fila3 = new JSONObject();
 						fila3.put("nombre", "Certificado Titulo");
 						fila3.put("obs", obsCertiTitulo);
@@ -372,7 +372,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 						valorCaratula = valorDocumento(dto.getCantidadPaginas(), 0, 0, "TITULO_10").longValue();
 						montoTotal=montoTotal+valorCaratula;
 
-						ProductoVO productoVO = this.obtenerProductoVO(usuarioWeb,42L,valorCaratula,foja, numero,Integer.valueOf(ano),"Carpeta de Títulos Últimos 10 Años (Incluye GP y Copia con Vigencia)",receptorEmailVO);
+						ProductoVO productoVO = this.obtenerProductoVO(usuarioWeb,42L,valorCaratula,foja, numero,Integer.valueOf(ano),"Carpeta de Tï¿½tulos ï¿½ltimos 10 Aï¿½os (Incluye GP y Copia con Vigencia)",receptorEmailVO);
 
 						productosTx.add(productoVO);
 					}
@@ -445,7 +445,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 //					System.out.println("usuario summit solicitarTransaccionPagoWebResponse " + solicitarTransaccionPagoWebResponse.getEstadoTransaccion().getEstado());
 
 					if (!solicitarTransaccionPagoWebResponse.getEstadoTransaccion().getEstado().equals("OK")){
-						//pude escribir la tx en mis tablas pero falló otra cosa, TGR??
+						//pude escribir la tx en mis tablas pero fallï¿½ otra cosa, TGR??
 						if(solicitarTransaccionPagoWebResponse.getResponse()!=null){
 //							System.out.println(solicitarTransaccionPagoWebResponse.getResponse());
 						}
@@ -671,7 +671,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 
 							tramites.add(fila2);
 							//				TITULO_10
-							valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Título Ultimos 10 Años", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
+							valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Tï¿½tulo Ultimos 10 Aï¿½os", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
 							JSONObject fila3 = new JSONObject();
 							fila3.put("nombre", "Certificado Titulo");
 							fila3.put("obs", obsCertiTitulo);
@@ -879,7 +879,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		InscripcionCitadaTempVO ins = new InscripcionCitadaTempVO();
 		ins.setFoja(foja);
 		ins.setNumero(numero);
-		ins.setAño(ano);
+		ins.setAÃ±o(ano);
 		ins.setTipoForm(tipoFormularioCaratula.toString());
 		if("prop".equals(registro))
 			ins.setRegistro("1");
@@ -1598,7 +1598,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 						//									ProductoGlosaVO[] glosaProd = caratulaVO.getProducto().getListaProductoGlosaVO();
 						//									if(glosaProd!=null && glosaProd.length>0){	
 						//										for(ProductoGlosaVO pg : glosaProd){
-						//											if(pg.getGlosa().indexOf("Observación cliente:")>=0)
+						//											if(pg.getGlosa().indexOf("Observaciï¿½n cliente:")>=0)
 						//												fila.put("glosaProducto", pg.getGlosa().substring(20));
 						//										}			
 						//									}
@@ -1799,7 +1799,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 
 					WritableSheet s = w.createSheet("NOMINA"+z, 0);
 
-					//Tamaño de celdas
+					//Tamaï¿½o de celdas
 					s.setColumnView(0, 10);
 					s.setColumnView(1, 10);
 					s.setColumnView(2, 10);

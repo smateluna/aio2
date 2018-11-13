@@ -86,7 +86,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 				
 				status = true;
 			}else{
-				msg = "No se encontró ningun folio para borrador " + borrador;
+				msg = "No se encontrï¿½ ningun folio para borrador " + borrador;
 
 				status = false;
 			}
@@ -227,12 +227,12 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 						respuesta.put("listaBorradores", listaBorradoresJSON);
 						status=true;
 					}else{
-						msg="No se encontró ningun borrador para caratula " + caratula;
+						msg="No se encontrï¿½ ningun borrador para caratula " + caratula;
 						status=false;
 					}
 				}
 			} else{
-				msg="No se encontró ningun borrador para caratula " + caratula;
+				msg="No se encontrï¿½ ningun borrador para caratula " + caratula;
 				status=false;
 			}						
 					
@@ -292,7 +292,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 				respuesta.put("listaBorradores", listaBorradoresJSON);
 				status=true;
 			}else{
-				msg="No se encontró ningun borrador para inscripcion " + fojas +" - " + numero + " - " + anyo;
+				msg="No se encontrï¿½ ningun borrador para inscripcion " + fojas +" - " + numero + " - " + anyo;
 				status=false;
 			}
 
@@ -315,7 +315,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 	
 	private void propiedades(int borrador, int folio, Date fecha, int anyos, JSONObject respuesta) throws GeneralException {
 		JSONObject datosPropiedadJSON = new JSONObject();
-		JSONArray listaDueñosJSON = new JSONArray();
+		JSONArray listaDuenosJSON = new JSONArray();
 		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
 
 		datosPropiedadJSON.put("fecha", formatoDeFecha.format(fecha));
@@ -325,7 +325,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 		logger.debug("listaPropiedades size: " + listaPropiedades.size());
 
 		if(listaPropiedades.size()==0){				
-			respuesta.put("msg", "No se encontraron propiedades vigentes para b&uacute;squeda de borrador <strong>"+borrador+"</strong> folio <strong>"+folio+" </strong> y fecha <strong>"+fecha+" </strong> para los &uacute;ltimos <strong>"+anyos+" </strong> años");
+			respuesta.put("msg", "No se encontraron propiedades vigentes para b&uacute;squeda de borrador <strong>"+borrador+"</strong> folio <strong>"+folio+" </strong> y fecha <strong>"+fecha+" </strong> para los &uacute;ltimos <strong>"+anyos+" </strong> aï¿½os");
 		}
 
 		respuesta.put("estado", true);
@@ -383,19 +383,19 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 			propiedadJSON.put("urlPdf", url );
 			propiedadJSON.put("tienePdf", false);
 
-			listaDueñosJSON.add(propiedadJSON);
+			listaDuenosJSON.add(propiedadJSON);
 		}
 
 		respuesta.put("tieneNoVigenteProp",tieneNoVigente);
-		respuesta.put("duenyos",listaDueñosJSON);
+		respuesta.put("duenyos",listaDuenosJSON);
 		respuesta.put("datosPropiedad",datosPropiedadJSON);
 	}
 	
 	/**
-	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, AÑO) dejando en una sublista los
+	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, Aï¿½O) dejando en una sublista los
 	 * nombres de clientes y su vigencia para una misma propiedad 
 	 * @param listaPropiedades
-	 * @return Retorna lista de propiedades agrupadas por registro(FOJAS, NUMERO, AÑO)
+	 * @return Retorna lista de propiedades agrupadas por registro(FOJAS, NUMERO, Aï¿½O)
 	 */
 	private ArrayList<PropiedadDTO> obtenerDuenyos(ArrayList<PropiedadDTO> listaPropiedades) {
 		ArrayList<PropiedadDTO> listaResultado = new ArrayList<PropiedadDTO>();
@@ -619,7 +619,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 	}
 			
 	/**
-	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, AÑO, NATURALEZA) dejando en una sublista los
+	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, Aï¿½O, NATURALEZA) dejando en una sublista los
 	 * nombres de clientes y su vigencia para un mismo registro 
 	 * @param listaPropiedades
 	 * @return Retorna lista de acreedores 
@@ -825,7 +825,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 	}
 	
 	/**
-	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, AÑO, NATURALEZA) dejando en una sublista los
+	 * Agrupa el listado de entrada por registro (FOJAS, NUMERO, Aï¿½O, NATURALEZA) dejando en una sublista los
 	 * nombres de clientes y su vigencia para un mismo registro 
 	 * @param listaPropiedades
 	 * @return Retorna lista de acreedores 
