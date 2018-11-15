@@ -36,7 +36,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			HttpServletResponse response){
 		return null; //this.init(mapping, form, request, response);
 	}
-	
+
 	@SuppressWarnings({ "unchecked" })
 	public void getUsuariosLogueados(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
@@ -50,51 +50,51 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			cal.setTime(new Date());
 			cal.add(Calendar.HOUR_OF_DAY,-2);
 			Date vencido = cal.getTime();
-			
-			if(SessionCounter.USUARIOS!=null && SessionCounter.USUARIOS.size()>0){
-		        for( String key : SessionCounter.USUARIOS.keySet()){
-		        	UsuarioAIODTO usuarioAIO = SessionCounter.USUARIOS.get(key);
-		        	try{
-		        		if(usuarioAIO.getHttpSession()!=null){
-		        			Date fechaUltimoAcceso = new Date(usuarioAIO.getHttpSession().getLastAccessedTime());
 
-		        			if(fechaUltimoAcceso.before(vencido)){
-//		        				SessionCounter.USUARIOS.remove(key);
-		        				continue;
-		        			}
-		        		}
-		        		if(usuarioAIO.getFechaCreacionL()!=null){
-			        		Date fechaUltimoAcceso = new Date(usuarioAIO.getFechaUltimoAccesoL());
-		        			if(fechaUltimoAcceso.before(vencido)){
-//		        				SessionCounter.USUARIOS.remove(key);
-		        				continue;
-		        			}
-		        		}
-		        		if(usuarioAIO.getPath()!=null && !"".equals(usuarioAIO.getPath()))
-		        			listaUsuarios.add(usuarioAIO);
-		        	} catch(IllegalStateException e){
-		        		SessionCounter.USUARIOS.remove(key);
-		        	}
-		        }
-		        
-		        json.put("numeroSesiones", SessionCounter.USUARIOS.size());
+			if(SessionCounter.USUARIOS!=null && SessionCounter.USUARIOS.size()>0){
+				for( String key : SessionCounter.USUARIOS.keySet()){
+					UsuarioAIODTO usuarioAIO = SessionCounter.USUARIOS.get(key);
+					try{
+						if(usuarioAIO.getHttpSession()!=null){
+							Date fechaUltimoAcceso = new Date(usuarioAIO.getHttpSession().getLastAccessedTime());
+
+							if(fechaUltimoAcceso.before(vencido)){
+								//		        				SessionCounter.USUARIOS.remove(key);
+								continue;
+							}
+						}
+						if(usuarioAIO.getFechaCreacionL()!=null){
+							Date fechaUltimoAcceso = new Date(usuarioAIO.getFechaUltimoAccesoL());
+							if(fechaUltimoAcceso.before(vencido)){
+								//		        				SessionCounter.USUARIOS.remove(key);
+								continue;
+							}
+						}
+						if(usuarioAIO.getPath()!=null && !"".equals(usuarioAIO.getPath()))
+							listaUsuarios.add(usuarioAIO);
+					} catch(IllegalStateException e){
+						SessionCounter.USUARIOS.remove(key);
+					}
+				}
+
+				json.put("numeroSesiones", SessionCounter.USUARIOS.size());
 			}
-	        
-	        
-	        
+
+
+
 			json.put("listaUsuarios", listaUsuarios);
-			
+
 
 			json.put("estado", true);
-			
+
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al buscar usuario");
-			
+
 		}
 
 		try {
@@ -103,7 +103,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}	
-	
+
 	@SuppressWarnings({ "unchecked" })
 	public void setSessionActiva(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
@@ -114,7 +114,8 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		try {		
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
 			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 			UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
 			usuarioAIO.setNombre(usuario);
 			usuarioAIO.setPath(request.getParameter("path"));
@@ -127,15 +128,15 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			SessionCounter.USUARIOS.put(usuario, usuarioAIO);		
 
 			json.put("estado", true);
-			
+
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al buscar usuario");
-			
+
 		}
 
 		try {
@@ -144,7 +145,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}
-	
+
 
 	@SuppressWarnings({ "unchecked" })
 	public void getUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -156,15 +157,25 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
 		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 		String usuario =context.getIdToken().getPreferredUsername();
-			
+
 		System.out.println("Obteniendo datos de usuario..."+usuario);
-			try {		
-			
+		try {		
+
 			json.put("nombreUsuario", usuario);
-			 logger.debug("Obteniendo datos de usuario..."+usuario);
+			logger.debug("Obteniendo datos de usuario..."+usuario);
 			//Propiedades AIO
 			json.put("sistema", CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 			json.put("anoArchivoNacional", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_ARCHIVO_NACIONAL")));
+			json.put("anoDigitalPropiedades", 2014);
+			json.put("anoDigitalHipotecas", 2018);
+			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROPIEDADES")!=null)
+				json.put("anoDigitalPropiedades", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROPIEDADES")));
+			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_HIPOTECAS")!=null)
+				json.put("anoDigitalHipotecas", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_HIPOTECAS")));
+			if(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROHIBICIONES")!=null)
+				json.put("anoDigitalProhibiciones", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("ANO_DIGITAL_PROHIBICIONES")));
+			if(CacheAIO.CACHE_CONFIG_AIO.get("FOJAS_DIGITAL_PROHIBICIONES")!=null)
+				json.put("fojasDigitalProhibiciones", new Integer(CacheAIO.CACHE_CONFIG_AIO.get("FOJAS_DIGITAL_PROHIBICIONES")));	
 
 			json.put("modulo", (String) request.getSession().getAttribute("modulo"));
 			json.put("grupo", (String) request.getSession().getAttribute("grupo"));
@@ -172,19 +183,19 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			json.put("userIpAddress", (String) request.getSession().getAttribute("userIpAddress"));
 			json.put("ipSocket", (String) request.getSession().getAttribute("ipSocket"));
 			json.put("puertoSocket", (String) request.getSession().getAttribute("puertoSocket"));
-						
+
 			json.put("estado", true);
-			
-			
-			
+
+
+
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al buscar usuario");
-			
+
 		}
 
 		try {
@@ -193,91 +204,91 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}
-	
+
 	@SuppressWarnings({ "unchecked" })
 	public void getPermisosUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 
 		JSONObject json = new JSONObject();
 		UsuarioUtil util = new UsuarioUtil();
-		
+
 		String perfil = request.getParameter("perfil");	
-		
+
 		json.put("status", false);	
 
 		try {		
-			
+
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
 			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
-			 System.out.println("Obteniendo datos de usuario..."+usuario);
-			
-//			if(usuario!=null && !"".equals(usuario)){
-				usuario = usuario.replaceAll("CBRS\\\\", "");
-				ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
-				UsuarioPerfilVO usuarioPerfilVO = new UsuarioPerfilVO();
-				String rut = (String) request.getSession().getAttribute("rutUsuario");
-				String nombreUsuario = (String) request.getSession().getAttribute("nombreUsuario");
-				String modulo = (String) request.getSession().getAttribute("modulo");
-				String grupo = (String) request.getSession().getAttribute("grupo");
-				String userIpAddress = (String) request.getSession().getAttribute("userIpAddress");
-				Boolean activoAtencion = (Boolean) request.getSession().getAttribute("activoAtencion");
-				String ipSocket = (String) request.getSession().getAttribute("ipSocket");
-				String puertoSocket = (String) request.getSession().getAttribute("puertoSocket");
-				String idPerfil = (String) request.getSession().getAttribute("idPerfil");
-								
-				if(listaPermisos==null){
-					listaPermisos = util.getPermisosUsuario(usuario, perfil, usuarioPerfilVO);	
-					nombreUsuario = usuarioPerfilVO.getNombreUsuario();
-					rut = usuarioPerfilVO.getRut();
-					request.getSession().setAttribute("permisosUsuario",listaPermisos);
-					request.getSession().setAttribute("rutUsuario", rut);
-					request.getSession().setAttribute("nombreUsuario", nombreUsuario);	
-					request.getSession().setAttribute("usuario", usuario);
-					request.getSession().setAttribute("idPerfil",idPerfil);
-					
-					//Verifico si perfil aplica para atencion de modulos - RG
-					String valor = TablaValores.getValor("aio.parametros", "perfiles_atencion_publico", perfil.toLowerCase());
-					if(null!=valor && valor.equals("1")){
-						userIpAddress = request.getRemoteAddr();
-						//modulo;activo(boolean);grupo;
-						activoAtencion = Boolean.parseBoolean(TablaValores.getValor("aio.parametros", userIpAddress, "activo"));
-						if(null!=activoAtencion){
-							request.getSession().setAttribute("activoAtencion", activoAtencion);
-							if(activoAtencion){
-								modulo = TablaValores.getValor("aio.parametros", userIpAddress, "modulo");
-								grupo = TablaValores.getValor("aio.parametros", userIpAddress, "grupo");
-								ipSocket = TablaValores.getValor("atencion_publico.parametros", "ip", "valor");
-								puertoSocket = TablaValores.getValor("atencion_publico.parametros", "puerto", "valor");
-								request.getSession().setAttribute("userIpAddress",userIpAddress);
-								request.getSession().setAttribute("modulo",modulo);
-								request.getSession().setAttribute("grupo",grupo);
-								request.getSession().setAttribute("ipSocket",ipSocket);
-								request.getSession().setAttribute("puertoSocket",puertoSocket);
-							}
+			System.out.println("Obteniendo datos de usuario..."+usuario);
+
+			//			if(usuario!=null && !"".equals(usuario)){
+			usuario = usuario.replaceAll("CBRS\\\\", "");
+			ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
+			UsuarioPerfilVO usuarioPerfilVO = new UsuarioPerfilVO();
+			String rut = (String) request.getSession().getAttribute("rutUsuario");
+			String nombreUsuario = (String) request.getSession().getAttribute("nombreUsuario");
+			String modulo = (String) request.getSession().getAttribute("modulo");
+			String grupo = (String) request.getSession().getAttribute("grupo");
+			String userIpAddress = (String) request.getSession().getAttribute("userIpAddress");
+			Boolean activoAtencion = (Boolean) request.getSession().getAttribute("activoAtencion");
+			String ipSocket = (String) request.getSession().getAttribute("ipSocket");
+			String puertoSocket = (String) request.getSession().getAttribute("puertoSocket");
+			String idPerfil = (String) request.getSession().getAttribute("idPerfil");
+
+			if(listaPermisos==null){
+				listaPermisos = util.getPermisosUsuario(usuario, perfil, usuarioPerfilVO);	
+				nombreUsuario = usuarioPerfilVO.getNombreUsuario();
+				rut = usuarioPerfilVO.getRut();
+				request.getSession().setAttribute("permisosUsuario",listaPermisos);
+				request.getSession().setAttribute("rutUsuario", rut);
+				request.getSession().setAttribute("nombreUsuario", nombreUsuario);	
+				request.getSession().setAttribute("usuario", usuario);
+				request.getSession().setAttribute("idPerfil",idPerfil);
+
+				//Verifico si perfil aplica para atencion de modulos - RG
+				String valor = TablaValores.getValor("aio.parametros", "perfiles_atencion_publico", perfil.toLowerCase());
+				if(null!=valor && valor.equals("1")){
+					userIpAddress = getIpUsuario(request);
+					//modulo;activo(boolean);grupo;
+					activoAtencion = Boolean.parseBoolean(TablaValores.getValor("aio.parametros", userIpAddress, "activo"));
+					if(null!=activoAtencion){
+						request.getSession().setAttribute("activoAtencion", activoAtencion);
+						if(activoAtencion){
+							modulo = TablaValores.getValor("aio.parametros", userIpAddress, "modulo");
+							grupo = TablaValores.getValor("aio.parametros", userIpAddress, "grupo");
+							ipSocket = TablaValores.getValor("atencion_publico.parametros", "ip", "valor");
+							puertoSocket = TablaValores.getValor("atencion_publico.parametros", "puerto", "valor");
+							request.getSession().setAttribute("userIpAddress",userIpAddress);
+							request.getSession().setAttribute("modulo",modulo);
+							request.getSession().setAttribute("grupo",grupo);
+							request.getSession().setAttribute("ipSocket",ipSocket);
+							request.getSession().setAttribute("puertoSocket",puertoSocket);
 						}
 					}
-					//Fin - Verifico si perfil aplica para atencion de modulos - RG
 				}
+				//Fin - Verifico si perfil aplica para atencion de modulos - RG
+			}
 
-				json.put("ipSocket", ipSocket);
-				json.put("puertoSocket", puertoSocket);
-				json.put("activoAtencion", activoAtencion);
-				json.put("modulo", modulo);
-				json.put("grupo", grupo);
-				json.put("userIpAddress", userIpAddress);
-				json.put("idPerfil", idPerfil);
-								
-				json.put("permisosUsuario", listaPermisos);
-				json.put("status", true);
+			json.put("ipSocket", ipSocket);
+			json.put("puertoSocket", puertoSocket);
+			json.put("activoAtencion", activoAtencion);
+			json.put("modulo", modulo);
+			json.put("grupo", grupo);
+			json.put("userIpAddress", userIpAddress);
+			json.put("idPerfil", idPerfil);
 
-				
-//			} 			
+			json.put("permisosUsuario", listaPermisos);
+			json.put("status", true);
+
+
+			//			} 			
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getPermisosUsuario: " + e.getMessage(), e);
 			json.put("msg", "Este usuario no tiene modulos configurados para perfil " + perfil);
 		}
@@ -288,51 +299,70 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}
-	
+
+	public String getIpUsuario(HttpServletRequest request){
+
+		String ip = request.getHeader("x-real-ip");
+
+		if(ip==null){
+			ip = request.getRemoteAddr();
+		}
+
+		//		Enumeration<String> headerNames = request.getHeaderNames();
+		//        while (headerNames.hasMoreElements()) {
+		//            String headerName = headerNames.nextElement();
+		//            String headerValue = request.getHeader(headerName);
+		//            System.out.println("Header Name: " + headerName + " Header Value: " + headerValue);
+		//        }
+
+		return ip;
+	}
+
+
 	@SuppressWarnings({ "unchecked" })
 	public void getPerfilesUsuario(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 
 		JSONObject json = new JSONObject();
 		UsuarioUtil util = new UsuarioUtil();
-		
+
 		json.put("status", false);	
 
 		try {		
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
 			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
-			 System.out.println("Obteniendo datos de usuario..."+usuario);
+			System.out.println("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");
-//			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
+			//			ArrayList<String> listaPerfiles = util.getPerfilesUsuario(usuario);			
 			JSONArray listaPerfiles = util.getPerfilesUsuario(usuario);
-			
+
 			if(listaPerfiles!=null && listaPerfiles.size()>0){
 				json.put("perfilesUsuario", listaPerfiles);
 				json.put("status", true);
 			} else{
 				//Usuario defecto
 				listaPerfiles = util.getPerfilesUsuario("aiobasico");	
-				
+
 				if(listaPerfiles!=null && listaPerfiles.size()>0){
 					json.put("perfilesUsuario", listaPerfiles);
 					json.put("status", true);
 				} else{	
 					json.put("msg", "Este usuario no puede utilizar esta aplicacion");
 					json.put("status", false);
-					
-		        	if(request.getSession()!=null){
-		        		request.getSession().invalidate();
-		        	}
+
+					if(request.getSession()!=null){
+						request.getSession().invalidate();
+					}
 				}
 			}
-						
+
 		} catch (Exception e) {
 			e.printStackTrace();
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getPermisosUsuario: " + e.getMessage(), e);
 			json.put("msg", "Este usuario no puede utilizar esta aplicacion");
 		}
@@ -343,11 +373,11 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}	
-	
+
 	@SuppressWarnings({ "unchecked" })
 	public void getSessionAttribute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
-		
+
 		String attributeReq = request.getParameter("attribute");
 
 		JSONObject json = new JSONObject();
@@ -355,20 +385,20 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			String attribute = (String)request.getSession().getAttribute(attributeReq);
-			
+
 			if(attribute!=null && !"".endsWith(attribute)){
 				json.put("value", attribute);
 				json.put("estado", true);
 			} 
-			
+
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al obtener variable en sesion");
-			
+
 		}
 
 		try {
@@ -377,11 +407,11 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			e.printStackTrace();
 		}		
 	}
-	
+
 	@SuppressWarnings({ "unchecked" })
 	public void setSessionAttribute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
-		
+
 		String attributeReq = request.getParameter("attribute");
 		String valueReq = request.getParameter("value");
 
@@ -392,15 +422,15 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			request.getSession().setAttribute(attributeReq, valueReq);			
 
 			json.put("estado", true);
-			
+
 		} catch (Exception e) {
-        	if(request.getSession()!=null){
-        		request.getSession().invalidate();
-        	}
-        	
+			if(request.getSession()!=null){
+				request.getSession().invalidate();
+			}
+
 			logger.error("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al setear variable en sesion");
-			
+
 		}
 
 		try {
