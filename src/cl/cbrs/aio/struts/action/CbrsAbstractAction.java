@@ -3,10 +3,12 @@ package cl.cbrs.aio.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.util.ThreadContext;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.keycloak.KeycloakSecurityContext;
 
 /**
  * 
@@ -32,6 +34,10 @@ public abstract class CbrsAbstractAction extends DispatchAction{
 			HttpServletResponse response, String name) throws Exception {
 		try{
 			//request.setCharacterEncoding("UTF-8"); 
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
+			ThreadContext.put("extra_key", usuario);
 			
 			return super.dispatchMethod(mapping, form, request, response, name);	
 		} catch (NoSuchMethodException exception){

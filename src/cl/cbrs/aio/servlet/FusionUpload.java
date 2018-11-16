@@ -3,7 +3,6 @@ package cl.cbrs.aio.servlet;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,25 +24,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
-
-
-import cl.cbr.util.ErroresUtil;
-import cl.cbr.util.TablaValores;
-import cl.cbrs.aio.dao.DocumentoDAO;
-import cl.cbrs.aio.documentos.DocumentosCliente;
-import cl.cbrs.aio.dto.DocumentoDTO;
-import cl.cbrs.aio.dto.estado.CaratulaEstadoDTO;
-import cl.cbrs.aio.dto.estado.MovimientoDTO;
-import cl.cbrs.aio.util.CaratulaEstadoUtil;
-import cl.cbrs.aio.util.CaratulasUtil;
-import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
-import cl.cbrs.caratula.flujo.vo.CaratulaVO;
-import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
-import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
-import cl.cbrs.caratula.flujo.vo.SeccionVO;
-import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
-import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
@@ -61,6 +41,22 @@ import com.itextpdf.text.pdf.PdfWriter;
 //import com.lowagie.text.pdf.PdfImportedPage;
 //import com.lowagie.text.pdf.PdfReader;
 //import com.lowagie.text.pdf.PdfWriter;
+
+import cl.cbr.util.TablaValores;
+import cl.cbrs.aio.dao.DocumentoDAO;
+import cl.cbrs.aio.documentos.DocumentosCliente;
+import cl.cbrs.aio.dto.DocumentoDTO;
+import cl.cbrs.aio.dto.estado.CaratulaEstadoDTO;
+import cl.cbrs.aio.dto.estado.MovimientoDTO;
+import cl.cbrs.aio.util.CaratulaEstadoUtil;
+import cl.cbrs.aio.util.CaratulasUtil;
+import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
+import cl.cbrs.caratula.flujo.vo.CaratulaVO;
+import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
+import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
+import cl.cbrs.caratula.flujo.vo.SeccionVO;
+import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
+import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 
 /**
  * Servlet to handle File upload request from Client

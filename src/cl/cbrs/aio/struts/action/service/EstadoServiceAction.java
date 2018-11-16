@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -82,6 +83,9 @@ import cl.cbrs.delegate.repertorio.WsRepertorioClienteDelegate;
 import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
+import org.apache.shiro.util.ThreadContext;
 
 public class EstadoServiceAction extends CbrsAbstractAction {
 
@@ -751,6 +755,10 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	@SuppressWarnings("unchecked")
 	public void getEstadoReporte(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		SimpleDateFormat sdfReporte = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		//KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+		//String usuario =context.getIdToken().getPreferredUsername();
+		
 		Date fecha = new Date();
 		String fechaReporte = sdfReporte.format(fecha);
 
@@ -877,11 +885,14 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);			
 			
 			//INGRESOS - EGRESOS
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
 			ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs = (ArrayList<IngresoEgresoDTO>)data.get("ingresoEgreso"); //caratulaEstadoDTO.getIngresoEgresoDTOs();//DataManager.getIngresoEgreso(Integer.valueOf(ncaratula));
-
+			ThreadContext.put("usuario", usuario);
 			if("pdf".equals(tipo))
 				response.setContentType("application/pdf");	
-
+			//MDC.put("extra_key", "extra_value");
 			bout = ReporteUtil.export(map, tareas, repertorioVOs, map2, historial, tipo, bitacoraCaratulaVOs, hayIngresoEgreso, ingresoEgresoDTOs);
 
 			out.write(bout.toByteArray());	

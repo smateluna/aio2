@@ -1,164 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<display-name>aio</display-name>
-	<distributable/>
-	<servlet>
-		<servlet-name>action</servlet-name>
-		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-		<init-param>
-			<param-name>config</param-name>
-			<param-value>/WEB-INF/struts-config.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>debug</param-name>
-			<param-value>3</param-value>
-		</init-param>
-		<init-param>
-			<param-name>detail</param-name>
-			<param-value>3</param-value>
-		</init-param>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
-	<servlet>
-	    <servlet-name>CACHE_AIO</servlet-name>
-	    <servlet-class>cl.cbrs.aio.servlet.CacheAIO</servlet-class>
-	    <load-on-startup>1</load-on-startup>
-	</servlet>	
-    <servlet-mapping>
-        <servlet-name>CACHE_AIO</servlet-name>
-        <url-pattern>/cacheAIO</url-pattern>
-    </servlet-mapping>	
-	<servlet>
-        <servlet-name>FileUpload</servlet-name>
-        <servlet-class>cl.cbrs.aio.servlet.FileUpload</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FileUpload</servlet-name>
-        <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>FusionUpload</servlet-name>
-        <servlet-class>cl.cbrs.aio.servlet.FusionUpload</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FusionUpload</servlet-name>
-        <url-pattern>/fusionUpload</url-pattern>
-    </servlet-mapping>
-    <listener>
-        <listener-class>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" id="WebApp_ID" version="2.4">
+  <display-name>aio</display-name>
+  <distributable/>
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>3</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>3</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>CACHE_AIO</servlet-name>
+    <servlet-class>cl.cbrs.aio.servlet.CacheAIO</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CACHE_AIO</servlet-name>
+    <url-pattern>/cacheAIO</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>FileUpload</servlet-name>
+    <servlet-class>cl.cbrs.aio.servlet.FileUpload</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FileUpload</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>FusionUpload</servlet-name>
+    <servlet-class>cl.cbrs.aio.servlet.FusionUpload</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FusionUpload</servlet-name>
+    <url-pattern>/fusionUpload</url-pattern>
+  </servlet-mapping>
+  <listener>
+    <listener-class>
             cl.cbrs.aio.listener.SessionCounter
         </listener-class>
-    </listener>	
-	<servlet-mapping>
-		<servlet-name>action</servlet-name>
-		<url-pattern>/do/*</url-pattern>
-	</servlet-mapping>
-	<!-- welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list-->
-	<welcome-file-list>
-    	<welcome-file>index.jsp</welcome-file>
-  	</welcome-file-list>
-	
-	
-	
-	<security-constraint>
-      <web-resource-collection>
-         <web-resource-name>*</web-resource-name>
-         <url-pattern>/*</url-pattern>
-         <http-method>GET</http-method>
-         <http-method>POST</http-method>
-      </web-resource-collection>
-     <auth-constraint>
-         <role-name>*</role-name>
-      </auth-constraint>
-   </security-constraint>
-	<security-constraint><!--Exclude servicio gp -->
-		<web-resource-collection>
-			<web-resource-name>GP Online</web-resource-name>
-			<url-pattern>/do/service/gponline/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint> 
-	<security-constraint><!--Exclude servicio Util -->
-		<web-resource-collection>
-			<web-resource-name>Util</web-resource-name>
-			<url-pattern>/do/service/util/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>	  
-   <security-constraint><!--Exclude css and images here -->
-         <web-resource-collection>
-            <web-resource-name>Exclude from Security</web-resource-name>
-            <url-pattern>/login/*</url-pattern><!-- No security for images -->
-            <url-pattern>/login/css/*</url-pattern><!-- No security for images -->
-         </web-resource-collection>
-   </security-constraint>
-	<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>bower components</web-resource-name>
-			<url-pattern>/app/bower_components/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>
-	<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>fonts</web-resource-name>
-			<url-pattern>/app/fonts/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>	
-	<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>images</web-resource-name>
-			<url-pattern>/app/images/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>		
-	<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>styles</web-resource-name>
-			<url-pattern>/app/styles/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>	
-		<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>scripts</web-resource-name>
-			<url-pattern>/app/scripts/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>	
-		<security-constraint><!--Exclude css and images here -->
-		<web-resource-collection>
-			<web-resource-name>views</web-resource-name>
-			<url-pattern>/app/views/*</url-pattern><!-- No security for assets -->
-		</web-resource-collection>
-	</security-constraint>	   
-	
-	
-	
-	
-   <login-config>
-      <auth-method>FORM</auth-method>
-      <realm-name>Authentication require</realm-name>
-      <form-login-config>
-            <form-login-page>/login/index.jsp</form-login-page>
-            <form-error-page>/login/index.jsp?error=1</form-error-page>
-      </form-login-config>
-   </login-config>
-   
-    <security-role>
-        <role-name>*</role-name>
-    </security-role> 
-    
-      
-   <session-config>
-      <session-timeout>-1</session-timeout>
-   </session-config>
-   <error-page>
+  </listener>
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>/do/*</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>*</web-resource-name>
+      <url-pattern>/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>GP Online</web-resource-name>
+      <url-pattern>/do/service/gponline/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Util</web-resource-name>
+      <url-pattern>/do/service/util/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Exclude from Security</web-resource-name>
+      <url-pattern>/login/*</url-pattern>
+      <url-pattern>/login/css/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>bower components</web-resource-name>
+      <url-pattern>/app/bower_components/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>fonts</web-resource-name>
+      <url-pattern>/app/fonts/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>images</web-resource-name>
+      <url-pattern>/app/images/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>styles</web-resource-name>
+      <url-pattern>/app/styles/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>scripts</web-resource-name>
+      <url-pattern>/app/scripts/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>views</web-resource-name>
+      <url-pattern>/app/views/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>Authentication require</realm-name>
+    <form-login-config>
+      <form-login-page>/login/index.jsp</form-login-page>
+      <form-error-page>/login/index.jsp?error=1</form-error-page>
+    </form-login-config>
+  </login-config>
+  <security-role>
+    <role-name>*</role-name>
+  </security-role>
+  <session-config>
+    <session-timeout>-1</session-timeout>
+  </session-config>
+  <error-page>
     <error-code>404</error-code>
     <location>/index.jsp</location>
-</error-page>
-	
+  </error-page>
 </web-app>
