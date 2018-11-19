@@ -879,8 +879,8 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		InscripcionCitadaTempVO ins = new InscripcionCitadaTempVO();
 		ins.setFoja(foja);
 		ins.setNumero(numero);
-		ins.setAÃ±o(ano);
 		ins.setTipoForm(tipoFormularioCaratula.toString());
+		ins.setAño(ano);
 		if("prop".equals(registro))
 			ins.setRegistro("1");
 		else if("hip".equals(registro))
