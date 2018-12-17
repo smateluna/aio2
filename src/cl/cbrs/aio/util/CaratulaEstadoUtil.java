@@ -826,7 +826,7 @@ public class CaratulaEstadoUtil {
 					}else if("p".equalsIgnoreCase(caratulaEstadoDTO.getDatosFormularioDTO().getEstado().trim())){
 						data.put("estadoFormDesc", "Proceso");
 					}else if("w".equalsIgnoreCase(caratulaEstadoDTO.getDatosFormularioDTO().getEstado().trim())){
-						data.put("estadoFormDesc", "Auditoría");
+						data.put("estadoFormDesc", "AuditorÃ­a");
 					}
 					
 					String ccc = caratulaEstadoDTO.getDatosFormularioDTO().getClienteCuentaCorriente();
@@ -1058,7 +1058,7 @@ public class CaratulaEstadoUtil {
 						data.put("diferencia", diferencia);					
 					}
 
-					obs = obs + "Carátula ANULADA ";
+					obs = obs + "CarÃ¡tula ANULADA ";
 
 					if(anulaDTO.getAnulaVO()!=null){
 						String nombreAnula = anulaDTO.getAnulaVO().getNombre();
@@ -1229,14 +1229,14 @@ public class CaratulaEstadoUtil {
 
 				} else{				
 					respuesta.put("success", false);
-					respuesta.put("errorMessage", "Carátula "+numeroCaratula+" no existe");
+					respuesta.put("errorMessage", "CarÃ¡tula "+numeroCaratula+" no existe");
 				}
 			}				
 			
 
 		} catch (NumberFormatException e1) {
 			respuesta.put("success", false);	
-			respuesta.put("errorMessage", "Carátula "+numeroCaratula+" no válida");
+			respuesta.put("errorMessage", "CarÃ¡tula "+numeroCaratula+" no vÃ¡lida");
 		} catch (GeneralException e) {
 			respuesta.put("success", false);	
 			respuesta.put("errorMessage", "Error en el server");

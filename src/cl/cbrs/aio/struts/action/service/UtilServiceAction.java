@@ -198,10 +198,6 @@ public class UtilServiceAction extends CbrsAbstractAction {
 				map2.put("fechaReporte", fechaReporte);
 				map2.put("ncaratula", ""+data.get("ncaratula"));	
 	
-				//REPERTORIO
-				WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
-				List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);			
-	
 				if("pdf".equals(tipo))
 					response.setContentType("application/pdf");
 				

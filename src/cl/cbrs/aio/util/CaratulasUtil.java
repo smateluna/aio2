@@ -488,7 +488,7 @@ public class CaratulasUtil {
 			bitacoraCaratulaVO.setNumeroCaratula(numeroCaratula);
 			BitacoraTipoEventoVO bitacoraTipoEventoVO = new BitacoraTipoEventoVO();
 			bitacoraTipoEventoVO.setIdTipoEvento(5);
-			bitacoraTipoEventoVO.setDescripcionTipoEvento("Observación");
+			bitacoraTipoEventoVO.setDescripcionTipoEvento("ObservaciÃ³n");
 			bitacoraCaratulaVO.setBitacoraTipoEventoVO(bitacoraTipoEventoVO );
 			bitacoraCaratulaVO.setRutFuncionario(rutFuncionario);
 			bitacoraCaratulaVO.setCategoria(categoria);
@@ -688,7 +688,7 @@ public class CaratulasUtil {
 		//PAPELES
 		ClienteWsFirmadorDelegate clienteWsFirmadorDelegate = new ClienteWsFirmadorDelegate();
 
-		//papeles carátula
+		//papeles CarÃ¡tula
 		RegistroFirmaElectronicaVO[] papeles =  clienteWsFirmadorDelegate.obtenerListaDocumentosPorCaratula(liquidacionCaratulaDTO.getCaratula().getNumeroCaratula());
 
 		if(papeles!=null && papeles.length>0){

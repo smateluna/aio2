@@ -80,7 +80,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 
 
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else{
 
 			try {		
@@ -145,7 +145,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 		ArrayList<SolicitudDTO> solicitudDTOs = new ArrayList<SolicitudDTO>();
 
 		if(StringUtils.isBlank(rut)){
-			msg = "Se requiere rut para realizar b˙squeda.";
+			msg = "Se requiere rut para realizar b√∫squeda.";
 		}else{
 
 			try {		
@@ -293,7 +293,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 					String dv1 = rut.substring(rut.length()-1, rut.length());
 					
 					if(StringUtils.isBlank(rut1) || StringUtils.isBlank(dv1)){
-						msg = "Rut no v·lido.";														
+						msg = "Rut no v√°lido.";														
 					}else{
 
 						if(!StringUtils.isBlank(dv1)){
@@ -303,9 +303,9 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 						}
 
 						if(StringUtils.isBlank(rut1)){
-							msg = "Rut no v·lido.";	
+							msg = "Rut no v√°lido.";	
 						}else if(!RUTUtil.validaDigitoVerificador(rut1, dv1)){
-							msg = "Rut no v·lido.";																				
+							msg = "Rut no v√°lido.";																				
 						}else{
 							try {
 								rutF = Long.parseLong(rut1);
@@ -316,7 +316,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 								
 								//rutOK = true;
 							} catch (Exception e) {
-								msg = "Rut no v·lido.";																				
+								msg = "Rut no v√°lido.";																				
 							}
 						}	
 					}
@@ -453,13 +453,13 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(foja==null || foja.intValue()==0){
-			msg = "Foja no v·lida.";
+			msg = "Foja no v√°lida.";
 		}else if(numero==null || numero.intValue()==0){
-			msg = "N˙mero no v·lido.";
+			msg = "N√∫mero no v√°lido.";
 		}else if(ano==null || ano.intValue()==0){
-			msg = "AÒo no v·lido.";
+			msg = "A√±o no v√°lido.";
 		}else{
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
 			
@@ -502,7 +502,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 						}else{
 							msg = "Tipo de documento desconocido. Tipo: "+tipoDocumento;
 						}
-					}else{ //tengo respuesta, pero no tengo papel de ning˙n tipo
+					}else{ //tengo respuesta, pero no tengo papel de ning√∫n tipo
 						Boolean fna = digitalUtil.consultaIndiceProhibiciones(foja, numerop, ano);
 
 						estado.put("fna", fna);
@@ -615,13 +615,13 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 		
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(foja==null || foja.intValue()==0){
-			msg = "Foja no v·lida.";
+			msg = "Foja no v√°lida.";
 		}else if(numero==null || numero.intValue()==0){
-			msg = "N˙mero no v·lido.";
+			msg = "N√∫mero no v√°lido.";
 		}else if(ano==null || ano.intValue()==0){
-			msg = "AÒo no v·lido.";
+			msg = "A√±o no v√°lido.";
 		}else{
 			
 			SolicitudUtil solicitudUtil = new SolicitudUtil();
@@ -673,11 +673,11 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 		
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(idSolicitud==null || idSolicitud.intValue()==0){
-			msg = "Solicitud no v·lida.";
+			msg = "Solicitud no v√°lida.";
 		}else if(StringUtils.isBlank(accionp) && !"remove-rechazo".equals(accionp) && !"remove-ok".equals(accionp)){
-			msg = "AcciÛn no v·lida, intente de nuevo.";
+			msg = "Acci√≥n no v√°lida, intente de nuevo.";
 		}else{
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
 
@@ -793,7 +793,7 @@ public class SolicitudProhibicionesServiceAction extends CbrsAbstractAction {
 		ArrayList<SolicitudDTO> solicitudDTOs = new ArrayList<SolicitudDTO>();
 
 		if(StringUtils.isBlank(foja.toString()) || StringUtils.isBlank(numero) || StringUtils.isBlank(ano.toString())){
-			msg = "Se requiere todos los datos para realizar b˙squeda.";
+			msg = "Se requiere todos los datos para realizar b√∫squeda.";
 		}else{
 
 			try {		

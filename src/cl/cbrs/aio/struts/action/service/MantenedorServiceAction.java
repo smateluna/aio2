@@ -367,7 +367,7 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){
-				msg = "No hay usuario, inicie sesión nuevamente.";
+				msg = "No hay usuario, inicie sesiÃ³n nuevamente.";
 				status = false;
 			}else{
 				FlujoDAO flujoDao = new FlujoDAO();
@@ -410,7 +410,7 @@ public class MantenedorServiceAction extends CbrsAbstractAction {
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){
-				msg = "No hay usuario, inicie sesión nuevamente.";
+				msg = "No hay usuario, inicie sesiÃ³n nuevamente.";
 				status = false;
 			}else{
 				if(ctaCteReq!=null && !"".equals(ctaCteReq)){

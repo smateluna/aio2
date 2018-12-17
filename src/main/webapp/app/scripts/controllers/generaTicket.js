@@ -55,7 +55,7 @@ app.controller('generaTicketCtrl', function ($scope, $rootScope, $timeout, $rout
 
 				bw.bitmap(new Bitmap);
 
-				var scl = 1; //define tama�o de codigo barra
+				var scl = 1; //define tamaño de codigo barra
 				bw.scale(scl,scl);
 
 				var div = document.getElementById('output');
@@ -112,7 +112,7 @@ app.controller('generaTicketCtrl', function ($scope, $rootScope, $timeout, $rout
 
 			bw.bitmap(new Bitmap);
 
-			var scl = 1; //define tama�o de codigo barra
+			var scl = 1; //define tamaño de codigo barra
 			bw.scale(scl,scl);
 
 			var div = document.getElementById('output');
