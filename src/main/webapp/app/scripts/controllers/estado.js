@@ -911,7 +911,7 @@ app
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ encodeURIComponent(JSON.stringify(documento));
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
@@ -938,7 +938,7 @@ app
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ encodeURIComponent(JSON.stringify(documento));
 				} else {
 					$scope
 					.raiseErr(data.errormsg);

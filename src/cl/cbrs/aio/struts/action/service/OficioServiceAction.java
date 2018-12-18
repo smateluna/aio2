@@ -219,7 +219,7 @@ public class OficioServiceAction extends CbrsAbstractAction {
 	
 						} catch (SolrServerException e) {
 							log.error(e.getMessage(),e);
-							respuesta.put("msg", "Problema invocando servicio índice");	
+							respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 						}
 
 					} catch (Exception e1) {

@@ -349,7 +349,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 					if(ctasCtesFinalDTO.getCierreActual()==0 && ctasCtesFinalDTO.getMitadDeMes()==0)
 						puedeLiquidar = false;	
 
-					//Se busca la caratula en las caratulas ya cerradas, si est· no se puede liquidar
+					//Se busca la caratula en las caratulas ya cerradas, si est√° no se puede liquidar
 					//						WsCuentaCorrienteClienteDelegate cuentaCorrienteClienteDelegate = new WsCuentaCorrienteClienteDelegate();
 					//						NominaCtaCteAioVO nominaCtaCteAioVO = cuentaCorrienteClienteDelegate.obtenerCierreCtaCte(ctaCteVO.getCodigo().toString(), ctasCtesFinalDTO.getFechaRev(), 0);
 					//						ListaNominaCtaCteAioVO[] lista = nominaCtaCteAioVO.getListaNominaCtaCteAioVO();

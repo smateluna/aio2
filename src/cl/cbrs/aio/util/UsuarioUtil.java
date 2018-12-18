@@ -192,7 +192,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoPlantillero(RecursoVO[] recursos) {
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("plantillero");
-		dto.setTitulo("Certificaci髇 Manual");
+		dto.setTitulo("Certificaci贸n Manual");
 		dto.setPath("/plantillero");
 		dto.setIcono("fa-edit");
 
@@ -233,7 +233,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoIndiceComercio(){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("indice_com");
-		dto.setTitulo("蚽dice Comercio");
+		dto.setTitulo("铆ndice Comercio");
 		dto.setPath("/indice_com");
 		dto.setIcono("fa-list");
 
@@ -243,7 +243,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoIndicePropiedad(){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("indice_prop");
-		dto.setTitulo("蚽dice Propiedad");
+		dto.setTitulo("铆ndice Propiedad");
 		dto.setPath("/indice_prop");
 		dto.setIcono("fa-list");
 
@@ -253,7 +253,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoIndice(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("indice");
-		dto.setTitulo("蚽dice");
+		dto.setTitulo("铆ndice");
 		dto.setPath("/indice");
 		dto.setIcono("fa-list");
 
@@ -336,7 +336,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoDocumentos(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("documentos");
-		dto.setTitulo("Documentos por car醫ula");
+		dto.setTitulo("Documentos por Car谩tula");
 		dto.setPath("/documentos");
 		dto.setIcono("fa-paperclip");
 
@@ -368,7 +368,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoDistribucion(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("distribucion");
-		dto.setTitulo("Distribuci髇");
+		dto.setTitulo("Distribuci贸n");
 		dto.setPath("/distribucion");
 		dto.setIcono("fa-code-fork");
 
@@ -384,7 +384,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoSolicitudes(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("solicitudes");
-		dto.setTitulo("Solicitudes digitalizaci髇");
+		dto.setTitulo("Solicitudes digitalizaci贸n");
 		dto.setPath("/solicitudes");
 		dto.setIcono("fa-list-alt");
 
@@ -483,7 +483,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoCertificacion(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("certificado");
-		dto.setTitulo("Certificaci髇");
+		dto.setTitulo("Certificaci贸n");
 		dto.setPath("/certificacion");
 		dto.setIcono("fa-check-circle");
 
@@ -499,7 +499,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoCertificacionHipotecas(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("certificadoHipotecas");
-		dto.setTitulo("Certificaci髇 Hipotecas");
+		dto.setTitulo("Certificaci贸n Hipotecas");
 		dto.setPath("/certificacionHipotecas");
 		dto.setIcono("fa-check-circle");
 
@@ -515,7 +515,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoCertificacionProhibiciones(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("certificadoProhibiciones");
-		dto.setTitulo("Certificaci髇 Prohibiciones");
+		dto.setTitulo("Certificaci贸n Prohibiciones");
 		dto.setPath("/certificacionProhibiciones");
 		dto.setIcono("fa-check-circle");
 
@@ -563,7 +563,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoAuditoria(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("auditoria");
-		dto.setTitulo("Auditor韆");
+		dto.setTitulo("Auditor铆a");
 		dto.setPath("/auditoria");
 		dto.setIcono("fa-eye");
 
@@ -579,7 +579,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoLiquidacion(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("liquidacion");
-		dto.setTitulo("Liquidaci髇");
+		dto.setTitulo("Liquidaci贸n");
 		dto.setPath("/liquidacion");
 		dto.setIcono("fa-usd");
 
@@ -595,7 +595,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoCertificacionEnParte(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("certificadoenparte");
-		dto.setTitulo("Certificaci髇 En Parte");
+		dto.setTitulo("Certificaci贸n En Parte");
 		dto.setPath("/certificacionenparte");
 		dto.setIcono("fa-check-circle");
 
@@ -713,7 +713,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoRevisionNotas(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("revisionNotas");
-		dto.setTitulo("Revisi髇 de Notas");
+		dto.setTitulo("Revisi贸n de Notas");
 		dto.setPath("/revisionNotas");
 		dto.setIcono("fa-eye");
 
@@ -729,7 +729,7 @@ public class UsuarioUtil {
 	private SubPermisoDTO getPermisoUAF_Op1(){
 		SubPermisoDTO dto = new SubPermisoDTO();
 		dto.setId("uaf1");
-		dto.setTitulo("B鷖queda de personas");
+		dto.setTitulo("B煤squeda de personas");
 		dto.setPath("/uaf1");
 		dto.setIcono("fa-list"); 	
 
@@ -739,7 +739,7 @@ public class UsuarioUtil {
 	private SubPermisoDTO getPermisoUAF_Op2(){
 		SubPermisoDTO dto = new SubPermisoDTO();
 		dto.setId("uaf2");
-		dto.setTitulo("B鷖queda de bienes");
+		dto.setTitulo("B煤squeda de bienes");
 		dto.setPath("/uaf2");
 		dto.setIcono("fa-briefcase"); 	
 
@@ -764,7 +764,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoOficio(){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("oficio");
-		dto.setTitulo("B鷖queda Oficios");
+		dto.setTitulo("B煤squeda Oficios");
 		dto.setPath("/oficio");
 		dto.setIcono("fa-search");
 
@@ -790,7 +790,7 @@ public class UsuarioUtil {
 	private PermisoDTO getPermisoRecepcionPlanos(RecursoVO[] recursos){
 		PermisoDTO dto = new PermisoDTO();
 		dto.setId("recepcionPlanos");
-		dto.setTitulo("Recepci髇 Planos");
+		dto.setTitulo("Recepci贸n Planos");
 		dto.setPath("/recepcionPlanos");
 		dto.setIcono("fa-map-marker");
 

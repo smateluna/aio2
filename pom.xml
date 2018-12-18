@@ -3,7 +3,7 @@
 	<groupId>cl.cbrs.web</groupId>
 	<artifactId>aio</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.26</version>
+	<version>1.0.27-SNAPSHOT</version>
 	<name>aio</name>
 	<properties>
 		<!-- maven-compiler-plugin -->
@@ -734,7 +734,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<encoding>iso-8859-1</encoding>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>

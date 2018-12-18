@@ -248,8 +248,8 @@ public class EscrituraServiceAction extends CbrsAbstractAction {
 			documentoDTO = dm.getDocumento(Long.parseLong(caratulaReq), Integer.parseInt(versionReq), Long.parseLong(idTipoDocumentoReq));
 
 			if(documentoDTO==null){
-				logger.error("Error: Car·tula no encontrada en documentos");
-				request.setAttribute("error", "Error: Car·tula no encontrada en documentos");
+				logger.error("Error: Car√°tula no encontrada en documentos");
+				request.setAttribute("error", "Error: Car√°tula no encontrada en documentos");
 			}
 
 			DocumentosCliente documentosCliente = new DocumentosCliente();

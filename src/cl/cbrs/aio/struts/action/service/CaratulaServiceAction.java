@@ -242,7 +242,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 						fila.put("valor", valorCaratula);
 						tramites.add(fila2);
 						//				TITULO_10
-						valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Tï¿½tulo Ultimos 10 Aï¿½os", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
+						valorCaratula=crearCaratulaTemp(wsCaratulaClienteDelegate, 10, "TITULO_10", "Título Ultimos 10 Años", "107", foja, numero, ano, rutCompleto, obsCertiTitulo,registro,numeroColilla,usuario);
 						JSONObject fila3 = new JSONObject();
 						fila3.put("nombre", "Certificado Titulo");
 						fila3.put("obs", obsCertiTitulo);

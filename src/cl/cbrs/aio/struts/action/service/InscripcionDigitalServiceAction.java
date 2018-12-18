@@ -147,7 +147,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		ConsultaDocumentoDTO consultaDocumentoDTO = new ConsultaDocumentoDTO();
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalDelegate digitalDelegate = new WsInscripcionDigitalDelegate();
@@ -343,7 +343,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		ConsultaDocumentoDTO consultaDocumentoDTO = new ConsultaDocumentoDTO();
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalDelegate digitalDelegate = new WsInscripcionDigitalDelegate();
@@ -461,7 +461,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		InscripcionDigitalDTO inscripcionDigitalDTO = null;
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalDelegate digitalDelegate = new WsInscripcionDigitalDelegate();
@@ -548,7 +548,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		String msg = "";
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else {	
 			status = true;
 			try {					
@@ -568,7 +568,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 						Boolean existe = digitalUtil.consultaIndice(foja, numero, ano);
 
 						if(existe==null || !existe){
-							msg = "Foja, Número y Año no encontradas.";					
+							msg = "Foja, NÃºmero y AÃ±o no encontradas.";					
 						}else{
 							fna = true;
 							estados.add(consultaDocumentoDTO);
@@ -1156,7 +1156,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			usuarioAprobador.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuarioAprobador)){
-				msg = "No hay usuario, inicie sesión nuevamente.";
+				msg = "No hay usuario, inicie sesiÃ³n nuevamente.";
 			}else if(anotacionId==null || anotacionId.intValue()==0){
 				msg = "Se requiere id de anotacion.";
 			}else{

@@ -2,5 +2,4 @@
 <jboss-web>
 
 	<!-- <security-domain flushOnSessionInvalidation="true">website-domain</security-domain> -->
-
 </jboss-web>

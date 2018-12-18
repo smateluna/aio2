@@ -447,7 +447,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 									} catch (SolrServerException e) {
 										log.error(e);
-										respuesta.put("msg", "Problema invocando servicio índice");	
+										respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 									}
 								}
 							}
@@ -530,7 +530,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 									} catch (SolrServerException e) {
 										log.error(e);
-										respuesta.put("msg", "Problema invocando servicio índice");	
+										respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 									}
 								}
 							}
@@ -615,7 +615,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 									} catch (SolrServerException e) {
 										log.error(e);
-										respuesta.put("msg", "Problema invocando servicio índice");	
+										respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 									}
 								}
 							}
@@ -698,14 +698,14 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 									} catch (SolrServerException e) {
 										log.error(e);
-										respuesta.put("msg", "Problema invocando servicio índice");	
+										respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 									}
 								}
 							}
 						}
 					}
 					//					}else{
-					//						String msg = cantidadConsultaVO==null?"No hay respuesta de servicio, intente más tarde":cantidadConsultaVO.getDescripcion();
+					//						String msg = cantidadConsultaVO==null?"No hay respuesta de servicio, intente mÃ¡s tarde":cantidadConsultaVO.getDescripcion();
 					//						respuesta.put("msg", msg);	
 					//					}			
 				} catch (Exception e1) {
@@ -1445,7 +1445,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 							} catch (SolrServerException e) {
 								log.error(e);
-								respuesta.put("msg", "Problema invocando servicio índice");	
+								respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 							}
 							//							}
 						}
@@ -1525,7 +1525,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 							} catch (SolrServerException e) {
 								log.error(e);
-								respuesta.put("msg", "Problema invocando servicio índice");	
+								respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 							}
 							//							}
 						}
@@ -1606,7 +1606,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 							} catch (SolrServerException e) {
 								log.error(e);
-								respuesta.put("msg", "Problema invocando servicio índice");	
+								respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 							}
 							//							}
 						}
@@ -1686,7 +1686,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 							} catch (SolrServerException e) {
 								log.error(e);
-								respuesta.put("msg", "Problema invocando servicio índice");	
+								respuesta.put("msg", "Problema invocando servicio Ã­ndice");	
 							}
 							//							}
 						}
@@ -1740,7 +1740,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					WritableSheet s = w.createSheet("COMERCIO"+z, 0);
 
-					//Tamaño de celdas
+					//TamAÃ±o de celdas
 					s.setColumnView(0, 10);
 					s.setColumnView(1, 10);
 					s.setColumnView(2, 10);
@@ -1766,7 +1766,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					s.addCell(new jxl.write.Label(0, 0, "Foja",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(1, 0, "Numero",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(2, 0, "Año",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(2, 0, "AÃ±o",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(3, 0, "Nombre Sociedad",arial12format));  //Nombres
 					s.addCell(new jxl.write.Label(4, 0, "Socio",arial12format));  //Tipo
 					s.addCell(new jxl.write.Label(5, 0, "Acto",arial12format));  //Caratula
@@ -1818,7 +1818,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					WritableSheet s = w.createSheet("PROHIBICIONES"+z, 0);
 
-					//Tamaño de celdas
+					//TamAÃ±o de celdas
 					s.setColumnView(0, 10);
 					s.setColumnView(1, 10);
 					s.setColumnView(2, 10);
@@ -1847,10 +1847,10 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					s.addCell(new jxl.write.Label(0, 0, "Foja",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(1, 0, "Numero",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(2, 0, "Año",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(2, 0, "AÃ±o",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(3, 0, "Foja Proh",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(4, 0, "Numero Proh",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(5, 0, "Año Proh",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(5, 0, "AÃ±o Proh",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(6, 0, "Nombres",arial12format));  //Nombres
 					s.addCell(new jxl.write.Label(7, 0, "Naturaleza",arial12format));  //Naturaleza
 					s.addCell(new jxl.write.Label(8, 0, "Tipo",arial12format));  //Tipo
@@ -1906,7 +1906,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					WritableSheet s = w.createSheet("HIPOTECA"+z, 0);
 
-					//Tamaño de celdas
+					//TamAÃ±o de celdas
 					s.setColumnView(0, 10);
 					s.setColumnView(1, 10);
 					s.setColumnView(2, 10);
@@ -1935,10 +1935,10 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					s.addCell(new jxl.write.Label(0, 0, "Foja",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(1, 0, "Numero",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(2, 0, "Año",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(2, 0, "AÃ±o",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(3, 0, "Foja H",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(4, 0, "Numero H",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(5, 0, "Año H",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(5, 0, "AÃ±o H",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(6, 0, "Nombres",arial12format));  //Nombres
 					s.addCell(new jxl.write.Label(7, 0, "Naturaleza",arial12format));  //Naturaleza
 					s.addCell(new jxl.write.Label(8, 0, "Tipo",arial12format));  //Tipo
@@ -1995,7 +1995,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					WritableSheet s = w.createSheet("PROPIEDAD"+z, 0);
 
-					//Tamaño de celdas
+					//TamAÃ±o de celdas
 					s.setColumnView(0, 10);
 					s.setColumnView(1, 10);
 					s.setColumnView(2, 10);
@@ -2022,7 +2022,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 					s.addCell(new jxl.write.Label(0, 0, "Foja",arial12format));  //Foja
 					s.addCell(new jxl.write.Label(1, 0, "Numero",arial12format));  //Numero
-					s.addCell(new jxl.write.Label(2, 0, "Año",arial12format));  //Agno
+					s.addCell(new jxl.write.Label(2, 0, "AÃ±o",arial12format));  //Agno
 					s.addCell(new jxl.write.Label(3, 0, "Nombres",arial12format));  //Nombres
 					s.addCell(new jxl.write.Label(4, 0, "Direccion",arial12format));  //Direccion
 					s.addCell(new jxl.write.Label(5, 0, "Comuna",arial12format));  //Comuna
@@ -2166,7 +2166,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 			}
 
 		}else{
-			json.put("msg", "rut no válido.");
+			json.put("msg", "rut no vÃ¡lido.");
 		}
 
 

@@ -195,17 +195,17 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 						request.getSession().setAttribute("numeroCaratula", numeroCaratula);
 
 					} else{
-						json.put("msg", "Car·tula no encontrada.");		
+						json.put("msg", "Car√°tula no encontrada.");		
 					}
 								
 				}
 
 			} catch (Exception e) {
-				json.put("msg", "Problemas en servidor obteniendo car·tula.");
+				json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 
@@ -278,15 +278,15 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 					json.put("status", true);
 				}else{
-					json.put("msg", "Car·tula no encontrada.");					
+					json.put("msg", "Car√°tula no encontrada.");					
 				}
 
 			} catch (Exception e) {
-				json.put("msg", "Problemas en servidor actualizando estado car·tula.");
+				json.put("msg", "Problemas en servidor actualizando estado Car√°tula.");
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -336,15 +336,15 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 					json.put("status", true);
 				}else{
-					json.put("msg", "Car·tula o requirente no encontrado.");					
+					json.put("msg", "Car√°tula o requirente no encontrado.");					
 				}
 
 			} catch (Exception e) {
-				json.put("msg", "Problemas en servidor obteniendo car·tula.");
+				json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -422,7 +422,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 					delegate.actualizarCaratula(caratulaVO);
 					
 					//Agregar bitacora
-					String observacion = "Datos citado modificado. Registro: " + descRegistro + " Foja: " + fojas + " N˙mero: "+ numero + " AÒo: " + ano + " Bis: " + bisStr;
+					String observacion = "Datos citado modificado. Registro: " + descRegistro + " Foja: " + fojas + " N√∫mero: "+ numero + " A√±o: " + ano + " Bis: " + bisStr;
 					String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
 					BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(new Long(numeroCaratula), rutUsuario, observacion,BitacoraCaratulaVO.OBSERVACION_INTERNA);
 					json.put("bitacoraDTO", bitacoraDTO);
@@ -433,7 +433,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(), e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -498,7 +498,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 					json.put("status", true);
 				}else{
-					json.put("msg", "Car·tula no encontrada.");					
+					json.put("msg", "Car√°tula no encontrada.");					
 				}
 
 			} catch (Exception e) {
@@ -506,7 +506,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -573,7 +573,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 					json.put("status", true);
 				}else{
-					json.put("msg", "Car·tula no encontrada.");					
+					json.put("msg", "Car√°tula no encontrada.");					
 				}
 
 			} catch (Exception e) {
@@ -581,7 +581,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -643,7 +643,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 		try {
@@ -1154,7 +1154,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 
 		JSONObject res = new JSONObject();
 		res.put("entregaEnLineaDTO", entregaEnLineaDTO);
@@ -1240,7 +1240,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 
 		JSONObject res = new JSONObject();
 		res.put("repertorioDTOs", repertorioDTOs);
@@ -1284,7 +1284,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 
 		JSONObject res = new JSONObject();
 		res.put("ingresoEgresoDTOs", ingresoEgresoDTOs);
@@ -1328,7 +1328,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else
-			json.put("msg", "CÛdigo no v·lido.");
+			json.put("msg", "C√≥digo no v√°lido.");
 
 		JSONObject res = new JSONObject();
 		res.put("cuentaCorrienteDTO", cuentaCorrienteDTO);
@@ -1454,11 +1454,11 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 								json.put("status", true);					
 
 							} else{
-								json.put("msg", "No se encontraron car·tulas.");	
+								json.put("msg", "No se encontraron Car√°tulas.");	
 							}
 
 					} catch (Exception e) {
-						json.put("msg", "Problemas en servidor obteniendo car·tula.");
+						json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 						logger.error("Error: "+e.getMessage(),e);
 					}
 				} else
@@ -1763,7 +1763,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			    	template = template.replaceAll("'", "&#39;");
 			    	StringBuffer html = new StringBuffer(template);				    					    	
 			        String from = "portal.conservador.noreply@conservador.cl";
-			        String subject = "ActualizaciÛn car·tula";
+			        String subject = "Actualizaci√≥n Car√°tula";
 		        	new SendMail().sendMensaje(correoReq, from, subject, html, "", false, true);
 				}
 			} else

@@ -71,7 +71,7 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			Integer tipo = tipop!=null?Integer.parseInt(tipop):null;
 			
 			if( (numero==null || numero==0) || (mes==null || mes==0) || (ano==null || ano==0)){
-				msg = "Se requiere  Número, Mes y Año";
+				msg = "Se requiere  NÃºmero, Mes y AÃ±o";
 			}else{
 				CartelesUtil cartelesUtil = new CartelesUtil();
 				
@@ -186,7 +186,7 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			Integer tipoArchivo = Integer.parseInt(tipoArchivop);
 		
 			if( (mes==null || mes==0) || (ano==null || ano==0)){
-				msg = "Se requiere al menos Mes y Año";
+				msg = "Se requiere al menos Mes y AÃ±o";
 			}else{
 				CartelesUtil cartelesUtil = new CartelesUtil();
 							
@@ -256,7 +256,7 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 		ArrayList<CertificadoCartelDTO> dtos = new ArrayList<CertificadoCartelDTO>();
 		
 		if(StringUtils.isBlank(usuario)){
-			msg = "No hay usuario, inicie sesión nuevamente.";
+			msg = "No hay usuario, inicie sesiÃ³n nuevamente.";
 		}else{
 
 			try {		
@@ -343,7 +343,7 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			Integer pagHasta = Integer.parseInt(paghastap);
 			
 			if( (mes==null || mes==0) || (ano==null || ano==0)){
-				msg = "Se requiere al menos Mes y Año";
+				msg = "Se requiere al menos Mes y AÃ±o";
 			}else{			
 				CartelesUtil cartelesUtil = new CartelesUtil();				
 				cartelesUtil.generarCartel(numero, mes, ano, bis, registro, pagDesde, pagHasta);

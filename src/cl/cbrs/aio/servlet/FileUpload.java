@@ -86,6 +86,8 @@ public class FileUpload extends HttpServlet {
 						File fileVersiona = new File(UPLOAD_DIRECTORY+File.separator +"C_"+caratula+".pdf");
 						File fileOcr = new File(folderOcr.toString() + File.separator +"OCR_"+caratula+".pdf");
 						
+						logger.info("Copiando escritura para OCR en: " + fileOcr);
+						
 						FileOutputStream fop = new FileOutputStream(fileVersiona);
 						FileOutputStream fopOcr = new FileOutputStream(fileOcr);
 						
