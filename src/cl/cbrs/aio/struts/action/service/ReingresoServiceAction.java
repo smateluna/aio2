@@ -155,7 +155,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				}
 				
 			} else{
-				json.put("msg", "No se encontrÛ la car·tula " + caratulaReq);
+				json.put("msg", "No se encontr√≥ la Car√°tula " + caratulaReq);
 				json.put("estado", false);
 			}
 
@@ -178,7 +178,8 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		response.setContentType("text/json");
 		
 		String caratulaDTOReq = request.getParameter("caratulaDTO");
-		String caratulaOriginalDTOReq = request.getParameter("caratulaOriginalDTO");
+//		String caratulaOriginalDTOReq = request.getParameter("caratulaOriginalDTO");
+//		String caratulaReq = request.getParameter("caratula");
 		String observacionReq = request.getParameter("observacion")!=null?request.getParameter("observacion").trim():"";
 		String codigoExtractoReq = request.getParameter("codigoExtracto")!=null&&!"".equals(request.getParameter("codigoExtracto").trim())?request.getParameter("codigoExtracto").trim():null;
 		String notarioReq = request.getParameter("notario");		
@@ -203,8 +204,9 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 			CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaDTOJSON);
 			
 			//Data original
-			JSONObject caratulaOriginalDTOJSON = (JSONObject)jsonParser.parse(caratulaOriginalDTOReq);
-			CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaOriginalDTOJSON);
+//			JSONObject caratulaOriginalDTOJSON = (JSONObject)jsonParser.parse(caratulaOriginalDTOReq);
+//			CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaOriginalDTOJSON);
+			CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaDTO.getNumeroCaratula());
 			
 			if(caratulaDTO.getInscripcionDigitalDTO()==null){
 				detalleError += "Inscripcion Digital nula";
@@ -237,7 +239,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				}
 				if(reglaReingresoDTO==null){
 					//No se encontro regla de reingreso
-					throw new SystemException("Car·tula no se puede reingresar, no se encontro una regla de reingreso.");
+					throw new SystemException("Car√°tula no se puede reingresar, no se encontro una regla de reingreso.");
 				}
 					
 			}
@@ -295,14 +297,14 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 					}
 					
 					try{
-						caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, "Se genera nueva caratula " + nuevaCaratula.getNumeroCaratula() +" por reingreso GP", OBSERVACION_INTERNA);
+						caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, "Se genera nueva caratula " + nuevaCaratula.getNumeroCaratula() +" por reingreso GP: " + observacionBitacora, OBSERVACION_INTERNA);
 						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, "Reingreso GP de caratula " + caratulaDTO.getNumeroCaratula(), OBSERVACION_INTERNA);
 						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, observacionBitacora, OBSERVACION_INTERNA);
 					} catch(Exception e){
 						logger.error("Error al agregar bitacora: " + e.getMessage(),e);
 					}
 	
-					json.put("msg", "Reingreso GP exitoso. Se generÛ nueva caratula " + nuevaCaratula.getNumeroCaratula());
+					json.put("msg", "Reingreso GP exitoso. Se gener√≥ nueva caratula " + nuevaCaratula.getNumeroCaratula());
 					json.put("reingresoGP", nuevaCaratula.getNumeroCaratula());
 				}
 			}	
@@ -315,7 +317,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				CierreCtasCtesFinalDTO ctasCtesFinalDTO = flujoDAO.getCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
 				if(ctasCtesFinalDTO!=null){					
 					if(ctasCtesFinalDTO.getCierreActual()==0 && ctasCtesFinalDTO.getMitadDeMes()==0)
-						throw new SystemException("Car·tula no se puede reingresar, est· en cierre de cta corriente y la nÛmina ya fuÈ enviada.");
+						throw new SystemException("Car√°tula no se puede reingresar, est√° en cierre de cta corriente y la n√≥mina ya fu√© enviada.");
 					else
 						flujoDAO.eliminarCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
 				}	
@@ -347,8 +349,8 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				actualizarTipoFormulario = true;
 			}
 			
-			//Actualizar flujo si hay cambio de inscripcion, tipo formulario o se reingresa un GP
-			if(actualizarInscripcion || actualizarTipoFormulario || caratulaDTO.getTipoFormularioDTO().getId().intValue()==5){				
+			//Actualizar flujo si hay cambio de inscripcion, tipo formulario o se reingresa un GP "normal"
+			if(!reingresoGP && (actualizarInscripcion || actualizarTipoFormulario || caratulaDTO.getTipoFormularioDTO().getId().intValue()==5) ){				
 				//Para reingreso GP se debe dejar impTicket en 0
 				if(caratulaDTO.getTipoFormularioDTO().getId().intValue()==5)
 					caratulaDTO.getInscripcionDigitalDTO().setImpTicket(false);
@@ -360,19 +362,19 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				
 				if(actualizarInscripcion){
 					
-					observacionBitacora += " Se actualiza inscripciÛn ";
+					observacionBitacora += " Se actualiza inscripci√≥n ";
 					
 					if(caratulaOriginalDTO.getInscripcionDigitalDTO()!=null){
-						observacionBitacora += "de Fojas: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja() + " N˙mero: " +caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero() +
-								" AÒo: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getAno();
+						observacionBitacora += "de Fojas: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja() + " N√∫mero: " +caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero() +
+								" A√±o: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getAno();
 						if(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaOriginalDTO.getInscripcionDigitalDTO().getBis())
 							observacionBitacora += " bis";
 						if(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO()!=null)
 							observacionBitacora += " Registro de " + caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ", ";
 					}
 					
-					observacionBitacora += "a Fojas: " + caratulaDTO.getInscripcionDigitalDTO().getFoja() + " N˙mero: " +caratulaDTO.getInscripcionDigitalDTO().getNumero() +
-							" AÒo: " + caratulaDTO.getInscripcionDigitalDTO().getAno();
+					observacionBitacora += "a Fojas: " + caratulaDTO.getInscripcionDigitalDTO().getFoja() + " N√∫mero: " +caratulaDTO.getInscripcionDigitalDTO().getNumero() +
+							" A√±o: " + caratulaDTO.getInscripcionDigitalDTO().getAno();
 					if(caratulaDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaDTO.getInscripcionDigitalDTO().getBis())
 						observacionBitacora += " bis";
 					observacionBitacora += " Registro de " + caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ".";
@@ -453,7 +455,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 					caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaFlujoVO );
 					
-					json.put("msg", "Car·tula reingresada.");
+					json.put("msg", "Car√°tula reingresada.");
 										
 				} else{
 					//ACTUALIZAR COMERCIO			
@@ -487,10 +489,10 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 						caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaFlujoVO );
 						
 						
-						json.put("msg", "Car·tula reingresada.");
+						json.put("msg", "Car√°tula reingresada.");
 					} else{
 						//Si no hay seccion parametrizada, solicitar reingreso manual
-						json.put("msg", "Car·tula reingresada. Debe ser distribuida manualmente");
+						json.put("msg", "Car√°tula reingresada. Debe ser distribuida manualmente");
 					}					
 				}
 				
@@ -535,7 +537,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 					}
 					
 					caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaVO );
-					json.put("msg", "Car·tula reingresada.");
+					json.put("msg", "Car√°tula reingresada.");
 				} else{
 					//Si no hay seccion parametrizada, solicitar reingreso manual
 					if(!reingresoGP)
@@ -543,7 +545,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				}
 			}
 			
-//			if(!caratulaDTO.getTipoFormularioDTO().getId().equals(5)){
+			if(!reingresoGP){
 				//Agregar bitacora
 				try{				
 					BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, observacionBitacora,OBSERVACION_INTERNA);
@@ -558,7 +560,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 	                Notificador notificador = new Notificador();
 	                notificador.notificar(GeneraMensajeEE.getMensajeTramiteReingresado(caratulaDTO.getIdTransaccion(), ""+caratulaDTO.getNumeroCaratula().longValue(), new Date()));
 	            }			
-//			}
+			}
 			
 			json.put("estado", true);		
 						

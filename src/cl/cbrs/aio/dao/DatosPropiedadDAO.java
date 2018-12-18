@@ -787,7 +787,7 @@ public class DatosPropiedadDAO {
 				quiebraDTO.setTipo(valorSinNull(rs.getString("DESC_NATURALEZA")));
 				quiebraDTO.setFoja(rs.getInt("FOJA_PH"));
 				quiebraDTO.setNumero(rs.getInt("NUMERO_PH"));
-				quiebraDTO.setAno(rs.getInt("AÑO_PH"));
+				quiebraDTO.setAno(rs.getInt("AÃ±o_PH"));
 				quiebraDTO.setNombres(valorSinNull(rs.getString("NOMBRES")));
 				
 				res.add(quiebraDTO);

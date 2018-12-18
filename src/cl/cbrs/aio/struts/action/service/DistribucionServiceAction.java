@@ -80,7 +80,7 @@ public class DistribucionServiceAction extends CbrsAbstractAction {
 			json.put("status", true);
 
 		} catch (Exception e) {
-			json.put("msg", "Problemas en servidor obteniendo car·tula.");
+			json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 			logger.error("Error: "+e.getMessage(),e);
 		}
 
@@ -136,7 +136,7 @@ public class DistribucionServiceAction extends CbrsAbstractAction {
 			json.put("status", true);
 
 		} catch (Exception e) {
-			json.put("msg", "Problemas en servidor obteniendo car·tula.");
+			json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 			logger.error("Error: "+e.getMessage(),e);
 		}
 
@@ -190,15 +190,15 @@ public class DistribucionServiceAction extends CbrsAbstractAction {
 					
 					request.getSession().setAttribute("numeroCaratula", numero);
 				}else{
-					json.put("msg", "Car·tula no encontrada.");					
+					json.put("msg", "Car√°tula no encontrada.");					
 				}
 
 			} catch (Exception e) {
-				json.put("msg", "Problemas en servidor obteniendo car·tula.");
+				json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 				logger.error("Error: "+e.getMessage(),e);
 			}
 		}else{
-			json.put("msg", "N˙mero car·tula no v·lido.");
+			json.put("msg", "N√∫mero Car√°tula no v√°lido.");
 		}
 
 
@@ -287,7 +287,7 @@ public class DistribucionServiceAction extends CbrsAbstractAction {
 			json.put("status", true);
 
 		} catch (Exception e) {
-			json.put("msg", "Problemas en servidor obteniendo car·tula.");
+			json.put("msg", "Problemas en servidor obteniendo Car√°tula.");
 			logger.error("Error: "+e.getMessage(),e);
 		}
 

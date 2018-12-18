@@ -35,8 +35,8 @@ public class UafDAO extends AbstractJdbcDao {
 						"WHERE " +     
 						"(COD_TIPO_PERSONA = 'co') " +
 						"AND (RUT <> '') " +
-						"AND (AÑO_CARATULA = "+ano+") " +
-						"and (select count(RUT) from REGISTRO.DBO.TAB_PERSONA where T.RUT=RUT AND (COD_TIPO_PERSONA = 'co') AND  (AÑO_CARATULA = "+ano+") AND FOJA_P<>0 AND NUMERO_P<>0 AND ANO_P<>0 )>= " +nInscripciones+  " " +
+						"AND (AÃ±o_CARATULA = "+ano+") " +
+						"and (select count(RUT) from REGISTRO.DBO.TAB_PERSONA where T.RUT=RUT AND (COD_TIPO_PERSONA = 'co') AND  (AÃ±o_CARATULA = "+ano+") AND FOJA_P<>0 AND NUMERO_P<>0 AND ANO_P<>0 )>= " +nInscripciones+  " " +
 						"AND FOJA_P<>0 AND NUMERO_P<>0 AND ANO_P<>0 " +
 						"and LEFT(t.CARATULA,7)  not in (select caratula from flujo.dbo.mae_formulario AS M where M.CARATULA =LEFT(t.CARATULA,7) AND M.CODIGO<>0) " +
 						"ORDER BY APELL_PATERNO,APELL_MATERNO,NOMBRES,RUT,CARATULA";

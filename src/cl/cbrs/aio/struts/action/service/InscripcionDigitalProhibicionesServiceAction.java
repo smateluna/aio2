@@ -136,7 +136,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		ConsultaDocumentoDTO consultaDocumentoDTO = new ConsultaDocumentoDTO();
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
@@ -338,7 +338,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		ConsultaDocumentoDTO consultaDocumentoDTO = new ConsultaDocumentoDTO();
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
@@ -456,7 +456,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		InscripcionDigitalDTO inscripcionDigitalDTO = null;
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else{
 
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
@@ -543,7 +543,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		String msg = "";
 
 		if( (foja==null || foja==0) || (StringUtils.isBlank(numero) || !StringUtils.isNumeric(numero)) || (ano==null || ano==0)){
-			msg = "Se requiere Foja, Número y Año";
+			msg = "Se requiere Foja, NÃºmero y AÃ±o";
 		}else {	
 			status = true;
 			try {					
@@ -563,7 +563,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 						Boolean existe = digitalUtil.consultaIndice(foja, numero, ano);
 
 						if(existe==null || !existe){
-							msg = "Foja, Número y Año no encontradas.";					
+							msg = "Foja, NÃºmero y AÃ±o no encontradas.";					
 						}else{
 							fna = true;
 							estados.add(consultaDocumentoDTO);

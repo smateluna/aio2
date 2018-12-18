@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
+<<<<<<< HEAD
 	<!-- <security-domain flushOnSessionInvalidation="true">website-domain</security-domain>  -->
+=======
+	<!-- <security-domain flushOnSessionInvalidation="true">website-domain</security-domain> -->
+>>>>>>> refs/heads/release/1.0.26
 </jboss-web>

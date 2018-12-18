@@ -368,7 +368,7 @@ public class GeneraCertificado {
 			Map parametros1 = new HashMap();
 			parametros1.put("TEXTO1", "El texto del documento");
 			parametros1.put("CODIGO_BARRA", codigoBarra.toLowerCase());
-			parametros1.put("CARATULA", "Carátula "+caratulaVO.getNumeroCaratula());
+			parametros1.put("CARATULA", "CarÃ¡tula "+caratulaVO.getNumeroCaratula());
 			parametros1.put("TEXTO_BARRA", codigoBarra.toLowerCase());
 			parametros1.put("FOJAS", ins[0].getFoja().toString());
 			parametros1.put("NUMERO", ins[0].getNumero().toString());
@@ -390,9 +390,9 @@ public class GeneraCertificado {
 			//TODO cambiar las fechas por las que correspondan, averiguar fecha de vigencia y fecha de certificacion.
 			if(tipo.equals(INSCRIPCION_CON_VIGENCIA) || tipo.equals(INS_CON_VIGENCIA.toString()) || enParte){
 				if(enParte){
-					sufijoVigencia= sufijoVigencia + " y se encuentra vigente en parte al día ";
+					sufijoVigencia= sufijoVigencia + " y se encuentra vigente en parte al dÃ­a ";
 				} else {
-					sufijoVigencia= sufijoVigencia + " y se encuentra vigente al día ";   
+					sufijoVigencia= sufijoVigencia + " y se encuentra vigente al dÃ­a ";   
 				}
 
 				date = new Date();
@@ -669,14 +669,14 @@ public class GeneraCertificado {
 		cb.beginText();
 		cb.setColorFill(Color.black);
 		cb.setFontAndSize(bf, 8);
-		cb.showTextAligned(Element.ALIGN_LEFT, "página " + pagina + " de " + totalPaginas, anchoDocumento - 155, 30, 0);
+		cb.showTextAligned(Element.ALIGN_LEFT, "pÃ¡gina " + pagina + " de " + totalPaginas, anchoDocumento - 155, 30, 0);
 		if (pagina>1){
 			cb.setFontAndSize(bf, 20);
 			cb.setColorFill(Color.black);
 			cb.setFontAndSize(bf, 8);
 			cb.showTextAligned(Element.ALIGN_LEFT, "Documento incorpora Firma", 50, 40, 0);
 			cb.showTextAligned(Element.ALIGN_LEFT, "Electronica Avanzada", 50, 32, 0);
-			cb.showTextAligned(Element.ALIGN_LEFT, "Código de Verificación: " + codigoFirma, 50, 24, 0);
+			cb.showTextAligned(Element.ALIGN_LEFT, "CÃ³digo de VerificaciÃ³n: " + codigoFirma, 50, 24, 0);
 			cb.setFontAndSize(bf, 8);
 		}
 		cb.endText();
@@ -781,7 +781,7 @@ public class GeneraCertificado {
 			Map parametros1 = new HashMap();
 			parametros1.put("TEXTO1", "El texto del documento");
 			parametros1.put("CODIGO_BARRA", codigoBarra.toLowerCase());
-			parametros1.put("CARATULA", "Carátula "+caratulaVO.getNumeroCaratula());
+			parametros1.put("CARATULA", "CarÃ¡tula "+caratulaVO.getNumeroCaratula());
 			parametros1.put("TEXTO_BARRA", codigoBarra.toLowerCase());
 			parametros1.put("TITULO", titulo);
 			parametros1.put("CUERPO_CERTIFICADO", cuerpoCertificado);

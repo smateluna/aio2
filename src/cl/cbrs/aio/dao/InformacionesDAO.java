@@ -240,7 +240,7 @@ public class InformacionesDAO extends AbstractJdbcDao {
 				caratulaVO.setInscripciones(ins);
 				TipoFormularioVO tipForm = new TipoFormularioVO();
 				tipForm.setTipo(1);
-				tipForm.setDescripcion("Inscripción");
+				tipForm.setDescripcion("InscripciÃ³n");
 				caratulaVO.setTipoFormulario(tipForm);
 				
 				listaCaratulas.add(caratulaVO);

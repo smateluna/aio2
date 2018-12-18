@@ -93,9 +93,9 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 		String usuarioCreador = request.getUserPrincipal().getName();
 
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(idInscripcion==null || idInscripcion.intValue()==0){
-			msg = "Busque la inscripciÛn e ingrese la nota nuevamente.";
+			msg = "Busque la inscripci√≥n e ingrese la nota nuevamente.";
 		}else if(StringUtils.isBlank(texto)){
 			msg = "Se requiere texto nota.";
 		}else{
@@ -214,7 +214,7 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 		usuarioEliminador.replaceAll("CBRS\\\\", "");
 
 		if(StringUtils.isBlank(usuarioEliminador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(idAnotacion==null || idAnotacion.intValue()==0){
 			msg = "Se requiere id de anotacion.";
 		}else{
@@ -226,7 +226,7 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 				if( (anotacionVO.getTipoAnotacionVo().getIdTipoAnotacion() == 1 || 
 						anotacionVO.getTipoAnotacionVo().getIdTipoAnotacion() == 2 ) &&
 						anotacionVO.getEstadoAnotacionVo().getIdEstado()!=1){
-					msg = "Ya no est· en ESPERA DE FOLIO, no puede eliminar.";
+					msg = "Ya no est√° en ESPERA DE FOLIO, no puede eliminar.";
 				}else{					
 					anotacionVO.setFechaEliminacion(new Date());
 					anotacionVO.setNombreUsuarioEliminador(usuarioEliminador);
@@ -267,7 +267,7 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){
-				msg = "No hay usuario, inicie sesiÛn nuevamente.";
+				msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 			}else{
 				//Obtener perfiles del usuario
 				LoginUsuarioRequest usuarioRequest = new LoginUsuarioRequest();
@@ -388,7 +388,7 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 		String usuarioCreador = request.getUserPrincipal().getName();
 
 		if(StringUtils.isBlank(usuarioCreador)){
-			msg = "No hay usuario, inicie sesiÛn nuevamente.";
+			msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 		}else if(idAnotacion==null || idAnotacion.intValue()==0){
 			msg = "No hay nota, no se podra realizar cambio.";
 		}else if(StringUtils.isBlank(texto)){
@@ -460,7 +460,7 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){
-				msg = "No hay usuario, inicie sesiÛn nuevamente.";
+				msg = "No hay usuario, inicie sesi√≥n nuevamente.";
 			}else{
 				if(null!=caratula){
 					WsRepertorioClienteDelegate wsRepertorioClienteDelegate = new WsRepertorioClienteDelegate();

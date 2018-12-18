@@ -39,23 +39,17 @@ public class ReporteUtil {
 	public static ByteArrayOutputStream export (HashMap<String, Object> map, ArrayList<TareaDTO> tareas, List<RepertorioVO> repertorioVOs, HashMap<String, String> map2, 
 			ArrayList<MovimientoDTO> historial, String tipo, ArrayList<BitacoraDTO> bitacora, 
 			boolean hayIngresoEgreso, ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs) throws JRException{
-		try{
-			System.out.println("GENREANDO REPORTEEEEEEEE");
+		
 		List<JasperPrint> jasperPrintList  = new ArrayList<JasperPrint>();
-		JasperDesign jd = null;
+		JasperReport report = null;
 		
-		String canal = (String) map.get("canal");
-		if(canal.equalsIgnoreCase("Web"))
-			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
-		else
-			jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath+"EstadoAIO.jasper");
-		
-		System.out.println(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
-		System.out.println(jasperPath +"EstadoAIO.jasper");// TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
-		//JasperReport report = JasperCompileManager.compileReport(jd);
+//		String canal = (String) map.get("canal");
+//		if(canal.equalsIgnoreCase("Web"))
+//			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
+//		else
+			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
+				
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(tareas);
-		System.out.println(map.toString());
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 		jasperPrintList.add(jasperPrint);
 
@@ -97,21 +91,14 @@ public class ReporteUtil {
 			exporter.exportReport();	
 		}
 
-		return out;
-		}catch(Exception e){
-			logger.error(e);
-			throw e;
-		}
-		
+		return out;	
 	}
 
 
 	private static JasperPrint export_historial (HashMap<String, String> map, ArrayList<MovimientoDTO> historial) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(historial);
 
-		JasperDesign jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_historial_aio" , "valor"));
-
-		JasperReport report = JasperCompileManager.compileReport(jd);
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_historial_aio" , "valor"));
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -121,9 +108,7 @@ public class ReporteUtil {
 	private static JasperPrint export_bitacora (HashMap<String, String> map, ArrayList<BitacoraDTO> bitacora) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(bitacora);
 
-		JasperDesign jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_bitacora_aio" , "valor"));
-
-		JasperReport report = JasperCompileManager.compileReport(jd);
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_bitacora_aio" , "valor"));
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -133,9 +118,7 @@ public class ReporteUtil {
 	private static JasperPrint export_repertorios (HashMap<String, String> map, List<RepertorioVO> bitacora) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(bitacora);
 
-		JasperDesign jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_repertorio_aio" , "valor"));
-
-		JasperReport report = JasperCompileManager.compileReport(jd);
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_repertorio_aio" , "valor"));
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -145,9 +128,7 @@ public class ReporteUtil {
 	private static JasperPrint export_ingreso_egreso (HashMap<String, String> map, ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(ingresoEgresoDTOs);
 
-		JasperDesign jd = JRXmlLoader.load(jasperPath + TablaValores.getValor("jasper.parametros", "estado_ingreso_egreso_aio" , "valor"));
-
-		JasperReport report = JasperCompileManager.compileReport(jd);
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_ingreso_egreso_aio" , "valor"));
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
