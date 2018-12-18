@@ -42,7 +42,7 @@ public class ReporteUtil {
 		
 		List<JasperPrint> jasperPrintList  = new ArrayList<JasperPrint>();
 		JasperReport report = null;
-		jasperPath = "C:\\jboss-5.1.0.GA\\server\\default\\tablas\\reporte\\";
+
 //		String canal = (String) map.get("canal");
 //		if(canal.equalsIgnoreCase("Web"))
 //			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
