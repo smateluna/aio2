@@ -29,7 +29,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 public class ReporteUtil {
 	
-	private final static String jasperPath = TablaValores.getValor("jasper.parametros", "path" , "valor");
+	private static String jasperPath = TablaValores.getValor("jasper.parametros", "path" , "valor");
 	private final static Logger logger= Logger.getLogger(ReporteUtil.class);
 			
 	public ReporteUtil(){
@@ -42,12 +42,13 @@ public class ReporteUtil {
 		
 		List<JasperPrint> jasperPrintList  = new ArrayList<JasperPrint>();
 		JasperReport report = null;
-		
+		jasperPath = "C:\\jboss-5.1.0.GA\\server\\default\\tablas\\reporte\\";
 //		String canal = (String) map.get("canal");
 //		if(canal.equalsIgnoreCase("Web"))
 //			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio_web" , "valor"));
 //		else
-			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
+//			report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_aio" , "valor"));
+			report = (JasperReport) JRLoader.loadObject(jasperPath + "EstadoAIO.jasper");
 				
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(tareas);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
@@ -98,7 +99,8 @@ public class ReporteUtil {
 	private static JasperPrint export_historial (HashMap<String, String> map, ArrayList<MovimientoDTO> historial) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(historial);
 
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_historial_aio" , "valor"));
+//		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_historial_aio" , "valor"));
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + "EstadoHistorialAIO.jasper");
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -108,7 +110,8 @@ public class ReporteUtil {
 	private static JasperPrint export_bitacora (HashMap<String, String> map, ArrayList<BitacoraDTO> bitacora) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(bitacora);
 
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_bitacora_aio" , "valor"));
+//		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_bitacora_aio" , "valor"));
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + "EstadoBitacoraAIO.jasper");
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -118,7 +121,8 @@ public class ReporteUtil {
 	private static JasperPrint export_repertorios (HashMap<String, String> map, List<RepertorioVO> bitacora) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(bitacora);
 
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_repertorio_aio" , "valor"));
+//		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_repertorio_aio" , "valor"));
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + "EstadoRepertorioAIO.jasper");
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
@@ -128,7 +132,8 @@ public class ReporteUtil {
 	private static JasperPrint export_ingreso_egreso (HashMap<String, String> map, ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs) throws JRException{
 		JRBeanCollectionDataSource ds =new JRBeanCollectionDataSource(ingresoEgresoDTOs);
 
-		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_ingreso_egreso_aio" , "valor"));
+//		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + TablaValores.getValor("jasper.parametros", "estado_ingreso_egreso_aio" , "valor"));
+		JasperReport report = (JasperReport) JRLoader.loadObject(jasperPath + "EstadoIngresoEgresoAIO.jasper");
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report,map, ds);
 
