@@ -12,7 +12,7 @@
              <input type="text" maxlength="10" placeholder="carátula" class="estado-buscar-field"
                     ng-model="req.numeroCaratula" name="numeroCaratula" id="numeroCaratula" required="" numbers-only="" focus-input="numeroCaratulaIsFocused" auto-select/>
              <button class="btn btn-primary btn-sm btn-rad" ng-disabled="myForm.$invalid" type="submit">Buscar</button>
-             <button class="btn btn-primary btn-sm btn-rad" type="button" ng-click="abrirCaratulasPorRutModal()">Busqueda Por Rut</button>
+             <button class="btn btn-primary btn-sm btn-rad" type="button" ng-click="abrirCaratulasPorRutModal()">Búsqueda Por Rut</button>
              <button ng-if="data.status" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="limpiar()">Nueva búsqueda</button>
              <button ng-if="data.status && data.res!=null" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="exportarPDF()" >Exportar a PDF</button>
          <button ng-if="data.status && data.res!=null && documentos.terminada!=null" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verDocumentoTerminado()">Caratula Terminada PDF</button>    
