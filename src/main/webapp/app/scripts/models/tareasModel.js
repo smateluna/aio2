@@ -7,7 +7,7 @@ app.factory('tareasModel', function () {
     data: null,
     predicate: null,
     reverse: null,
-    tiemporefresco:2
+    tiemporefresco:10
   };
   
   var states = {

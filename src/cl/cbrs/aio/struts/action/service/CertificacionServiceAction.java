@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.StringUtil;
 import cl.cbr.util.TablaValores;
@@ -62,7 +63,8 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		
 		List<CaratulaVO> caratulaVOs = null;
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -170,7 +172,8 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
@@ -247,9 +250,6 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
 
@@ -349,7 +349,8 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
@@ -427,9 +428,6 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		String msg = "";
 		
 		List<CaratulaVO> caratulaVOs = null;
-		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
@@ -536,7 +534,8 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
@@ -582,9 +581,6 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
 		

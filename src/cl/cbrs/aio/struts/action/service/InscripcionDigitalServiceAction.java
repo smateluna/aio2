@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.GeneralException;
 import cl.cbrs.aio.dao.AnteriorDAO;
@@ -1384,7 +1385,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			LibrosPropiedadesDAO librosPropiedadesDAO = new LibrosPropiedadesDAO();
 			cuadernillo = Integer.parseInt(cuadernillop);
 			ano = Integer.parseInt(anop);
-			String usuario = request.getUserPrincipal().getName();
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			
 			DespachoCuadernilloDTO dto = new DespachoCuadernilloDTO();

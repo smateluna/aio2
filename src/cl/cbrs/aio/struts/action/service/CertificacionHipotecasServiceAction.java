@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.StringUtil;
 import cl.cbr.util.TablaValores;
@@ -61,7 +62,8 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		
 		List<CaratulaVO> caratulaVOs = null;
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -151,7 +153,8 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
@@ -227,9 +230,6 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
 
@@ -328,9 +328,6 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-		
 		try{
 			String caratula = request.getParameter("caratula")==null?"0":request.getParameter("caratula");
 	    	
@@ -393,8 +390,8 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
@@ -440,9 +437,6 @@ public class CertificacionHipotecasServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		try{
 		

@@ -155,6 +155,9 @@
 				        	<option value="5">
 					      	5 minutos
 				        	</option>
+				        	<option value="10">
+					      	10 minutos
+				        	</option>				        	
 				        </select>	
 			    		<button type="button" class="pull-right btn  btn-primary btn-sm" ng-click="buscarLiquidaciones()" tooltip="Refrescar" tooltip-placement="bottom">
                           <i class="fa fa-refresh"></i>
@@ -198,6 +201,7 @@
 			        </thead>
 			        <tbody>
 						<tr ng-repeat="sol in filtered = (busquedaTareas.data.caratulas | filter:filterExpr | orderBy:busquedaTareas.predicate:busquedaTareas.reverse | startFrom:(paginacionTareas.currentPage-1)*paginacionTareas.numPerPage | limitTo:paginacionTareas.numPerPage)">
+						<!-- <tr ng-repeat="sol in busquedaTareas.data.caratulas)"> -->
                                 <td>
                                  <input type="checkbox" class="icheck" ng-i-check="" ng-model="sol.check" />
                                   
@@ -207,13 +211,11 @@
                                     {{sol.canalTexto}}
                                 </td>
 				        		<td class="text-left">				        			
-			        				{{sol.tipoFormularioDTO.idDescripcion}}
-			        				<br />
-			        				{{sol.productoWebDTO.descripcionProducto}}
+			        				{{sol.tipoFormularioDTO.idDescripcion}}			        				
 				        		</td>
 				        		<td class="text-left" ng-if="busquedaTareas.data.hayInscripcion">
 				        			{{sol.inscripcionDigitalDTO.foja}}-{{sol.inscripcionDigitalDTO.numero}}-{{sol.inscripcionDigitalDTO.ano}} {{sol.inscripcionDigitalDTO.bis===1?'bis':''}}
-				        			<button type="button" class="btn btn-primary btn-xs btn-rad"
+				        			<button type="button" class="btn btn-primary btn-xs btn-rad" ng-if="sol.inscripcionDigitalDTO.foja"
 										ng-click="verTitulo(sol.inscripcionDigitalDTO, sol.numeroCaratula)">
 										<i class="fa fa-search"></i>
 									</button>

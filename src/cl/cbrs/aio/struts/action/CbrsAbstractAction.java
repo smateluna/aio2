@@ -35,7 +35,6 @@ public abstract class CbrsAbstractAction extends DispatchAction{
 		try{
 			//request.setCharacterEncoding("UTF-8"); 
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
 			ThreadContext.put("extra_key", usuario);
 			

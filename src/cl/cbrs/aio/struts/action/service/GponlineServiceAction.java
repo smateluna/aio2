@@ -65,9 +65,6 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-		logger.debug("usuario:"+usuario);
 		try{
 
 			String borradorStr = request.getParameter("borrador")==null?"0":request.getParameter("borrador");
@@ -118,9 +115,6 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-		logger.debug("usuario:"+usuario);
 		try{
 
 			String borradorStr = request.getParameter("borrador")==null?"0":request.getParameter("borrador");
@@ -188,12 +182,6 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		JSONArray listaBorradoresJSON = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-		
-		WsCaratulaClienteDelegate caratulaDelegate = new WsCaratulaClienteDelegate();
-		WsBorradorDelegate borradorDelegate = new WsBorradorDelegate();
 
 		try {							
 			
@@ -277,10 +265,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		JSONArray listaBorradoresJSON = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-
+		
 		try {
 			String fojasStr = request.getParameter("foja")==null?"0":request.getParameter("foja");
 			String numeroStr = request.getParameter("numero")==null?"0":request.getParameter("numero");
@@ -1320,9 +1305,6 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		JSONArray listaBorradoresJSON = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 
 		try {
 			String fojasStr = request.getParameter("foja")==null?"0":request.getParameter("foja");

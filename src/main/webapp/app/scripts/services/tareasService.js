@@ -28,7 +28,7 @@ app.factory('tareasService', function ($http, $q) {
           var deferred = $q.defer();
 
           $http({
-            method: 'GET',
+            method: 'POST',
             url: '../do/service/tareas',
             params: paramsObj
           }).

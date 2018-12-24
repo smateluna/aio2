@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.GeneralException;
 import cl.cbr.util.TablaValores;
@@ -283,7 +284,8 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 		JSONArray listaTiposAnotacionJSON = new JSONArray();
 	
 		try {
-			String usuario = request.getUserPrincipal().getName();
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){
@@ -476,7 +478,8 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 		}
 		
 		try {
-			String usuario = request.getUserPrincipal().getName();
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuario)){

@@ -113,7 +113,6 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
@@ -155,7 +154,6 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 
 		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 		String usuario =context.getIdToken().getPreferredUsername();
 
 		System.out.println("Obteniendo datos de usuario..."+usuario);
@@ -219,7 +217,6 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 		try {		
 
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			System.out.println("Obteniendo datos de usuario..."+usuario);
 
@@ -330,7 +327,6 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		try {		
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
 			String usuario =context.getIdToken().getPreferredUsername();			 logger.debug("Obteniendo datos de usuario..."+usuario);
 			System.out.println("Obteniendo datos de usuario..."+usuario);
 			usuario = usuario.replaceAll("CBRS\\\\", "");

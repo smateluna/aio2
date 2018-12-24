@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbrs.aio.dto.CartelDTO;
 import cl.cbrs.aio.dto.CertificadoCartelDTO;
@@ -251,7 +252,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 		ArrayList<CertificadoCartelDTO> dtos = new ArrayList<CertificadoCartelDTO>();
 		

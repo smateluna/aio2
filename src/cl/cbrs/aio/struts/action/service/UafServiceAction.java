@@ -45,9 +45,7 @@ public class UafServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		try {
-			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
-			
+		try {			
 			UafDAO uafDAO = new UafDAO();
 			ArrayList<UafPersonaDTO> listaPersonas = uafDAO.buscarPersonas(nInscripciones, ano) ;			
 			respuesta.put("listaPersonas", listaPersonas);

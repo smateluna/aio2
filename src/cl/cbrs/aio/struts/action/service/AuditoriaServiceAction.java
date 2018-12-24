@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.GeneralException;
 import cl.cbr.util.TablaValores;
@@ -65,9 +66,6 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 		JSONArray resultado = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 
 		try{
 
@@ -117,9 +115,6 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 //		JSONArray resultado = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		final String MAX_ANYOS = TablaValores.getValor(Constants.ARCHIVO_PROPERTIES, "BUSCAR", "max_anyos");
 		respuesta.put("maxAnyos", MAX_ANYOS);
@@ -188,9 +183,6 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 		JSONArray listaBorradoresJSON = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
 		
 		WsCaratulaClienteDelegate caratulaDelegate = new WsCaratulaClienteDelegate();
 		WsBorradorDelegate borradorDelegate = new WsBorradorDelegate();
@@ -260,10 +252,7 @@ public class AuditoriaServiceAction extends CbrsAbstractAction {
 		JSONArray listaBorradoresJSON = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-
-		String usuario = request.getUserPrincipal().getName();
-		usuario = usuario.replaceAll("CBRS\\\\", "");
-
+		
 		try {
 			String fojasStr = request.getParameter("foja")==null?"0":request.getParameter("foja");
 			String numeroStr = request.getParameter("numero")==null?"0":request.getParameter("numero");

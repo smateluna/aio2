@@ -755,9 +755,6 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	@SuppressWarnings("unchecked")
 	public void getEstadoReporte(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		SimpleDateFormat sdfReporte = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		//KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-		//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-		//String usuario =context.getIdToken().getPreferredUsername();
 		
 		Date fecha = new Date();
 		String fechaReporte = sdfReporte.format(fecha);
@@ -886,8 +883,8 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			
 			//INGRESOS - EGRESOS
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			//String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
-			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 			ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs = (ArrayList<IngresoEgresoDTO>)data.get("ingresoEgreso"); //caratulaEstadoDTO.getIngresoEgresoDTOs();//DataManager.getIngresoEgreso(Integer.valueOf(ncaratula));
 			ThreadContext.put("usuario", usuario);
 			if("pdf".equals(tipo))

@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.foliomercantil.vo.ActoJuridicoVO;
@@ -2146,7 +2147,8 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 			
 			request.getSession().setAttribute("rut", rutp);
 
-			String usuario = request.getRemoteUser()!=null?request.getRemoteUser():"";
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			InformacionesDAO daoinfo = new InformacionesDAO();
@@ -2195,8 +2197,8 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 		try{
 			InformacionesDAO daoinfo = new InformacionesDAO();
-			
-			String usuario = request.getUserPrincipal().getName();
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			
 			atencionInformacionesDTO=daoinfo.get(usuario);

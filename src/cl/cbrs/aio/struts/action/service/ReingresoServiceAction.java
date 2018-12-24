@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -196,7 +197,9 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		ComercioUtil comercioUtil = new ComercioUtil();
 
 		try {		
-			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 			JSONParser jsonParser = new JSONParser();						
 			
 			//Data

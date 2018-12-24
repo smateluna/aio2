@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -126,7 +127,8 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		Integer numero = 0;
 		String ano = "0";
 
-		String usuario = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 
 		try{
@@ -523,8 +525,9 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		Integer numero = 0;
 		String ano = "0";
 		String vigente = "";
-
-		String usuario = request.getUserPrincipal().getName();
+		
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuario =context.getIdToken().getPreferredUsername();			
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 
 		try{
@@ -1879,7 +1882,9 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		try{
 
 			String seccionStr = request.getParameter("seccion")==null?"":request.getParameter("seccion");
-			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();
 			listaCaratulas = wsCaratulaClienteDelegate.obtenerCaratulasPorSeccionUsuario(seccionStr,usuario);

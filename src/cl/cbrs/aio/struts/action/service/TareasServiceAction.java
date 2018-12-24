@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,12 +78,14 @@ import cl.cbrs.aio.util.UsuarioUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CtaCteVO;
+import cl.cbrs.caratula.flujo.vo.EstadoActualCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
 import cl.cbrs.caratula.flujo.vo.ProductoGlosaVO;
 import cl.cbrs.caratula.flujo.vo.ProductoReceptorEmailVO;
 import cl.cbrs.caratula.flujo.vo.ProductoVO;
 import cl.cbrs.caratula.flujo.vo.SeccionVO;
+import cl.cbrs.caratula.flujo.vo.TipoFormularioVO;
 import cl.cbrs.cuentacorriente.delegate.WsCuentaCorrienteClienteDelegate;
 import cl.cbrs.delegate.botondepago.WsBotonDePagoClienteDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
@@ -127,7 +130,9 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		List<CaratulaVO> caratulaVOs = null;		
 
 		try {
-			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
 			CaratulasUtil caratulasUtil = new CaratulasUtil();
@@ -184,19 +189,17 @@ public class TareasServiceAction extends CbrsAbstractAction {
 					Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
 					String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
 					String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
-					WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/obtenerReingresosGPPendienteSeccion/"+funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()));
+					WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/obtenerCaratulasReingresosGPPendienteSeccion/"+funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()));
 					ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
 					com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 		
 					if(statusRespuesta.getStatusCode() == 200){
-						JSONArray reingresosGP = (JSONArray) getResponse(clientResponse);
+						JSONArray jsonArray = (JSONArray) getResponse(clientResponse);
 						if(caratulaVOs==null)
 							caratulaVOs = new ArrayList<CaratulaVO>();
-						for(int i=0; i<reingresosGP.size(); i++){					
-							ReingresoGPDTO reingresoGPDTO = gson.fromJson(reingresosGP.get(i).toString(), ReingresoGPDTO.class);
-							Integer caratulaNueva = reingresoGPDTO.getCaratulaNueva();
-							CaratulaVO caratula = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratulaNueva.longValue());
-							caratulaVOs.add(caratula);
+						for(int i=0; i<jsonArray.size(); i++){					
+							CaratulaVO caratulaVO = gson.fromJson(jsonArray.get(i).toString(), CaratulaVO.class);
+							caratulaVOs.add(caratulaVO);
 						}				
 					} else{
 						//TODO warning error al cargar tareas de reingresos
@@ -264,7 +267,9 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		List<CaratulaVO> caratulaVOs = null;
 
 		try {
-			String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
+			usuario = usuario.replaceAll("CBRS\\\\", "");
 
 			WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
 			CaratulasUtil caratulasUtil = new CaratulasUtil();
@@ -652,7 +657,9 @@ public class TareasServiceAction extends CbrsAbstractAction {
 						Date fechaHoy = new Date();	
 
 						wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/liquidacionTemporal"));
-						String usuario = request.getUserPrincipal().getName().replaceAll("CBRS\\\\", "");
+						KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+						String usuario =context.getIdToken().getPreferredUsername();			
+						usuario = usuario.replaceAll("CBRS\\\\", "");
 
 						liquidacionTemporalIdDTO.setCaratula(ncaratula.intValue());
 

@@ -16,6 +16,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
@@ -116,7 +117,8 @@ public class DesbloqueoServiceAction extends CbrsAbstractAction {
 			String numero = solicitudJSON.get("numero").toString();
 			Long ano = new Long(solicitudJSON.get("ano").toString());
 			Integer bis = new Integer(solicitudJSON.get("bis").toString());
-			String usuario = request.getUserPrincipal().getName();
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			
 			logger.info("Desbloqueando solicitud id: " + idSolicitud + "\n Foja: " + foja + "\n Numero: " + numero + 
