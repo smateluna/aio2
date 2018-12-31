@@ -234,7 +234,7 @@ public class AnotacionUtil {
 			dto.setNumero(vo.getNumero());
 			dto.setAno(vo.getAno());
 			dto.setBis(vo.getBis());	
-//			dto.setFechaFolio(vo.getFechaFolio());
+			dto.setFechaFolio(vo.getFechaFolio());
 			
 				
 //			if(conAnotacion){
@@ -261,7 +261,7 @@ public class AnotacionUtil {
 			dto.setNumero(vo.getNumero());
 			dto.setAno(vo.getAno());
 			dto.setBis(vo.getBis());	
-//			dto.setFechaFolio(vo.getFechaFolio());
+			dto.setFechaFolio(vo.getFechaFolio());
 			
 				
 //			if(conAnotacion){
@@ -285,6 +285,7 @@ public class AnotacionUtil {
 			dto.setNumero(vo.getNumero());
 			dto.setAno(vo.getAno());
 			dto.setBis(vo.getBis());	
+			dto.setFechaFolio(vo.getFechaFolio());
 		}
 
 		return dto;	

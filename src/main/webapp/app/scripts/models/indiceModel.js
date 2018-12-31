@@ -40,6 +40,38 @@ app.factory('indiceModel', function () {
     selectedRow: null,
     indicebusqueda: false
   };
+  
+  var paginacion = {
+		currentPage: 1,
+		numPerPage: 10,
+		maxSize: 10,
+		filteredTodos: [],
+		todos: []
+	}   
+  
+  var paginacioncom = {
+		currentPage: 1,
+		numPerPage: 10,
+		maxSize: 10,
+		filteredTodos: [],
+		todos: []
+	} 
+  
+  var paginacionproh = {
+		currentPage: 1,
+		numPerPage: 10,
+		maxSize: 10,
+		filteredTodos: [],
+		todos: []
+	}   
+  
+  var paginacionhipo = {
+		currentPage: 1,
+		numPerPage: 10,
+		maxSize: 10,
+		filteredTodos: [],
+		todos: []
+	}   
 
   var busquedaMis = {
     resultados: [],
@@ -159,6 +191,51 @@ app.factory('indiceModel', function () {
     },
     setListaAnoInscripcion: function (newListaAnoInscripcion){
       anosInscripciones = newlistaAnoInscripcion;
+    },
+    getPaginacion: function (){
+    	return paginacion;
+    },
+    getPaginacioncom: function (){
+    	return paginacioncom;
+    },
+    getPaginacionproh: function (){
+    	return paginacionproh;
+    },
+    getPaginacionhipo: function (){
+    	return paginacionhipo;
+    },
+    resetPaginacion: function (){
+    	  paginacion = {
+				currentPage: 1,
+				numPerPage: 10,
+				maxSize: 10,
+				filteredTodos: [],
+				todos: []
+			}   
+		  
+		  paginacioncom = {
+				currentPage: 1,
+				numPerPage: 10,
+				maxSize: 10,
+				filteredTodos: [],
+				todos: []
+			} 
+		  
+		  paginacionproh = {
+				currentPage: 1,
+				numPerPage: 10,
+				maxSize: 10,
+				filteredTodos: [],
+				todos: []
+			}   
+		  
+		  paginacionhipo = {
+				currentPage: 1,
+				numPerPage: 10,
+				maxSize: 10,
+				filteredTodos: [],
+				todos: []
+			} 
     }
   };
 });

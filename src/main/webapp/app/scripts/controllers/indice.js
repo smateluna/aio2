@@ -8,8 +8,12 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 	$scope.listaProhibiciones = indiceModel.getListaProhibiciones();
 	$scope.listaHipoteca = indiceModel.getListaHipoteca();
 	$scope.listaComercio = indiceModel.getListaComercio();
+	$scope.paginacion = indiceModel.getPaginacion();
+	$scope.paginacioncom = indiceModel.getPaginacioncom();
+	$scope.paginacionproh = indiceModel.getPaginacionproh();
+	$scope.paginacionhipo = indiceModel.getPaginacionhipo();
 	$scope.tab = solicitudesModel.getTab();
-
+	
 	$scope.rowHighilited = function (idSelected) {
 		$scope.busquedaIndice.selectedRow = idSelected;
 	};
@@ -45,14 +49,6 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 		esDigital: false,
 		tieneRechazo: false
 	};
-
-	$scope.paginacionMaster = {
-		currentPage: 1,
-		numPerPage: 10,
-		maxSize: 10,
-		filteredTodos: [],
-		todos: []
-	}
 
 	$scope.datosSesion = {
 		rut: null,
@@ -442,6 +438,8 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 		}
 		$scope.listaComercio.inicio = 0;
 		$scope.listaComercio.fin = $scope.listaComercio.offset;
+		
+		indiceModel.resetPaginacion();
 	};
 
 	$scope.limpiarTitulo = function(){
@@ -458,7 +456,7 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 		$scope.busquedaIndice.anoInscripcion = null;
 		$scope.busquedaIndice.acto = null;
 		$scope.busquedaIndice.tipo = null;
-		$scope.busquedaIndice.conservador = null;
+		$scope.busquedaIndice.conservador = null;  
 
 		$scope.myform.$setPristine(true);
 
@@ -1165,11 +1163,11 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 			//			$scope.obtenerAtencionPorDia();
 		});
 	};  
-
-	$scope.paginacion = angular.copy($scope.paginacionMaster);
-	$scope.paginacioncom = angular.copy($scope.paginacionMaster);
-	$scope.paginacionproh = angular.copy($scope.paginacionMaster);
-	$scope.paginacionhipo = angular.copy($scope.paginacionMaster);
+	
+	$scope.paginacion = indiceModel.getPaginacion();
+	$scope.paginacioncom = indiceModel.getPaginacioncom();
+	$scope.paginacionproh = indiceModel.getPaginacionproh();
+	$scope.paginacionhipo = indiceModel.getPaginacionhipo();	
 
 	$scope.paginacion.todos=$scope.busquedaIndice.resultados;
 	$scope.paginacioncom.todos=$scope.busquedaIndice.resultadoscomercio;
@@ -1179,10 +1177,10 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 
 	$scope.makeTodos = function() {
 
-		$scope.paginacion = angular.copy($scope.paginacionMaster);
-		$scope.paginacioncom = angular.copy($scope.paginacionMaster);
-		$scope.paginacionproh = angular.copy($scope.paginacionMaster);
-		$scope.paginacionhipo = angular.copy($scope.paginacionMaster);
+		$scope.paginacion = indiceModel.getPaginacion();
+		$scope.paginacioncom = indiceModel.getPaginacioncom();
+		$scope.paginacionproh = indiceModel.getPaginacionproh();
+		$scope.paginacionhipo = indiceModel.getPaginacionhipo();
 
 		$scope.paginacion.todos=$scope.busquedaIndice.resultados;
 		$scope.paginacioncom.todos=$scope.busquedaIndice.resultadoscomercio;
@@ -1211,7 +1209,6 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 		, end = begin + $scope.paginacion.numPerPage;
 
 		$scope.paginacion.filteredTodos = $scope.paginacion.todos.slice(begin, end);
-
 	});
 
 	$scope.$watch('paginacioncom.currentPage + paginacioncom.numPerPage', function() {
