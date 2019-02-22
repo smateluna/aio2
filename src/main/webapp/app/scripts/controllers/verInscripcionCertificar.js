@@ -4,7 +4,7 @@
 
 'use strict';
 
-app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout,inscripcionDigitalService,caratulaService, certificacionService) {
+app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout,inscripcionDigitalService,caratulaService, certificacionService, filterFilter, $window) {
 
 	$scope.parametros = {
 		caratula: $routeParams.caratula,
@@ -31,8 +31,28 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 	$scope.certificacion = {
 		tipo: {}
 	};
+	
+	$scope.barraDerechaStatus = {
+			nota : true,
+			formulario : false
+		};	
+	
+	$scope.paginacionMaster = {
+			currentPage: 1,
+			numPerPage: 10,
+			maxSize: 2,
+			totalpaginas: 0,
+			filteredTodos: [],
+			todos: [],
+			filterExprNotas: ''
+		}
+	
+	$scope.paginacionNotas = angular.copy($scope.paginacionMaster);
 
+	$scope.reverseNotas=$routeParams.reverseNotas;
 	$scope.anotaciones = [];
+	$scope.notas = [];
+	$scope.embargos = [];
 	$scope.data = {};
 
 	$scope.borradores = [];
@@ -136,13 +156,21 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 							function(obj) {
 								if (obj.tipoAnotacionDTO.idTipoAnotacion === 2) {
 									tieneanotacion2=true;
+								}
+								if ((obj.tipoAnotacionDTO.idTipoAnotacion === 1 || obj.tipoAnotacionDTO.idTipoAnotacion === 2) && obj.estadoAnotacionDTO.idEstado !== 7) {
+									$scope.notas.push(obj);
+
+									if((obj.tipoAnotacionDTO.idTipoAnotacion === 2 || obj.tipoAnotacionDTO.idTipoAnotacion === 1) && (obj.acto=='Prejudicial' || obj.acto=='Embargo' || obj.acto=='Medida Precautoria' || obj.acto=='Medida Prejudicial Precautoria' || obj.acto=='Quiebra' || obj.acto=='Interdiccion' || obj.acto=='Prohibicion Judicial' || obj.acto=='Prohibicion Voluntaria' || obj.acto=='Desposeimiento' || obj.acto=='Litigio' || obj.acto=='LIQUIDACION LEY 20720')){
+										$scope.embargos.push(obj);
+									}								
 								} else if (obj.tipoAnotacionDTO.idTipoAnotacion === 3) {
-									$scope.anotaciones
-									.push(obj);
+									$scope.anotaciones.push(obj);
 								}
 							});
 
 					}
+					
+					$scope.makeTodos();
 
 				} else {
 					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
@@ -607,4 +635,83 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 		});
 	};
 
+	$scope.makeTodos = function() {
+
+		$scope.paginacionNotas = angular.copy($scope.paginacionMaster);
+
+		$scope.paginacionNotas.todos=$scope.notas;
+
+		var begin = (($scope.paginacionNotas.currentPage - 1) * $scope.paginacionNotas.numPerPage)
+		, end = begin + $scope.paginacionNotas.numPerPage;
+
+		$scope.paginacionNotas.filteredTodos = $scope.paginacionNotas.todos.slice(begin, end);
+
+		$scope.paginacionNotas.totalpaginas = Math.ceil($scope.paginacionNotas.todos.length / $scope.paginacionNotas.numPerPage);
+		
+		//$scope.paginacionNotas.maxSize = Math.round($scope.paginacionNotas.todos.length / $scope.paginacionNotas.numPerPage);
+
+	};
+	
+	$scope.acordionDerecha = function(target) {
+
+		if (target === 'nota') {
+
+			if ($scope.barraDerechaStatus.nota) {
+				$scope.barraDerechaStatus.nota = false;
+			} else {
+				$scope.barraDerechaStatus.nota = true;
+			}
+
+			$scope.barraDerechaStatus.formulario = false;
+
+		} else if (target === 'formulario') {
+			if ($scope.barraDerechaStatus.formulario) {
+				$scope.barraDerechaStatus.formulario = false;
+				$scope.acordionNotas();
+			} else {
+				$scope.barraDerechaStatus.formulario = true;
+				$scope.acordionNotas();
+				$scope.titulosanteriores();
+			}
+
+			$scope.barraDerechaStatus.nota = false;
+		} 
+	};	
+
+	// $watch search to update pagination
+	$scope.$watch('paginacionNotas.filterExprNotas', function (newVal, oldVal) {
+
+		if(newVal!=undefined && oldVal!=undefined){
+			$scope.filtered = filterFilter($scope.notas, newVal);
+			$scope.paginacionNotas.todos = $scope.filtered;
+			$scope.paginacionNotas.currentPage = 1;
+
+			var begin = (($scope.paginacionNotas.currentPage - 1) * $scope.paginacionNotas.numPerPage)
+			, end = begin + $scope.paginacionNotas.numPerPage;
+
+			$scope.paginacionNotas.filteredTodos = $scope.paginacionNotas.todos.slice(begin, end);
+
+			//				$scope.paginacionNotas.maxSize = Math.round($scope.paginacionNotas.todos.length / $scope.paginacionNotas.numPerPage);
+		}
+
+	}, true);	
+	
+	$scope.openEmbargosModal = function(){
+		$modal.open({     
+			templateUrl: 'embargoModal.html',
+			backdrop: 'static',
+			windowClass: 'modal modal-dialog-xl', 
+			controller: 'EmbargoModalCtrl',
+			size: 'lg',  
+			resolve: {  
+			embargos : function(){
+			return $scope.embargos;
+		}
+		}
+		});
+	};
+	
+	$scope.imprimirNotas = function() {
+		$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/anotacion?metodo=printNotas&fojas='+$scope.parametros.foja+'&numero='+$scope.parametros.numero+'&ano='+$scope.parametros.ano+'&bis='+$scope.parametros.bis+'&registro='+$scope.parametros.registro+'&download=false','popupNotas','width=800,height=600');			
+	};
 });

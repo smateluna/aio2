@@ -1,5 +1,3 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
 <div class="row row-title-dv">
     <div class="col-md-12 no-padding">
         <div class="page-head no-padding">
@@ -9,7 +7,7 @@
                         <span ng-switch="parametros.registro">
                         <span ng-switch-when="com" class="label label-com label-registro">Comercio</span>
                         <span ng-switch-when="prop" class="label label-prop label-registro">Propiedad</span>
-                        <span ng-switch-when="proh" class="label label-proh label-registro">Prohibición</span>
+                        <span ng-switch-when="proh" class="label label-proh label-registro">Prohibici�n</span>
                         <span ng-switch-when="hip" class="label label-hipo label-registro">Hipoteca</span>
                     </span>
             </div>
@@ -96,22 +94,22 @@
                  </div>
                  <div class="col-md-1 col-sm-1">
                      <div class="form-group">
-                         <label class="control-label" for="numero">Número
+                         <label class="control-label" for="numero">N&uacute;mero
                          </label>
                          <input type="text" class="form-control" ng-model="parametros.numero"  id="numero" name="numero"
-                                placeholder="número" maxlength="6" enter-next="" numbers-only="numbers-only">
+                                placeholder="n�mero" maxlength="6" enter-next="" numbers-only="numbers-only">
                      </div>
                  </div>
                  <div class="col-md-1 col-sm-1">
                      <div class="form-group">
-                         <label class="control-label">Año</label>
-                         <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="parametros.ano" name="ano" placeholder="año"
+                         <label class="control-label">A&nacute;o</label>
+                         <input type="text" class="form-control" ng-class="{'error-field': (myform.ano.$error.archivoNacional || myform.ano.$error.anoActual) && !myform.ano.$pristine}" ng-model="parametros.ano" name="ano" placeholder="a�o"
                                 maxlength="4" ng-minlength="4" ng-maxlength="4" ui-validate="{archivoNacional : 'archivoNacional($value)', anoActual: 'anoActual($value)' }"  numbers-only="numbers-only">
                          <div class="error-message" ng-show="myform.ano.$error.archivoNacional && !myform.ano.$pristine">
                              Anterior a {{aioParametros.anoArchivoNacional}} debe ir a Archivo Nacional
                          </div>
                          <div class="error-message" ng-show="myform.ano.$error.anoActual && !myform.ano.$pristine">
-                             No debe ser mayor al año actual
+                             No debe ser mayor al a�o actual
                          </div>
                      </div>
                  </div>
@@ -252,7 +250,7 @@
 								ng-if="anotacion.estadoAnotacionDTO.idEstado==5">
 								<button ng-click="deleteAnotacion(anotacion)"
 									class="btn btn-default btn-xs pull-right"
-									tooltip="Eliminar anotaciÃ³n">
+									tooltip="Eliminar anotación">
 									<i class="fa fa-times dv-icon-boton-remove"></i>
 								</button>
 							</div>
@@ -276,7 +274,7 @@
 								<div class="anotacion-creada"
 									ng-if="anotacion.caratula && anotacion.repertorio">
 									<div>
-										CarÃ¡tula:
+										Carátula:
 										<a class="no-decorator" href
 											ng-click="verEstadoCaratula(anotacion.caratula)">{{anotacion.caratula}}</a>
 									</div>
@@ -293,7 +291,7 @@
 									</div>
 
 									<div>
-										<i class="fa fa-calendar" tooltip="Fecha creaciÃ³n"
+										<i class="fa fa-calendar" tooltip="Fecha creación"
 											tooltip-placement="right"></i>&nbsp;
 										{{anotacion.fechaCreacion}}
 									</div>
@@ -306,7 +304,7 @@
 										{{anotacion.nombreUsuarioEliminador}}
 									</div>
 									<div>
-										<i class="fa fa-calendar" tooltip="Fecha eliminaciÃ³n"
+										<i class="fa fa-calendar" tooltip="Fecha eliminación"
 											tooltip-placement="right"></i>&nbsp;
 										{{anotacion.fechaEliminacion}}
 									</div>
@@ -393,7 +391,7 @@
 									</div>
 								</div>
 								<div class="borrador-contenido">
-									<i class="fa fa-map-marker" tooltip="DirecciÃ³n"></i>
+									<i class="fa fa-map-marker" tooltip="Dirección"></i>
 									{{borradorElement.direccion}}
 								</div>
 							</div>
@@ -418,7 +416,7 @@
 				style="border-radius: 0; margin-bottom: 0px; margin-top: 30px;">
 				<div class="panel-heading">
 					<h4 class="panel-title" style="padding: 5px;">
-						Carátulas
+						Car&aacute;tulas
 
 					</h4>
 				</div>
@@ -454,11 +452,11 @@
 					<div class="panel-body panel-body-inscripcion">
 
 						<p class="nohay" ng-if="data.contadores.proceso==0">
-							No se han encontrado carátulas en proceso.
+							No se han encontrado car�tulas en proceso.
 						</p>
 						<p class="nohay" ng-if="loaders.enProceso.error">
 							<span class="fa fa-times-circle"></span> Problema obteniendo
-							carátulas en proceso.
+							car�tulas en proceso.
 						</p>
 
 
@@ -474,7 +472,7 @@
 								<div class="borrador-header">
 
 									<div class="borrador-field">
-										Carátula:
+										Car�tula:
 										<a href ng-click="verEstadoCaratula(caratula.numeroCaratula)">
 											{{caratula.numeroCaratula}} <i
 											class="fa fa-external-link-square"></i> </a>
@@ -485,7 +483,7 @@
 								</div>
 								<div class="caratula-detalle">
 									<div>
-										<i class="fa fa-chevron-right" tooltip="SecciÃ³n"
+										<i class="fa fa-chevron-right" tooltip="Sección"
 											tooltip-placement="right"></i>
 										{{caratula.estadoActualCaratulaDTO.seccionDTO.descripcion}}
 									</div>
@@ -547,11 +545,11 @@
 					<div class="panel-body panel-body-inscripcion">
 
 						<p class="nohay" ng-if="data.contadores.terminadas==0">
-							No se han encontrado carátulas terminadas.
+							No se han encontrado car�tulas terminadas.
 						</p>
 						<p class="nohay" ng-if="loaders.terminadas.error">
 							<span class="fa fa-times-circle"></span> Problema obteniendo
-							carátulas terminadas.
+							car�tulas terminadas.
 						</p>
 
 
@@ -567,7 +565,7 @@
 								<div class="borrador-header">
 
 									<div class="borrador-field">
-										Carátula:
+										Car�tula:
 										<a href ng-click="verEstadoCaratula(caratula.numeroCaratula)">
 											{{caratula.numeroCaratula}} <i
 											class="fa fa-external-link-square"></i> </a>
@@ -578,7 +576,7 @@
 								</div>
 								<div class="caratula-detalle">
 									<div>
-										<i class="fa fa-chevron-right" tooltip="SecciÃ³n"
+										<i class="fa fa-chevron-right" tooltip="Sección"
 											tooltip-placement="right"></i>
 										{{caratula.estadoActualCaratulaDTO.seccionDTO.descripcion}}
 									</div>
@@ -611,25 +609,7 @@
 	</div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	<div ng-class="{'col-md-12': !derechaStatus.notasExpanded, 'col-md-10' : derechaStatus.notasExpanded}">
+	<div ng-class="{'col-md-10': !derechaStatus.notasExpanded, 'col-md-8' : derechaStatus.notasExpanded}">
     
     <div class="pull-left">
 		<button class="btn btn-primary btn-xs dv-boton-nota-certificado-agrandar"
@@ -655,6 +635,257 @@
     	</div>
 
 	</div>
+	
+	<!-- Columna notas -->
+		<div class="columna-notas col-sm-2" >
+			<div class="panel-group accordion" style="margin-bottom: 0;">
+				<div class="panel panel-default" style="border-radius: 0;">
+					<div class="panel-heading">
+						<h4 class="panel-title" style="padding: 5px;">
+							<div class="pull-left">
+								<span class="dv-contador label label-default">{{notas.length}}</span>
+							</div>
+
+							<div class="pull-right" ng-click="acordionDerecha('nota')">
+								<button class="btn btn-primary btn-xs dv-boton-plus"
+									ng-if="!barraDerechaStatus.nota" tooltip="Expandir">
+									<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+								</button>
+								<button class="btn btn-primary btn-xs dv-boton-plus"
+									ng-if="barraDerechaStatus.nota" tooltip="Colapsar">
+									<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+								</button>
+							</div>
+
+							
+
+							<div ng-if="!embargos || embargos.length>0"
+								class="btn-group pull-right"
+								style="margin-top: -4px; margin-right: -5px;">
+								<button type="button" class="btn btn-danger btn-xs"
+									ng-click="openEmbargosModal()" aria-expanded="false"
+									style="margin: 0;">
+									<i class="fa fa-bank"></i> {{embargos.length}}
+								</button>
+							</div>
+							
+							<div ng-if="!notas || notas.length>0"
+								class="btn-group pull-right"
+								style="margin-top: -4px; margin-right: -5px;">
+								<button type="button" class="btn btn-primary btn-xs"
+									ng-click="imprimirNotas()" aria-expanded="false"
+									style="margin: 0;">
+									<i class="fa fa-print"></i> &nbsp;
+								</button>
+							</div>							
+							<div>Notas</div>
+						</h4>
+					</div>
+
+					<div class="panel-heading text-center font-12"
+						ng-show="notas.length!=0 && !loaders.notas.isLoading">
+						<input type="text" value=""
+							ng-model="paginacionNotas.filterExprNotas"
+							placeholder="Filtrar..." class="filtroNotas">
+						<div class="totalNota">
+							Página Notas
+							<span>{{paginacionNotas.currentPage}} de
+								{{paginacionNotas.totalpaginas}}</span>
+						</div>
+					</div>
+
+					<div class="panel-collapse panel-collapse-dv" util-derecha=""
+						modelod="{{barraDerechaStatus.nota}}" target="nota"
+						versionado="{{esVersionado()}}">
+
+						<div class="panel-body panel-body-inscripcion notasB">
+
+							<p class="nohay"
+								ng-if="notas.length==0 && !loaders.notas.isLoading">
+								No se han encontrado notas.
+							</p>
+
+							<p class="nohay" ng-if="loaders.notas.error">
+								<span class="fa fa-times-circle"></span> Problema obteniendo
+								Notas.
+							</p>
+
+							<p ng-if="loaders.notas.isLoading" class="text-center">
+								Buscando Notas...
+								<br>
+								<img src="../app/images/load-18.gif" alt="" />
+							</p>
+
+							<div class="anotacion-wrapper"
+								ng-repeat="nota in filtered = (notas)">
+
+								<div class="anotacion-modify"
+									ng-if="nota.estadoAnotacionDTO.idEstado==1 && nota.nombreUsuarioCreador.toUpperCase()==data.sesion.toUpperCase()">
+									<button class="btn btn-primary btn-xs pull-right ng-scope"
+										tooltip="Modificar nota" ng-click="modificarAnotacion(nota)">
+										<i class="fa fa-pencil-square-o"></i>
+									</button>
+								</div>
+
+								<div class="anotacion-modify"
+									ng-if="nota.estadoAnotacionDTO.idEstado==1 && nota.nombreUsuarioCreador.toUpperCase()==data.sesion.toUpperCase()">
+									<button class="btn btn-danger btn-xs pull-right ng-scope"
+										tooltip="Eliminar nota" ng-click="deleteAnotacion(nota)">
+										<i class="fa fa-trash-o"></i>
+									</button>
+								</div>
+
+
+								<div class="anotacion-card notas-sombra">
+									<div class="nota-header">
+										<div class="nota-title text-center">
+											<!--                                    <div class="pull-left">
+                                        <span class="anotacion-counter label label-default">{{$index+1}}</span>
+                                    </div>-->
+											{{nota.acto | uppercase}}
+										</div>
+									</div>
+									<div class="borrador-field text-center" ng-switch
+										on="nota.estadoAnotacionDTO.idEstado">
+										<span class="label label-default estado-nota"
+											ng-switch-when="1">{{nota.estadoAnotacionDTO.descripcion}}</span>
+										<span class="label label-primary estado-nota"
+											ng-switch-when="2">{{nota.estadoAnotacionDTO.descripcion}}</span>
+										<span class="label label-success estado-nota"
+											ng-switch-when="3">{{nota.estadoAnotacionDTO.descripcion}}</span>
+										<span class="label label-warning estado-nota"
+											ng-switch-when="5">{{nota.estadoAnotacionDTO.descripcion}}</span>
+										<span class="label label-default estado-nota"
+											ng-switch-default>{{nota.estadoAnotacionDTO.descripcion}}</span>
+									</div>
+
+									<div class="borrador-field"
+										ng-if="nota.estadoAnotacionDTO.idEstado!=1 && nota.tipoAnotacionDTO.idTipoAnotacion==1 && nota.inscripcionDigitalByIdInscripcionOrigenDTO.foja
+                    && nota.inscripcionDigitalByIdInscripcionOrigenDTO.numero && nota.inscripcionDigitalByIdInscripcionOrigenDTO.ano">
+										<a 
+											ng-click="verInscripcion(nota.inscripcionDigitalByIdInscripcionOrigenDTO)">
+
+											Inscrito a Fojas
+											{{nota.inscripcionDigitalByIdInscripcionOrigenDTO.foja}},
+											número
+											{{nota.inscripcionDigitalByIdInscripcionOrigenDTO.numero}}
+											del año
+											{{nota.inscripcionDigitalByIdInscripcionOrigenDTO.ano}} </a>
+									</div>
+
+									<div class="anotacion-contenido">
+										<span ng-bind-html="nota.texto"></span>
+
+										<span ng-if="nota.tipoAnotacionDTO.idTipoAnotacion==1">
+											<br>Santiago, <span
+											ng-if="nota.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio">
+												{{nota.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio
+												| myMoment:'DD/MM/YYYY HH:mm:ss':'LL'}} </span> <span
+											class="widget-nota-content-no-data"
+											ng-if="!nota.inscripcionDigitalByIdInscripcionOrigenDTO.fechaFolio">
+
+										</span> </span>
+										<span ng-if="nota.tipoAnotacionDTO.idTipoAnotacion==2"
+											ng-switch on="nota.estadoAnotacionDTO.idEstado"> <span
+											ng-switch-when="2">{{nota.nombreUsuarioFirmador}}.</span> <span
+											ng-switch-when="3">{{nota.nombreUsuarioFirmador}}.</span> <span
+											ng-switch-when="4">{{nota.nombreUsuarioFirmador}}.</span> <span
+											ng-switch-when="5">{{nota.nombreUsuarioFirmador}}.</span> <span
+											ng-switch-default></span> </span>
+
+									</div>
+									<div class="anotacion-creada">
+										<div>
+											<i class="fa fa-user" tooltip="Creada por"></i>
+											{{nota.nombreUsuarioCreador}}
+										</div>
+
+										<div>
+											<i class="fa fa-calendar" tooltip="Fecha creación"></i>
+											{{nota.fechaCreacion}}
+										</div>
+									</div>
+									<div class="anotacion-creada"
+										ng-if="nota.nombreUsuarioAprobador">
+										<div>
+											<i class="fa fa-check" tooltip="Aprobada por"></i>
+											<i class="fa fa-user" tooltip="Aprobada por"></i>
+											{{nota.nombreUsuarioAprobador}}
+										</div>
+
+										<div>
+											<i class="fa fa-calendar" tooltip="Fecha Aprobación"></i>
+											{{nota.fechaAprobacion}}
+										</div>
+									</div>
+									<div class="anotacion-creada">
+										<div>
+											Carátula:
+											<a ng-if="nota.caratulaMatriz==''" href
+												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratula}}</a>
+											<a ng-if="nota.caratulaMatriz!=''" href
+												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratulaMatriz}}</a>
+
+										</div>
+
+										<div>
+											Repertorio:
+											<a ng-if="nota.repertorio" href
+												ng-click="verRepertorio(nota.repertorio)">{{nota.repertorio}}</a>
+											<span ng-if="!nota.repertorio"> - </span>
+										</div>
+										<div>
+											Borrador:
+											<span ng-if="!nota.borrador"> - </span>
+											<!--<a ng-if="nota.borrador" target="_blank"
+                                       ng-href="{{data.urlGpOnline}}?borrador={{nota.borrador}}&folio={{nota.folio}}&anyos=50&fecha={{hoy}}">
+                                        {{nota.borrador}}
+                                    </a>-->
+											<a href ng-if="nota.borrador"
+												ng-click="irGpOnlineAIO(nota.borrador,nota.folio)">
+												{{nota.borrador}} </a>
+										</div>
+										<div>
+											Id Nota Electr&oacute;nica:
+											<span ng-if="nota.idAnotacion"> {{nota.idAnotacion}} </span>
+											<span ng-if="!nota.idAnotacion"> - </span>
+										</div>
+										<div ng-if="nota.idNota">
+											Id Nota F&iacute;sica:
+											<span ng-if="nota.idAnotacion"> {{nota.idNota}} </span>
+											<span ng-if="!nota.idAnotacion"> - </span>
+										</div>										
+										<div ng-if="nota.direccion">
+											<i class="fa fa-map-marker" tooltip="Dirección"></i>
+											<span ng-if="nota.direccion">{{nota.direccion}}</span>
+											<span ng-if="!nota.direccion"> -</span>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+					<div class="panel-footer panel-footer-notas text-center"
+						ng-if="notas.length!=0 && !loaders.notas.isLoading">
+						<pagination style="margin-top:1px !important;"
+							ng-model="paginacionNotas.currentPage"
+							total-items="paginacionNotas.todos.length" class="pagination-sm"
+							max-size="paginacionNotas.maxSize" rotate="false"
+							boundary-links="true" previous-text="&lsaquo;"
+							next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+						</pagination>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+<!-- Fin Columna notas -->
 
 </div>
 
@@ -664,6 +895,7 @@
 <div ng-include="'views/loadingModal.html'"></div>
 <div ng-include="'views/gpOnlineModal.html'"></div>
 <div ng-include="'views/estadoIndiceModal.html'"></div>
+<div ng-include="'views/digital/embargoModal.html'"></div>
 
 
 <script type="text/javascript">
