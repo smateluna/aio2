@@ -124,8 +124,7 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 
 			AnotacionVO anotacionVO = new AnotacionVO();
 
-			
-			anotacionVO.setNombreUsuarioCreador(usuarioCreador);
+			anotacionVO.setNombreUsuarioCreador("CBRS\\"+usuarioCreador);
 			anotacionVO.setTexto(texto);
 			anotacionVO.setActo(acto);
 			
@@ -424,7 +423,7 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 			try {
 				AnotacionVO anotacionVO = digitalDelegate.obtenerAnotacion(idAnotacion);
 
-				anotacionVO.setNombreUsuarioCreador(usuarioCreador);
+				anotacionVO.setNombreUsuarioCreador("CBRS\\"+usuarioCreador);
 				anotacionVO.setTexto(texto);
 
 				if(caratula!=null){
