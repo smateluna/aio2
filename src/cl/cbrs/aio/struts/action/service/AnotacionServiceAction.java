@@ -110,7 +110,8 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 
 		}
 		
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 
 		if(StringUtils.isBlank(usuarioCreador)){
 			msg = "No hay usuario, inicie sesión nuevamente.";
@@ -230,8 +231,9 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 		} catch (Exception e1) {
 
 		}
-
-		String usuarioEliminador = request.getUserPrincipal().getName();
+		
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioEliminador =context.getIdToken().getPreferredUsername();
 		usuarioEliminador.replaceAll("CBRS\\\\", "");
 
 		if(StringUtils.isBlank(usuarioEliminador)){
@@ -407,7 +409,8 @@ public class AnotacionServiceAction extends CbrsAbstractAction {
 		}
 			
 		
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 
 		if(StringUtils.isBlank(usuarioCreador)){
 			msg = "No hay usuario, inicie sesión nuevamente.";

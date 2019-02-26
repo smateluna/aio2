@@ -253,7 +253,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 
 		String urlGpOnline = ConstantesDigital.getParametro("URL_GP_ONLINE");
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();			
 
 		JSONObject respuesta = new JSONObject();
 
@@ -401,7 +402,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		}
 
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		JSONObject respuesta = new JSONObject();
 
@@ -483,7 +485,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			}	
 		}
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
@@ -1151,9 +1154,10 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		String anotacionIdReq = request.getParameter("anotacion");
 
 		try{
-			Long anotacionId = Long.parseLong(anotacionIdReq);
-
-			String usuarioAprobador = request.getUserPrincipal().getName();
+			Long anotacionId = Long.parseLong(anotacionIdReq);			
+			
+			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuarioAprobador =context.getIdToken().getPreferredUsername();
 			usuarioAprobador.replaceAll("CBRS\\\\", "");
 
 			if(StringUtils.isBlank(usuarioAprobador)){

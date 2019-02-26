@@ -22,6 +22,7 @@ import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.GeneralException;
 import cl.cbr.util.RUTUtil;
@@ -66,7 +67,8 @@ public class SolicitudServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 
 		ArrayList<SolicitudDTO> solicitudDTOs = new ArrayList<SolicitudDTO>();
 
@@ -452,7 +454,8 @@ public class SolicitudServiceAction extends CbrsAbstractAction {
 			bisInscripcion = true;
 		}
 
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 
 		if(StringUtils.isBlank(usuarioCreador)){
@@ -614,7 +617,8 @@ public class SolicitudServiceAction extends CbrsAbstractAction {
 			bis = 1;
 		}
 
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 		
 		if(StringUtils.isBlank(usuarioCreador)){
@@ -672,7 +676,8 @@ public class SolicitudServiceAction extends CbrsAbstractAction {
 
 		}
 
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 		usuarioCreador.replaceAll("CBRS\\\\", "");
 		
 		if(StringUtils.isBlank(usuarioCreador)){

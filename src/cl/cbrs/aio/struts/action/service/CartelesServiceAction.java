@@ -105,7 +105,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 		}	
 		
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
@@ -192,9 +193,10 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 				CartelesUtil cartelesUtil = new CartelesUtil();
 							
 				CertificadoCartelVO certificadoCartelVO = new CertificadoCartelVO();
-				String nombreUsuario = request.getUserPrincipal().getName();
-		        String soloNombre = nombreUsuario.substring(5, nombreUsuario.length());
-				certificadoCartelVO.setUsuario(soloNombre);
+				KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+				String nombreUsuario =context.getIdToken().getPreferredUsername();
+				nombreUsuario=nombreUsuario.replaceAll("CBRS\\\\", "");
+				certificadoCartelVO.setUsuario(nombreUsuario);
 				
 				TipoArchivoVO tipoArchivoVO = new TipoArchivoVO();
 				tipoArchivoVO.setTipo(tipoArchivo);
@@ -228,7 +230,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			msg = "Se ha detectado un problema en el servidor.";
 		}		
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
@@ -360,7 +363,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			msg = "Se ha detectado un problema en el servidor.";
 		}	
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
@@ -402,7 +406,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 		}	
 		
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
@@ -442,7 +447,8 @@ public class CartelesServiceAction extends CbrsAbstractAction {
 			msg = "Se ha detectado un problema en el servidor.";
 		}		
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);

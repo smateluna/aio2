@@ -91,7 +91,8 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 		}
 			
 		
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador = context.getIdToken().getPreferredUsername();
 
 		if(StringUtils.isBlank(usuarioCreador)){
 			msg = "No hay usuario, inicie sesión nuevamente.";
@@ -211,7 +212,8 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 
 		}
 
-		String usuarioEliminador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioEliminador =context.getIdToken().getPreferredUsername();
 		usuarioEliminador.replaceAll("CBRS\\\\", "");
 
 		if(StringUtils.isBlank(usuarioEliminador)){
@@ -387,7 +389,8 @@ public class AnotacionHipotecasServiceAction extends CbrsAbstractAction {
 		}
 			
 		
-		String usuarioCreador = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String usuarioCreador =context.getIdToken().getPreferredUsername();
 
 		if(StringUtils.isBlank(usuarioCreador)){
 			msg = "No hay usuario, inicie sesión nuevamente.";

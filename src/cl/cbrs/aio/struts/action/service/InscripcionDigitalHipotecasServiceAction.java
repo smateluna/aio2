@@ -22,6 +22,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.keycloak.KeycloakSecurityContext;
 
 import cl.cbr.util.GeneralException;
 import cl.cbrs.aio.dao.AnteriorDAO;
@@ -235,7 +236,8 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 		}
 		
 		String urlGpOnline = ConstantesDigital.getParametro("URL_GP_ONLINE");
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		JSONObject respuesta = new JSONObject();
 
@@ -382,7 +384,8 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 		}
 
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		JSONObject respuesta = new JSONObject();
 
@@ -464,7 +467,8 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 			}	
 		}
 
-		String sesion = request.getUserPrincipal().getName();
+		KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+		String sesion =context.getIdToken().getPreferredUsername();
 
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);

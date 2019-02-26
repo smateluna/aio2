@@ -139,10 +139,16 @@ public class AnotacionUtil {
 		
 		anotacionDTO.setInscripcionDigitalByIdInscripcionOrigenDTO(inscripcionDigitalByIdInscripcionOrigenDTO);		
 		anotacionDTO.setEstadoAnotacionDTO(this.getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo()));
-		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
+		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));	
+		
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
+		
 		anotacionDTO.setCaratula(anotacionVO.getCaratula());
 		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
 		anotacionDTO.setRepertorio(anotacionVO.getRepertorio());
@@ -175,9 +181,15 @@ public class AnotacionUtil {
 		anotacionDTO.setInscripcionDigitalByIdInscripcionOrigenDTO(inscripcionDigitalByIdInscripcionOrigenDTO);		
 		anotacionDTO.setEstadoAnotacionDTO(this.getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo()));
 		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
+		
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
+
 		anotacionDTO.setCaratula(anotacionVO.getCaratula());
 		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
 		anotacionDTO.setRepertorio(anotacionVO.getRepertorio());
@@ -209,10 +221,16 @@ public class AnotacionUtil {
 		
 		anotacionDTO.setInscripcionDigitalByIdInscripcionOrigenDTO(inscripcionDigitalByIdInscripcionOrigenDTO);		
 		anotacionDTO.setEstadoAnotacionDTO(this.getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo()));
-		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
+		anotacionDTO.setTipoAnotacionDTO(this.getTipoAnotacionDTO(anotacionVO.getTipoAnotacionVo()));	
+		
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
+
 		anotacionDTO.setCaratula(anotacionVO.getCaratula());
 		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
 		anotacionDTO.setRepertorio(anotacionVO.getRepertorio());
