@@ -51,7 +51,7 @@ app.controller('DespachoCuadernilloCtrl', function ($scope,$timeout,$rootScope,$
 		});
 		
 		$scope.openLoadingModal("Reasignando cuadernillos","");
-		var promise = inscripcionDigitalService.reasignarCuadernillos(JSON.stringify(cuadernillos), usuario);
+		var promise = inscripcionDigitalService.reasignarCuadernillos(encodeURIComponent(JSON.stringify(cuadernillos)), usuario);
 		promise.then(function(data) {
 			$scope.closeModal();
 		    if(data.status===null){

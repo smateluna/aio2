@@ -44,7 +44,7 @@ app.controller('masInfoLiquidacionModalCtrl', function ($rootScope, $scope,$rout
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ encodeURIComponent(JSON.stringify(documento));
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
@@ -71,7 +71,7 @@ app.controller('masInfoLiquidacionModalCtrl', function ($rootScope, $scope,$rout
 		.then(
 			function(data) {
 				if (data.hayDocumento) {
-					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ JSON.stringify(documento);
+					$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ encodeURIComponent(JSON.stringify(documento));
 				} else {
 					$scope
 					.raiseErr(data.errormsg);
@@ -85,7 +85,7 @@ app.controller('masInfoLiquidacionModalCtrl', function ($rootScope, $scope,$rout
 	};
 	
 	$scope.aprobarCaratula = function(){
-		var promise = tareasService.aprobarCaratula($scope.liquidacionCaratula.caratulaDTO.numeroCaratula, JSON.stringify($scope.liquidacionCaratula.papeles), $scope.getTotalPapeles());
+		var promise = tareasService.aprobarCaratula($scope.liquidacionCaratula.caratulaDTO.numeroCaratula, encodeURIComponent(JSON.stringify($scope.liquidacionCaratula.papeles)), $scope.getTotalPapeles());
 		promise.then(function(data) {
 			
 			if(data.estado===null){

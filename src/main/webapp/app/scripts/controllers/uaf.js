@@ -42,7 +42,7 @@ app.controller('UAFCtrl', function ($scope, $timeout, $rootScope, $location, $an
 	$scope.buscarBienes = function(){
 		$scope.openLoadingModal('Buscando bienes...', '');
         
-        var promise = uafService.buscarBienes($scope.busquedaUAF.inscripciones, $scope.busquedaUAF.ano, JSON.stringify($scope.busquedaUAF.naturaleza));
+        var promise = uafService.buscarBienes($scope.busquedaUAF.inscripciones, $scope.busquedaUAF.ano, encodeURIComponent(JSON.stringify($scope.busquedaUAF.naturaleza)));
         promise.then(function(data) {
         $scope.closeModal();
           if(data.status){

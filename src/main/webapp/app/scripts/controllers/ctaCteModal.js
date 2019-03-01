@@ -18,7 +18,7 @@ app.controller('CtaCteModalCtrl', function ($log, $rootScope, $scope, $modal, $r
   $scope.guardarCtaCte = function(){
 	$scope.openLoadingModal('Guardando...', '');
 	  
-    var promise = mantenedorService.guardarCtaCte(JSON.stringify($scope.ctaCte));
+    var promise = mantenedorService.guardarCtaCte(encodeURIComponent(JSON.stringify($scope.ctaCte)));
     promise.then(function(data) {
     	$scope.closeModal();
       if(data.status===null){

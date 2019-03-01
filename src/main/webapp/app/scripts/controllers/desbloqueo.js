@@ -31,7 +31,7 @@ app.controller('DesbloqueoCtrl', function ($scope, $rootScope, $timeout, localSt
   	$scope.desbloquear = function(inscripcion){
   		$scope.openLoadingModal('Desbloqueando...', '');
 
-	    var promise = desbloqueoService.desbloquear(inscripcion, JSON.stringify($scope.data.listaSolicitudes) );
+	    var promise = desbloqueoService.desbloquear(inscripcion, encodeURIComponent(JSON.stringify($scope.data.listaSolicitudes)) );
 	    promise.then(function(data) {
 	    	$scope.closeModal();
 	      	if(data.estado===null){

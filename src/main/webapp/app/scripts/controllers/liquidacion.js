@@ -321,7 +321,7 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		else if($rootScope.subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROHIBICIONES') >= 0)
 			seccionDestino=54;
 		
-		var promise = tareasService.aprobarCaratula($scope.liquidacionCaratula.caratulaDTO.numeroCaratula,$scope.liquidacionCaratula.caratulaDTO.idCanal, JSON.stringify($scope.liquidacionCaratula.papeles), $scope.getTotalPapeles(), actualizarCierre,seccionDestino);
+		var promise = tareasService.aprobarCaratula($scope.liquidacionCaratula.caratulaDTO.numeroCaratula,$scope.liquidacionCaratula.caratulaDTO.idCanal, encodeURIComponent(JSON.stringify($scope.liquidacionCaratula.papeles)), $scope.getTotalPapeles(), actualizarCierre,seccionDestino);
 		//var promise = tareasService.aprobarCaratula($scope.liquidacionCaratula.caratulaDTO.numeroCaratula, null, $scope.getTotalPapeles(), actualizarCierre);
 		promise.then(function(data) {
 			$scope.closeModal();
@@ -359,8 +359,7 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		.then(
 				function(data) {
 					if (data.hayDocumento) {
-						//$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ JSON.stringify(documento);
-						$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ JSON.stringify(documento)+'&download=false','popupDoc','width=800,height=600');
+						$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&documento='+ encodeURIComponent(JSON.stringify(documento))+'&download=false','popupDoc','width=800,height=600');
 					} else {
 						$scope
 						.raiseErr(data.errormsg);
@@ -387,7 +386,7 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		.then(
 				function(data) {
 					if (data.hayDocumento) {
-						$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ JSON.stringify(documento);
+						$window.location.href = $window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadDocumento&documento='+ encodeURIComponent(JSON.stringify(documento));
 					} else {
 						$scope
 						.raiseErr(data.errormsg);
