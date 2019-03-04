@@ -632,6 +632,12 @@
 		    <artifactId>keycloak-core</artifactId>
 		    <version>4.5.0.Final</version>
 		</dependency>
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>javax.mail-api</artifactId>
+		    <version>1.6.2</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
 	</dependencies>
 	<profiles>
