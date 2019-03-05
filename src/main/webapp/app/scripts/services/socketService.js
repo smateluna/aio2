@@ -12,7 +12,7 @@ app.factory('socketService', function ($rootScope, $websocket, $modal, $window) 
 		conexion: function(){
 			if($rootScope.activoAtencion){
 
-				var ruta = 'ws://'+$rootScope.ipSocket+':'+$rootScope.puertoSocket+'/atencion-publico/websocket/atencion/aio/operador/'+$rootScope.userIpAddress+'/'+$rootScope.modulo+'/'+$rootScope.grupo+'/0';
+				var ruta = 'wss://'+$rootScope.ipSocket+':'+$rootScope.puertoSocket+'/atencion-publico/websocket/atencion/aio/operador/'+$rootScope.userIpAddress+'/'+$rootScope.modulo+'/'+$rootScope.grupo+'/0';
 				dataStream = $websocket(ruta, null,
 						{
 					reconnectIfNotNormalClose: true
