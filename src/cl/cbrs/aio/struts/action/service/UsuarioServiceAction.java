@@ -303,6 +303,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 
 		if(ip==null){
 			ip = request.getRemoteAddr();
+//			ip =  "192.168.201.23";
 		}
 
 		//		Enumeration<String> headerNames = request.getHeaderNames();
