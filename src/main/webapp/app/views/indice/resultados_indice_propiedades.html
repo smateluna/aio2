@@ -86,7 +86,7 @@
 					    <div class="btn-group">
 					      <button class="btn btn-primary btn-xs btn-rad dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-plus"></i> Solicitar <span class="caret"></span></button>
 					      <ul class="dropdown-menu" role="menu">
-						    <li><a href="" ng-click="openSolicitar(sol,'prop')"> Crear Pre-Caratula</a></li>
+						    <li><a href="" ng-if="sol.ano>=aioParametros.anoArchivoNacional" ng-click="openSolicitar(sol,'prop')"> Crear Pre-Caratula</a></li>
 						    <li><a href="" ng-click="reingresar(sol,'Propiedad','1')"> Reingresar</a></li>
 						    <li class="divider"></li>
 						    <li><a href="" ng-click="ticket(sol,'prop')"> Ticket Prop.</a></li>

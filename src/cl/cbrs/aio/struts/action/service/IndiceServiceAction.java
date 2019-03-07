@@ -415,7 +415,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 										else if(!StringUtils.isBlank(direccion))
 											query.set("qf", "direccion");
 										
-										query.set("mm", "100%");
+//										query.set("mm", "100%");
 										query.setHighlight(true);
 										query.setHighlightSimplePre("<span class=\"highlighted\">");
 										query.setHighlightSimplePost("</span>");
@@ -498,7 +498,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 									if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || comuna==null || anoCitado==null || ano==null || rut==null)){
 										query.set("defType", "edismax");
 										query.set("qf", "nombre");
-										query.set("mm", "100%");
+//										query.set("mm", "100%");
 										query.setHighlight(true);
 										query.setHighlightSimplePre("<span class=\"highlighted\">");
 										query.setHighlightSimplePost("</span>");
@@ -583,7 +583,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 									if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || comuna==null || anoCitado==null || ano==null || rut==null)){
 										query.set("defType", "edismax");
 										query.set("qf", "nombre");
-										query.set("mm", "100%");
+//										query.set("mm", "100%");
 										query.setHighlight(true);
 										query.setHighlightSimplePre("<span class=\"highlighted\">");
 										query.setHighlightSimplePost("</span>");
@@ -666,7 +666,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 									if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || anoCitado==null || acto==null || tipo==null)){
 										query.set("defType", "edismax");
 										query.set("qf", "nombreSociedad personas");
-										query.set("mm", "100%");
+//										query.set("mm", "100%");
 										query.setHighlight(true);
 										query.setHighlightSimplePre("<span class=\"highlighted\">");
 										query.setHighlightSimplePost("</span>");
@@ -1413,7 +1413,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 							if((!StringUtils.isBlank(nombre) || !StringUtils.isBlank(direccion)) && (foja==null || numero==null || comuna==null || anoCitado==null || ano==null || rut==null)){
 								query.set("defType", "edismax");
 								query.set("qf", "nombre direccion");
-								query.set("mm", "100%");
+//								query.set("mm", "100%");
 								query.setHighlight(true);
 								query.setHighlightSimplePre("<span class=\"highlighted\">");
 								query.setHighlightSimplePost("</span>");
@@ -1493,7 +1493,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 							if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || comuna==null || anoCitado==null || ano==null || rut==null)){
 								query.set("defType", "edismax");
 								query.set("qf", "nombre");
-								query.set("mm", "100%");
+//								query.set("mm", "100%");
 								query.setHighlight(true);
 								query.setHighlightSimplePre("<span class=\"highlighted\">");
 								query.setHighlightSimplePost("</span>");
@@ -1574,7 +1574,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 							if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || comuna==null || anoCitado==null || ano==null || rut==null)){
 								query.set("defType", "edismax");
 								query.set("qf", "nombre");
-								query.set("mm", "100%");
+//								query.set("mm", "100%");
 								query.setHighlight(true);
 								query.setHighlightSimplePre("<span class=\"highlighted\">");
 								query.setHighlightSimplePost("</span>");
@@ -1654,7 +1654,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 							if(!StringUtils.isBlank(nombre) && (foja==null || numero==null || anoCitado==null || acto==null || tipo==null)){
 								query.set("defType", "edismax");
 								query.set("qf", "nombreSociedad personas");
-								query.set("mm", "100%");
+//								query.set("mm", "100%");
 								query.setHighlight(true);
 								query.setHighlightSimplePre("<span class=\"highlighted\">");
 								query.setHighlightSimplePost("</span>");
