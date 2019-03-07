@@ -171,6 +171,14 @@ public class DocumentosCliente {
 		return (byte[])executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "downloadEscritura", pathParams, null);
 	}
 	
+	public byte[] downloadEscrituraVisor(boolean conRayas, Long caratulap) throws HTTPException, Exception{
+
+		//{conRayas}/{caratulap}}
+		String[] pathParams = {String.valueOf(conRayas), caratulap.toString()};
+		
+		return (byte[])executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "downloadEscrituraVisor", pathParams, null);
+	}	
+	
 	public JSONObject eliminarEscritura(Long idDocumentop, boolean esDetalle, boolean esPrincipal) throws HTTPException, Exception{
 
 		//{idDocumentop}/{esDetallep}/{esPrincipalp}
