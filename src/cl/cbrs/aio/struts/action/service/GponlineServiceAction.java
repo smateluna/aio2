@@ -819,12 +819,14 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 	}	
 
 	private boolean filtroTipoAcreedor(String tipoAcreedor) {
-		String codigosStr = TablaValores.getValor(Constants.ARCHIVO_PROPERTIES, "FILTRO_COMUNERO_PROHIBICION", "codigos");
-		String[] codigos = codigosStr.split(",");
-		
-		for(int i=0;i<codigos.length;i++){
-			if( tipoAcreedor.equals(codigos[i]) )
-				return true;
+		if(tipoAcreedor!=null){
+			String codigosStr = TablaValores.getValor(Constants.ARCHIVO_PROPERTIES, "FILTRO_COMUNERO_PROHIBICION", "codigos");
+			String[] codigos = codigosStr.split(",");
+			
+			for(int i=0;i<codigos.length;i++){
+				if( tipoAcreedor.equals(codigos[i]) )
+					return true;
+			}
 		}
 		
 		return false;

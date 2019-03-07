@@ -56,7 +56,7 @@ public class EscrituraServiceAction extends CbrsAbstractAction {
 		String caratulaReq = request.getParameter("caratula");
 
 		try {           
-			if(caratulaReq!=""){
+			if(caratulaReq!=null && !"".equals(caratulaReq)){
 				int caratula = Integer.parseInt(caratulaReq);
 				String server = TablaValores.getValor("repertorioWeb.properties", "HOSTS", "HOST_ESCRITURAS");
 				String httpResponse = excuteHttp("http://"+server+"/documentos/do/caratulaService", "metodo=getCaratulaVersion&_dc=1339697228141&caratulap="+caratula+"&tipoDocumentop=1&tipoRegistrop=0&node=root");
@@ -250,24 +250,25 @@ public class EscrituraServiceAction extends CbrsAbstractAction {
 			if(documentoDTO==null){
 				logger.error("Error: Carátula no encontrada en documentos");
 				request.setAttribute("error", "Error: Carátula no encontrada en documentos");
+			} else{
+				DocumentosCliente documentosCliente = new DocumentosCliente();
+				byte[] archivo = null;
+				if(documentoDTO.getIdTipoDocumento().intValue() == 1){
+					logger.debug("CAratula:"+caratulaReq+" Tipo documento 1");
+					archivo = documentosCliente.downloadEscritura(true, documentoDTO.getIdDocumento(), 0L, 0L, documentoDTO.getVersion().intValue(), false, false, true);
+	//				archivo = documentosCliente.downloadEscrituraVisor(true, documentoDTO.getCaratula());
+				}
+				else if(documentoDTO.getIdTipoDocumento().intValue() == 3){
+					logger.debug("CAratula:"+caratulaReq+" Tipo documento 3");
+					archivo = documentosCliente.downloadDocumento(3, 0, documentoDTO.getNombreArchivoVersion(), documentoDTO.getFechaProcesa());
+				}
+				out = response.getOutputStream();			    
+				out.write(archivo, 0, archivo.length);
+				out.flush();
+	
+				if(out != null)
+					out.close();
 			}
-
-			DocumentosCliente documentosCliente = new DocumentosCliente();
-			byte[] archivo = null;
-			if(documentoDTO.getIdTipoDocumento().intValue() == 1){
-				logger.debug("CAratula:"+caratulaReq+" Tipo documento 1");
-				archivo = documentosCliente.downloadEscritura(true, documentoDTO.getIdDocumento(), 0L, 0L, documentoDTO.getVersion().intValue(), false, false, true);
-			}
-			else if(documentoDTO.getIdTipoDocumento().intValue() == 3){
-				logger.debug("CAratula:"+caratulaReq+" Tipo documento 3");
-				archivo = documentosCliente.downloadDocumento(3, 0, documentoDTO.getNombreArchivoVersion(), documentoDTO.getFechaProcesa());
-			}
-			out = response.getOutputStream();			    
-			out.write(archivo, 0, archivo.length);
-			out.flush();
-
-			if(out != null)
-				out.close();
 		} catch(HTTPException e){
 			logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
 			request.setAttribute("error", "Archivo no encontrado.");	        	
