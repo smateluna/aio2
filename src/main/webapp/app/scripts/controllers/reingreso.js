@@ -97,8 +97,7 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 	$scope.reingresarCaratula = function(){
 		$scope.openLoadingModal('Reingresando carátula #'+$scope.req.numeroCaratula+'...', '');
 		if ($scope.formReingresar.$valid) {
-			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.dataOriginal.caratulaDTO, 
-				$scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario);
+			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario);
 			promise.then(function(data) {
 				$scope.closeModal();
 				if(data.estado===null){
@@ -111,10 +110,6 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 							$scope.closeModal();
 							if(data.reingresoGP){
 								$scope.verEstadoCaratula(data.reingresoGP);
-//								$scope.urlPDF = $sce.trustAsResourceUrl('../do/service/reingreso?metodo=imprimirReingresoGP&caratula='+data.reingresoGP);
-//								$timeout(function(){
-//									 $scope.printReingresoGP();
-//								},8000);
 								$scope.printReingresoGPCaratula(data.reingresoGP);
 							}
 						},2000);
@@ -134,6 +129,16 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 			$scope.formEditar.submitted = true;
 		}
 	};	
+	
+	$scope.validarReingreso = function(){
+		if($scope.data.caratulaDTO.tipoFormularioDTO.id!=1 && (
+				$scope.data.caratulaDTO.inscripcionDigitalDTO.foja=="" || $scope.data.caratulaDTO.inscripcionDigitalDTO.foja==undefined ||
+				$scope.data.caratulaDTO.inscripcionDigitalDTO.numero=="" || $scope.data.caratulaDTO.inscripcionDigitalDTO.numero==undefined || 
+				$scope.data.caratulaDTO.inscripcionDigitalDTO.ano=="" || $scope.data.caratulaDTO.inscripcionDigitalDTO.ano==undefined )
+		)
+			return false;
+		return true;
+	}
 	
 	$scope.printReingresoGPCaratula = function(caratula) {
 		$scope.openLoadingModal('Generando pdf...', '');
@@ -388,6 +393,10 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 			}
 		});
 	}; 	
+	
+	$scope.getAno = function(){
+		return new Date().getFullYear();
+	}
 	
 	$scope.$watch('data.caratulaDTO.tipoFormularioDTO', function() {
 		$scope.llenaComboWorkFlow();

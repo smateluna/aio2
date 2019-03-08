@@ -689,7 +689,9 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 				out.close();      														
 
 
-			} catch(HTTPException e){
+			} catch(IOException e){
+	        	logger.warn("Se cancelo descarga documento");
+	        } catch(HTTPException e){
 				logger.error("Error HTTP codigo : "+e.getStatusCode(),e);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
@@ -1003,7 +1005,9 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 					buffer = documentosCliente.downloadDocumento(ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO, idReg, prefijo+foja+"_ "+numero+"_ "+ano+".pdf", fecha);
 			}
 
-		} catch (HTTPException e) {
+		} catch(IOException e){
+        	logger.warn("Se cancelo descarga documento");
+        } catch (HTTPException e) {
 			logger.error("Error HTTP codigo " + e.getStatusCode(), e);
 		} catch (Exception e1) {
 			logger.error("Error al buscar documento: " + e1.getMessage(),e1);

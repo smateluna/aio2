@@ -54,26 +54,28 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			if(SessionCounter.USUARIOS!=null && SessionCounter.USUARIOS.size()>0){
 				for( String key : SessionCounter.USUARIOS.keySet()){
 					UsuarioAIODTO usuarioAIO = SessionCounter.USUARIOS.get(key);
-					try{
-						if(usuarioAIO.getHttpSession()!=null){
-							Date fechaUltimoAcceso = new Date(usuarioAIO.getHttpSession().getLastAccessedTime());
+					if(usuarioAIO.getPath()!=null && !"".equals(usuarioAIO.getPath())){
+						try{
+							if(usuarioAIO.getHttpSession()!=null){
+								Date fechaUltimoAcceso = new Date(usuarioAIO.getHttpSession().getLastAccessedTime());
+	
+								if(fechaUltimoAcceso.before(vencido)){
+									//		        				SessionCounter.USUARIOS.remove(key);
+									continue;
+								}
+							}
+							if(usuarioAIO.getFechaCreacionL()!=null){
+								Date fechaUltimoAcceso = new Date(usuarioAIO.getFechaUltimoAccesoL());
+								if(fechaUltimoAcceso.before(vencido)){
+									//		        				SessionCounter.USUARIOS.remove(key);
+									continue;
+								}
+							}
 
-							if(fechaUltimoAcceso.before(vencido)){
-								//		        				SessionCounter.USUARIOS.remove(key);
-								continue;
-							}
-						}
-						if(usuarioAIO.getFechaCreacionL()!=null){
-							Date fechaUltimoAcceso = new Date(usuarioAIO.getFechaUltimoAccesoL());
-							if(fechaUltimoAcceso.before(vencido)){
-								//		        				SessionCounter.USUARIOS.remove(key);
-								continue;
-							}
-						}
-						if(usuarioAIO.getPath()!=null && !"".equals(usuarioAIO.getPath()))
 							listaUsuarios.add(usuarioAIO);
-					} catch(IllegalStateException e){
-						SessionCounter.USUARIOS.remove(key);
+						} catch(IllegalStateException e){
+							SessionCounter.USUARIOS.remove(key);
+						}
 					}
 				}
 
@@ -92,7 +94,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 				request.getSession().invalidate();
 			}
 
-			logger.error("error en getUsuario: " + e.getMessage(), e);
+			logger.debug("error en getUsuario: " + e.getMessage(), e);
 			json.put("msg", "Problemas en servidor al buscar usuario");
 
 		}
@@ -116,7 +118,7 @@ public class UsuarioServiceAction extends CbrsAbstractAction {
 			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
-			usuarioAIO.setNombre(usuario);
+			usuarioAIO.setNombre(usuario + " : " + request.getUserPrincipal());
 			usuarioAIO.setPath(request.getParameter("path"));
 			usuarioAIO.setUserAgent(request.getHeader("User-Agent"));
 			usuarioAIO.setFechaUltimoAccesoL(request.getSession().getLastAccessedTime());
