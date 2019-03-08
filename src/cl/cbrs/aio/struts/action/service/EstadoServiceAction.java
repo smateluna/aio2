@@ -1584,6 +1584,8 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	     
 	            if(out != null)
 	                  out.close();
+	        } catch(IOException e){
+	        	logger.warn("Se cancelo descarga documento: " + documentoReq);
 	        } catch(HTTPException e){
 	            logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
 	            request.setAttribute("error", "Archivo no encontrado.");	        	
@@ -1667,6 +1669,8 @@ public class EstadoServiceAction extends CbrsAbstractAction {
      
             if(out != null)
                   out.close();
+        } catch(IOException e){
+        	logger.warn("Se cancelo descarga documento: " + documentoReq);
         } catch(HTTPException e){
             logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
             request.setAttribute("error", "Archivo no encontrado.");	        	

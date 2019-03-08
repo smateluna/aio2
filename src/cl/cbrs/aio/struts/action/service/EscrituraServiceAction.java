@@ -269,7 +269,9 @@ public class EscrituraServiceAction extends CbrsAbstractAction {
 				if(out != null)
 					out.close();
 			}
-		} catch(HTTPException e){
+        } catch(IOException e){
+        	logger.warn("Se cancelo descarga documento caratula: " + caratulaReq);
+        } catch(HTTPException e){
 			logger.error("Error HTTP codigo " + e.getStatusCode() + " al buscar documento: " + e.getMessage(),e);
 			request.setAttribute("error", "Archivo no encontrado.");	        	
 		} catch (Exception e) {

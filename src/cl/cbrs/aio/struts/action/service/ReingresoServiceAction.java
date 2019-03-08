@@ -205,276 +205,238 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 			//Data
 			JSONObject caratulaDTOJSON = (JSONObject)jsonParser.parse(cambiaEncoding(caratulaDTOReq));
 			CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaDTOJSON);
-			
-			//Data original
-//			JSONObject caratulaOriginalDTOJSON = (JSONObject)jsonParser.parse(caratulaOriginalDTOReq);
-//			CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaOriginalDTOJSON);
-			CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaDTO.getNumeroCaratula());
-			
-			if(caratulaDTO.getInscripcionDigitalDTO()==null){
-				detalleError += "Inscripcion Digital nula";
-				throw new Exception("Inscripcion Digital nula");
-			}
-			
-			logger.info("Reingresando caratula " + caratulaOriginalDTO.getNumeroCaratula() + "\n Usuario: " + usuario + 
-					" CaratulaDTO: " + caratulaDTOReq + " Observacion: " + observacionReq);
-			
-			ReglaReingresoDTO reglaReingresoDTO = null;
-			
-			if(CacheAIO.CACHE_REGLAS_REINGRESO.size()==0)
-				CacheAIO.cargaReglasReingreso();
-			for(ReglaReingresoDTO dto : CacheAIO.CACHE_REGLAS_REINGRESO){
-				if(dto.getIdTipoFormulario()==caratulaDTO.getTipoFormularioDTO().getId() && dto.getRegistro().equals(caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion())){
-					reglaReingresoDTO=dto;
-					break;
+					
+			if(caratulaDTO.getInscripcionDigitalDTO()!=null){
+				
+				//Data original
+				CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaDTO.getNumeroCaratula());
+				
+				logger.info("Reingresando caratula " + caratulaOriginalDTO.getNumeroCaratula() + "\n Usuario: " + usuario + 
+						" CaratulaDTO: " + caratulaDTOReq + " Observacion: " + observacionReq);
+				
+				ReglaReingresoDTO reglaReingresoDTO = null;
+				
+				if(CacheAIO.CACHE_REGLAS_REINGRESO.size()==0)
+					CacheAIO.cargaReglasReingreso();
+				for(ReglaReingresoDTO dto : CacheAIO.CACHE_REGLAS_REINGRESO){
+					if(dto.getIdTipoFormulario()==caratulaDTO.getTipoFormularioDTO().getId() && dto.getRegistro().equals(caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion())){
+						reglaReingresoDTO=dto;
+						break;
+					}
 				}
-			}
-
-			if(reglaReingresoDTO==null){
-				//Para hipotecas, prohibiciones, aguas copiar regla de propiedades en caso de no encontrar regla en propio registro
-				if(caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==2 || caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==3 || caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==5){
-					for(ReglaReingresoDTO dto : CacheAIO.CACHE_REGLAS_REINGRESO){
-						if(dto.getIdTipoFormulario()==caratulaDTO.getTipoFormularioDTO().getId() && dto.getRegistro().equals("Propiedades")){
-							reglaReingresoDTO=dto;
-							break;
+	
+				if(reglaReingresoDTO==null){
+					//Para hipotecas, prohibiciones, aguas copiar regla de propiedades en caso de no encontrar regla en propio registro
+					if(caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==2 || caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==3 || caratulaDTO.getInscripcionDigitalDTO().getRegistro().intValue()==5){
+						for(ReglaReingresoDTO dto : CacheAIO.CACHE_REGLAS_REINGRESO){
+							if(dto.getIdTipoFormulario()==caratulaDTO.getTipoFormularioDTO().getId() && dto.getRegistro().equals("Propiedades")){
+								reglaReingresoDTO=dto;
+								break;
+							}
 						}
 					}
-				}
-				if(reglaReingresoDTO==null){
-					//No se encontro regla de reingreso
-					throw new SystemException("Carátula no se puede reingresar, no se encontro una regla de reingreso.");
-				}
-					
-			}
-			
-			boolean moverCaratula = reglaReingresoDTO.getCodSeccion()!=null && !"".equals(reglaReingresoDTO.getCodSeccion());
-			boolean reingresoGP = false;
-			
-			//REINGRESO GP para usuarios con perfil reingresoGP y caratula en seccion "Despachada"
-	    	ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
-	    	UsuarioUtil util = new UsuarioUtil();
-	    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "reingreso");
-			if(caratulaDTO.getTipoFormularioDTO().getId().equals(5) && subPermisos.contains("REINGRESO_GP")){
-				CaratulaDTO dto = caratulasUtil.getCaratulaDTO(caratulaOriginalDTO.getNumeroCaratula());
-				if(dto.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("10")){
-					moverCaratula = false;
-					reingresoGP = true;
-					CaratulaVO nuevaCaratula = agregarCaratulaGP(caratulaDTO, (String)request.getSession().getAttribute("rutUsuario"));					
-					logger.debug("nueva caratula: " + nuevaCaratula.getNumeroCaratula());
-					
-					//Mover caratula nueva
-					FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
-					EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
-					estadoCaratulaVO.setEnviadoPor(funcionarioVO);
-					estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
-					estadoCaratulaVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
-					estadoCaratulaVO.setSeccion(new SeccionVO("PR"));
-					estadoCaratulaVO.setFechaMovimiento(new Date());
-					caratulasUtil.moverCaratulaSeccion(nuevaCaratula.getNumeroCaratula(), estadoCaratulaVO );
-					
-					
-					String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
-					String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
-	
-					ReingresoGPDTO gpdto = new ReingresoGPDTO();
-					gpdto.setCaratulaNueva(nuevaCaratula.getNumeroCaratula().intValue());
-					gpdto.setCaratulaOriginal(caratulaDTO.getNumeroCaratula().intValue());
-					gpdto.setFecha(new Date());
-					gpdto.setUsuario(usuario);
-					
-					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-					String jsonInString = gson.toJson(gpdto);
-
-					Client client = Client.create();
-					WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/agregarReingresoGP/"));
-					ClientResponse clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString);
-					com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();				
-					
-					if(statusRespuesta.getStatusCode() == 200){
-						//ReingresoGP insertado en tabla
-					} else{		
-						logger.error("ERROR: no se pudo insertar el reingreso GP. caratula nueva: " + nuevaCaratula.getNumeroCaratula() + " caratula original: " + caratulaDTO.getNumeroCaratula());
-						caratulasUtil.rechazarCaratula(nuevaCaratula.getNumeroCaratula(), (String)request.getSession().getAttribute("rutUsuario"), 0, "error reingreso gp");
-						detalleError += "No se pudo asociar nueva caratula";
-						throw new Exception("No se pudo asociar nueva caratula");
+					if(reglaReingresoDTO==null){
+						//No se encontro regla de reingreso
+						throw new SystemException("Carátula no se puede reingresar, no se encontro una regla de reingreso.");
 					}
-					
-					try{
-						caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, "Se genera nueva caratula " + nuevaCaratula.getNumeroCaratula() +" por reingreso GP: " + observacionBitacora, OBSERVACION_INTERNA);
-						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, "Reingreso GP de caratula " + caratulaDTO.getNumeroCaratula(), OBSERVACION_INTERNA);
-						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, observacionBitacora, OBSERVACION_INTERNA);
-					} catch(Exception e){
-						logger.error("Error al agregar bitacora: " + e.getMessage(),e);
-					}
-	
-					json.put("msg", "Reingreso GP exitoso. Se generó nueva caratula " + nuevaCaratula.getNumeroCaratula());
-					json.put("reingresoGP", nuevaCaratula.getNumeroCaratula());
-				}
-			}	
-			//FIN reingreso GP
-			
-			//Si es cta corriente (y no es reingreso gp)
-			if(caratulaDTO.getCodigo()!=null && !reingresoGP){
-				//Buscar si la caratula esta en cierre ctas corrientes
-				FlujoDAO flujoDAO = new FlujoDAO();
-				CierreCtasCtesFinalDTO ctasCtesFinalDTO = flujoDAO.getCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
-				if(ctasCtesFinalDTO!=null){					
-					if(ctasCtesFinalDTO.getCierreActual()==0 && ctasCtesFinalDTO.getMitadDeMes()==0)
-						throw new SystemException("Carátula no se puede reingresar, está en cierre de cta corriente y la nómina ya fué enviada.");
-					else
-						flujoDAO.eliminarCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
-				}	
-			}
-			
-			//Comparar Inscripciones
-			boolean actualizarInscripcion = false;
-//			if( /*(caratulaDTO.getInscripcionDigitalDTO()!=null && caratulaOriginalDTO.getInscripcionDigitalDTO()==null) ||*/
-//					( caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja())) ) ||
-//					( caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null && !caratulaDTO.getInscripcionDigitalDTO().getNumero().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero()) ) ||
-//					( caratulaDTO.getInscripcionDigitalDTO().getAno()!=null && !caratulaDTO.getInscripcionDigitalDTO().getAno().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getAno()) ) ||
-//					( caratulaDTO.getInscripcionDigitalDTO().getBis()!=null && !caratulaDTO.getInscripcionDigitalDTO().getBis().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()) ) /*||
-//					( caratulaDTO.getInscripcionDigitalDTO().getRegistro()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getRegistro().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistro())) )*/
-//			){
-			if( caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null && caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null && caratulaDTO.getInscripcionDigitalDTO().getAno()!=null &&					
-					( caratulaOriginalDTO.getInscripcionDigitalDTO()==null ||
-					( !caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja()) ) ||
-					( !caratulaDTO.getInscripcionDigitalDTO().getNumero().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero()) ) ||
-					( !caratulaDTO.getInscripcionDigitalDTO().getAno().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getAno()) ) ||
-					( !caratulaDTO.getInscripcionDigitalDTO().getBis().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()) ) ||
-					( caratulaDTO.getInscripcionDigitalDTO().getRegistro()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getRegistro().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistro())) ))
-			){			
-				actualizarInscripcion = true;
-			}
-			
-			//Comparar Tipo de Formulario
-			boolean actualizarTipoFormulario = false;
-			if( !caratulaDTO.getTipoFormularioDTO().getId().equals(caratulaOriginalDTO.getTipoFormularioDTO().getId()) ){
-				actualizarTipoFormulario = true;
-			}
-			
-			//Actualizar flujo si hay cambio de inscripcion, tipo formulario o se reingresa un GP "normal"
-			if(!reingresoGP && (actualizarInscripcion || actualizarTipoFormulario || caratulaDTO.getTipoFormularioDTO().getId().intValue()==5) ){				
-				//Para reingreso GP se debe dejar impTicket en 0
-				if(caratulaDTO.getTipoFormularioDTO().getId().intValue()==5)
-					caratulaDTO.getInscripcionDigitalDTO().setImpTicket(false);
-				
-				//dejando caratula en proceso
-				caratulaDTO.setEstadoForm("p");
-				
-				caratulaDTO = caratulasUtil.updateCaratulaDTO(caratulaDTO);
-				
-				if(actualizarInscripcion){
-					
-					observacionBitacora += " Se actualiza inscripción ";
-					
-					if(caratulaOriginalDTO.getInscripcionDigitalDTO()!=null){
-						observacionBitacora += "de Fojas: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja() + " Número: " +caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero() +
-								" Año: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getAno();
-						if(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaOriginalDTO.getInscripcionDigitalDTO().getBis())
-							observacionBitacora += " bis";
-						if(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO()!=null)
-							observacionBitacora += " Registro de " + caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ", ";
-					}
-					
-					observacionBitacora += "a Fojas: " + caratulaDTO.getInscripcionDigitalDTO().getFoja() + " Número: " +caratulaDTO.getInscripcionDigitalDTO().getNumero() +
-							" Año: " + caratulaDTO.getInscripcionDigitalDTO().getAno();
-					if(caratulaDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaDTO.getInscripcionDigitalDTO().getBis())
-						observacionBitacora += " bis";
-					observacionBitacora += " Registro de " + caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ".";
-				}
-				
-				if(actualizarTipoFormulario){
-					observacionBitacora += " Se actualiza tipo de formulario a: " + caratulaDTO.getTipoFormularioDTO().getDescripcion() + ".";
-				}
-			}
-			
-			json.put("caratulaDTO", caratulaDTO);				
-					
-			
-			if("Comercio".equalsIgnoreCase(reglaReingresoDTO.getRegistro())){
-				if(workflowReq!=null && !"".equals(workflowReq)){
-					//INGRESAR EN FLUJO DE COMERCIO		
-					Long foja = caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null?caratulaDTO.getInscripcionDigitalDTO().getFoja() : 0L;
-					String numero = caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null&&!"".equals(caratulaDTO.getInscripcionDigitalDTO().getNumero())?caratulaDTO.getInscripcionDigitalDTO().getNumero() : "0" ;
-					Long ano = caratulaDTO.getInscripcionDigitalDTO().getAno()!=null?caratulaDTO.getInscripcionDigitalDTO().getAno() : 0L;
-					FojaCaratulaVO fojaCaratulaVO = new FojaCaratulaVO();
-					fojaCaratulaVO.setFoja( foja );
-					fojaCaratulaVO.setNumero( numero );
-					fojaCaratulaVO.setAno( ano );
-					
-					JSONObject workflowJSON = (JSONObject)jsonParser.parse(workflowReq);
-					Long idWorkflow = new Long(workflowJSON.get("id").toString());
-					WorkflowVO workflowVO = null;
-					
-					//Lista Workflows
-					if(CACHE_LISTA_WORKFLOWS==null){
-						CACHE_LISTA_WORKFLOWS = comercioUtil.getWorkflows();				
-					}
-					
-					for(int i=0; i<CACHE_LISTA_WORKFLOWS.length; i++){
-						if(CACHE_LISTA_WORKFLOWS[i].getIdWorkflow().equals(idWorkflow))
-							workflowVO = CACHE_LISTA_WORKFLOWS[i];
-					}
-
-					Long idNotario = null;
-					if(notarioReq!=null){
-						JSONObject notarioJSON = (JSONObject)jsonParser.parse(notarioReq);
-						idNotario = notarioJSON!=null && notarioJSON instanceof JSONObject? new Long(notarioJSON.get("id").toString()) : null;
-					}
-												
-					comercioUtil.ingresaCaratulaFlujo(caratulaDTO.getNumeroCaratula(), workflowVO, fojaCaratulaVO , observacionReq, codigoExtractoReq, idNotario);
-					
-					//Actualizar inscripcion en flujo si para comercio se inserto 0, 0, 0
-					if(fojaCaratulaVO.getFoja().equals(0L) && fojaCaratulaVO.getNumero().equals("0") && fojaCaratulaVO.getAno().equals(0L)){
-							caratulaDTO.getInscripcionDigitalDTO().setFoja(0L);
-							caratulaDTO.getInscripcionDigitalDTO().setNumero("0");
-							caratulaDTO.getInscripcionDigitalDTO().setAno(0L);
-							caratulaDTO.getInscripcionDigitalDTO().setRegistro(caratulaDTO.getInscripcionDigitalDTO().getRegistro());
 						
-							caratulaDTO = caratulasUtil.updateCaratulaDTO(caratulaDTO);
+				}
+				
+				boolean moverCaratula = reglaReingresoDTO.getCodSeccion()!=null && !"".equals(reglaReingresoDTO.getCodSeccion());
+				boolean reingresoGP = false;
+				
+				//REINGRESO GP para usuarios con perfil reingresoGP y caratula en seccion "Despachada"
+		    	ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
+		    	UsuarioUtil util = new UsuarioUtil();
+		    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "reingreso");
+				if(caratulaDTO.getTipoFormularioDTO().getId().equals(5) && subPermisos.contains("REINGRESO_GP")){
+					CaratulaDTO dto = caratulasUtil.getCaratulaDTO(caratulaOriginalDTO.getNumeroCaratula());
+					if(dto.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("10")){
+						moverCaratula = false;
+						reingresoGP = true;
+						CaratulaVO nuevaCaratula = agregarCaratulaGP(caratulaDTO, (String)request.getSession().getAttribute("rutUsuario"));					
+						logger.debug("nueva caratula: " + nuevaCaratula.getNumeroCaratula());
+						
+						//Mover caratula nueva
+						FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
+						EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
+						estadoCaratulaVO.setEnviadoPor(funcionarioVO);
+						estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+						estadoCaratulaVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
+						estadoCaratulaVO.setSeccion(new SeccionVO("PR"));
+						estadoCaratulaVO.setFechaMovimiento(new Date());
+						caratulasUtil.moverCaratulaSeccion(nuevaCaratula.getNumeroCaratula(), estadoCaratulaVO );
+						
+						
+						String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
+						String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
+		
+						ReingresoGPDTO gpdto = new ReingresoGPDTO();
+						gpdto.setCaratulaNueva(nuevaCaratula.getNumeroCaratula().intValue());
+						gpdto.setCaratulaOriginal(caratulaDTO.getNumeroCaratula().intValue());
+						gpdto.setFecha(new Date());
+						gpdto.setUsuario(usuario);
+						
+						Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+						String jsonInString = gson.toJson(gpdto);
+	
+						Client client = Client.create();
+						WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/agregarReingresoGP/"));
+						ClientResponse clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString);
+						com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();				
+						
+						if(statusRespuesta.getStatusCode() == 200){
+							//ReingresoGP insertado en tabla
+						} else{		
+							logger.error("ERROR: no se pudo insertar el reingreso GP. caratula nueva: " + nuevaCaratula.getNumeroCaratula() + " caratula original: " + caratulaDTO.getNumeroCaratula());
+							caratulasUtil.rechazarCaratula(nuevaCaratula.getNumeroCaratula(), (String)request.getSession().getAttribute("rutUsuario"), 0, "error reingreso gp");
+							detalleError += "No se pudo asociar nueva caratula";
+							throw new Exception("No se pudo asociar nueva caratula");
+						}
+						
+						try{
+							caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, "Se genera nueva caratula " + nuevaCaratula.getNumeroCaratula() +" por reingreso GP: " + observacionBitacora, OBSERVACION_INTERNA);
+							caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, "Reingreso GP de caratula " + caratulaDTO.getNumeroCaratula(), OBSERVACION_INTERNA);
+							caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, observacionBitacora, OBSERVACION_INTERNA);
+						} catch(Exception e){
+							logger.error("Error al agregar bitacora: " + e.getMessage(),e);
+						}
+		
+						json.put("msg", "Reingreso GP exitoso. Se generó nueva caratula " + nuevaCaratula.getNumeroCaratula());
+						json.put("reingresoGP", nuevaCaratula.getNumeroCaratula());
 					}
-									
-					WorkflowEstadoVO[] estadosWorflow = workflowVO.getEstadosVO();
-					WorkflowEstadoVO estadoWorkflow = estadosWorflow[1];
-					EstadoVO estado = estadoWorkflow.getEstadoVO();
-					cl.cbr.foliomercantil.vo.EstadoCaratulaVO estadoCaratulaVO = new cl.cbr.foliomercantil.vo.EstadoCaratulaVO();
-					//estadoCaratulaVO.setCaratulaVO(caratulaVO);
-					estadoCaratulaVO.setIdUsuario(1L);
-					estadoCaratulaVO.setEstadoVO(estado);
-					estadoCaratulaVO.setFecha(new Date());
-					estadoCaratulaVO.setObservacionUsuario(observacionReq);
-					comercioUtil.moverCaratula(estadoCaratulaVO, caratulaDTO.getNumeroCaratula());
+				}	
+				//FIN reingreso GP
+				
+				//Si es cta corriente (y no es reingreso gp)
+				if(caratulaDTO.getCodigo()!=null && !reingresoGP){
+					//Buscar si la caratula esta en cierre ctas corrientes
+					FlujoDAO flujoDAO = new FlujoDAO();
+					CierreCtasCtesFinalDTO ctasCtesFinalDTO = flujoDAO.getCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
+					if(ctasCtesFinalDTO!=null){					
+						if(ctasCtesFinalDTO.getCierreActual()==0 && ctasCtesFinalDTO.getMitadDeMes()==0)
+							throw new SystemException("Carátula no se puede reingresar, está en cierre de cta corriente y la nómina ya fué enviada.");
+						else
+							flujoDAO.eliminarCierreFinalCaratula(caratulaDTO.getNumeroCaratula());
+					}	
+				}
+				
+				//Comparar Inscripciones
+				boolean actualizarInscripcion = false;
+	//			if( /*(caratulaDTO.getInscripcionDigitalDTO()!=null && caratulaOriginalDTO.getInscripcionDigitalDTO()==null) ||*/
+	//					( caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja())) ) ||
+	//					( caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null && !caratulaDTO.getInscripcionDigitalDTO().getNumero().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero()) ) ||
+	//					( caratulaDTO.getInscripcionDigitalDTO().getAno()!=null && !caratulaDTO.getInscripcionDigitalDTO().getAno().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getAno()) ) ||
+	//					( caratulaDTO.getInscripcionDigitalDTO().getBis()!=null && !caratulaDTO.getInscripcionDigitalDTO().getBis().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()) ) /*||
+	//					( caratulaDTO.getInscripcionDigitalDTO().getRegistro()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getRegistro().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistro())) )*/
+	//			){
+				if( caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null && caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null && caratulaDTO.getInscripcionDigitalDTO().getAno()!=null &&					
+						( caratulaOriginalDTO.getInscripcionDigitalDTO()==null ||
+						( !caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja()) ) ||
+						( !caratulaDTO.getInscripcionDigitalDTO().getNumero().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero()) ) ||
+						( !caratulaDTO.getInscripcionDigitalDTO().getAno().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getAno()) ) ||
+						( !caratulaDTO.getInscripcionDigitalDTO().getBis().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()) ) ||
+						( caratulaDTO.getInscripcionDigitalDTO().getRegistro()!=null && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null || !caratulaDTO.getInscripcionDigitalDTO().getRegistro().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistro())) ))
+				){			
+					actualizarInscripcion = true;
+				}
+				
+				//Comparar Tipo de Formulario
+				boolean actualizarTipoFormulario = false;
+				if( !caratulaDTO.getTipoFormularioDTO().getId().equals(caratulaOriginalDTO.getTipoFormularioDTO().getId()) ){
+					actualizarTipoFormulario = true;
+				}
+				
+				//Actualizar flujo si hay cambio de inscripcion, tipo formulario o se reingresa un GP "normal"
+				if(!reingresoGP && (actualizarInscripcion || actualizarTipoFormulario || caratulaDTO.getTipoFormularioDTO().getId().intValue()==5) ){				
+					//Para reingreso GP se debe dejar impTicket en 0
+					if(caratulaDTO.getTipoFormularioDTO().getId().intValue()==5)
+						caratulaDTO.getInscripcionDigitalDTO().setImpTicket(false);
 					
-					//Moviendo caratula comercio en flujo 
-					FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
-					EstadoCaratulaVO estadoCaratulaFlujoVO = new EstadoCaratulaVO();
-					estadoCaratulaFlujoVO.setEnviadoPor(funcionarioVO);
-					estadoCaratulaFlujoVO.setFechaMovimiento(new Date());
-					estadoCaratulaFlujoVO.setMaquina(request.getRemoteHost());
-					estadoCaratulaFlujoVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
-					SeccionVO seccionVO = new SeccionVO();
-					seccionVO.setCodigo(REINGRESO_COMERCIO);
-					estadoCaratulaFlujoVO.setSeccion(seccionVO);
-
-					caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaFlujoVO );
+					//dejando caratula en proceso
+					caratulaDTO.setEstadoForm("p");
 					
-					json.put("msg", "Carátula reingresada.");
+					caratulaDTO = caratulasUtil.updateCaratulaDTO(caratulaDTO);
+					
+					if(actualizarInscripcion){
+						
+						observacionBitacora += " Se actualiza inscripción ";
+						
+						if(caratulaOriginalDTO.getInscripcionDigitalDTO()!=null){
+							observacionBitacora += "de Fojas: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja() + " Número: " +caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero() +
+									" Año: " + caratulaOriginalDTO.getInscripcionDigitalDTO().getAno();
+							if(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaOriginalDTO.getInscripcionDigitalDTO().getBis())
+								observacionBitacora += " bis";
+							if(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO()!=null)
+								observacionBitacora += " Registro de " + caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ", ";
+						}
+						
+						observacionBitacora += "a Fojas: " + caratulaDTO.getInscripcionDigitalDTO().getFoja() + " Número: " +caratulaDTO.getInscripcionDigitalDTO().getNumero() +
+								" Año: " + caratulaDTO.getInscripcionDigitalDTO().getAno();
+						if(caratulaDTO.getInscripcionDigitalDTO().getBis()!=null && caratulaDTO.getInscripcionDigitalDTO().getBis())
+							observacionBitacora += " bis";
+						observacionBitacora += " Registro de " + caratulaDTO.getInscripcionDigitalDTO().getRegistroDTO().getDescripcion() + ".";
+					}
+					
+					if(actualizarTipoFormulario){
+						observacionBitacora += " Se actualiza tipo de formulario a: " + caratulaDTO.getTipoFormularioDTO().getDescripcion() + ".";
+					}
+				}
+				
+				json.put("caratulaDTO", caratulaDTO);				
+						
+				
+				if("Comercio".equalsIgnoreCase(reglaReingresoDTO.getRegistro())){
+					if(workflowReq!=null && !"".equals(workflowReq)){
+						//INGRESAR EN FLUJO DE COMERCIO		
+						Long foja = caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null?caratulaDTO.getInscripcionDigitalDTO().getFoja() : 0L;
+						String numero = caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null&&!"".equals(caratulaDTO.getInscripcionDigitalDTO().getNumero())?caratulaDTO.getInscripcionDigitalDTO().getNumero() : "0" ;
+						Long ano = caratulaDTO.getInscripcionDigitalDTO().getAno()!=null?caratulaDTO.getInscripcionDigitalDTO().getAno() : 0L;
+						FojaCaratulaVO fojaCaratulaVO = new FojaCaratulaVO();
+						fojaCaratulaVO.setFoja( foja );
+						fojaCaratulaVO.setNumero( numero );
+						fojaCaratulaVO.setAno( ano );
+						
+						JSONObject workflowJSON = (JSONObject)jsonParser.parse(workflowReq);
+						Long idWorkflow = new Long(workflowJSON.get("id").toString());
+						WorkflowVO workflowVO = null;
+						
+						//Lista Workflows
+						if(CACHE_LISTA_WORKFLOWS==null){
+							CACHE_LISTA_WORKFLOWS = comercioUtil.getWorkflows();				
+						}
+						
+						for(int i=0; i<CACHE_LISTA_WORKFLOWS.length; i++){
+							if(CACHE_LISTA_WORKFLOWS[i].getIdWorkflow().equals(idWorkflow))
+								workflowVO = CACHE_LISTA_WORKFLOWS[i];
+						}
+	
+						Long idNotario = null;
+						if(notarioReq!=null){
+							JSONObject notarioJSON = (JSONObject)jsonParser.parse(notarioReq);
+							idNotario = notarioJSON!=null && notarioJSON instanceof JSONObject? new Long(notarioJSON.get("id").toString()) : null;
+						}
+													
+						comercioUtil.ingresaCaratulaFlujo(caratulaDTO.getNumeroCaratula(), workflowVO, fojaCaratulaVO , observacionReq, codigoExtractoReq, idNotario);
+						
+						//Actualizar inscripcion en flujo si para comercio se inserto 0, 0, 0
+						if(fojaCaratulaVO.getFoja().equals(0L) && fojaCaratulaVO.getNumero().equals("0") && fojaCaratulaVO.getAno().equals(0L)){
+								caratulaDTO.getInscripcionDigitalDTO().setFoja(0L);
+								caratulaDTO.getInscripcionDigitalDTO().setNumero("0");
+								caratulaDTO.getInscripcionDigitalDTO().setAno(0L);
+								caratulaDTO.getInscripcionDigitalDTO().setRegistro(caratulaDTO.getInscripcionDigitalDTO().getRegistro());
+							
+								caratulaDTO = caratulasUtil.updateCaratulaDTO(caratulaDTO);
+						}
 										
-				} else{
-					//ACTUALIZAR COMERCIO			
-					if(caratulaDTO.getInscripcionDigitalDTO() != null)
-						comercioUtil.actualizarFojaCaratula(caratulaDTO.getInscripcionDigitalDTO(), caratulaDTO.getNumeroCaratula());					
-					
-					//Mover caratula a seccion parametrizada en Excel			
-					if(reglaReingresoDTO.getCodSeccion()!=null && !"".equals(reglaReingresoDTO.getCodSeccion())){					
-						//Mover caratula en folio_mercantil a seccion parametrizada en Excel
+						WorkflowEstadoVO[] estadosWorflow = workflowVO.getEstadosVO();
+						WorkflowEstadoVO estadoWorkflow = estadosWorflow[1];
+						EstadoVO estado = estadoWorkflow.getEstadoVO();
 						cl.cbr.foliomercantil.vo.EstadoCaratulaVO estadoCaratulaVO = new cl.cbr.foliomercantil.vo.EstadoCaratulaVO();
-						cl.cbr.foliomercantil.vo.EstadoVO estadoVO = new cl.cbr.foliomercantil.vo.EstadoVO();
-						estadoVO.setIdEstado(new Long(reglaReingresoDTO.getIdEstado()));
-						estadoCaratulaVO.setEstadoVO(estadoVO );
+						//estadoCaratulaVO.setCaratulaVO(caratulaVO);
+						estadoCaratulaVO.setIdUsuario(1L);
+						estadoCaratulaVO.setEstadoVO(estado);
 						estadoCaratulaVO.setFecha(new Date());
-						estadoCaratulaVO.setIdUsuario(new Long(reglaReingresoDTO.getIdUsuarioComercio()));
-						estadoCaratulaVO.setNombreUsuario(usuario);
 						estadoCaratulaVO.setObservacionUsuario(observacionReq);
 						comercioUtil.moverCaratula(estadoCaratulaVO, caratulaDTO.getNumeroCaratula());
 						
@@ -488,81 +450,119 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 						SeccionVO seccionVO = new SeccionVO();
 						seccionVO.setCodigo(REINGRESO_COMERCIO);
 						estadoCaratulaFlujoVO.setSeccion(seccionVO);
-
+	
 						caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaFlujoVO );
 						
+						json.put("msg", "Carátula reingresada.");
+											
+					} else{
+						//ACTUALIZAR COMERCIO			
+						if(caratulaDTO.getInscripcionDigitalDTO() != null)
+							comercioUtil.actualizarFojaCaratula(caratulaDTO.getInscripcionDigitalDTO(), caratulaDTO.getNumeroCaratula());					
 						
+						//Mover caratula a seccion parametrizada en Excel			
+						if(reglaReingresoDTO.getCodSeccion()!=null && !"".equals(reglaReingresoDTO.getCodSeccion())){					
+							//Mover caratula en folio_mercantil a seccion parametrizada en Excel
+							cl.cbr.foliomercantil.vo.EstadoCaratulaVO estadoCaratulaVO = new cl.cbr.foliomercantil.vo.EstadoCaratulaVO();
+							cl.cbr.foliomercantil.vo.EstadoVO estadoVO = new cl.cbr.foliomercantil.vo.EstadoVO();
+							estadoVO.setIdEstado(new Long(reglaReingresoDTO.getIdEstado()));
+							estadoCaratulaVO.setEstadoVO(estadoVO );
+							estadoCaratulaVO.setFecha(new Date());
+							estadoCaratulaVO.setIdUsuario(new Long(reglaReingresoDTO.getIdUsuarioComercio()));
+							estadoCaratulaVO.setNombreUsuario(usuario);
+							estadoCaratulaVO.setObservacionUsuario(observacionReq);
+							comercioUtil.moverCaratula(estadoCaratulaVO, caratulaDTO.getNumeroCaratula());
+							
+							//Moviendo caratula comercio en flujo 
+							FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
+							EstadoCaratulaVO estadoCaratulaFlujoVO = new EstadoCaratulaVO();
+							estadoCaratulaFlujoVO.setEnviadoPor(funcionarioVO);
+							estadoCaratulaFlujoVO.setFechaMovimiento(new Date());
+							estadoCaratulaFlujoVO.setMaquina(request.getRemoteHost());
+							estadoCaratulaFlujoVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
+							SeccionVO seccionVO = new SeccionVO();
+							seccionVO.setCodigo(REINGRESO_COMERCIO);
+							estadoCaratulaFlujoVO.setSeccion(seccionVO);
+	
+							caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaFlujoVO );
+							
+							
+							json.put("msg", "Carátula reingresada.");
+						} else{
+							//Si no hay seccion parametrizada, solicitar reingreso manual
+							json.put("msg", "Carátula reingresada. Debe ser distribuida manualmente");
+						}					
+					}
+					
+	
+				} else{ 
+					//PROPIEDADES, PROHIBICIONES, AGUAS, HIPOTECAS								
+					
+					//Ya no se valida si es digital para reingreso (al igual que basic). 24-11-2017
+	//				Boolean esDigital = false;
+	//				if(caratulaDTO.getTipoFormularioDTO().getId().equals(1L)){
+	//					esDigital = digitalDelegate.validaAnosDigitales(caratulaDTO.getInscripcionDigitalDTO().getFoja(), caratulaDTO.getInscripcionDigitalDTO().getNumero(), caratulaDTO.getInscripcionDigitalDTO().getAno());
+	//				}
+					
+					//Excepciones Excel
+	//				if( caratulaDTO.getTipoFormularioDTO().getId().equals(1) && !esDigital){
+	//					logger.info("Excepcion Excel: distribucion manual");
+	//					moverCaratula = false; //Si es Inscripcion de Propiedad y no esta digitalizada distribuir manualmente
+	//				}
+					
+					if( moverCaratula ){
+						FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
+						EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
+						estadoCaratulaVO.setEnviadoPor(funcionarioVO);
+						estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+						estadoCaratulaVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
+													
+						//09-11-2017 Mover caratula a seccion Reingreso antes de mover en flujo a seccion parametrizada. 
+						estadoCaratulaVO.setSeccion(new SeccionVO("63")); // Seccion reingreso
+						if(caratulaDTO.getTipoFormularioDTO().getId().equals(5)){
+							estadoCaratulaVO.setSeccion(new SeccionVO("RG")); //Para GP enviar a seccion Reingreso de GP
+						}
+						estadoCaratulaVO.setFechaMovimiento(new Date());
+						caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaVO );
+						
+						//Mover caratula en flujo a seccion parametrizada en Excel												
+						estadoCaratulaVO.setFechaMovimiento(new Date());									
+						estadoCaratulaVO.setSeccion(new SeccionVO(reglaReingresoDTO.getCodSeccion()));
+						
+						//Excepciones Excel
+						if( (caratulaDTO.getTipoFormularioDTO().getId().equals(8) || caratulaDTO.getTipoFormularioDTO().getId().equals(9)) && "Aguas".equalsIgnoreCase(reglaReingresoDTO.getRegistro())  ){
+							estadoCaratulaVO.setSeccion(new SeccionVO("37")); //Para 'copias de inscripciones' de Aguas enviar a "37 - Copias Propiedades"
+						}
+						
+						caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaVO );
 						json.put("msg", "Carátula reingresada.");
 					} else{
 						//Si no hay seccion parametrizada, solicitar reingreso manual
-						json.put("msg", "Carátula reingresada. Debe ser distribuida manualmente");
-					}					
+						if(!reingresoGP)
+							json.put("msg", "Caratula lista para distribuir a la seccion correspondiente");
+					}
 				}
 				
+				if(!reingresoGP){
+					//Agregar bitacora
+					try{				
+						BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, observacionBitacora,OBSERVACION_INTERNA);
+						json.put("bitacoraDTO", bitacoraDTO);
+					} catch (Exception e) {
+						logger.error("Error: " + e.getMessage(), e);
+					}
+					
+					String habilitarEE= TablaValores.getValor(ARCHIVO_PROPERTIES, "HABILITAR_EE", "valor");
+		            if("SI".equals(habilitarEE) && caratulaDTO.getOrigenCreacion()!=null && caratulaDTO.getOrigenCreacion().intValue()==3){
+		            	
+		                Notificador notificador = new Notificador();
+		                notificador.notificar(GeneraMensajeEE.getMensajeTramiteReingresado(caratulaDTO.getIdTransaccion(), ""+caratulaDTO.getNumeroCaratula().longValue(), new Date()));
+		            }			
+				}
 
-			} else{ 
-				//PROPIEDADES, PROHIBICIONES, AGUAS, HIPOTECAS								
-				
-				//Ya no se valida si es digital para reingreso (al igual que basic). 24-11-2017
-//				Boolean esDigital = false;
-//				if(caratulaDTO.getTipoFormularioDTO().getId().equals(1L)){
-//					esDigital = digitalDelegate.validaAnosDigitales(caratulaDTO.getInscripcionDigitalDTO().getFoja(), caratulaDTO.getInscripcionDigitalDTO().getNumero(), caratulaDTO.getInscripcionDigitalDTO().getAno());
-//				}
-				
-				//Excepciones Excel
-//				if( caratulaDTO.getTipoFormularioDTO().getId().equals(1) && !esDigital){
-//					logger.info("Excepcion Excel: distribucion manual");
-//					moverCaratula = false; //Si es Inscripcion de Propiedad y no esta digitalizada distribuir manualmente
-//				}
-				
-				if( moverCaratula ){
-					FuncionarioVO funcionarioVO = new FuncionarioVO((String)request.getSession().getAttribute("rutUsuario"));
-					EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
-					estadoCaratulaVO.setEnviadoPor(funcionarioVO);
-					estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
-					estadoCaratulaVO.setResponsable(new FuncionarioVO(reglaReingresoDTO.getRutFuncionario()));
-												
-					//09-11-2017 Mover caratula a seccion Reingreso antes de mover en flujo a seccion parametrizada. 
-					estadoCaratulaVO.setSeccion(new SeccionVO("63")); // Seccion reingreso
-					if(caratulaDTO.getTipoFormularioDTO().getId().equals(5)){
-						estadoCaratulaVO.setSeccion(new SeccionVO("RG")); //Para GP enviar a seccion Reingreso de GP
-					}
-					estadoCaratulaVO.setFechaMovimiento(new Date());
-					caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaVO );
-					
-					//Mover caratula en flujo a seccion parametrizada en Excel												
-					estadoCaratulaVO.setFechaMovimiento(new Date());									
-					estadoCaratulaVO.setSeccion(new SeccionVO(reglaReingresoDTO.getCodSeccion()));
-					
-					//Excepciones Excel
-					if( (caratulaDTO.getTipoFormularioDTO().getId().equals(8) || caratulaDTO.getTipoFormularioDTO().getId().equals(9)) && "Aguas".equalsIgnoreCase(reglaReingresoDTO.getRegistro())  ){
-						estadoCaratulaVO.setSeccion(new SeccionVO("37")); //Para 'copias de inscripciones' de Aguas enviar a "37 - Copias Propiedades"
-					}
-					
-					caratulasUtil.moverCaratulaSeccion(caratulaDTO.getNumeroCaratula(), estadoCaratulaVO );
-					json.put("msg", "Carátula reingresada.");
-				} else{
-					//Si no hay seccion parametrizada, solicitar reingreso manual
-					if(!reingresoGP)
-						json.put("msg", "Caratula lista para distribuir a la seccion correspondiente");
-				}
-			}
-			
-			if(!reingresoGP){
-				//Agregar bitacora
-				try{				
-					BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario, observacionBitacora,OBSERVACION_INTERNA);
-					json.put("bitacoraDTO", bitacoraDTO);
-				} catch (Exception e) {
-					logger.error("Error: " + e.getMessage(), e);
-				}
-				
-				String habilitarEE= TablaValores.getValor(ARCHIVO_PROPERTIES, "HABILITAR_EE", "valor");
-	            if("SI".equals(habilitarEE) && caratulaDTO.getOrigenCreacion()!=null && caratulaDTO.getOrigenCreacion().intValue()==3){
-	            	
-	                Notificador notificador = new Notificador();
-	                notificador.notificar(GeneraMensajeEE.getMensajeTramiteReingresado(caratulaDTO.getIdTransaccion(), ""+caratulaDTO.getNumeroCaratula().longValue(), new Date()));
-	            }			
+			} else{
+				json.put("estado", false);
+				detalleError += "Faltan datos para el reingreso";
 			}
 			
 			json.put("estado", true);		
