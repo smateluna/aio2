@@ -15,6 +15,7 @@
   <StrutsActivity path="/do/service/requirente" location="50,250" dimension="331,96" />
   <StrutsActivity path="/do/service/pdf" location="50,650" dimension="292,96" />
   <StrutsActivity path="/do/service/estado" location="650,650" dimension="309,96" />
+  <StrutsActivity path="/do/service/util" location="950,2450" dimension="292,96" />
   <StrutsActivity path="/do/service/anexo" location="50,850" dimension="307,96" />
   <StrutsActivity path="/do/service/reingreso" location="650,850" dimension="326,96" />
   <StrutsActivity path="/do/service/usuario" location="50,1050" dimension="314,96" />
@@ -29,6 +30,7 @@
   <StrutsActivity path="/do/service/distribucion" location="50,1650" dimension="338,96" />
   <StrutsActivity path="/do/service/certificacion" location="650,1650" dimension="341,96" />
   <StrutsActivity path="/do/service/certificacionHipotecas" location="1550,2250" dimension="394,96" />
+  <StrutsActivity path="/do/service/certificacionProhibiciones" location="50,2750" dimension="413,96" />
   <StrutsActivity path="/do/service/desbloqueo" location="350,2450" dimension="337,96" />
   <StrutsActivity path="/do/service/tareas" location="650,2050" dimension="308,96" />
   <StrutsActivity path="/do/service/uaf" location="1250,1850" dimension="292,96" />
@@ -43,7 +45,7 @@
   <StrutsActivity path="/login/index.jsp" location="1250,1250" dimension="113,51" />
   <StrutsActivity path="/l" location="1250,1450" dimension="38,51" />
   <StrutsActivity path="/app/index.html\#/gponline" location="1250,1650" dimension="180,51" />
-  <StrutsActivity path="/do/service/util" />
+  <StrutsActivity path="/do/service/posesionEfectiva" />
   <StrutsTransition id="/do/service/gponline,gponline,/app/index.html#/gponline,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="211,1898" />

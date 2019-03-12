@@ -18,6 +18,7 @@ public class CaratulaEstadoDTO implements JSONAware{
 	private ArrayList<BitacoraDTO> bitacoraDTOs;
 	private ArrayList<TareaDTO> tareaDTOs;
 	private ArrayList<RepertorioDTO> repertorioDTOs;
+	private ArrayList<PosesionEfectivaDTO> posesionEfectivaDTOs;
 	
 	public CaratulaEstadoDTO(){
 		
@@ -159,6 +160,17 @@ public class CaratulaEstadoDTO implements JSONAware{
 		sb.append(":");
 
 		sb.append(tareaDTOsJSONArray);
+		
+		sb.append(",");
+		
+		JSONArray posesionEfectivaDTOsJSONArray = new JSONArray();
+		if(this.posesionEfectivaDTOs!=null){
+			for(PosesionEfectivaDTO rep : this.posesionEfectivaDTOs)				
+				posesionEfectivaDTOsJSONArray.add(rep);		
+		}
+		sb.append("\"posesionEfectivaDTOs\"");
+		sb.append(":");
+		sb.append(posesionEfectivaDTOsJSONArray);		
 
 		sb.append("}");
 
@@ -252,4 +264,13 @@ public class CaratulaEstadoDTO implements JSONAware{
 	public void setCitadoDTOs(ArrayList<CitadoDTO> citadoDTOs) {
 		this.citadoDTOs = citadoDTOs;
 	}
+
+	public ArrayList<PosesionEfectivaDTO> getPosesionEfectivaDTOs() {
+		return posesionEfectivaDTOs;
+	}
+
+	public void setPosesionEfectivaDTOs(ArrayList<PosesionEfectivaDTO> posesionEfectivaDTOs) {
+		this.posesionEfectivaDTOs = posesionEfectivaDTOs;
+	}
+	
 }

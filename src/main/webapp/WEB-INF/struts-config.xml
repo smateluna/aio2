@@ -48,6 +48,11 @@
 			validate="false">
 		</action>
 		
+		<action parameter="metodo" path="/service/posesionEfectiva"
+			type="cl.cbrs.aio.struts.action.service.PosesionEfectivaServiceAction"
+			validate="false">
+		</action>
+		
 		<action parameter="metodo" path="/service/borradores"
 			type="cl.cbrs.aio.struts.action.service.BorradoresServiceAction"
 			validate="false">

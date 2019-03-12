@@ -270,6 +270,25 @@ app.factory('estadoService', function ($q, $http) {
 
         return deferred.promise;
       },
+      getPosesionEfectiva: function(caratula) {
+          var paramsObj = {metodo: 'getPosesionEfectiva', numeroCaratula: caratula};
+
+          var deferred = $q.defer();
+
+          $http({
+            method: 'GET',
+            url: '../do/service/estado',
+            params: paramsObj
+          }).
+            success(function(data, status, headers, config){
+              deferred.resolve(data);
+            }).
+            error(function(data, status, headers, config){
+              deferred.reject(status);
+            });
+
+          return deferred.promise;
+      },
       getCuentaCorriente: function(codigo) {
         var paramsObj = {metodo: 'getCuentaCorriente', codigo: codigo};
 
