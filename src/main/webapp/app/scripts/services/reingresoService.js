@@ -22,9 +22,8 @@ app.factory('reingresoService', function ($q, $http) {
 
         return deferred.promise;
       },
-      reingresarCaratula: function (caratulaDTO, caratulaOriginalDTO, observacion, workflow, codigoExtracto, notario) {
-        var paramsObj = {metodo: 'reingresarCaratula', caratulaDTO: caratulaDTO, //caratulaOriginalDTO: caratulaOriginalDTO, 
-        		observacion: observacion, workflow: workflow, codigoExtracto: codigoExtracto, notario: notario};
+      reingresarCaratula: function (caratulaDTO, observacion, workflow, codigoExtracto, notario) {
+        var paramsObj = {metodo: 'reingresarCaratula', caratulaDTO: caratulaDTO, observacion: observacion, workflow: workflow, codigoExtracto: codigoExtracto, notario: notario};
 
         var deferred = $q.defer();
 

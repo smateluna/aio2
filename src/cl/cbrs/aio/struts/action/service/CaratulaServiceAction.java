@@ -1460,7 +1460,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 
 		try{
 			String caratulast = request.getParameter("caratula");
-			if(caratulast.length()>=7){
+			if(caratulast!=null && !"".equals(caratulast) && caratulast.length()>=7){
 				Long caratula = Long.parseLong(caratulast.trim());
 
 				WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();

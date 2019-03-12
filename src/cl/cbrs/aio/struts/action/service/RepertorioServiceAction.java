@@ -3,6 +3,7 @@ package cl.cbrs.aio.struts.action.service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,9 @@ import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import cl.cbrs.aio.dto.estado.RepertorioDTO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
+import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.delegate.repertorio.WsRepertorioClienteDelegate;
 import cl.cbrs.repertorio.flujo.vo.ListadoRepertorioVO;
 import cl.cbrs.repertorio.flujo.vo.RepertorioPorRegistroVO;
@@ -68,6 +71,7 @@ public class RepertorioServiceAction extends CbrsAbstractAction {
 						fila.put("comprador", repertorio.getNombreApellCompra()!=null?repertorio.getNombreApellCompra().trim():"");
 						fila.put("fechaIngreso", repertorio.getFechaIngreso()!=null?repertorio.getFechaIngreso().getTime():"");
 						fila.put("obs", repertorio.getObservacion()!=null?repertorio.getObservacion():"");
+						fila.put("vigente", repertorio.getVigente());
 
 						resultado.add(fila);
 					}

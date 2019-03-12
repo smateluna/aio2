@@ -65,6 +65,9 @@
 			                Año
 			            </th>
 			            <th>
+			                Vigencia
+			            </th>			            
+			            <th>
 			                Fecha
 			            </th>			            
 			        	<th>
@@ -98,7 +101,15 @@
 			        		<td class="text-left"><a href ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>				        
 			        		<td class="text-left">{{sol.repertorio}}</td>
 			        		<td class="text-left">{{sol.anorepertorio}}</td>
-			        		<td class="text-left">{{sol.fechaIngreso | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+			                <td class="text-left">
+			 					<label class="label label-success ng-scope" ng-if="sol.vigente!=0">
+			                        VIGENTE
+			                     </label>
+			                     <label class="label label-danger ng-scope" ng-if="sol.vigente==0">
+			                        NO VIGENTE
+			                     </label>
+			                </td>			        		
+			        		<td class="text-left">{{sol.fechaIngreso | date: 'dd/MM/yyyy HH:mm:ss'}}</td>			        		
 			        		<td class="text-left">{{sol.tipo}}</td>
 			        		<td class="text-left">{{sol.requirente}}</td>
 			        		<td class="text-left">{{sol.notario}}</td>

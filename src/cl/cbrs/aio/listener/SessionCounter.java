@@ -15,6 +15,9 @@ public class SessionCounter implements HttpSessionListener, Serializable {
     public static HashMap<String, UsuarioAIODTO> USUARIOS = new HashMap<String, UsuarioAIODTO>();
 
     public void sessionCreated(HttpSessionEvent event) {
+    	if(USUARIOS.size()>500)
+    		USUARIOS.clear();
+    	
         HttpSession session = event.getSession();       
         UsuarioAIODTO usuarioAIO = new UsuarioAIODTO();
         usuarioAIO.setHttpSession(session);
