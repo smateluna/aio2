@@ -742,8 +742,8 @@ public class CaratulaEstadoUtil {
 		String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_POSEFE, "IP_WS", "valor");
 		String port = TablaValores.getValor(ARCHIVO_PARAMETROS_POSEFE, "PORT_WS", "valor");
 
-//		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/"+numeroCaratula));
-		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/14584904"));
+		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/"+numeroCaratula));
+//		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/14584904"));
 		
 		ClientResponse clientResponse = wr.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();

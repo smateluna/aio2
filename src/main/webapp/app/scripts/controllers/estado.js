@@ -1012,7 +1012,7 @@ app
 
 	$scope.verPosesionEfectiva = function(posEfectiva) {
 		var documento ={
-				"nombreArchivo": "V_CERT_"+folio+".pdf",
+				"nombreArchivo": "V_CERT_"+posEfectiva.folio+".pdf",
 				"idTipoDocumento": 14, //Posesion Efectiva
 				"idReg": 1, //Propiedad
 				"fechaDocumento": posEfectiva.fechaProceso
