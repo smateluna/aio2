@@ -10,7 +10,7 @@ public class PosesionEfectivaDTO implements JSONAware{
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
-	private Long folio;
+	private String folio;
 	private CausanteDTO causante;
 	private String titulo;
 	private Date fechaProceso;
@@ -27,7 +27,7 @@ public class PosesionEfectivaDTO implements JSONAware{
 
 		sb.append("\"folio\"");
 		sb.append(":");
-		sb.append(this.folio);		
+		sb.append("\"" + JSONObject.escape(this.folio.trim()) + "\"");
 		sb.append(",");
 		
 		sb.append("\"caratula\"");
@@ -63,11 +63,11 @@ public class PosesionEfectivaDTO implements JSONAware{
 		return sb.toString();		
 	}
 
-	public Long getFolio() {
+	public String getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(String folio) {
 		this.folio = folio;
 	}
 
