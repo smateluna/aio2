@@ -3,6 +3,7 @@ package cl.cbrs.aio.certificado;
 import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,8 +51,14 @@ import cl.cbrs.firmaelectronica.delagate.ClienteWsFirmadorDelegate;
 import cl.cbrs.firmaelectronica.vo.RegistroFirmaElectronicaVO;
 import cl.cbrs.inscripciondigital.util.ConstantesInscripcionDigital;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRRuntimeException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 
 
@@ -431,11 +438,21 @@ public class GeneraCertificado {
 			}
 			caratulaVO.setValorReal((long)valor);
 			parametros1.put("VALOR", "$ "+(int)valor);
+			
+//			InputStream is1 = new BufferedInputStream(new FileInputStream(jasperFile));
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			JasperReport report =(JasperReport) JRLoader.loadObject(jasperFile);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report,parametros1);
+			JRPdfExporter exporter = new JRPdfExporter();
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+			exporter.exportReport();
+			certificadoDigital = new ByteArrayInputStream(out.toByteArray());
+			
 
-			InputStream is1 = new BufferedInputStream(new FileInputStream(jasperFile));
-
-			byte[] rep1 = JasperRunManager.runReportToPdf(is1, parametros1);
-			certificadoDigital = new ByteArrayInputStream(rep1);
+//			byte[] rep1 = JasperRunManager.runReportToPdf(is1, parametros1);
+//			certificadoDigital = new ByteArrayInputStream(rep1);
 
 		}catch (JRException e) {
 			logger.error(e.getMessage(),e);

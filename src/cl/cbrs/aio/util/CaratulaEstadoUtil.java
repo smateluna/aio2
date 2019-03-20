@@ -1,5 +1,8 @@
 package cl.cbrs.aio.util;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -9,11 +12,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+import javax.xml.ws.http.HTTPException;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 import cl.cbr.common.exception.GeneralException;
+import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.dto.estado.CanalDTO;
 import cl.cbrs.aio.dto.estado.CaratulaEstadoDTO;
@@ -24,6 +41,7 @@ import cl.cbrs.aio.dto.estado.EstadoActualDTO;
 import cl.cbrs.aio.dto.estado.FuncionarioDTO;
 import cl.cbrs.aio.dto.estado.IngresoEgresoDTO;
 import cl.cbrs.aio.dto.estado.MovimientoDTO;
+import cl.cbrs.aio.dto.estado.PosesionEfectivaDTO;
 import cl.cbrs.aio.dto.estado.ProductoWebDTO;
 import cl.cbrs.aio.dto.estado.RegistroDTO;
 import cl.cbrs.aio.dto.estado.RepertorioDTO;
@@ -55,14 +73,14 @@ import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 import cl.cbrs.ws.cliente.usuarioweb.WsUsuarioWebDelegate;
 
 public class CaratulaEstadoUtil {
-	
+
 	public CaratulaEstadoUtil(){
-		
+
 	}
 
 	public CaratulaEstadoDTO getCaratulaEstadoDTO(CaratulaVO caratula){
 		CaratulaEstadoDTO caratulaEstadoDTO = new CaratulaEstadoDTO();
-		
+
 		if(caratula==null)
 			return null;
 
@@ -76,7 +94,8 @@ public class CaratulaEstadoUtil {
 		RequirenteDTO requirenteDTO = getRequirenteDTO(caratula);		
 		ArrayList<BitacoraDTO> bitacoraDTOs = getBitacoraDTOs(caratula.getBitacoraCaratulaVO());		
 		ArrayList<TareaDTO> tareaDTOs = getTareaDTOs(caratula);
-//		ArrayList<RepertorioDTO> repertorioDTOs = getRepertorioDTO(caratula.getNumeroCaratula());
+		//		ArrayList<RepertorioDTO> repertorioDTOs = getRepertorioDTO(caratula.getNumeroCaratula());
+		//		ArrayList<PosesionEfectivaDTO> posesionEfectivaDTOs = getPosesionEfectivaDTO(caratula.getNumeroCaratula());
 
 		caratulaEstadoDTO.setDatosFormularioDTO(datosFormularioDTO);
 		caratulaEstadoDTO.setProductoWebDTO(productoWebDTO);
@@ -88,19 +107,20 @@ public class CaratulaEstadoUtil {
 		caratulaEstadoDTO.setCuentaCorrienteDTO(cuentaCorrienteDTO);
 		caratulaEstadoDTO.setBitacoraDTOs(bitacoraDTOs);
 		caratulaEstadoDTO.setTareaDTOs(tareaDTOs);
-//		caratulaEstadoDTO.setRepertorioDTOs(repertorioDTOs);
+		//		caratulaEstadoDTO.setRepertorioDTOs(repertorioDTOs);
+		//		caratulaEstadoDTO.setPosesionEfectivaDTOs(posesionEfectivaDTOs);
 
 		return caratulaEstadoDTO;		
 	}
-	
+
 	public CaratulaEstadoDTO getCaratulaEstadoDTO(AnulaCaratulaVO anulaCaratulaVO){
 		Long numeroCaratula = new Long(anulaCaratulaVO.getCaratula());
 		CaratulaEstadoDTO caratulaEstadoDTO = new CaratulaEstadoDTO();
-		
+
 		WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
-		
+
 		try{
-		
+
 			DatosFormularioDTO datosFormularioDTO = new DatosFormularioDTO();
 			datosFormularioDTO.setNumeroCaratula(numeroCaratula);
 			datosFormularioDTO.setFechaIngresoL(anulaCaratulaVO.getFechaIngreso().getTime());
@@ -109,41 +129,41 @@ public class CaratulaEstadoUtil {
 				TipoFormularioDTO tipoFormularioDTO = new TipoFormularioDTO();
 				tipoFormularioDTO.setId(anulaCaratulaVO.getTipoFormularioVO().getTipo());
 				tipoFormularioDTO.setDescripcion(anulaCaratulaVO.getTipoFormularioVO().getDescripcion());
-				
+
 				datosFormularioDTO.setTipoFormularioDTO(tipoFormularioDTO);
 			}
-			
+
 			//datosFormularioDTO.setEstado("ANULADA"); //?
 			datosFormularioDTO.setValorPagado(new Long(anulaCaratulaVO.getValorPagado()));
 			datosFormularioDTO.setValorReal(new Long(anulaCaratulaVO.getValorReal()));
 			datosFormularioDTO.setValorTasado(new Long(anulaCaratulaVO.getValorTasado()));
 			Integer dif = anulaCaratulaVO.getValorReal() - anulaCaratulaVO.getValorPagado();
-			
+
 			datosFormularioDTO.setDiferencia(new Long(dif));
-			
+
 			caratulaEstadoDTO.setDatosFormularioDTO(datosFormularioDTO);
-			
+
 			if(anulaCaratulaVO.getRequirenteVO()!=null){
 				RequirenteDTO requirenteDTO = new RequirenteDTO();
-				
+
 				String rut = anulaCaratulaVO.getRequirenteVO().getRut();
-	
+
 				if(StringUtils.isNotBlank(rut)){						
-						String rut1 = "";
-						String dv1 = "";
-	
-						try{
-							rut1 = rut.substring(0,8);
-							dv1 = rut.substring(8,9);
-	
-							requirenteDTO.setRut(rut1);
-							requirenteDTO.setDv(dv1);
-						}catch (Exception e) {
-							requirenteDTO.setRut(rut);
-							requirenteDTO.setDv("");
-						}
+					String rut1 = "";
+					String dv1 = "";
+
+					try{
+						rut1 = rut.substring(0,8);
+						dv1 = rut.substring(8,9);
+
+						requirenteDTO.setRut(rut1);
+						requirenteDTO.setDv(dv1);
+					}catch (Exception e) {
+						requirenteDTO.setRut(rut);
+						requirenteDTO.setDv("");
+					}
 				}
-	
+
 				requirenteDTO.setApellidoPaterno(anulaCaratulaVO.getRequirenteVO().getApellidoPaterno());
 				requirenteDTO.setApellidoMaterno(anulaCaratulaVO.getRequirenteVO().getApellidoMaterno());
 				requirenteDTO.setNombres(anulaCaratulaVO.getRequirenteVO().getNombres());
@@ -151,94 +171,94 @@ public class CaratulaEstadoUtil {
 				requirenteDTO.setDireccion(anulaCaratulaVO.getRequirenteVO().getDireccion());
 				requirenteDTO.setTelefono(anulaCaratulaVO.getRequirenteVO().getTelefono());
 				requirenteDTO.setEmail(anulaCaratulaVO.getRequirenteVO().getEmail());
-	
-	
+
+
 				caratulaEstadoDTO.setRequirenteDTO(requirenteDTO );		
 			}
-			
+
 			List<BitacoraCaratulaVO> bitacoraCaratulaVOs = caratulaClienteDelegate.obtenerBitacoraCaratula(numeroCaratula.intValue());
 			caratulaEstadoDTO.setBitacoraDTOs(getBitacoraDTOs(bitacoraCaratulaVOs));
 
-		
+
 			//MOVIMIENTOS
 			MovimientoDTO movimientoDTO = new MovimientoDTO();
 			movimientoDTO.setFechaL(anulaCaratulaVO.getFechaAnula().getTime());
 			movimientoDTO.setFecha(anulaCaratulaVO.getFechaAnula());
-			
+
 			if(anulaCaratulaVO.getCajeroVO()!=null){
 				FuncionarioDTO envia = new FuncionarioDTO();
 				String nombreAnula = anulaCaratulaVO.getCajeroVO().getNombre();
 				String apellidoAnula = anulaCaratulaVO.getCajeroVO().getApellidoPaterno();
-	
+
 				if(StringUtils.isNotBlank(nombreAnula))
 					nombreAnula = nombreAnula.trim();
-	
+
 				if(StringUtils.isNotBlank(apellidoAnula))
 					apellidoAnula = apellidoAnula.trim();
-				
+
 				envia.setNombre(nombreAnula);
 				envia.setApellidoPaterno(apellidoAnula);			
 				movimientoDTO.setEnvia(envia);
 			}
-			
+
 			if(anulaCaratulaVO.getAnulaVO()!=null){					
 				FuncionarioDTO responsable = new FuncionarioDTO();
 				String nombreResponsable = anulaCaratulaVO.getAnulaVO().getNombre();
 				String apellidoResponsable = anulaCaratulaVO.getAnulaVO().getApellidoPaterno();
-				
+
 				if(StringUtils.isNotBlank(nombreResponsable))
 					nombreResponsable = nombreResponsable.trim();
-	
+
 				if(StringUtils.isNotBlank(apellidoResponsable))
 					apellidoResponsable = apellidoResponsable.trim();
-				
+
 				responsable.setNombre(nombreResponsable);
 				responsable.setApellidoPaterno(apellidoResponsable);
 				movimientoDTO.setResponsable(responsable );
 			}
-			
+
 			SeccionDTO seccionDTO = new SeccionDTO();
 			seccionDTO.setDescripcion("Caja");
 			movimientoDTO.setSeccionDTO(seccionDTO );
-			
-			
+
+
 			ArrayList<MovimientoDTO> movimientoDTOs = new ArrayList<MovimientoDTO>();
 			movimientoDTOs.add(movimientoDTO);
 			caratulaEstadoDTO.setMovimientoDTOs(movimientoDTOs );
-	
-			
-			
+
+
+
 			//ESTADO ACTUAL
 			EstadoActualDTO estadoActualDTO = new EstadoActualDTO();
 			estadoActualDTO.setDescripcionEnFlujo("Anulada");
 			caratulaEstadoDTO.setEstadoActualDTO(estadoActualDTO );
-			
+
 			//REPERTORIOS
 			caratulaEstadoDTO.setRepertorioDTOs(getRepertorioDTO(numeroCaratula));
-	
+
 			//INGRESOS-EGRESOS
 			caratulaEstadoDTO.setIngresoEgresoDTOs(getIngresoEgresoDTO(numeroCaratula));
-		
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return caratulaEstadoDTO;
 	}
-	
+
 	private ArrayList<TareaDTO> getTareaDTOs(CaratulaVO caratula){
 		ArrayList<TareaDTO> tareaDTOs = new ArrayList<TareaDTO>();
-		
-		
+
+
 		if(caratula.getTareas()!=null && caratula.getTareas().length>0){
-			
+
 			for(TareaVO vo : caratula.getTareas()){
-				
+
 				if(vo.getTipo()!=null){
 					TareaDTO dto = new TareaDTO();
 					dto.setId(vo.getTipo().getCodigo());
 					dto.setDescripcion(vo.getTipo().getDescripcion());
-					
+
 					tareaDTOs.add(dto);
 				}
 			}
@@ -246,20 +266,20 @@ public class CaratulaEstadoUtil {
 
 		return tareaDTOs;
 	}
-	
+
 	private ArrayList<BitacoraDTO> getBitacoraDTOs(List<BitacoraCaratulaVO> bitacoraCaratulaVOs){
 		ArrayList<BitacoraDTO> bitacoraDTOs = new ArrayList<BitacoraDTO>();
-		
+
 		if(bitacoraCaratulaVOs!=null && bitacoraCaratulaVOs.size()>0)
 			for(BitacoraCaratulaVO vo : bitacoraCaratulaVOs)
 				bitacoraDTOs.add(getBitacoraDTO(vo));
 
 		return bitacoraDTOs;
 	}
-	
+
 	private ArrayList<BitacoraDTO> getBitacoraDTOs(BitacoraCaratulaVO[] bitacoraCaratulaVOs){
 		ArrayList<BitacoraDTO> bitacoraDTOs = new ArrayList<BitacoraDTO>();
-			
+
 		if(bitacoraCaratulaVOs!=null && bitacoraCaratulaVOs.length>0)
 			for(BitacoraCaratulaVO vo : bitacoraCaratulaVOs)
 				bitacoraDTOs.add(getBitacoraDTO(vo));
@@ -269,7 +289,7 @@ public class CaratulaEstadoUtil {
 
 	private BitacoraDTO getBitacoraDTO(BitacoraCaratulaVO vo) {
 		BitacoraDTO dto = new BitacoraDTO();
-		
+
 		dto.setFechaL(vo.getFecha().getTime());
 		dto.setFecha(vo.getFecha());
 		dto.setComentario(vo.getObservacion());
@@ -278,89 +298,89 @@ public class CaratulaEstadoUtil {
 		String apellidoPaterno = vo.getApellidoPaternoFuncionario();
 		String nombre = vo.getNombreFuncionario();
 		String rut = vo.getRutFuncionario();
-		
+
 		FuncionarioDTO funcionarioDTO = new FuncionarioDTO();			
 		funcionarioDTO.setApellidoMaterno(apellidoMaterno);
 		funcionarioDTO.setApellidoPaterno(apellidoPaterno);
 		funcionarioDTO.setNombre(nombre);
 		funcionarioDTO.setRut(rut);
-		
+
 		dto.setFuncionario(funcionarioDTO);
-		
+
 		CausalRechazoVO causalRechazoVO = vo.getCausalRechazoVO();
 		BitacoraOrigenVO bitacoraOrigenVO = vo.getBitacoraOrigenVO();
 		BitacoraTipoEventoVO bitacoraTipoEventoVO = vo.getBitacoraTipoEventoVO();
-					
+
 		if(causalRechazoVO!=null){
 			dto.setIdCausal(causalRechazoVO.getCodigoCausaRechazo());
 			dto.setDescCausal(causalRechazoVO.getDescripcionCausaRechazo());
 		}
-		
+
 		if(bitacoraOrigenVO!=null){
 			dto.setIdOrigen(bitacoraOrigenVO.getId());
 			dto.setDescOrigen(bitacoraOrigenVO.getDescripcion());
 		}
-		
+
 		if(bitacoraTipoEventoVO!=null){
 			dto.setIdTipo(bitacoraTipoEventoVO.getIdTipoEvento());
 			dto.setDescTipo(bitacoraTipoEventoVO.getDescripcionTipoEvento());
 		}
-		
+
 		if(vo.getCategoria()!=null){
 			dto.setCategoria(vo.getCategoria());
 		}
-		
+
 		return dto;
 	}
-	
+
 	public CuentaCorrienteDTO getCuentaCorrienteDTO(Integer codigo){
 		CuentaCorrienteDTO cuentaCorrienteDTO = new CuentaCorrienteDTO();
 
 		if(codigo!=null){
 			WsCaratulaClienteDelegate caratulaDelegate = new WsCaratulaClienteDelegate();
-			
+
 			try {
 				CtaCteVO ctaCteVO =  caratulaDelegate.obtenerCtaCte(codigo);
-	
+
 				if(ctaCteVO!=null){				
-						cuentaCorrienteDTO.setCodigo(ctaCteVO.getCodigo());	
-						cuentaCorrienteDTO.setInstitucion(ctaCteVO.getInstitucion());
-						cuentaCorrienteDTO.setRut(ctaCteVO.getRut());
+					cuentaCorrienteDTO.setCodigo(ctaCteVO.getCodigo());	
+					cuentaCorrienteDTO.setInstitucion(ctaCteVO.getInstitucion());
+					cuentaCorrienteDTO.setRut(ctaCteVO.getRut());
 				}				
-				
+
 			} catch (GeneralException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return cuentaCorrienteDTO;
 	}
-	
+
 
 	private RequirenteDTO getRequirenteDTO(CaratulaVO caratula){
 		RequirenteDTO requirenteDTO = new RequirenteDTO();
-			
+
 		if(caratula.getRequirente()!=null){
 			RequirenteVO requirenteVO = caratula.getRequirente();
-			
+
 			String rut = requirenteVO.getRut();	
 			String ruts = "";
-			
+
 			try {
-				
+
 				if(rut!=null){
 					rut = rut.trim();
-					
+
 					Long rl = Long.parseLong(rut);
-					
+
 					ruts = NumberFormat.getInstance(new Locale("ES", "CL")).format(rl);
 				}
 			} catch (Exception e) {
 
 			}
-			
+
 			String dv = requirenteVO.getDv();
-			
+
 			String nombres = requirenteVO.getNombres();
 			String apellidoPaterno = requirenteVO.getApellidoPaterno();
 			String apellidoMaterno = requirenteVO.getApellidoMaterno();
@@ -431,7 +451,7 @@ public class CaratulaEstadoUtil {
 				}
 
 				movimientoDTO.setSeccionDTO(seccionDTO);
-				
+
 				movimientoDTOs.add(movimientoDTO);
 			}
 
@@ -444,7 +464,7 @@ public class CaratulaEstadoUtil {
 		ArrayList<IngresoEgresoDTO> ingresoEgresoDTOs = new ArrayList<IngresoEgresoDTO>();
 
 		WsCaratulaClienteDelegate caratulaDelegate = new WsCaratulaClienteDelegate();
-		
+
 		try {
 			IngresoEgresoCaratulaVO[] ingresoEgresoCaratulaVOs =  caratulaDelegate.obtenerIngresosEgresos(numeroCaratula.intValue());
 
@@ -461,12 +481,12 @@ public class CaratulaEstadoUtil {
 					ingresoEgresoDTO.setIdTipo(ingresoEgresoCaratulaVO.getTipoIngresoEgresoVO().getId());
 					ingresoEgresoDTO.setIdTransaccion(ingresoEgresoCaratulaVO.getIdTransaccion());
 					ingresoEgresoDTO.setMonto(ingresoEgresoCaratulaVO.getMonto());		
-					
+
 					ingresoEgresoDTOs.add(ingresoEgresoDTO);
 				}
 			}
-			
-			
+
+
 		} catch (GeneralException e) {
 			e.printStackTrace();
 		}
@@ -491,7 +511,7 @@ public class CaratulaEstadoUtil {
 				seccionDTO.setId(seccionVO.getCodigo());
 				seccionDTO.setDescripcion(seccionVO.getDescripcion());
 			}
-			
+
 			estadoActualDTO.setDescripcionEnFlujo(caratula.getEstadoActualCaratula().getDescripcionEnFlujo());
 
 			estadoActualDTO.setSeccionDTO(seccionDTO);
@@ -511,22 +531,22 @@ public class CaratulaEstadoUtil {
 				citadoDTO.setFoja(citadaVO.getFoja());
 				citadoDTO.setNumero(citadaVO.getNumero());
 				citadoDTO.setBis(citadaVO.getBis());
-	
+
 				if(citadaVO.getRegistro()!=null){
 					RegistroDTO registroDTO = new RegistroDTO();
-		
+
 					registroDTO.setId(citadaVO.getRegistro());
 					switch(citadaVO.getRegistro()){
-						case 1: registroDTO.setDescripcion("Propiedad"); break;
-						case 2: registroDTO.setDescripcion("Hipotecas"); break;
-						case 3: registroDTO.setDescripcion("Prohibiciones"); break;
-						case 4: registroDTO.setDescripcion("Comercio"); break;
-						case 5: registroDTO.setDescripcion("Aguas"); break;
+					case 1: registroDTO.setDescripcion("Propiedad"); break;
+					case 2: registroDTO.setDescripcion("Hipotecas"); break;
+					case 3: registroDTO.setDescripcion("Prohibiciones"); break;
+					case 4: registroDTO.setDescripcion("Comercio"); break;
+					case 5: registroDTO.setDescripcion("Aguas"); break;
 					}
-		
+
 					citadoDTO.setRegistroDTO(registroDTO);
 				}
-				
+
 				citadoDTOs.add(citadoDTO);
 			}
 		}
@@ -535,26 +555,26 @@ public class CaratulaEstadoUtil {
 
 	private ProductoWebDTO getProductoWebDTOLite(CaratulaVO caratula){
 		ProductoWebDTO productoWebDTO = new ProductoWebDTO();
-			
+
 		ArrayList<String> glosa = new ArrayList<String>();
 
 		if(caratula.getProducto()!=null){
 			productoWebDTO.setDescripcionProducto(caratula.getProducto().getDescripcionProducto());
 			productoWebDTO.setIdTransaccion(caratula.getProducto().getIdTransaccion());
 			productoWebDTO.setIdUsuarioWeb(caratula.getProducto().getIdUsuarioWeb());
-			
-//			WsUsuarioWebDelegate usuarioWebDelegate = new WsUsuarioWebDelegate();
-//			
-//			try {
-//				UsuarioWebVO usuarioWebVO =  usuarioWebDelegate.obtenerUsuario(caratula.getProducto().getIdUsuarioWeb());
-//				
-//				productoWebDTO.setNameUsuarioWeb(usuarioWebVO.getEMail());
-//				
-//			} catch (GeneralException e) {
-//				e.printStackTrace();
-//			}
-			
-			
+
+			//			WsUsuarioWebDelegate usuarioWebDelegate = new WsUsuarioWebDelegate();
+			//			
+			//			try {
+			//				UsuarioWebVO usuarioWebVO =  usuarioWebDelegate.obtenerUsuario(caratula.getProducto().getIdUsuarioWeb());
+			//				
+			//				productoWebDTO.setNameUsuarioWeb(usuarioWebVO.getEMail());
+			//				
+			//			} catch (GeneralException e) {
+			//				e.printStackTrace();
+			//			}
+
+
 			if(caratula.getProducto().getListaProductoGlosaVO()!=null){
 				ProductoGlosaVO[] glosaProd = caratula.getProducto().getListaProductoGlosaVO();
 
@@ -565,11 +585,11 @@ public class CaratulaEstadoUtil {
 					}			
 				}
 			}
-		
+
 		}
-		
+
 		productoWebDTO.setProductoGlosa(glosa);
-		
+
 		return productoWebDTO;
 	}
 
@@ -577,22 +597,22 @@ public class CaratulaEstadoUtil {
 
 		if(productoWebDTO!=null && productoWebDTO.getIdUsuarioWeb()!=null){
 
-			
+
 			WsUsuarioWebDelegate usuarioWebDelegate = new WsUsuarioWebDelegate();
-			
+
 			try {
 				UsuarioWebVO usuarioWebVO =  usuarioWebDelegate.obtenerUsuario(productoWebDTO.getIdUsuarioWeb());
 				productoWebDTO.setNameUsuarioWeb(usuarioWebVO.getEMail());
-				
+
 			} catch (GeneralException e) {
 				e.printStackTrace();
 			}
-		
+
 		}
-		
+
 		return productoWebDTO;
 	}
-	
+
 	public ProductoWebDTO getProductoWebDTO(JSONObject json){
 
 		ProductoWebDTO productoWebDTO = new ProductoWebDTO();
@@ -602,16 +622,16 @@ public class CaratulaEstadoUtil {
 			productoWebDTO.setIdTransaccion((Long)json.get("idTransaccion"));
 			productoWebDTO.setIdUsuarioWeb((Long)json.get("idUsuarioWeb"));
 			productoWebDTO.setNameUsuarioWeb((String)json.get("nameUsuarioWeb"));
-			
+
 			ArrayList<String> listaGlosa = new ArrayList<String>();
 			JSONArray productoGlosaJSON = (JSONArray)json.get("productoGlosa");
 			for(int i=0; i<productoGlosaJSON.size(); i++){
 				listaGlosa.add((String)productoGlosaJSON.get(i));
 			}
 			productoWebDTO.setProductoGlosa(listaGlosa);
-		
+
 		}
-		
+
 		return productoWebDTO;
 	}	
 
@@ -620,7 +640,7 @@ public class CaratulaEstadoUtil {
 
 		if(caratula.getCanal()!=null){
 			CanalVO canalVO = caratula.getCanal();
-	
+
 			canalDTO.setId(canalVO.getId());
 			canalDTO.setDescripcion(canalVO.getDescripcion());
 		}
@@ -633,7 +653,7 @@ public class CaratulaEstadoUtil {
 
 		if(caratula.getTipoFormulario()!=null){
 			TipoFormularioVO tipoFormularioVO = caratula.getTipoFormulario();
-	
+
 			tipoFormularioDTO.setId(tipoFormularioVO.getTipo());
 			tipoFormularioDTO.setDescripcion(tipoFormularioVO.getDescripcion());
 		}
@@ -666,28 +686,28 @@ public class CaratulaEstadoUtil {
 		datosFormularioDTO.setValorReal(caratula.getValorReal());
 
 		Long diferencia = caratula.getValorReal() - caratula.getValorPagado();		
-		
+
 		datosFormularioDTO.setDiferencia(diferencia);		
 
 		datosFormularioDTO.setEstado(caratula.getEstadoFormulario());
-		
-		
+
+
 		datosFormularioDTO.setCodigo(caratula.getCodigo());
 		datosFormularioDTO.setClienteCuentaCorriente(caratula.getClienteCtaCte());
 		datosFormularioDTO.setUsuarioCreador(caratula.getUsuarioCreador());
 
 		return datosFormularioDTO;
 	}
-	
+
 	public ArrayList<RepertorioDTO> getRepertorioDTO(Long numeroCaratula){
 		ArrayList<RepertorioDTO> repertorioDTOs = new ArrayList<RepertorioDTO>();
 
 		if(numeroCaratula!=null){
 			WsRepertorioClienteDelegate delegate = new WsRepertorioClienteDelegate();
-			
+
 			try {
 				List<RepertorioVO> repertorioVOs =  delegate.existeCaratulaConRepertorio(numeroCaratula);
-	
+
 				if(repertorioVOs!=null){	
 					for(RepertorioVO repertorioVO : repertorioVOs){
 						RepertorioDTO repertorioDTO = new RepertorioDTO();
@@ -699,19 +719,51 @@ public class CaratulaEstadoUtil {
 							repertorioDTO.setFechaIngresoL(repertorioVO.getFechaIngreso().getTime());
 							repertorioDTO.setFechaIngreso(repertorioVO.getFechaIngreso());
 						}
-						
+
 						repertorioDTOs.add(repertorioDTO);
 					}
 				}				
-				
+
 			} catch (GeneralException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return repertorioDTOs;
 	}	
-	
+
+	public ArrayList<PosesionEfectivaDTO> getPosesionEfectivaDTO(Long numeroCaratula) throws HTTPException, Exception {
+
+		ArrayList<PosesionEfectivaDTO> posesionEfectivaDTOs = new ArrayList<PosesionEfectivaDTO>();
+		JSONArray posesionesEfectivas = new JSONArray();
+
+		Client client = Client.create();
+		String ARCHIVO_PARAMETROS_POSEFE = "ws_posesionefectiva.parametros";	
+		String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_POSEFE, "IP_WS", "valor");
+		String port = TablaValores.getValor(ARCHIVO_PARAMETROS_POSEFE, "PORT_WS", "valor");
+
+		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/"+numeroCaratula));
+//		WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/api/pe/caratula/14584904"));
+		
+		ClientResponse clientResponse = wr.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
+
+		if(statusRespuesta.getStatusCode() == 200){
+			posesionesEfectivas = (JSONArray) getResponse(clientResponse);
+			
+			if (posesionesEfectivas != null) { 
+
+				Gson gson = new GsonBuilder()
+						.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+				posesionEfectivaDTOs = gson.fromJson(posesionesEfectivas.toString(), new TypeToken<List<PosesionEfectivaDTO>>(){}.getType());
+			
+			} 
+		}
+
+		return posesionEfectivaDTOs;
+	}
+
 	@SuppressWarnings("unchecked")
 	public JSONObject estadoReporteJSON(CaratulaEstadoDTO caratulaEstadoDTO, Long numeroCaratula){	
 		JSONObject respuesta = new JSONObject();
@@ -753,33 +805,33 @@ public class CaratulaEstadoUtil {
 
 		data.put("anulada", false);
 		data.put("obs", "");
-//		data.put("repertorioVigente", true);
+		//		data.put("repertorioVigente", true);
 
 		data.put("citadoFoja", "-");
 		data.put("citadoNum", "-");
 		data.put("citadoAno", "-");
 		data.put("citadoRegistro", "-");		
 		data.put("citadoRegistroNombre", "-");		
-		
+
 		data.put("hayCitado", false);
 		data.put("canal", "");
 		data.put("hayCanal", false);
-		
+
 		data.put("estadoForm", "-");
 		data.put("estadoFormDesc", "-");
 
 
 		String obs = "";
-		
+
 		WsCaratulaClienteDelegate caratulaDelegate = new WsCaratulaClienteDelegate();
-		
+
 		try {
 			DecimalFormatSymbols dfs  = new DecimalFormatSymbols(new Locale("es", "cl"));
 			DecimalFormat df = new DecimalFormat("#,##0", dfs);
 
 			AnulaCaratulaVO[] anulaCaratulaVOs = caratulaDelegate.obtenerCaratulasAnuladas(numeroCaratula);
 			//AnulaCaratulaDTO anulaDTO = DataManager.checkAnulada(numeroCaratula);
-			
+
 			//Repertorios
 			WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
 			List<RepertorioVO> repertorioVOs = repertorioClienteDelegate.existeCaratulaConRepertorio(numeroCaratula);
@@ -809,17 +861,17 @@ public class CaratulaEstadoUtil {
 				data.put("nform", caratulaEstadoDTO.getDatosFormularioDTO().getTipoFormularioDTO().getId()); 
 				data.put("tform", caratulaEstadoDTO.getDatosFormularioDTO().getTipoFormularioDTO().getDescripcion());					
 				data.put("estadoForm", caratulaEstadoDTO.getDatosFormularioDTO().getEstado());
-				
+
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");	
 				String fechaIngreso = sdf.format(caratulaEstadoDTO.getDatosFormularioDTO().getFechaIngreso());
 				data.put("fechaIngreso", fechaIngreso);
-				
+
 				data.put("codSeccionActual", caratulaEstadoDTO.getEstadoActualDTO().getSeccionDTO().getId());
 				data.put("seccionActual", caratulaEstadoDTO.getEstadoActualDTO().getSeccionDTO().getDescripcion());
-				
+
 				String fechaActual = sdf.format(caratulaEstadoDTO.getEstadoActualDTO().getFecha());
 				data.put("fechaActual", fechaActual);
-				
+
 				if(caratulaEstadoDTO.getDatosFormularioDTO()!=null){
 					if("d".equalsIgnoreCase(caratulaEstadoDTO.getDatosFormularioDTO().getEstado().trim())){
 						data.put("estadoFormDesc", "Despachada");
@@ -828,30 +880,30 @@ public class CaratulaEstadoUtil {
 					}else if("w".equalsIgnoreCase(caratulaEstadoDTO.getDatosFormularioDTO().getEstado().trim())){
 						data.put("estadoFormDesc", "Auditoría");
 					}
-					
+
 					String ccc = caratulaEstadoDTO.getDatosFormularioDTO().getClienteCuentaCorriente();
 					if(StringUtils.isNotBlank(ccc)){
 						data.put("ccc", ccc);					
 					}
-					
+
 				}
 
 				//RepertorioDTO repertorioDTO = DataManager.getRepertorio(numeroCaratula);
-//					WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
-//					repertorioClienteDelegate.existeCaratulaConRepertorio(caratulaEstadoDTO.getDatosFormularioDTO().getNumeroCaratula());
+				//					WsRepertorioClienteDelegate repertorioClienteDelegate = new WsRepertorioClienteDelegate();
+				//					repertorioClienteDelegate.existeCaratulaConRepertorio(caratulaEstadoDTO.getDatosFormularioDTO().getNumeroCaratula());
 
 				if(caratulaEstadoDTO.getDatosFormularioDTO()!=null){
 
-//						if(!repertorioDTO.isVigente() caratulaEstadoDTO.getDatosFormularioDTO().get){
-//							data.put("repertorioVigente", false);
-//							obs = obs+ "Repertorio NO VIGENTE. ";
-//						}
-//
-//						if(repertorioDTO.getObserva()!=null && repertorioDTO.getObserva().trim().length()>0){
-//							obs = obs+ repertorioDTO.getObserva().trim()+". ";
-//						}
+					//						if(!repertorioDTO.isVigente() caratulaEstadoDTO.getDatosFormularioDTO().get){
+					//							data.put("repertorioVigente", false);
+					//							obs = obs+ "Repertorio NO VIGENTE. ";
+					//						}
+					//
+					//						if(repertorioDTO.getObserva()!=null && repertorioDTO.getObserva().trim().length()>0){
+					//							obs = obs+ repertorioDTO.getObserva().trim()+". ";
+					//						}
 					data.put("obs", obs);
-				
+
 
 					if(caratulaEstadoDTO.getDatosFormularioDTO().getValorPagado()!=null){
 						String pagado = df.format(caratulaEstadoDTO.getDatosFormularioDTO().getValorPagado());
@@ -870,12 +922,12 @@ public class CaratulaEstadoUtil {
 
 					if(caratulaEstadoDTO.getDatosFormularioDTO().getValorPagado()!=null && caratulaEstadoDTO.getDatosFormularioDTO().getValorReal()!=null){
 						Integer dif = caratulaEstadoDTO.getDatosFormularioDTO().getValorReal().intValue() - caratulaEstadoDTO.getDatosFormularioDTO().getValorPagado().intValue();
-						
+
 						String diferencia = df.format(dif);
 						data.put("diferencia", diferencia);					
 					}
 				}
-				
+
 				if(caratulaEstadoDTO.getRequirenteDTO()!=null){
 					String rut = caratulaEstadoDTO.getRequirenteDTO().getRut();
 
@@ -946,10 +998,10 @@ public class CaratulaEstadoUtil {
 						}
 					}								
 				}
-				
+
 				data.put("historial", caratulaEstadoDTO.getMovimientoDTOs());
 				data.put("tareas", caratulaEstadoDTO.getTareaDTOs());
-						
+
 				if(caratulaEstadoDTO.getCuentaCorrienteDTO()!=null && caratulaEstadoDTO.getCuentaCorrienteDTO().getCodigo()!=null && caratulaEstadoDTO.getCuentaCorrienteDTO().getCodigo().intValue()!=0){
 					data.put("hayCC", true);
 
@@ -977,7 +1029,7 @@ public class CaratulaEstadoUtil {
 					CitadoDTO citadoDTO = caratulaEstadoDTO.getCitadoDTOs().get(0);
 					if(citadoDTO.getFoja()!=null && 
 							citadoDTO.getNumero()!=null && 
-									citadoDTO.getAno()!=null){
+							citadoDTO.getAno()!=null){
 						data.put("citadoFoja", citadoDTO.getFoja());
 						data.put("citadoNum", citadoDTO.getNumero());								
 						data.put("citadoAno", citadoDTO.getAno());		
@@ -1007,15 +1059,15 @@ public class CaratulaEstadoUtil {
 					}
 				}
 				data.put("glosa", glosaArray);	
-				
+
 				//bitacora			
 				data.put("bitacora", caratulaEstadoDTO.getBitacoraDTOs());
-				
+
 				//ingreso-egreso				
 				data.put("ingresoEgreso", caratulaEstadoDTO.getIngresoEgresoDTOs());
 
 			}else{
-				
+
 				//Buscar anulacion si hay
 				if(anulaCaratulaVOs!=null && anulaCaratulaVOs.length>0){
 					AnulaCaratulaVO anulaDTO = anulaCaratulaVOs[0]; //Ultima Anulacion
@@ -1025,16 +1077,16 @@ public class CaratulaEstadoUtil {
 					//data.put("obs", true);
 
 					data.put("ncaratula", anulaDTO.getCaratula());
-					
+
 					if(anulaDTO.getTipoFormularioVO()!=null){
 						data.put("nform", anulaDTO.getTipoFormularioVO().getTipo());
 						data.put("tform", anulaDTO.getTipoFormularioVO().getDescripcion());
 					}
 
 					data.put("tareas", new ArrayList<TareaDTO>());
-					
 
-					
+
+
 
 					if(anulaDTO.getValorPagado()!=null){
 						String pagado = df.format(anulaDTO.getValorPagado());
@@ -1094,7 +1146,7 @@ public class CaratulaEstadoUtil {
 					MovimientoDTO movimiento = new MovimientoDTO();
 					movimiento.setFechaL(anulaDTO.getFechaIngreso().getTime());
 					movimiento.setFecha(anulaDTO.getFechaIngreso());
-					
+
 					if(anulaDTO.getCajeroVO()!=null){
 						String nombreAnula = anulaDTO.getCajeroVO().getNombre();
 						String apellidoAnula = anulaDTO.getCajeroVO().getApellidoPaterno();					
@@ -1106,14 +1158,14 @@ public class CaratulaEstadoUtil {
 						if(StringUtils.isNotBlank(apellidoAnula)){
 							apellidoAnula = apellidoAnula.trim();
 						}
-						
+
 						FuncionarioDTO envia = new FuncionarioDTO();
 						envia.setNombre(nombreAnula);
 						envia.setApellidoPaterno(apellidoAnula);
-						
+
 						movimiento.setEnvia(envia);
 					}
-					
+
 					if(anulaDTO.getAnulaVO()!=null){
 						String nombreResponsable = anulaDTO.getAnulaVO().getNombre();
 						String apellidoResponsable = anulaDTO.getAnulaVO().getApellidoPaterno();					
@@ -1125,14 +1177,14 @@ public class CaratulaEstadoUtil {
 						if(StringUtils.isNotBlank(apellidoResponsable)){
 							apellidoResponsable = apellidoResponsable.trim();
 						}
-						
+
 						FuncionarioDTO responsable = new FuncionarioDTO();
 						responsable.setNombre(nombreResponsable);
 						responsable.setApellidoPaterno(apellidoResponsable);
-						
+
 						movimiento.setResponsable(responsable);
 					}					
-	
+
 					SeccionDTO seccionDTO = new SeccionDTO();
 					seccionDTO.setDescripcion("Caja");
 					seccionDTO.setId("01");
@@ -1215,13 +1267,13 @@ public class CaratulaEstadoUtil {
 							}
 						}								
 					}
-					
+
 					List<BitacoraCaratulaVO> bitacoraCaratulaVOs = caratulaDelegate.obtenerBitacoraCaratula(numeroCaratula.intValue());
 					ArrayList<BitacoraDTO> bitacoraDTOs = new ArrayList<BitacoraDTO>();
 					if(bitacoraCaratulaVOs!=null)
 						for(BitacoraCaratulaVO bitacoraCaratulaVO : bitacoraCaratulaVOs)
 							bitacoraDTOs.add(getBitacoraDTO(bitacoraCaratulaVO));
-					
+
 					data.put("bitacora", bitacoraDTOs);
 
 					//ingreso-egreso				
@@ -1232,7 +1284,7 @@ public class CaratulaEstadoUtil {
 					respuesta.put("errorMessage", "Carátula "+numeroCaratula+" no existe");
 				}
 			}				
-			
+
 
 		} catch (NumberFormatException e1) {
 			respuesta.put("success", false);	
@@ -1249,47 +1301,47 @@ public class CaratulaEstadoUtil {
 
 		return respuesta;		
 	}	
-	
+
 	@SuppressWarnings("unchecked")
 	public JSONArray getBitacora(ArrayList<BitacoraDTO> bitacora, Long ncaratula){
 		JSONArray bitacoraJSON = new JSONArray();
 
 		try {
 			if(bitacora!=null && bitacora.size()>0){
-				
+
 				for(BitacoraDTO record: bitacora){
 					JSONObject recordJSON = new JSONObject();
-					
+
 					if(record.getFuncionario()!=null){
 						recordJSON.put("apellidoMaternoFuncionario", record.getFuncionario().getApellidoMaterno());
 						recordJSON.put("apellidoPaternoFuncionario", record.getFuncionario().getApellidoPaterno());
 						recordJSON.put("nombreFuncionario", record.getFuncionario().getNombre());
 					}
-					
+
 					recordJSON.put("boId", record.getIdOrigen());
 					recordJSON.put("boDescripcion", record.getDescOrigen());
-					
+
 					recordJSON.put("bteId", record.getIdTipo());
 					recordJSON.put("bteDescripcion", record.getDescTipo());	
-					
+
 					recordJSON.put("causalId", "");
 					recordJSON.put("causalDescripcion", "");
-					
+
 					if(record.getIdCausal()!=null){
 						recordJSON.put("causalId", record.getIdCausal());
 						recordJSON.put("causalDescripcion", record.getDescCausal());						
 					}
-					
+
 					Date fecha = record.getFecha();
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 					String fechaFinal = sdf.format(fecha);
 					recordJSON.put("fecha", fechaFinal);
-					
+
 					String nombreUsuarioWeb = "";
 					String apellidoPaternoUsuarioWeb = "";
 					String rutUsuarioWeb = "";
 					String dvUsuarioWeb = "";
-					
+
 					recordJSON.put("rutUsuarioWeb", rutUsuarioWeb);
 					recordJSON.put("dvUsuarioWeb", dvUsuarioWeb);
 					recordJSON.put("nombreUsuarioWeb", nombreUsuarioWeb);
@@ -1298,16 +1350,33 @@ public class CaratulaEstadoUtil {
 					recordJSON.put("idBitacora", record.getId());					
 					recordJSON.put("numeroCaratula", ncaratula);
 					recordJSON.put("observacion", record.getComentario());
-					
+
 
 					bitacoraJSON.add(recordJSON);	
 				}			
-				
+
 			}
 		} catch (Exception e) {
 
 		}	
-		
+
 		return bitacoraJSON;
 	}
+
+	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
+		Object respuesta = null;
+		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
+			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
+				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
+			else if(response.getType().toString().startsWith("application/json"))
+				respuesta = new JSONParser().parse(response.getEntity(String.class));
+			else
+				respuesta = response.getEntity(String.class);
+
+		} else if(response!=null)
+			throw new HTTPException(response.getStatus());
+		else
+			throw new Exception("Sin respuesta del servicio");
+		return respuesta;
+	}      
 }

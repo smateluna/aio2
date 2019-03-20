@@ -22,10 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.shiro.util.ThreadContext;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,7 +41,6 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import cl.cbr.common.exception.GeneralException;
-import cl.cbr.util.ErroresUtil;
 import cl.cbr.util.RUTUtil;
 import cl.cbr.util.SendMail;
 import cl.cbr.util.StringUtil;
@@ -54,6 +54,7 @@ import cl.cbrs.aio.dto.estado.CausalRechazoDTO;
 import cl.cbrs.aio.dto.estado.CuentaCorrienteDTO;
 import cl.cbrs.aio.dto.estado.IngresoEgresoDTO;
 import cl.cbrs.aio.dto.estado.MovimientoDTO;
+import cl.cbrs.aio.dto.estado.PosesionEfectivaDTO;
 import cl.cbrs.aio.dto.estado.ProductoWebDTO;
 import cl.cbrs.aio.dto.estado.RepertorioDTO;
 import cl.cbrs.aio.dto.estado.TareaDTO;
@@ -83,9 +84,6 @@ import cl.cbrs.delegate.repertorio.WsRepertorioClienteDelegate;
 import cl.cbrs.repertorio.flujo.vo.RepertorioVO;
 import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 import net.sf.jasperreports.engine.JRException;
-import org.apache.log4j.MDC;
-import org.apache.log4j.NDC;
-import org.apache.shiro.util.ThreadContext;
 
 public class EstadoServiceAction extends CbrsAbstractAction {
 
@@ -1285,6 +1283,50 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 
 		JSONObject res = new JSONObject();
 		res.put("ingresoEgresoDTOs", ingresoEgresoDTOs);
+		json.put("res", res);
+
+		try {
+			json.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}		
+	}	
+	
+	@SuppressWarnings({ "unchecked" })
+	public void getPosesionEfectiva(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/json");
+
+		String numeroCaratula = request.getParameter("numeroCaratula");		
+
+		JSONObject json = new JSONObject();
+		json.put("status", false);
+		json.put("msg", "");
+
+		JSONObject req = new JSONObject();
+		req.put("numeroCaratula", numeroCaratula);
+		json.put("req", req);	
+
+		ArrayList<PosesionEfectivaDTO> posesionEfectivaDTOs = new ArrayList<PosesionEfectivaDTO>();
+		
+		if(StringUtils.isNotBlank(numeroCaratula) && StringUtils.isNumeric(numeroCaratula)){
+			Long numero = Long.parseLong(numeroCaratula);
+
+			try {		
+				CaratulaEstadoUtil caratulaEstadoUtil = new CaratulaEstadoUtil();
+				posesionEfectivaDTOs = caratulaEstadoUtil.getPosesionEfectivaDTO(numero);				
+
+				json.put("status", true);					
+
+			} catch (Exception e) {
+				json.put("msg", "Problemas en servidor obteniendo posesion efectiva.");
+				logger.error("Error: "+e.getMessage(),e);
+			}
+		}else
+			json.put("msg", "Número Carátula no válido.");
+
+		JSONObject res = new JSONObject();
+		res.put("posesionEfectivaDTOs", posesionEfectivaDTOs);
 		json.put("res", res);
 
 		try {
