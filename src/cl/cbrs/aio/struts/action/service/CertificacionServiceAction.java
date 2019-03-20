@@ -206,7 +206,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			status = true;
 			
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage(),e);
 
 			status = false;
 			msg = "Se ha detectado un problema, comunicar area soporte.";

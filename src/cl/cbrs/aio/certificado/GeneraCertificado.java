@@ -439,20 +439,20 @@ public class GeneraCertificado {
 			caratulaVO.setValorReal((long)valor);
 			parametros1.put("VALOR", "$ "+(int)valor);
 			
-//			InputStream is1 = new BufferedInputStream(new FileInputStream(jasperFile));
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			
-			JasperReport report =(JasperReport) JRLoader.loadObject(jasperFile);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(report,parametros1);
-			JRPdfExporter exporter = new JRPdfExporter();
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-			exporter.exportReport();
-			certificadoDigital = new ByteArrayInputStream(out.toByteArray());
+			InputStream is1 = new BufferedInputStream(new FileInputStream(jasperFile));
+//			ByteArrayOutputStream out = new ByteArrayOutputStream();
+//			
+//			JasperReport report =(JasperReport) JRLoader.loadObject(jasperFile);
+//			JasperPrint jasperPrint = JasperFillManager.fillReport(report,parametros1);
+//			JRPdfExporter exporter = new JRPdfExporter();
+//			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+//			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+//			exporter.exportReport();
+//			certificadoDigital = new ByteArrayInputStream(out.toByteArray());
 			
 
-//			byte[] rep1 = JasperRunManager.runReportToPdf(is1, parametros1);
-//			certificadoDigital = new ByteArrayInputStream(rep1);
+			byte[] rep1 = JasperRunManager.runReportToPdf(is1, parametros1);
+			certificadoDigital = new ByteArrayInputStream(rep1);
 
 		}catch (JRException e) {
 			logger.error(e.getMessage(),e);
