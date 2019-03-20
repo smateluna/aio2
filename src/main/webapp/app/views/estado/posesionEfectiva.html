@@ -7,7 +7,7 @@
         <div class="loader loader-xs" ng-show="data.status && !data.statusPosesionEfectiva"></div> Posesión Efectiva</div>
     <div class="panel-body no-padding" ng-hide="area.collapsed">
         <table class="hover table-bordered">
-            <thead>
+            <!-- <thead>
             <tr>
                 <th class="estado-table-title">Folio</th>
                 <th class="estado-table-title text-center">Causante</th>
@@ -15,9 +15,9 @@
                 <th class="estado-table-title text-center">Tipo</th>
                 <th class="estado-table-title text-center">Ver</th>
             </tr>
-            </thead>
+            </thead> -->
             <tbody>
-            <tr ng-repeat="posesionEfectiva in data.res.caratulaDTO.posesionEfectivaDTOs "> 
+            <!-- <tr ng-repeat="posesionEfectiva in data.res.caratulaDTO.posesionEfectivaDTOs "> 
               <td>{{posesionEfectiva.folio}}</td>
               <td>{{posesionEfectiva.causante.nombreCausante}}</td>
               <td>{{posesionEfectiva.causante.fechaDefuncion}}</td>
@@ -27,7 +27,7 @@
                    <i class="fa fa-file-pdf-o"></i> 
                 </button>
               </td>
-            </tr>
+            </tr> -->
             <tr ng-if="!data.res.caratulaDTO.posesionEfectivaDTOs || data.res.caratulaDTO.posesionEfectivaDTOs.length===0">
                 <td colspan="6" class="estado-table-td text-center text-italic">No hay posesión efectiva.</td>
             </tr>
@@ -35,5 +35,7 @@
                       
             </tbody>
         </table>
+        
+        <div ng-show='data.res.caratulaDTO.posesionEfectivaDTOs.length>0' ag-grid="gridOptions" class="ag-theme-balham" style="width: 100%; height: 100%;"></div>
     </div>
 </div>
