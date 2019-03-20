@@ -11,5 +11,9 @@
     "grunt-contrib-nodeunit": "~0.4.1",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-ng-annotate": "^1.0.1"
+  },
+  "dependencies": {
+    "ag-grid-angular": "^20.1.0",
+    "ag-grid-enterprise": "^20.1.0"
   }
 }

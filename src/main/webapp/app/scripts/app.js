@@ -4,6 +4,11 @@ var versionAIO = 'AIO Version 1.4 25/07/2018\n'
 	+'----------------------------\n'
 	+'mejoras reingreso gp';
 
+agGrid.LicenseManager.setLicenseKey("Conservador_de_Bienes_Raíces_de_Santiago__MultiApp_1Devs14_March_2020__MTU4NDE0NDAwMDAwMA==e88abe9a3e7fcf67bd38763a6891e639");
+
+agGrid.initialiseAgGridWithAngular1(angular);
+
+
 var app = angular
 .module('aioApp', [
                    'ngCookies',
@@ -24,7 +29,8 @@ var app = angular
                    'angularjs-dropdown-multiselect',
                    'badwing.autoselect',
                    'ngFileUpload',
-                   'ngWebSocket'
+                   'ngWebSocket',
+                   'agGrid'
                    ]);
 
 app.config(function ($routeProvider, $compileProvider) {

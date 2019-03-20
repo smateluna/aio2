@@ -6,6 +6,254 @@ app
 		reingresoService, inscripcionDigitalService, $modal,
 		$modalStack, $route, $routeParams, Usuario, $rootScope, escrituraService, Modal) {
 
+//	var columnDefs = [
+//        {headerName: "Folio", field: "folio", sortable: true},
+//        {headerName: "Fecha proceso", field: "fechaProceso", sort: 'desc', sortable: true},
+//        {headerName: "Causante", field: "causante.nombreCausante"},
+//        {headerName: "Fecha defunción", field: "causante.fechaDefuncion"},
+//        {headerName: "Tipo", field: "titulo"}
+//    ];
+//
+//    $scope.gridOptions = {
+//        columnDefs: columnDefs
+//    };
+	
+	function TooltipCellRenderer(params){
+        //var id = params.data.id;
+
+        if(params.value){
+            return params.value + ' <md-tooltip md-direction="left">'+params.value+'</md-tooltip>';
+        }else{
+            return '';
+        }
+    }
+	
+	function CertificadoCellRenderer(params){
+		return '<button class="btn btn-primary btn-xs" type="button" style="font-size: 10px;" tooltip="Ver Documento" tooltip-placement="bottom" ng-click="verPosesionEfectiva(\''+params.data.folio+'\', \''+params.data.fechaProceso+'\')">' +params.data.folio+
+//		'<i class="fa fa-file-pdf-o"></i>' +
+        '</button>';
+//		return "<button ng-click=\"verPosesionEfectiva('+params.data.folio+\"','\"+params.data.fechaProceso+\"')\" class=\"btn btn-xs btn-primary\">" +
+//				"<i class=\"fa fa-file-pdf-o\"></i>" +
+//				"</button>";
+	}
+	
+	var gridLocaleText = {
+
+            // for filter panel
+            page: 'Página',
+            more: 'Más',
+            to: '-',
+            of: 'de',
+            next: 'Siguiente',
+            last: 'Último',
+            first: 'Primero',
+            previous: 'Previo',
+            loadingOoo: 'Cargando...',
+
+            // for set filter
+            selectAll: 'Seleccionar todo',
+            searchOoo: 'Buscar...',
+            blanks: 'Blanco',
+
+            // for number filter and text filter
+            filterOoo: 'Filtrar...',
+            applyFilter: 'Aplicar filtro',
+            clearFilter: 'Limpiar filtro',
+
+            // for number filter
+            equals: 'Igual',
+            notEqual: 'No es igual',
+            lessThan: 'Menor',
+            greaterThan: 'Mayor',
+            inRange: 'Entre',
+            greaterThanOrEqual: 'Igual o mayor que',
+
+            // for text filter
+            contains: 'Contiene',
+            notContains: 'No contiene',
+            startsWith: 'Comienza con',
+            endsWith: 'Termina con',
+
+            // the header of the default group column
+            group: 'Grupo',
+
+            // tool panel
+            filteredRowCount: 'Filtrado',
+            rowCount: 'Total de filas',
+            selectedRowCount: 'Seleccionado',
+            columns: 'Columnas',
+            rowGroupColumns: 'laPivot Cols',
+            rowGroupColumnsEmptyMessage: 'la drag cols to group',
+            valueColumns: 'laValue Cols',
+            pivotMode: 'laPivot-Mode',
+            groups: 'laGroups',
+            values: 'laValues',
+            pivots: 'laPivots',
+            valueColumnsEmptyMessage: 'la drag cols to aggregate',
+            pivotColumnsEmptyMessage: 'la drag here to pivot',
+            toolPanelButton: 'Panel de Herramientas',
+
+            // other
+            noRowsToShow: 'No hay filas para mostrar',
+
+            // enterprise menu
+            pinColumn: 'laPin Column',
+            valueAggregation: 'laValue Agg',
+            autosizeThiscolumn: 'laAutosize Diz',
+            autosizeAllColumns: 'laAutsoie em All',
+            groupBy: 'laGroup by',
+            ungroupBy: 'laUnGroup by',
+            resetColumns: 'laReset Those Cols',
+            expandAll: 'laOpen-em-up',
+            collapseAll: 'laClose-em-up',
+            toolPanel: 'Panel de Herramientas',
+            export: 'Exportar',
+            csvExport: 'Exportar a CSV',
+            excelExport: 'Exportar a Excel',
+
+            // enterprise menu pinning
+            pinLeft: 'laPin <<',
+            pinRight: 'laPin >>',
+            noPin: 'laDontPin <>',
+
+            // enterprise menu aggregation and status panel
+            sum: 'laSum',
+            min: 'laMin',
+            max: 'laMax',
+            //first: 'laFirst',
+            //last: 'laLast',
+            none: 'laNone',
+            count: 'laCount',
+            average: 'laAverage',
+
+            // standard menu
+            copy: 'Copiar',
+            copyWithHeaders: 'Copiar con Encabezado',
+            ctrlC: 'ctrl + C',
+            paste: 'Pegar',
+            ctrlV: 'ctrl + V'
+        };
+	
+	var defaultColDef = {
+            suppressMenu: true,
+            suppressMovable: false,
+            enableRowGroup: false,
+            enablePivot: false,
+            enableValue: false,
+            resizable: true,
+            sortable: true,
+            filter: true
+        };
+    
+    $scope.gridOptions = {
+            suppressRowClickSelection: true,
+            suppressCsvExport: true,
+            suppressExcelExport: true,
+//            domLayout: 'autoHeight',
+//    		cellRenderer: showMultiline,
+            localeText: gridLocaleText,
+    		angularCompileRows: true,
+            defaultColDef: defaultColDef,
+            
+            getRowHeight: function(params) {
+                return 20 * (Math.floor(params.data.causante.nombreCausante.length / 10) + 1);
+            },
+            columnDefs: [
+//                {
+//                    headerName: 'Ver',
+//                    headerTooltip: 'Ver',
+//                    width: 58,
+//                    cellRenderer: CertificadoCellRenderer,
+//                    sortable: false,
+//                },
+            	{
+                    headerName: 'Folio',
+                    headerTooltip: 'Folio',
+                    field: 'folio',
+                    cellRenderer: CertificadoCellRenderer,
+                    width: 90
+                },
+                {
+                    headerName: 'Proceso',
+                    headerTooltip: 'Proceso',
+                    field: 'fechaProceso',
+                    sort: 'desc',
+                    cellStyle: { "white-space": "normal", "line-height": "normal", "font-size": "10px" },
+//                    ,
+//                    cellRenderer: function(data){
+//
+//                        var date = moment(data.value, 'YYYY-MM-DD HH:mm:ss.SSS');
+//
+//                        return date.format('DD/MM/YYYY HH:mm:ss');
+//
+//                    }
+                    width: 104
+                },
+            	{
+                    headerName: 'Causante',
+                    headerTooltip: 'Causante',
+                    field: 'causante.nombreCausante',
+//                    checkboxSelection: false,
+//                    cellRenderer: function(params){
+//                        return params.value + ' <md-tooltip md-direction="right">'+params.value+'</md-tooltip>';
+//                    },
+                    cellStyle: { "white-space": "normal", "line-height": "normal", "font-size": "10px" },
+                    width: 92
+                },
+                {
+                    headerName: 'Defunción',
+                    headerTooltip: 'Defunción',
+                    field: 'causante.fechaDefuncion',
+                    cellStyle: { "white-space": "normal", "line-height": "normal", "font-size": "10px" },
+                    width: 97
+                },
+                {
+                    headerName: 'Título',
+                    headerTooltip: 'Título',
+                    field: 'titulo',
+                    sortable: false,
+                    cellStyle: { "white-space": "normal", "line-height": "normal", "font-size": "10px" },
+                    width: 93,
+
+                }
+            ],
+            components: {
+                'certificadoCellRenderer': CertificadoCellRenderer
+
+            },
+//            onRowDataChanged: function() {
+//                $scope.gridOptionsCertificados.api.sizeColumnsToFit();
+//            },
+//            onSelectionChanged: function(param){
+//
+//                $scope.resetGrid('herederos');
+//                $scope.resetGrid('bienesRaices');
+//
+//                var selected = ($scope.gridOptionsCertificados.api.getSelectedNodes());
+//
+//                if(selected.length===1){
+//                    $scope.isCertificadoSelected = true;
+//                    $scope.gridOptionsBienesRaices.api.setRowData(null);
+//                    $scope.gridOptionsHerederos.api.setRowData(null);
+//
+//                    $scope.gridOptionsBienesRaices.api.setRowData(selected[0].data.bienesRaices);
+//                    $scope.gridOptionsHerederos.api.setRowData(selected[0].data.herederos);
+//
+//
+//                }else{
+//                    $scope.isCertificadoSelected = false;
+//                }
+//
+//            },
+            statusBar: {
+                statusPanels: [
+                    { statusPanel: 'agTotalRowCountComponent'}
+                ]
+            }
+        };
+	
+    
+    
 	//models
 	var tab = {
 			parentActive : 1
@@ -582,6 +830,9 @@ app
 									} else if (data.status) {
 										$scope.data.statusPosesionEfectiva = data.status;
 										$scope.data.res.caratulaDTO.posesionEfectivaDTOs = data.res.posesionEfectivaDTOs;
+										
+										$scope.gridOptions.api.setRowData(data.res.posesionEfectivaDTOs);
+
 
 									} else {
 										$scope
@@ -1010,12 +1261,12 @@ app
 
 	};
 
-	$scope.verPosesionEfectiva = function(posEfectiva) {
+	$scope.verPosesionEfectiva = function(folio, fechaProceso) {
 		var documento ={
-				"nombreArchivo": "V_CERT_"+posEfectiva.folio+".pdf",
+				"nombreArchivo": "V_CERT_"+folio+".pdf",
 				"idTipoDocumento": 14, //Posesion Efectiva
 				"idReg": 1, //Propiedad
-				"fechaDocumento": posEfectiva.fechaProceso
+				"fechaDocumento": fechaProceso
 		};		
 
 		//existe documento
