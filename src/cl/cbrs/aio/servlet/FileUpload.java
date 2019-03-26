@@ -48,9 +48,7 @@ public class FileUpload extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(FileUpload.class);
 	
 	private static String ARCHIVO_PARAMETROS = "aio.parametros";
-	private String UPLOAD_DIRECTORY =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_VERSIONAR_ESCRITURA", "valor");
-	private String UPLOAD_DIRECTORY_OCR =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_OCR_ESCRITURA", "valor");
-
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
@@ -76,17 +74,16 @@ public class FileUpload extends HttpServlet {
 						ByteArrayOutputStream bufferUnlocked = new ByteArrayOutputStream();
 						liberate(pdfReader, bufferUnlocked);
 						
-						
+						String UPLOAD_DIRECTORY_OCR =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_OCR_ESCRITURA", "valor");
 						File folderOcr = new File(UPLOAD_DIRECTORY_OCR+File.separator +"OCR_"+caratula);
 						
 						if (!folderOcr.exists()) {
 				  			folderOcr.mkdir();
 				  		}
 
+						String UPLOAD_DIRECTORY =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_VERSIONAR_ESCRITURA", "valor");
 						File fileVersiona = new File(UPLOAD_DIRECTORY+File.separator +"C_"+caratula+".pdf");
 						File fileOcr = new File(folderOcr.toString() + File.separator +"OCR_"+caratula+".pdf");
-						
-						logger.info("Copiando escritura para OCR en: " + fileOcr);
 						
 						FileOutputStream fop = new FileOutputStream(fileVersiona);
 						FileOutputStream fopOcr = new FileOutputStream(fileOcr);

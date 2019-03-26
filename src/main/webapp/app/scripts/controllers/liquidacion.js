@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScope, $modal, $modalStack, $routeParams, tareasService, estadoService, caratulaService, $filter) {
+app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScope, $modal, $modalStack, $routeParams, tareasService, estadoService, $filter) {
 
 	$scope.nuevoDocumento = {
 			nombre: null,
@@ -47,6 +47,10 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 					}
 					
 				}
+				
+				$scope.bitacora.resultado = data.listabitacoras;
+				$scope.ultimaLiquidacion = $filter('filter')(data.listabitacoras, {observacion: 'Liquidacion de caratula aprobada'})[0];
+				$scope.ultimaAnulacion = $filter('filter')(data.listabitacoras, {observacion: 'Se elimino caratula de lista pendientes a Entrega Documentos'})[0];
 			}else{
 				$scope.raiseErr(data.msg);
 			}
@@ -55,30 +59,9 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 			$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
 		});			
 
-		$scope.obtenerBitacoraCaratula();			
 		$scope.buscarEscritura();
 
 	}; 
-	
-	$scope.obtenerBitacoraCaratula = function () {
-		var promise = caratulaService.obtenerBitacoraCaratula($scope.caratula);
-		promise.then(function(data) {
-
-			if(data.status===null){
-
-			}else if(data.status){
-				
-				$scope.bitacora.resultado = data.listabitacoras;
-				$scope.ultimaLiquidacion = $filter('filter')(data.listabitacoras, {observacion: 'Liquidacion de caratula aprobada'})[0];
-				$scope.ultimaAnulacion = $filter('filter')(data.listabitacoras, {observacion: 'Se elimino caratula de lista pendientes a Entrega Documentos'})[0];
-
-			}else{
-				$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
-			}
-		}, function(reason) {
-			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
-		});
-	};
 	
 	$scope.getGlosa = function (papel) {
 		var promise = tareasService.getGlosaDocumento(papel.codArchivoAlpha);

@@ -1,11 +1,14 @@
 'use strict';
 
-app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService, $log, reingresoService,caratulaService, $modal, $modalStack, $routeParams, $sce, $rootScope) {
+app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService, $log, reingresoService, $modal, $modalStack, $routeParams, $sce, $rootScope) {
 
 
 	$scope.submitted = false;
 	$scope.req = {
 		numeroCaratula: null
+	};
+	$scope.caratula = {
+		resultados: []
 	};
 	//$scope.notario = undefined;
 	//$scope.codigoExtracto = undefined;
@@ -31,7 +34,8 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 				if(data.inscripcionDigitalDTO != null)
 					$scope.data.caratulaDTO.inscripcionDigitalDTO = data.inscripcionDigitalDTO;
 
-				var promise = reingresoService.getListas($scope.data.caratulaDTO);
+				var idRegistro = $scope.data.caratulaDTO.registroDTO==undefined?0:$scope.data.caratulaDTO.registroDTO.id;
+				var promise = reingresoService.getListas(idRegistro);
 				promise.then(function(data) {
 					if(data.estado===null){
 					}else if(data.estado){
@@ -51,8 +55,12 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 				}, function(reason) {
 					$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
 				});
-				
-				$scope.obtenerBitacoraCaratula();
+								
+				if(data.listabitacoras.length!==0){
+					$scope.caratula.resultados = data.listabitacoras;
+					$scope.openComentariosModal(); 
+
+				}
 
 //				$scope.doFocus('formulario');  
 
@@ -305,35 +313,6 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 			return data;
 		}
 		}
-		});
-	};
-
-	$scope.caratula = {
-		resultados: []
-	};
-	
-	$scope.obtenerBitacoraCaratula = function () {
-		var promise = caratulaService.obtenerBitacoraCaratula($scope.req.numeroCaratula);
-		promise.then(function(data) {
-
-			if(data.status===null){
-
-			}else if(data.status){
-				
-				$scope.caratula.resultados = data.listabitacoras;
-				$scope.status = data.status;
-
-				if($scope.caratula.resultados.length!==0){
-
-					$scope.openComentariosModal(); 
-
-				}	
-
-			}else{
-				$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
-			}
-		}, function(reason) {
-			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
 		});
 	};
 	
