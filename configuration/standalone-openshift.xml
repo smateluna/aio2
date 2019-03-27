@@ -321,12 +321,10 @@
                         cache="http-session-cache" socket-timeout="60000"
                         preload="true" passivation="false" purge="false" shared="true"/>-->
                 </replicated-cache>
-                <distributed-cache name="dist" mode="ASYNC" l1-lifespan="0" owners="2">
-                    <locking isolation="REPEATABLE_READ"/>
-                    <transaction mode="BATCH"/>
-                    <file-store/>
-                </distributed-cache>
-            </cache-container>
+		<distributed-cache name="dist" mode="SYNC" l1-lifespan="0" owners="2">
+			<file-store/>
+		</distributed-cache>
+	    </cache-container>
             <cache-container name="ejb" aliases="sfsb" default-cache="repl" module="org.wildfly.clustering.ejb.infinispan">
                 <transport lock-timeout="60000"/>
                 <replicated-cache name="repl" mode="ASYNC">
