@@ -116,8 +116,8 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 			Long caratula = new Long(caratulaReq);			
 			CaratulaVO caratulaVO = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratula);
 			
-			CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaVO);
-			if(caratulaDTO!=null){
+			if(caratulaVO!=null){
+				CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaVO);
 				json.put("caratulaDTO", caratulaDTO);
 				request.getSession().setAttribute("numeroCaratula", caratula);
 				
