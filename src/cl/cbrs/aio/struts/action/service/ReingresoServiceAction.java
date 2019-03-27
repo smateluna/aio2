@@ -62,6 +62,7 @@ import cl.cbrs.aio.util.ComercioUtil;
 import cl.cbrs.aio.util.ParametrosUtil;
 import cl.cbrs.aio.util.RegistrosUtil;
 import cl.cbrs.aio.util.UsuarioUtil;
+import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaReceptorEmailVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
@@ -109,11 +110,14 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		json.put("estado", true);	
 
 		CaratulasUtil caratulasUtil = new CaratulasUtil();
+		WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
 
 		try {		
-			Long caratula = new Long(caratulaReq);
-			CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratula);
-			if(caratulaDTO!=null){
+			Long caratula = new Long(caratulaReq);			
+			CaratulaVO caratulaVO = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratula);
+			
+			if(caratulaVO!=null){
+				CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaVO);
 				json.put("caratulaDTO", caratulaDTO);
 				request.getSession().setAttribute("numeroCaratula", caratula);
 				
@@ -154,6 +158,21 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 						json.put("reingresosGP", reingresosGP);						
 					}					
 				}
+				 
+				BitacoraCaratulaVO[] bitacoraCaratulaVOs = caratulaVO.getBitacoraCaratulaVO();
+				JSONArray bitacoras = new JSONArray();
+				if(null!=bitacoraCaratulaVOs){
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					for(BitacoraCaratulaVO bitacora:bitacoraCaratulaVOs){
+						JSONObject fila = new JSONObject();
+						fila.put("id", bitacora.getIdBitacora());
+						fila.put("observacion", bitacora.getObservacion());
+						fila.put("fecha", sdf.format(bitacora.getFecha()));
+						fila.put("funcionario", bitacora.getNombreFuncionario()+ " " +  bitacora.getApellidoPaternoFuncionario());
+						bitacoras.add(fila);
+					}
+				}
+				json.put("listabitacoras", bitacoras);
 				
 			} else{
 				json.put("msg", "No se encontró la Carátula " + caratulaReq);
@@ -779,7 +798,8 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 	public void getListas(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 		
-		String caratulaDTOReq = request.getParameter("caratulaDTO");
+//		String caratulaDTOReq = request.getParameter("caratulaDTO");
+		String idRegistroReq = request.getParameter("idRegistro");
 		
 		JSONObject json = new JSONObject();
 		json.put("estado", true);	
@@ -788,9 +808,14 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		ComercioUtil comercioUtil = new ComercioUtil();
 
 		try {		
-			JSONParser jsonParser = new JSONParser();
-			caratulaDTOReq = cambiaEncoding(caratulaDTOReq);
-			JSONObject caratulaDTOJSON = (JSONObject)jsonParser.parse(caratulaDTOReq);
+//			JSONParser jsonParser = new JSONParser();
+//			caratulaDTOReq = cambiaEncoding(caratulaDTOReq);
+//			JSONObject caratulaDTOJSON = (JSONObject)jsonParser.parse(caratulaDTOReq);
+			
+			Long idRegistro=0L;
+			try{
+				idRegistro = Long.parseLong(idRegistroReq);
+			} catch(Exception e){};
 			
 			//Lista Workflows
 			if(CACHE_LISTA_WORKFLOWS==null){
@@ -835,46 +860,38 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
             json.put("listaWorkflowsJSONIns", listaWorkflowsJSONIns);
             json.put("listaWorkflowsJSONSolCv", listaWorkflowsJSONSolCv);
             json.put("listaWorkflowsJSONSolSv", listaWorkflowsJSONSolSv);
-            json.put("listaWorkflowsJSONSolVig", listaWorkflowsJSONSolVig);
+            json.put("listaWorkflowsJSONSolVig", listaWorkflowsJSONSolVig);						
 			
-			ParametrosUtil parametrosUtil = new ParametrosUtil();
+//			if( caratulaDTOJSON.get("inscripcionDigitalDTO")!=null && caratulaDTOJSON.get("inscripcionDigitalDTO") instanceof JSONObject ){
+//				JSONObject inscripcionDigitalJSON = (JSONObject)caratulaDTOJSON.get("inscripcionDigitalDTO");
+//				if( inscripcionDigitalJSON.get("registroDTO")!=null && inscripcionDigitalJSON.get("registroDTO") instanceof JSONObject ){
+//					JSONObject registroDTOJSON = (JSONObject)inscripcionDigitalJSON.get("registroDTO");
+//					Long idRegistro = (Long)registroDTOJSON.get("id");
+//													
+//					json.put("listaTiposFormulario", getListaTiposFormulario(idRegistro));
+//				}else{
+//					JSONArray listaTiposFormulario = new JSONArray();
+//					JSONObject tipoFormularioJSON = new JSONObject();
+//					JSONObject tipoFormularioDTOJSON = (JSONObject)caratulaDTOJSON.get("tipoFormularioDTO");
+//					Long tipoFormulario = (Long)tipoFormularioDTOJSON.get("id");
+//					tipoFormularioJSON.put("id", tipoFormulario);
+//					tipoFormularioJSON.put("descripcion", (String)tipoFormularioDTOJSON.get("descripcion"));
+//					listaTiposFormulario.add(tipoFormularioJSON);
+//					json.put("listaTiposFormulario", listaTiposFormulario);	
+//				}				
+//			} else{
+//				JSONArray listaTiposFormulario = new JSONArray();
+//				JSONObject tipoFormularioJSON = new JSONObject();
+//				JSONObject tipoFormularioDTOJSON = (JSONObject)caratulaDTOJSON.get("tipoFormularioDTO");
+//				Long tipoFormulario = (Long)tipoFormularioDTOJSON.get("id");
+//				tipoFormularioJSON.put("id", tipoFormulario);
+//				tipoFormularioJSON.put("descripcion", (String)tipoFormularioDTOJSON.get("descripcion"));
+//				listaTiposFormulario.add(tipoFormularioJSON);
+//				json.put("listaTiposFormulario", listaTiposFormulario);					
+//			}
 			
-			if( caratulaDTOJSON.get("inscripcionDigitalDTO")!=null && caratulaDTOJSON.get("inscripcionDigitalDTO") instanceof JSONObject ){
-				JSONObject inscripcionDigitalJSON = (JSONObject)caratulaDTOJSON.get("inscripcionDigitalDTO");
-				if( inscripcionDigitalJSON.get("registroDTO")!=null && inscripcionDigitalJSON.get("registroDTO") instanceof JSONObject ){
-					JSONObject registroDTOJSON = (JSONObject)inscripcionDigitalJSON.get("registroDTO");
-					Long idRegistro = (Long)registroDTOJSON.get("id");
-					
-					//Tipos Formularios					
-					if(CACHE_LISTA_FORMULARIOS==null)
-						CACHE_LISTA_FORMULARIOS = parametrosUtil.getFormulariosDTO();			
-					
-					json.put("listaTiposFormulario", getListaTiposFormulario(idRegistro));
-				}else{
-					JSONArray listaTiposFormulario = new JSONArray();
-					JSONObject tipoFormularioJSON = new JSONObject();
-					JSONObject tipoFormularioDTOJSON = (JSONObject)caratulaDTOJSON.get("tipoFormularioDTO");
-					Long tipoFormulario = (Long)tipoFormularioDTOJSON.get("id");
-					tipoFormularioJSON.put("id", tipoFormulario);
-					tipoFormularioJSON.put("descripcion", (String)tipoFormularioDTOJSON.get("descripcion"));
-					listaTiposFormulario.add(tipoFormularioJSON);
-					json.put("listaTiposFormulario", listaTiposFormulario);	
-				}
-				
-				//Lista Registros				
-					json.put("listaRegistros", registrosUtil.getRegistros());	
-			} else{
-				JSONArray listaTiposFormulario = new JSONArray();
-				JSONObject tipoFormularioJSON = new JSONObject();
-				JSONObject tipoFormularioDTOJSON = (JSONObject)caratulaDTOJSON.get("tipoFormularioDTO");
-				Long tipoFormulario = (Long)tipoFormularioDTOJSON.get("id");
-				tipoFormularioJSON.put("id", tipoFormulario);
-				tipoFormularioJSON.put("descripcion", (String)tipoFormularioDTOJSON.get("descripcion"));
-				listaTiposFormulario.add(tipoFormularioJSON);
-				json.put("listaTiposFormulario", listaTiposFormulario);				
-				json.put("listaRegistros", registrosUtil.getRegistros());	
-			}
-
+			json.put("listaRegistros", registrosUtil.getRegistros());
+			json.put("listaTiposFormulario", getListaTiposFormulario(idRegistro));
 			
 		} catch (Exception e) {
 			logger.error("Error: " + e.getMessage(), e);
@@ -890,11 +907,16 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 	}
 
 
-	private JSONArray getListaTiposFormulario(Long idRegistro) {
+	private JSONArray getListaTiposFormulario(Long idRegistro) throws Exception {
 		JSONArray listaTiposFormulario = new JSONArray();
 		
 		if(idRegistro==0L || idRegistro==null)
 			idRegistro=1L;
+		
+		ParametrosUtil parametrosUtil = new ParametrosUtil();
+		//Tipos Formularios					
+		if(CACHE_LISTA_FORMULARIOS==null)
+			CACHE_LISTA_FORMULARIOS = parametrosUtil.getFormulariosDTO();
 		
 		String tipoFormulariosStr = TablaValores.getValor(ARCHIVO_PROPERTIES, "ID_REGISTRO_"+idRegistro,  "tipo_formulario" );
 		String[] tipoFormularios = tipoFormulariosStr.split(",");

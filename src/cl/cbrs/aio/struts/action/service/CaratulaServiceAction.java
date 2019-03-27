@@ -1400,7 +1400,6 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		CaratulaVO caratulaVO = null;
 
 		try{
-			String caratulast = request.getParameter("caratula");
 			Long caratula = Long.parseLong(request.getParameter("caratula"));
 
 			WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();

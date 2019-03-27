@@ -176,36 +176,38 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				}
 			}
 			
-			//Caratuas Reingresos GP pendientes - Solo si el usuario tiene recurso REINGRESO_GP
+			//Caratulas Reingresos GP pendientes - Solo si el usuario tiene recurso REINGRESO_GP
 	    	ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
-	    	UsuarioUtil util = new UsuarioUtil();
-	    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "tareas");
-			if(subPermisos.contains("REINGRESO_GP")){
-				FuncionarioSeccionUtil funcionarioSeccionUtil = new FuncionarioSeccionUtil();
-				FuncionariosSeccionVO funcionarioSeccion = funcionarioSeccionUtil.obtenerFuncionarioVO(usuario);
-				
-				if(funcionarioSeccion!=null && funcionarioSeccion.getTabFuncionariosVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()!=null){
-					Client client = Client.create();
-					Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
-					String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
-					String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
-					WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/obtenerCaratulasReingresosGPPendienteSeccion/"+funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()));
-					ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
-					com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
-		
-					if(statusRespuesta.getStatusCode() == 200){
-						JSONArray jsonArray = (JSONArray) getResponse(clientResponse);
-						if(caratulaVOs==null)
-							caratulaVOs = new ArrayList<CaratulaVO>();
-						for(int i=0; i<jsonArray.size(); i++){					
-							CaratulaVO caratulaVO = gson.fromJson(jsonArray.get(i).toString(), CaratulaVO.class);
-							caratulaVOs.add(caratulaVO);
-						}				
-					} else{
-						//TODO warning error al cargar tareas de reingresos
+	    	if(listaPermisos!=null){
+		    	UsuarioUtil util = new UsuarioUtil();
+		    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "tareas");
+				if(subPermisos.contains("REINGRESO_GP")){
+					FuncionarioSeccionUtil funcionarioSeccionUtil = new FuncionarioSeccionUtil();
+					FuncionariosSeccionVO funcionarioSeccion = funcionarioSeccionUtil.obtenerFuncionarioVO(usuario);
+					
+					if(funcionarioSeccion!=null && funcionarioSeccion.getTabFuncionariosVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO()!=null && funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()!=null){
+						Client client = Client.create();
+						Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
+						String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
+						String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
+						WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/CaratulaRest/caratula/obtenerCaratulasReingresosGPPendienteSeccion/"+funcionarioSeccion.getTabFuncionariosVO().getTabSeccionesVO().getCodSeccion()));
+						ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
+						com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
+			
+						if(statusRespuesta.getStatusCode() == 200){
+							JSONArray jsonArray = (JSONArray) getResponse(clientResponse);
+							if(caratulaVOs==null)
+								caratulaVOs = new ArrayList<CaratulaVO>();
+							for(int i=0; i<jsonArray.size(); i++){					
+								CaratulaVO caratulaVO = gson.fromJson(jsonArray.get(i).toString(), CaratulaVO.class);
+								caratulaVOs.add(caratulaVO);
+							}				
+						} else{
+							//TODO warning error al cargar tareas de reingresos
+						}
 					}
 				}
-			}
+	    	}
 			
 			if(caratulaVOs!=null && caratulaVOs.size()>0){
 				for(CaratulaVO caratulaVO: caratulaVOs){
@@ -405,7 +407,22 @@ public class TareasServiceAction extends CbrsAbstractAction {
 
 				if(statusRespuesta.getStatusCode() == 200){
 					documentosLiquidacion = (JSONArray) getResponse(clientResponse);
-				}				
+				}	
+				
+				BitacoraCaratulaVO[] bitacoraCaratulaVOs = caratulaVO.getBitacoraCaratulaVO();
+				JSONArray bitacoras = new JSONArray();
+				if(null!=bitacoraCaratulaVOs){
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					for(BitacoraCaratulaVO bitacora:bitacoraCaratulaVOs){
+						JSONObject fila = new JSONObject();
+						fila.put("id", bitacora.getIdBitacora());
+						fila.put("observacion", bitacora.getObservacion());
+						fila.put("fecha", sdf.format(bitacora.getFecha()));
+						fila.put("funcionario", bitacora.getNombreFuncionario()+ " " +  bitacora.getApellidoPaternoFuncionario());
+						bitacoras.add(fila);
+					}
+				}
+				respuesta.put("listabitacoras", bitacoras);
 
 				status = true;
 			} else{

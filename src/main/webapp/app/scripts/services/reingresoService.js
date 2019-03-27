@@ -60,8 +60,8 @@ app.factory('reingresoService', function ($q, $http) {
 
         return deferred.promise;
       },
-      getListas: function (caratulaDTO) {
-        var paramsObj = {metodo: 'getListas', caratulaDTO: caratulaDTO};
+      getListas: function (idRegistro) {
+        var paramsObj = {metodo: 'getListas', idRegistro: idRegistro};
 
         var deferred = $q.defer();
 

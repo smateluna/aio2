@@ -64,11 +64,8 @@ import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
  */
 public class FusionUpload extends HttpServlet {
 	Logger logger = Logger.getLogger(FusionUpload.class);
-	private  String ARCHIVO_PARAMETROS = "aio.parametros";
-	private String UPLOAD_DIRECTORY =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_VERSIONAR_ESCRITURA", "valor");
-	private String UPLOAD_DIRECTORY_OCR =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_OCR_ESCRITURA", "valor");
-	private  String ARCHIVO_PARAMETROS_CARATULA = "ws_caratula.parametros";	
-	private String SECCIONES_RECHAZOS =TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "TAB_SECCIONES.RECHAZADOS", "valor");
+	private  String ARCHIVO_PARAMETROS = "aio.parametros";		
+	private  String ARCHIVO_PARAMETROS_CARATULA = "ws_caratula.parametros";		
 
 	private  final Long ESCRITURA = 1L;
 
@@ -77,6 +74,7 @@ public class FusionUpload extends HttpServlet {
 	throws ServletException, IOException {
 
 		JSONObject respuesta = new JSONObject();
+		String SECCIONES_RECHAZOS =TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "TAB_SECCIONES.RECHAZADOS", "valor");
 
 		//process only if its multipart content
 		if(ServletFileUpload.isMultipartContent(request)){
@@ -122,12 +120,14 @@ public class FusionUpload extends HttpServlet {
 							lista.add(new ByteArrayInputStream(os.toByteArray()));
 							lista2.add(new ByteArrayInputStream(os.toByteArray()));
 							
+							String UPLOAD_DIRECTORY_OCR =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_OCR_ESCRITURA", "valor");
 							File folderOcr = new File(UPLOAD_DIRECTORY_OCR+File.separator +"OCR_"+caratula);
 							
 							if (!folderOcr.exists()) {
 					  			folderOcr.mkdir();
 					  		}
 
+							String UPLOAD_DIRECTORY =TablaValores.getValor(ARCHIVO_PARAMETROS, "PATH_VERSIONAR_ESCRITURA", "valor");
 							File fileVersiona = new File(UPLOAD_DIRECTORY+File.separator +"C_"+caratula+".pdf");
 							File fileOcr = new File(folderOcr.toString() + File.separator +"OCR_"+caratula+".pdf");
 							

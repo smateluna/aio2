@@ -110,7 +110,7 @@
                 <level name="WARN"/>
             </logger>
               <logger category="cl.cbrs">
-                <level name="ERROR"/>
+                <level name="INFO"/>
             </logger>
             <root-logger>
                 <level name="INFO"/>
