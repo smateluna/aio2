@@ -311,8 +311,10 @@
             <cache-container name="web" default-cache="repl" module="org.wildfly.clustering.web.infinispan">
                 <transport lock-timeout="60000"/>
                 <replicated-cache name="repl" mode="ASYNC">
+		 <!-- comentado por performance del app, revisar funcionamiento con datagrid
                     <locking isolation="REPEATABLE_READ"/>
                     <transaction mode="BATCH"/>
+		-->
                     <remote-store remote-servers="remote-jdg-server"
                         cache="${env.CACHE_NAME}" socket-timeout="60000"
                         preload="true" passivation="false" purge="false" shared="true"/>
