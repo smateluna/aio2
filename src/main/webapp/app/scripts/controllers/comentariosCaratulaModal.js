@@ -11,25 +11,29 @@ app.controller('ComentariosCaratulaModalCtrl', function ($scope, $modalInstance,
 	$scope.caratula = {
 		resultados: []
 	};
+	
+	if(data.resultados != undefined)
+		$scope.caratula.resultados=data.resultados;
+	else{
+		var promise = caratulaService.obtenerBitacoraCaratula($scope.dataImagen.numeroCaratula);
+		promise.then(function(data) {
 
-	var promise = caratulaService.obtenerBitacoraCaratula($scope.dataImagen.numeroCaratula);
-	promise.then(function(data) {
+			if(data.status===null){
 
-		if(data.status===null){
+			}else if(data.status){
 
-		}else if(data.status){
+				$scope.caratula.resultados = data.listabitacoras;
+				$scope.status = data.status;
 
-			$scope.caratula.resultados = data.listabitacoras;
-			$scope.status = data.status;
+				$scope.doFocus('buttonClose');
 
-			$scope.doFocus('buttonClose');
-
-		}else{
-			$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
-		}
-	}, function(reason) {
-		$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
-	});
+			}else{
+				$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
+			}
+		}, function(reason) {
+			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+		});
+	}
 
 	$scope.doFocus = function(name) {
 		$scope.$broadcast(name + 'IsFocused');

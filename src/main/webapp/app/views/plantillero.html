@@ -72,7 +72,7 @@
 										placeholder="{{field.name}}" maxlength={{field.max}} required
 										enter-next="" numbers-only="numbers-only"
 										ng-change="reemplazaData()" />
-								</div>
+								</div>							
 								<!--TEXT FIELDS-->
 								<div class="form-group" ng-if="field.type=='text'">
 									<label class="control-label">{{field.label}} </label> <input
@@ -157,7 +157,7 @@
 									placeholder="{{field.name}}" maxlength={{field.max}} required
 									enter-next="" numbers-only="numbers-only"
 									ng-change="reemplazaData()" />
-							</div>
+							</div>						
 							<!--TEXT FIELDS-->
 							<div class="form-group" ng-if="field.type=='text'">
 								<label class="control-label">{{field.label}} </label> <input
@@ -348,8 +348,7 @@
 								<!-- <textarea class="form-control hW-text" ng-model="plantillero.cuerpocertificado" rows="2" cols="8"
 									style="height: 300px;"></textarea> -->
 
-								<div style="border: solid 1px #ccc; padding: 10px;">{{plantillero.cuerpocertificado}}</div>
-
+								<div ng-bind-html = "plantillero.cuerpocertificado" style="border: solid 1px #ccc; padding: 10px;"></div>
 							</div>
 						</div>
 					</div>

@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $timeout, $modalStack, firmaService,taOptions,certificacionService) {
+app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $timeout, $modalStack, $sce, firmaService,taOptions,certificacionService) {
 
 	$scope.fechahoy = new Date().toJSON().split('T')[0];
 
@@ -16,6 +16,10 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 //			{type: "checkbox", name: "check_id", label: "Checkbox" , options:[{id: 1, name: "name1"},{id: 2, name: "name2"},{id: 3, name: "name3"},{id: 4, name: "name4"}], required: true, data:""}
 //			{type: "date", name: "Fecha", label: "Fecha" , required: true, data:""}
 //			]
+	};
+	
+	$scope.field = {
+			model:"200"
 	};
 
 	$scope.plantillero = {
@@ -140,6 +144,10 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 				texto = texto.replace("_VALOR_", $scope.plantillero.valor);
 
 			angular.forEach($scope.entity.fields, function(value, key) {
+				if(value.model){
+					value.data = $scope.$eval(value.model)
+				}
+					
 				if(value.type!='button'){
 					if(value.data){
 						if(value.type=='select')
@@ -155,6 +163,7 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			});
 
 			$scope.plantillero.cuerpocertificado = texto;
+//			$scope.plantillero.cuerpocertificado=$sce.trustAsHtml(texto);
 		}
 	};
 
@@ -233,7 +242,11 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 				});
 
 				texto = $scope.plantillero.copiatemplate;
-				texto = texto.replace(value.textotemplate, value.textotemplate+" ,"+value.textotemplate);
+				if(!value.textotemplate.endsWith('<br />'))
+					texto = texto.replace(value.textotemplate, value.textotemplate+" ,"+value.textotemplate);
+				else
+					texto = texto.replace(value.textotemplate, value.textotemplate+value.textotemplate);
+
 				$scope.plantillero.copiatemplate = texto;
 				$scope.plantillero.cuerpocertificado = texto;
 
@@ -260,18 +273,23 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 				var elementos = jsonQuitar.length; 
 				
 				if(value.type == "button"){
-					
 					$scope.entity.fields.splice(key-elementos,elementos);
-//					console.log($scope.entity.fields);
 					sigueIteracion=false;
 					
 					var jsonanterior = $scope.entity.fields[key-elementos-1];
 					jsonanterior.saltolinea=false;
 					
 					texto = $scope.plantillero.copiatemplate;
-					texto = texto.replace(" ,"+value.textotemplate, "");
+					if(!value.textotemplate.endsWith('<br />'))
+						texto = texto.replace(" ,"+value.textotemplate, "");
+					else{
+						var lastIndex = texto.lastIndexOf('<br />'+value.textotemplate);
+						var beginString = texto.substring(0, lastIndex);
+					    var endString = texto.substring(lastIndex + (value.textotemplate).length);
+					    texto = beginString + endString;
+					}
+					
 					$scope.plantillero.copiatemplate = texto;
-					$scope.plantillero.cuerpocertificado = texto;
 				}
 								
 			}
