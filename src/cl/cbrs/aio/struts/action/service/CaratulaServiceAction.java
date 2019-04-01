@@ -531,10 +531,6 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		usuario = usuario.replaceAll("CBRS\\\\", "");
 
 		try{
-
-			foja = Integer.parseInt(request.getParameter("foja")==""?"0":request.getParameter("foja"));
-			numero = Integer.parseInt(request.getParameter("numero")==""?"0":request.getParameter("numero"));
-			ano = request.getParameter("ano");
 			registro = request.getParameter("registro");
 			String rut = request.getParameter("rut");
 			String nombre = cambiaEncoding(request.getParameter("nombre")); 

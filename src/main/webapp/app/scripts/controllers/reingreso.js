@@ -31,31 +31,12 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 				$scope.data = data;
 				$scope.dataOriginal = angular.copy($scope.data);
 
-				if(data.inscripcionDigitalDTO != null)
-					$scope.data.caratulaDTO.inscripcionDigitalDTO = data.inscripcionDigitalDTO;
-
-				var idRegistro = $scope.data.caratulaDTO.registroDTO==undefined?0:$scope.data.caratulaDTO.registroDTO.id;
-				var promise = reingresoService.getListas(idRegistro);
-				promise.then(function(data) {
-					if(data.estado===null){
-					}else if(data.estado){
-						$scope.listaRegistros = data.listaRegistros;
-						$scope.listaTiposFormulario = data.listaTiposFormulario;	
-						
-						$scope.listaWorkflowsJSONIns=data.listaWorkflowsJSONIns;
-						$scope.listaWorkflowsJSONSolVig=data.listaWorkflowsJSONSolVig;
-						$scope.listaWorkflowsJSONSolCv=data.listaWorkflowsJSONSolCv;
-						$scope.listaWorkflowsJSONSolSv=data.listaWorkflowsJSONSolSv;
-						
-						$scope.llenaComboWorkFlow();
-						
-					}else{
-						$scope.raiseErr(data.msg);
-					}
-				}, function(reason) {
-					$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
-				});
-								
+//				if(data.inscripcionDigitalDTO != null)
+//					$scope.data.caratulaDTO.inscripcionDigitalDTO = data.inscripcionDigitalDTO;
+				
+				if($scope.data.caratulaDTO.inscripcionDigitalDTO!=null && $scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO!=null)
+					$scope.cargaListas();
+				
 				if(data.listabitacoras.length!==0){
 					$scope.caratula.resultados = data.listabitacoras;
 					$scope.openComentariosModal(); 
@@ -73,12 +54,20 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 		});
 	};
 
-	$scope.recargaListas = function(){
-		var promise = reingresoService.getListas($scope.data.caratulaDTO);
+	$scope.cargaListas = function(){
+		var promise = reingresoService.getListas($scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id);
 		promise.then(function(data) {
 			if(data.estado===null){
 			}else if(data.estado){
+				$scope.listaRegistros = data.listaRegistros;
 				$scope.listaTiposFormulario = data.listaTiposFormulario;	
+				
+				$scope.listaWorkflowsJSONIns=data.listaWorkflowsJSONIns;
+				$scope.listaWorkflowsJSONSolVig=data.listaWorkflowsJSONSolVig;
+				$scope.listaWorkflowsJSONSolCv=data.listaWorkflowsJSONSolCv;
+				$scope.listaWorkflowsJSONSolSv=data.listaWorkflowsJSONSolSv;
+				
+				$scope.llenaComboWorkFlow();	
 			}else{
 				$scope.raiseErr(data.msg);
 			}
@@ -298,7 +287,8 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 
 	$scope.openComentariosModal = function () {
 		var data = {
-			numeroCaratula : $scope.req.numeroCaratula
+			numeroCaratula : $scope.req.numeroCaratula,
+			resultados : $scope.caratula.resultados
 		};
 
 		$modal.open({

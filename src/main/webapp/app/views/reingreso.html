@@ -14,7 +14,7 @@
    <div class="panel panel-default">
          <div class="panel-heading">
 				<h4 class="panel-title">Datos de Car&aacute;tula 
-			    <button type="button" class="btn btn-primary btn-sm pull-right mTmenos-6" ng-click="obtenerBitacoraCaratula()" ng-show="data.estado && listaTiposFormulario.length>0 && caratula.resultados.length!==0"  tooltip="Comentarios Caratula" tooltip-placement="top">
+			    <button type="button" class="btn btn-primary btn-sm pull-right mTmenos-6" ng-click="openComentariosModal()" ng-show="data.estado && listaTiposFormulario.length>0 && caratula.resultados.length!==0"  tooltip="Comentarios Caratula" tooltip-placement="top">
            			<i class="fa fa-comment" alt=""></i>
       			</button>
       			<button type="button" class="btn btn-primary btn-sm pull-right mTmenos-6" ng-click="openDocumentosEntregaModal()"  ng-show="data.estado" tooltip="Documentos Entrega" tooltip-placement="top">
@@ -119,7 +119,7 @@
 	               <div class="col-md-9 col-xs-offset-2">
 	                <div class="loader loader-xs" ng-show="data.estado && listaRegistros==null"></div><span> Registro</span> 
 	                <!-- <select  ng-readonly="data.caratulaDTO.tipoFormularioDTO.id==1 && data.caratulaDTO.inscripcionDigitalDTO==''" class="form-control" ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required="required"></select>  -->
-	                <select  class="form-control" ng-change="recargaListas()" enter-next ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required></select>	                	               
+	                <select  class="form-control" ng-change="cargaListas()" enter-next ng-model="data.caratulaDTO.inscripcionDigitalDTO.registroDTO" ng-options="item.descripcion for item in listaRegistros  track by item.id" required></select>	                	               
 	               </div>
 	            </div>
 	           <!--fin row-->
