@@ -315,6 +315,10 @@
                     <locking isolation="REPEATABLE_READ"/>
                     <transaction mode="BATCH"/>
 		-->
+		   <!-- mejoras sincronizacion datagrid -->
+		    <transaction mode="NON_XA" locking="OPTIMISTIC"/>
+                    <locking isolation="READ_COMMITTED"/>
+			
                     <remote-store remote-servers="remote-jdg-server"
                         cache="${env.CACHE_NAME}" socket-timeout="60000"
                         preload="true" passivation="false" purge="false" shared="true"/>
