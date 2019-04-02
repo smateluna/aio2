@@ -133,7 +133,7 @@ public class BorradoresServiceAction extends CbrsAbstractAction {
 		List<ProrealVO> listaBorradores = null;
 		int totalTitulosAnteriores = 0;
 		try{
-//			WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();
+			WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();
 			
 			Integer foja = Integer.parseInt(request.getParameter("foja"));
 			Integer numero = Integer.parseInt(request.getParameter("numero"));
@@ -154,11 +154,16 @@ public class BorradoresServiceAction extends CbrsAbstractAction {
 				ConsultaDocumentoDTO consultaDocumentoDTO = digitalUtil.getConsultaDocumentoDTO(foja.longValue(), numero.longValue(), ano.longValue(), bis, 1);
 				fila.put("consultaDocumentoDTO", consultaDocumentoDTO);		
 				
-//				InscripcionDigitalVO  inscripcionDigitalVO = wsInscripcionDigitalDelegate.obtenerInscripcionDigital(foja.longValue(), numero.toString(), ano.longValue(), bis);
+				InscripcionDigitalVO  inscripcionDigitalVO = wsInscripcionDigitalDelegate.obtenerInscripcionDigital(foja.longValue(), numero.toString(), ano.longValue(), bis);
 //				if(inscripcionDigitalVO!=null && inscripcionDigitalVO.getEstadoInscripcionVO().getIdEstadoInscripcion()==1)
 //					fila.put("estaDigitalizada", true);
 //				else
 //					fila.put("estaDigitalizada", false);
+				if(inscripcionDigitalVO!=null)
+					fila.put("idInscripcion", inscripcionDigitalVO.getIdInscripcion());
+				else
+					fila.put("idInscripcion", "");
+
 				
 //				Boolean estadoTieneRechazo = wsInscripcionDigitalDelegate.solicitudTieneRechazo(foja.longValue(), numero.toString(), ano.longValue(), bis?1:0);				
 //				JSONObject estado = new JSONObject();
