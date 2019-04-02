@@ -2089,7 +2089,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 
 		try {		
 
-			if(request.getSession().getAttribute("rut") != null){
+			if(request.getSession().getAttribute("rut")!=null && request.getSession().getAttribute("requirente")!=null){
 				json.put("rut", request.getSession().getAttribute("rut").toString());
 				json.put("requirente", request.getSession().getAttribute("requirente").toString());
 				json.put("status", true);
