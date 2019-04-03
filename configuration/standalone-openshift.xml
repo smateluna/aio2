@@ -35,13 +35,15 @@
         <extension module="org.wildfly.extension.undertow"/>
 	<extension module="org.keycloak.keycloak-adapter-subsystem"/>
     </extensions>
-    
+	
+    <!--  JGODOY - Para no usar certificado LOCAL de osp.conservador.cl -->
+    <!--  
     <system-properties>
         <property name="http.nonProxyHosts" value="*"/> 
         <property name="javax.net.ssl.trustStorePassword" value="trustme"/>
         <property name="javax.net.ssl.trustStore" value="/opt/truststore/truststore.jks"/>
     </system-properties>
-
+    -->
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
