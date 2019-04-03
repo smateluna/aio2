@@ -34,8 +34,7 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 //				if(data.inscripcionDigitalDTO != null)
 //					$scope.data.caratulaDTO.inscripcionDigitalDTO = data.inscripcionDigitalDTO;
 				
-				if($scope.data.caratulaDTO.inscripcionDigitalDTO!=null && $scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO!=null)
-					$scope.cargaListas();
+				$scope.cargaListas();
 				
 				if(data.listabitacoras.length!==0){
 					$scope.caratula.resultados = data.listabitacoras;
@@ -55,7 +54,8 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 	};
 
 	$scope.cargaListas = function(){
-		var promise = reingresoService.getListas($scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id);
+		var registro = $scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO==undefined?0:$scope.data.caratulaDTO.inscripcionDigitalDTO.registroDTO.id;
+		var promise = reingresoService.getListas(registro);
 		promise.then(function(data) {
 			if(data.estado===null){
 			}else if(data.estado){

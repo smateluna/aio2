@@ -40,13 +40,8 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			title: null,
 			msg: null
 	};
-
-	taOptions.toolbar = [
-	                     //['h4', 'h5', 'h6', 'p',],
-	                     //['italics'],
-	                     //['justifyLeft', 'justifyCenter', 'justifyRight']
-	                     //,['html']
-	                     ];
+	
+	taOptions.toolbar = [['html']];
 
 	$scope.obtenerTiposCertificadosPorPerfil = function(){
 		$scope.openLoadingModal('Cargando Listado...', '');
