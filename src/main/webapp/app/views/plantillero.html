@@ -11,6 +11,17 @@
 	texto="'No tiene permiso para acceder a la opción solicitada.'">
 </my-notification>
 
+ <style>
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+  max-height: 300px;
+}
+</style>
+
 <div class="row mt70">
 	<div class="col-md-12">
 		<div class="tab-container">
@@ -28,8 +39,7 @@
 											ng-model="plantillero.caratula" name="caratula"
 											placeholder="caratula" focus-input="caratulaIsFocused"
 											maxlength="10" autofocus="true" required="required"
-											enter-next="" numbers-only="numbers-only"
-											ng-change="reemplazaData()">
+											enter-next="" numbers-only="numbers-only">
 									</div>
 								</div>
 								<div class="col-md-5 col-sm-5">
@@ -343,12 +353,16 @@
 
 					<div class="row mt0">
 						<div class="col-md-12">
-							<div class="form-group" ng-if="plantillero.cuerpocertificado">
+							<div class="form-group" ng-if="plantillero.tipocertificado">
 								<label class="control-label">Texto a Certificar: </label><br>
 								<!-- <textarea class="form-control hW-text" ng-model="plantillero.cuerpocertificado" rows="2" cols="8"
 									style="height: 300px;"></textarea> -->
 
-								<div ng-bind-html = "plantillero.cuerpocertificado" style="border: solid 1px #ccc; padding: 10px;"></div>
+								<!-- <div ng-bind-html = "plantillero.cuerpocertificado" style="border: solid 1px #ccc; padding: 10px;"></div> -->
+								<!-- <text-angular ta-bind ng-model="plantillero.cuerpocertificado"></text-angular> -->
+								<!-- <div text-angular ng-model="plantillero.cuerpocertificado" ta-toolbar-class="btn-toolbar" ta-toolbar-group-class="btn-group" ta-toolbar-button-class="btn btn-default" ta-toolbar-active-button-class="active"></div> -->
+								<div text-angular ng-model="plantillero.cuerpocertificado"></div>
+								
 							</div>
 						</div>
 					</div>
