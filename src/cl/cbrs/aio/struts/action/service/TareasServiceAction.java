@@ -702,18 +702,22 @@ public class TareasServiceAction extends CbrsAbstractAction {
 
 						JSONObject obj = (JSONObject) getResponse(clientResponse);
 
-						if(valorReal!=null && !valorReal.equals(caratulaVO.getValorReal()) ){
-							observacionBitacora += " Se actualiza valor real de $" + caratulaVO.getValorReal() + " a $" + valorReal + ". ";
-							caratulaVO.setValorReal(valorReal);
-							wsCaratulaClienteDelegate.actualizarCaratula(caratulaVO);												
-
-							//Actualizar cierre cta corriente si corresponde
-							if(actualizarCierre){
-								logger.debug("Actualizar cierre");
-								observacionBitacora += " Se actualiza valor real en cierre cta corriente a $" + valorReal + ".";
-								WsCuentaCorrienteClienteDelegate ctaCteDelegate = new WsCuentaCorrienteClienteDelegate();
-								ctaCteDelegate.modificaValorCtaCte(null, valorReal, ncaratula, null);
-							}						
+						if(valorReal!=null){ 
+							if(!valorReal.equals(caratulaVO.getValorReal()) ){
+								observacionBitacora += " Se actualiza valor real de $" + caratulaVO.getValorReal() + " a $" + valorReal + ". ";
+								caratulaVO.setValorReal(valorReal);
+								wsCaratulaClienteDelegate.actualizarCaratula(caratulaVO);												
+	
+								//Actualizar cierre cta corriente si corresponde
+								if(actualizarCierre){
+									logger.debug("Actualizar cierre");
+									observacionBitacora += " Se actualiza valor real en cierre cta corriente a $" + valorReal + ".";
+									WsCuentaCorrienteClienteDelegate ctaCteDelegate = new WsCuentaCorrienteClienteDelegate();
+									ctaCteDelegate.modificaValorCtaCte(null, valorReal, ncaratula, null);
+								}		
+							} else{
+								observacionBitacora += " Monto aprobado: $" + valorReal + ". ";
+							}
 						}
 
 						//Agregar bitacora

@@ -508,12 +508,12 @@ public class GeneraCertificado {
 				//agregaInformacionPieDePagina(pagina, pdfReader.getNumberOfPages(), 600, cbu);
 
 				if (pagina == pdfReader.getNumberOfPages()) {
-					cb.beginText();
-					cb.setFontAndSize(bf, 11);
-					cb.showTextAligned(Element.ALIGN_LEFT, "Santiago, "
-							+ TextosUtil.fechaEnPalabras(new Date(), false, false, false) + ".", 123, 254, 0);
-
-					cb.endText();
+//					cb.beginText();
+//					cb.setFontAndSize(bf, 11);
+//					cb.showTextAligned(Element.ALIGN_LEFT, "Santiago, "
+//							+ TextosUtil.fechaEnPalabras(new Date(), false, false, false) + ".", 123, 254, 0);
+//
+//					cb.endText();
 					PdfFormField sig = PdfFormField.createSignature(writer);
 
 					sig.setWidget(new Rectangle(340, 250, 620, 128), null);
