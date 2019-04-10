@@ -1,6 +1,6 @@
 'use strict';
 
-var versionAIO = 'AIO Version 1.4 25/07/2018\n'
+var versionAIO = 'AIO Version 1.4 09/04/2019\n'
 	+'----------------------------\n'
 	+'mejoras reingreso gp';
 
