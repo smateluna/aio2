@@ -1313,7 +1313,6 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		respuesta.put("status", status);
 		respuesta.put("msg", msg);
 
-
 		try {
 			respuesta.writeJSONString(response.getWriter());
 		} catch (IOException e) {

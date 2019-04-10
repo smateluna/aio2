@@ -379,7 +379,7 @@
 					Atenci&oacute;n: Car&aacute;tula no se puede liquidar. La n&oacute;mina ya fu&eacute; enviada a Cuenta Corriente {{liquidacionCaratula.cuentaCorrienteDTO.codigo}} de {{liquidacionCaratula.cuentaCorrienteDTO.institucion}}. Fecha cierre {{liquidacionCaratula.cierreCtasCtesFinalDTO.fechaRev}} .
 				   </span>	
 				   <span class="label label-warning text-left mensaje-label" ng-if="liquidacionCaratula.caratulaLiquidada">
-					<strong>Atenci&oacute;n: Car&aacute;tula ya fu&eacute; liquidada anteriormente en {{liquidacionCaratula.caratulaDTO.valorReal | myCurrency}} por {{ultimaLiquidacion.funcionario}} el {{ultimaLiquidacion.fecha}}.</strong>
+					<strong>Atenci&oacute;n: Car&aacute;tula ya fu&eacute; liquidada anteriormente por {{ultimaLiquidacion.funcionario}} el {{ultimaLiquidacion.fecha}}.</strong>
 				   </span>
 				   <span class="label label-danger text-left mensaje-label" ng-if="!liquidacionCaratula.caratulaPendienteEntregaDoc && ultimaAnulacion!=null && ultimaAnulacion.id > ultimaLiquidacion.id">
 					Atenci&oacute;n: Car&aacute;tula fu&eacute; eliminada de lista pendientes por {{ultimaAnulacion.funcionario}} el {{ultimaAnulacion.fecha}} y a&uacute;n no llega a Entrega Documentos.

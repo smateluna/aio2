@@ -399,15 +399,139 @@ public class CaratulasUtil {
 		return caratulaDTO;		
 	}
 
-	//	private ArrayList<BitacoraDTO> getBitacoraDTOs(BitacoraCaratulaVO[] bitacoraCaratulaVOs){
-	//		ArrayList<BitacoraDTO> bitacoraDTOs = new ArrayList<BitacoraDTO>();
-	//			
-	//		if(bitacoraCaratulaVOs!=null && bitacoraCaratulaVOs.length>0)
-	//			for(BitacoraCaratulaVO vo : bitacoraCaratulaVOs)
-	//				bitacoraDTOs.add(getBitacoraDTO(vo));
-	//
-	//		return bitacoraDTOs;
-	//	}	
+	public CaratulaDTO getCaratulaDTOLigth(CaratulaVO caratulaVO) throws Exception{
+		CaratulaDTO caratulaDTO = new CaratulaDTO();
+
+		Long numeroCaratula = caratulaVO.getNumeroCaratula();
+		caratulaDTO.setNumeroCaratula(numeroCaratula);		
+		caratulaDTO.setOrigenCreacion(caratulaVO.getOrigenCreacion());
+		caratulaDTO.setIdTransaccion(caratulaVO.getIdTransaccion());
+		caratulaDTO.setCodigo(caratulaVO.getCodigo());
+
+		if(caratulaVO.getFechaCreacion()!=null){
+			caratulaDTO.setFechaCreacionL(caratulaVO.getFechaCreacion().getTime());
+			caratulaDTO.setFechaCreacion(caratulaVO.getFechaCreacion());
+		}
+
+		caratulaDTO.setValorPagado(caratulaVO.getValorPagado());
+		caratulaDTO.setValorReal(caratulaVO.getValorReal());
+		if(caratulaVO.getValorPagado()!=null && caratulaVO.getValorReal()!=null){
+			Long diferencia = caratulaVO.getValorPagado() - caratulaVO.getValorReal();					
+			caratulaDTO.setDiferencia(diferencia);
+		}
+
+		if(null != caratulaVO.getCodigoDocumentoElectronico())
+			caratulaDTO.setCodigoDocumentoElectronico(caratulaVO.getCodigoDocumentoElectronico());
+		else
+			caratulaDTO.setCodigoDocumentoElectronico("0");
+
+		if(null != caratulaVO.getIdNotarioElectronico())
+			caratulaDTO.setIdNotarioElectronico(caratulaVO.getIdNotarioElectronico());
+		else
+			caratulaDTO.setIdNotarioElectronico(0L);
+
+		if(null!=caratulaVO.getCanal()){
+			caratulaDTO.setIdCanal(caratulaVO.getCanal().getId());
+		}else{
+			caratulaDTO.setIdCanal(1);
+		}
+
+		if(caratulaDTO.getIdCanal()==2)
+			caratulaDTO.setCanalTexto("WEB");
+		else
+			caratulaDTO.setCanalTexto("CAJA");
+
+		if(null!=caratulaVO.getEstadoDescargaEscri())
+			caratulaDTO.setEstadoDescargaEscri(caratulaVO.getEstadoDescargaEscri());
+		else
+			caratulaDTO.setEstadoDescargaEscri(0);
+
+		if(null!=caratulaVO.getEmpresa())
+			caratulaDTO.setEmpresa(caratulaVO.getEmpresa());
+		else
+			caratulaDTO.setEmpresa(0);
+
+		TipoFormularioVO tipoFormularioVO = caratulaVO.getTipoFormulario();
+		TipoFormularioDTO tipoFormularioDTO = new TipoFormularioDTO();
+		if(tipoFormularioVO!=null){					
+			tipoFormularioDTO.setId(tipoFormularioVO.getTipo());
+			tipoFormularioDTO.setDescripcion(tipoFormularioVO.getDescripcion());/**/
+			tipoFormularioDTO.setIdDescripcion(tipoFormularioVO.getTipo()+"-"+tipoFormularioVO.getDescripcion());
+		}
+
+		EstadoActualCaratulaVO estadoActualCaratulaVO = caratulaVO.getEstadoActualCaratula();
+		if(estadoActualCaratulaVO!=null){		
+			Date fechaMov = estadoActualCaratulaVO.getFechaMov();
+
+			EstadoActualCaratulaDTO estadoActualCaratulaDTO = new EstadoActualCaratulaDTO();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+			String fechaMovS = sdf.format(fechaMov);
+			Long fechaMovL = fechaMov.getTime();
+
+			estadoActualCaratulaDTO.setFechaMov(fechaMovS);
+			estadoActualCaratulaDTO.setFechaMovL(fechaMovL);
+			estadoActualCaratulaDTO.setDescripcionEnFlujo(estadoActualCaratulaVO.getDescripcionEnFlujo());
+
+			SeccionDTO seccionDTO = new SeccionDTO();	
+			SeccionVO seccionVO = estadoActualCaratulaVO.getSeccion();
+			if(seccionVO!=null){
+				seccionDTO.setCodigo(seccionVO.getCodigo());
+				seccionDTO.setDescripcion(seccionVO.getDescripcion());	
+				estadoActualCaratulaDTO.setSeccionDTO(seccionDTO);
+			}
+
+			caratulaDTO.setEstadoActualCaratulaDTO(estadoActualCaratulaDTO);
+		}
+
+		caratulaDTO.setTipoFormularioDTO(tipoFormularioDTO);		
+
+		//		ArrayList<BitacoraDTO> bitacoraDTOs = getBitacoraDTOs(caratulaVO.getBitacoraCaratulaVO());
+		//		caratulaDTO.setBitacoraDTOs(bitacoraDTOs);
+
+
+		InscripcionDigitalDTO inscripcionDigitalDTO = null;
+		if(caratulaVO.getInscripciones()!=null && caratulaVO.getInscripciones().length>0){
+			inscripcionDigitalDTO = new InscripcionDigitalDTO();
+			InscripcionCitadaVO inscripcionCitadaVO = caratulaVO.getInscripciones()[0];
+
+			if(inscripcionCitadaVO!=null){
+				//inscripcionDigitalDTO.setIdInscripcion(new Long(inscripcionCitadaVO.getId()));
+				inscripcionDigitalDTO.setFoja(new Long(inscripcionCitadaVO.getFoja()));
+				inscripcionDigitalDTO.setNumero(String.valueOf(inscripcionCitadaVO.getNumero()));
+				inscripcionDigitalDTO.setAno(new Long(inscripcionCitadaVO.getAno()));
+				if(inscripcionCitadaVO.getBis()!=null && inscripcionCitadaVO.getBis().intValue()==1)
+					inscripcionDigitalDTO.setBis(true);
+				else
+					inscripcionDigitalDTO.setBis(false);
+				if(inscripcionCitadaVO.getRegistro()!=null){
+					inscripcionDigitalDTO.setRegistro(inscripcionCitadaVO.getRegistro());
+					RegistroDTO registroDTO = new RegistroDTO();
+					registroDTO.setId(inscripcionCitadaVO.getRegistro());
+					switch(inscripcionCitadaVO.getRegistro()){
+					case 1: registroDTO.setDescripcion("Propiedades"); break;
+					case 2: registroDTO.setDescripcion("Hipotecas"); break;
+					case 3: registroDTO.setDescripcion("Prohibiciones"); break;
+					case 4: registroDTO.setDescripcion("Comercio"); break;
+					case 5: registroDTO.setDescripcion("Aguas"); break;
+					}
+
+					inscripcionDigitalDTO.setRegistroDTO(registroDTO );
+				}
+				if(inscripcionCitadaVO.getFecha()!=null){
+					Date fechaActualizacion = inscripcionCitadaVO.getFecha();
+					Long fechaActL = fechaActualizacion.getTime();
+
+					inscripcionDigitalDTO.setFechaActualizacion(fechaActualizacion);
+					inscripcionDigitalDTO.setFechaActualizacionL(fechaActL);
+				}
+
+				caratulaDTO.setInscripcionDigitalDTO(inscripcionDigitalDTO);
+			}
+		}
+
+		return caratulaDTO;		
+	}
 
 	private BitacoraDTO getBitacoraDTO(BitacoraCaratulaVO vo) {
 		BitacoraDTO dto = new BitacoraDTO();
