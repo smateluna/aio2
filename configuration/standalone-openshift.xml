@@ -95,7 +95,7 @@
         </access-control>
     </management>
     <profile>
-        <subsystem xmlns="urn:jboss:domain:logging:3.0">
+<!--         <subsystem xmlns="urn:jboss:domain:logging:3.0">
             <console-handler name="CONSOLE">
                 <formatter>
                     <named-formatter name="COLOR-PATTERN"/>
@@ -130,7 +130,7 @@
             <formatter name="COLOR-PATTERN">
                 <pattern-formatter pattern="%K{level}%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"/>
             </formatter>
-        </subsystem>
+        </subsystem> -->
         <subsystem xmlns="urn:jboss:domain:batch-jberet:2.0">
                  <default-job-repository name="in-memory"/>
             <default-thread-pool name="batch"/>

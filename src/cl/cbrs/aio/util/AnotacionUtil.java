@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 
+import cl.cbr.util.GeneralException;
 import cl.cbrs.aio.dto.AnotacionDTO;
 import cl.cbrs.aio.dto.EstadoAnotacionDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
@@ -25,37 +26,24 @@ public class AnotacionUtil {
 	}
 	
 	
-	public JSONArray getAnotaciones(Long fojaini, Long fojafin, Long ano){
+	public JSONArray getAnotaciones(Long fojaini, Long fojafin, Long ano) throws GeneralException{
 		WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();						
 		List<AnotacionVO> anotacionVOList;
 		JSONArray anotaciones = new JSONArray();
 
-		try {
-			anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionPorRevisar(fojaini,fojafin,ano);
-			
-			anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
+		anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionPorRevisar(fojaini,fojafin,ano);
+		anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
 		
 		return anotaciones;
 	}
 	
-	public JSONArray getAnotacionesResumen(Long caratula,Integer borrador,Integer folio){
+	public JSONArray getAnotacionesResumen(Long caratula,Integer borrador,Integer folio) throws GeneralException{
 		WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();						
 		List<AnotacionVO> anotacionVOList;
 		JSONArray anotaciones = new JSONArray();
 
-		try {
-
-			anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionCaratulaBorradorFolio(caratula,borrador,folio,null);
-			
-			anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
+		anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionCaratulaBorradorFolio(caratula,borrador,folio,null);			
+		anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
 		
 		return anotaciones;
 	}
@@ -309,56 +297,35 @@ public class AnotacionUtil {
 		return dto;	
 	}
 	
-	public JSONArray getAnotacionesInscripcion(Long foja, String numero, Long ano, Boolean bis){
+	public JSONArray getAnotacionesInscripcion(Long foja, String numero, Long ano, Boolean bis) throws GeneralException{
 		WsInscripcionDigitalDelegate wsInscripcionDigitalDelegate = new WsInscripcionDigitalDelegate();						
 		List<AnotacionVO> anotacionVOList;
 		JSONArray anotaciones = new JSONArray();
 
-		try {
-
-			anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);
-			
-			anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
+		anotacionVOList = wsInscripcionDigitalDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);
+		anotaciones = getJSONArrayAnotacionDTO(anotacionVOList);
 		
 		return anotaciones;
 	}
 	
-	public JSONArray getAnotacionesInscripcionHipotecas(Long foja, String numero, Long ano, Boolean bis){
+	public JSONArray getAnotacionesInscripcionHipotecas(Long foja, String numero, Long ano, Boolean bis) throws GeneralException{
 		WsInscripcionDigitalHDelegate wsInscripcionDigitalHDelegate = new WsInscripcionDigitalHDelegate();
 		List<cl.cbrs.inscripciondigitalh.vo.AnotacionVO> anotacionVOList;
 		JSONArray anotaciones = new JSONArray();
-
-		try {
-
-			anotacionVOList = wsInscripcionDigitalHDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);
-			
-			anotaciones = getJSONArrayAnotacionDTOHipotecas(anotacionVOList);
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
+		
+		anotacionVOList = wsInscripcionDigitalHDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);	
+		anotaciones = getJSONArrayAnotacionDTOHipotecas(anotacionVOList);
 		
 		return anotaciones;
 	}
 	
-	public JSONArray getAnotacionesInscripcionProhibiciones(Long foja, String numero, Long ano, Boolean bis){
+	public JSONArray getAnotacionesInscripcionProhibiciones(Long foja, String numero, Long ano, Boolean bis) throws GeneralException{
 		WsInscripcionDigitalPHDelegate wsInscripcionDigitalPHDelegate = new WsInscripcionDigitalPHDelegate();
 		List<cl.cbrs.inscripciondigitalph.vo.AnotacionVO> anotacionVOList;
 		JSONArray anotaciones = new JSONArray();
 
-		try {
-
-			anotacionVOList = wsInscripcionDigitalPHDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);
-			
-			anotaciones = getJSONArrayAnotacionDTOProhibiciones(anotacionVOList);
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
+		anotacionVOList = wsInscripcionDigitalPHDelegate.obtenerAnotacionesInscripcion(foja, numero, ano, bis);	
+		anotaciones = getJSONArrayAnotacionDTOProhibiciones(anotacionVOList);
 		
 		return anotaciones;
 	}
