@@ -136,7 +136,7 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 				function(data) {
 					if (data.hayDocumento) {
 						//download documento
-						$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ $scope.caratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','popup','width=800,height=600');
+						$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ $scope.liquidacionCaratula.caratulaDTO.numeroCaratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','popup','width=800,height=600');
 
 					} else {
 						$scope

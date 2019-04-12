@@ -307,7 +307,7 @@
 															<td style='text-align: center;'><input size="35" focus-input ="descripcionIsFocused" name="descripcion" enter-next="" required="" ng-model="nuevoDocumento.nombre" type="text" /></td>
 															<td style='text-align: center;'>$ <input required="" ng-model="nuevoDocumento.valor" numbers-only-neg type="number" /></td>
 															<td style='text-align: center;' colspan="2">
-																<button class="btn btn-primary btn-xs btn-rad" ng-click="agregarDocumento(nuevoDocumento.nombre, nuevoDocumento.valor, liquidacionCaratula.caratulaDTO.numeroCaratula)"  type="button">Agregar</button>
+																<button ng-disabled="nuevoDocumento.valor==null || nuevoDocumento.nombre==null" class="btn btn-primary btn-xs btn-rad" ng-click="agregarDocumento(nuevoDocumento.nombre, nuevoDocumento.valor, liquidacionCaratula.caratulaDTO.numeroCaratula)"  type="button">Agregar</button>
 															</td>														
 													</tr>	 												
 												</tbody>

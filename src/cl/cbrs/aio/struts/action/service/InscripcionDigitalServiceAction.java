@@ -1435,32 +1435,30 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 
 		Boolean status = false;
 		String msg = "";
+		
 
-		Integer cuadernillo = null;
-		try {
-			LibrosPropiedadesDAO librosPropiedadesDAO = new LibrosPropiedadesDAO();
-			Date fechaIni = null;
-			Date fechaFin = null;
-
-			if(fechaIniP!="")
-				fechaIni = new SimpleDateFormat("yyyy-MM-dd").parse(fechaIniP);
-			if(fechaFinP!="")
-				fechaFin = new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinP);
-						
-			ArrayList<DespachoCuadernilloDTO> listaCuadernillos = librosPropiedadesDAO.obtenerDespachoCuadernillos(fechaIni, fechaFin);
-	
-			respuesta.put("listaCuadernillos", listaCuadernillos);
-			status = true;
+			if(fechaIniP!=null && fechaIniP!="" && fechaFinP!=null && fechaFinP!=""){
+				try {
+					LibrosPropiedadesDAO librosPropiedadesDAO = new LibrosPropiedadesDAO();
+					Date fechaIni = null;
+					Date fechaFin = null;
+					
+					fechaIni = new SimpleDateFormat("yyyy-MM-dd").parse(fechaIniP);				
+					fechaFin = new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinP);
+								
+					ArrayList<DespachoCuadernilloDTO> listaCuadernillos = librosPropiedadesDAO.obtenerDespachoCuadernillos(fechaIni, fechaFin);
 			
+					respuesta.put("listaCuadernillos", listaCuadernillos);
+					status = true;
+				} catch (Exception e1) {
+					logger.error("Error al buscar cuadernillos: " + e1.getMessage(),e1);
+					request.setAttribute("error", "Error al obtener informacion cuadernillo.");
 
-		} catch (Exception e1) {
-			logger.error("Error al guardar despacho cuadernillo: " + e1.getMessage(),e1);
-			request.setAttribute("error", "Error al obtener informacion cuadernillo.");
-
-			status = false;
-			msg = "Error al obtener informacion cuadernillo.";
-		}
-
+					status = false;
+					msg = "Error al obtener informacion cuadernillo.";
+				}
+			} else
+				status = false;
 		
 		respuesta.put("status", status);
 		respuesta.put("msg", msg);

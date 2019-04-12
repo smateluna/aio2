@@ -10,7 +10,8 @@ app.controller('DatosFormularioModalCtrl', function ($log, $rootScope, $scope, $
 	    {id:'p', descripcion:'En Proceso'},
 	    {id:'d', descripcion:'Despachada'},
 	    {id:'w', descripcion:'Auditoría'},
-	    {id:'d', descripcion:'Aprobada'} //Estado Despachado + seccion Aprobada
+	    {id:'d', descripcion:'Aprobada'},
+	    {id:'t', descripcion:'Detenida'}
 	];
 	
 	//Estado original

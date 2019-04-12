@@ -328,8 +328,7 @@ app.controller('masinfoindiceModalCtrl', function ($rootScope, $scope, $modal, $
 		return !(moment(new Date()).year()<value);
 	};
 
-	$scope.verEscritura = function(caratula){
-//		$rootScope.go('/verEscritura/'+$scope.caratula+'/indice');
+	$scope.verEscritura = function(){
 		$window.open('../do/service/escritura?metodo=verDocumento&caratula='+$scope.caratula+'&type=uri','','width=800,height=600');
 	};
 

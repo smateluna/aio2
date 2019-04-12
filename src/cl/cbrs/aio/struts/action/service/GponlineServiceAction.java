@@ -1135,7 +1135,9 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 					String rutFirmadorp = firmaElectronicaVO.getUsuario();
 					Date fechap = firmaElectronicaVO.getFechaPdf();
 					
-					String firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
+					String firmador = "LMC";
+					if(rutFirmadorp!=null && !"".equals(rutFirmadorp))
+						firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
 					
 					DocumentosCliente documentosCliente = new DocumentosCliente();
 					byte[] buffer = documentosCliente.downloadFirma(nombreArchivop, firmador, fechap);
@@ -1183,7 +1185,9 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 			String rutFirmadorp = firmaElectronicaVO.getUsuario();
 			Date fechap = firmaElectronicaVO.getFechaPdf();
 			
-			String firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
+			String firmador = "LMC";
+			if(rutFirmadorp!=null && !"".equals(rutFirmadorp))
+				firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
 			
 			DocumentosCliente documentosCliente = new DocumentosCliente();
 			byte[] buffer = documentosCliente.downloadFirma(nombreArchivop, firmador, fechap);
