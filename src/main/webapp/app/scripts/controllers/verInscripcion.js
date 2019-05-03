@@ -867,6 +867,22 @@ app
 
 				}
 			}
+			
+			//Revisar alertas
+			if($scope.data.alertas){
+				for(var i=0; i<$scope.data.alertas.length; i++){
+					//Solo alertas vigentes de accion 2
+					if($scope.data.alertas[i].vigente && $scope.data.alertas[i].accion==2){
+						$scope.alertas.push($scope.data.alertas[i]);								
+					}
+				}	
+				
+				$timeout(function(){
+					for(var i=0; i<$scope.alertas.length; i++){
+							$scope.openMensajeModal('warn',$scope.alertas[i].texto, '',  false, null);								
+					}
+				}, 2000);
+			}
 
 		};
 
@@ -891,21 +907,7 @@ app
 						$scope.data = data;
 						$scope.inicia();
 						
-						//Revisar alertas
-						if($scope.data.alertas){
-							for(var i=0; i<$scope.data.alertas.length; i++){
-								//Solo alertas vigentes de accion 2
-								if($scope.data.alertas[i].vigente && $scope.data.alertas[i].accion==2){
-									$scope.alertas.push($scope.data.alertas[i]);								
-								}
-							}	
-							
-							$timeout(function(){
-								for(var i=0; i<$scope.alertas.length; i++){
-										$scope.openMensajeModal('warn',$scope.alertas[i].texto, '',  false, null);								
-								}
-							}, 2000);
-						}
+
 
 						$scope.isLoading = false;
 					} else {
