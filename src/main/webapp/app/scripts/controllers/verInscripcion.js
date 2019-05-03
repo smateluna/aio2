@@ -20,6 +20,7 @@ app
 		$scope.anotaciones = [];
 		$scope.embargos = [];
 		$scope.notas = [];
+		$scope.alertas = [];
 
 		$scope.borradores = [];
 		$scope.proceso = [];
@@ -98,12 +99,14 @@ app
 
 		$scope.izquierdaStatus = {
 			anotaciones : true,
+			alertas : true,
 			borradores : false,
 			borradoresLoaded : false,
 			proceso : false,
 			procesoLoaded : false,
 			terminadas : false,
-			terminadasLoaded : false
+			terminadasLoaded : false,
+			alertasLoaded : true
 		};
 
 		$scope.barraDerechaStatus = {
@@ -178,7 +181,31 @@ app
 			});
 		};
 
+		$scope.openMensajeModal = function (tipo, titulo, detalle, autoClose, segundos) {
+			$modal.open({
+				templateUrl: 'mensajeModal.html',
+				backdrop: 'static',
+				windowClass: 'modal',
+				controller: 'MensajeModalCtrl',
+				resolve: {
+					tipo: function () {
+					return tipo;
+					},
+					titulo: function () {
+						return titulo;
+					},
+					detalle: function () {
+						return detalle;
+					}
+				}
+			});
 
+//			if(autoClose){
+//				$timeout(function(){
+//					$scope.closeModal();
+//				},segundos*1000);
+//			}
+		};
 
 		$scope.cerrar = function() {
 			if($scope.parametros.origen=='consultadiablito'){
@@ -261,6 +288,16 @@ app
 				$scope.izquierdaStatus.anotaciones = false;
 				$scope.izquierdaStatus.borradores = false;
 				$scope.izquierdaStatus.proceso = false;
+			} else if (target === 'alertas') {
+				if ($scope.izquierdaStatus.alertas) {
+					$scope.izquierdaStatus.alertas = false;
+				} else {
+					$scope.izquierdaStatus.alertas = true;
+				}
+
+//				$scope.izquierdaStatus.anotaciones = false;
+//				$scope.izquierdaStatus.borradores = false;
+//				$scope.izquierdaStatus.proceso = false;
 			}
 		};
 
@@ -745,8 +782,8 @@ app
 		$scope.inicia = function() {
 			if (!$scope.tieneRechazo()
 					&& !$scope.esMalCitadaDesde()
-					&& $scope.hayDocumento() && $scope.hayPaginas()) {
-
+					&& $scope.hayDocumento() && $scope.hayPaginas()) {				
+				
 				var foja = $scope.data.inscripcionDigitalDTO.foja, numero = $scope.data.inscripcionDigitalDTO.numero, ano = $scope.data.inscripcionDigitalDTO.ano, bis = $scope.data.inscripcionDigitalDTO.bis, estado = $scope.data.consultaDocumentoDTO.tipoDocumento, registro = $scope.parametros.registro;
 
 				for (var i = 0; i < $scope.data.consultaDocumentoDTO.cantidadPaginas; i++) {
@@ -824,13 +861,10 @@ app
 				$scope.makeTodos();
 
 				if($scope.embargos.length>0){
-					//				console.log("pase embargo")
-
 					$timeout(function(){
 						$scope.openEmbargosModal();
 					}, 2000);
 
-					//				console.log("listo modal embargo")
 				}
 			}
 
@@ -856,6 +890,22 @@ app
 
 						$scope.data = data;
 						$scope.inicia();
+						
+						//Revisar alertas
+						if($scope.data.alertas){
+							for(var i=0; i<$scope.data.alertas.length; i++){
+								//Solo alertas vigentes de accion 2
+								if($scope.data.alertas[i].vigente && $scope.data.alertas[i].accion==2){
+									$scope.alertas.push($scope.data.alertas[i]);								
+								}
+							}	
+							
+							$timeout(function(){
+								for(var i=0; i<$scope.alertas.length; i++){
+										$scope.openMensajeModal('warn',$scope.alertas[i].texto, '',  false, null);								
+								}
+							}, 2000);
+						}
 
 						$scope.isLoading = false;
 					} else {
@@ -874,6 +924,7 @@ app
 					'No se ha podido establecer comunicación.');
 
 				});
+
 		};
 
 		$scope.buscaNotas = function() {

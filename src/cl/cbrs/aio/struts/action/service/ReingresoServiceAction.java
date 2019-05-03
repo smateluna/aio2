@@ -61,6 +61,7 @@ import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ComercioUtil;
 import cl.cbrs.aio.util.ParametrosUtil;
 import cl.cbrs.aio.util.RegistrosUtil;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.aio.util.UsuarioUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaReceptorEmailVO;
@@ -141,7 +142,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 				com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 				if(statusRespuesta.getStatusCode() == 200){
-					JSONArray reingresosGP = (JSONArray) getResponse(clientResponse);
+					JSONArray reingresosGP = (JSONArray) RestUtil.getResponse(clientResponse);
 					json.put("reingresoGP", reingresosGP.get(0));
 					
 				} else{
@@ -154,7 +155,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 					statusRespuesta = clientResponse.getClientResponseStatus();
 
 					if(statusRespuesta.getStatusCode() == 200){
-						JSONArray reingresosGP = (JSONArray) getResponse(clientResponse);
+						JSONArray reingresosGP = (JSONArray) RestUtil.getResponse(clientResponse);
 						json.put("reingresosGP", reingresosGP);						
 					}					
 				}
@@ -1025,25 +1026,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		}
 			
 
-	}	
-	
-	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(MediaType.APPLICATION_JSON_TYPE.equals(response.getType()))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
-	}	
-	
+	}		
 	
 	private String cambiaEncoding(String campo) throws UnsupportedEncodingException{
 		String campoConEncoding=new String("");

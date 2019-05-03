@@ -71,21 +71,11 @@
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>GP Online</web-resource-name>
-      <url-pattern>/do/service/gponline/*</url-pattern>
-    </web-resource-collection>
-  </security-constraint>
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>Util</web-resource-name>
-      <url-pattern>/do/service/util/*</url-pattern>
-    </web-resource-collection>
-  </security-constraint>
-  <security-constraint>
-    <web-resource-collection>
       <web-resource-name>Exclude from Security</web-resource-name>
       <url-pattern>/login/*</url-pattern>
       <url-pattern>/login/css/*</url-pattern>
+      <url-pattern>/do/service/util/*</url-pattern>
+      <url-pattern>/do/service/gponline/*</url-pattern>
     </web-resource-collection>
   </security-constraint>
   <security-constraint>

@@ -9,6 +9,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.representations.IDToken;
 
 /**
  * 
@@ -35,8 +36,14 @@ public abstract class CbrsAbstractAction extends DispatchAction{
 		try{
 			//request.setCharacterEncoding("UTF-8"); 
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
-			String usuario =context.getIdToken().getPreferredUsername();			usuario = usuario.replaceAll("CBRS\\\\", "");
-			ThreadContext.put("extra_key", usuario);
+			if(context!=null){
+				IDToken idToken = context.getIdToken();		
+				if(idToken!=null){
+					String usuario =idToken.getPreferredUsername();
+					usuario = usuario.replaceAll("CBRS\\\\", "");
+					ThreadContext.put("extra_key", usuario);
+				}
+			}
 			
 			return super.dispatchMethod(mapping, form, request, response, name);	
 		} catch (NoSuchMethodException exception){

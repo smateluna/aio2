@@ -205,10 +205,49 @@
 			ng-class="{'col-sm-2': !derechaStatus.notasExpanded, 'hide' : derechaStatus.notasExpanded}">
 
 			<div class="panel-group accordion no-margin-bottom">
-				<div class="panel panel-default" ng-if="esVersionado()">
+				<div class="panel panel-default" ng-if="esVersionado() && alertas.length>0">
 					<div class="panel-heading">
-						<h4 class="panel-title padding-5"
-							ng-click="acordionIzquierda('anotaciones')">
+						<h4 class="panel-title padding-5" ng-click="acordionIzquierda('alertas')">
+							<div class="pull-left">
+								<span class="dv-contador label label-warning">{{alertas.length}}</span>
+							</div>
+							Alertas
+							<div class="pull-right">
+								<button class="btn btn-primary btn-xs dv-boton-plus"
+									ng-if="!izquierdaStatus.alertas" tooltip="Expandir">
+									<i class="fa fa-chevron-up dv-icon-boton-plus"></i>
+								</button>
+								<button class="btn btn-primary btn-xs dv-boton-plus"
+									ng-if="izquierdaStatus.alertas" tooltip="Colapsar">
+									<i class="fa fa-chevron-down dv-icon-boton-plus"></i>
+								</button>
+							</div>
+						</h4>
+					</div>	
+					<div class="panel-collapse panel-collapse-dv" util-izquierda=""
+						modelo="{{izquierdaStatus.alertas}}" target="alerta"
+						versionado="{{esVersionado()}}">
+						<div class="panel-body panel-body-inscripcion-anotacion">
+							<div class="anotacion-wrapper"
+								ng-repeat="alerta in alertas">
+								<div class="anotacion-card ">
+									<div class="anotacion-header">
+										<div class="anotacion-title">
+											<div class="pull-left">
+												<span class="anotacion-counter label label-warning">{{$index+1}}</span>
+											</div>
+											<div style="white-space: pre-line;">{{alerta.texto}}</div>
+										</div>
+									</div>									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>					
+								
+				<div class="panel panel-default" ng-if="esVersionado()">								
+					<div class="panel-heading">
+						<h4 class="panel-title padding-5" ng-click="acordionIzquierda('anotaciones')">
 							<div class="pull-left">
 								<span class="dv-contador label label-default">{{anotaciones.length}}</span>
 							</div>
@@ -334,9 +373,6 @@
 							</div>
 						</div>
 					</div>
-
-
-
 				</div>
 
 
@@ -692,9 +728,8 @@
 								<div class="">
 									<div class="panel-toolbar DV-toolbar">
 
-
+										
 										<div class="font-12">
-
 											<button type="button" class="btn btn-default btn-xs "
 												tooltip="Pág. inicio" tooltip-placement="top"
 												dv-boton-page="" ng-model="imagen.page"
@@ -1247,4 +1282,5 @@
 <div ng-include="'views/estadoIndiceModal.html'"></div>
 <div ng-include="'views/titulosanteriores.html'"></div>
 <div ng-include="'views/solicitarIndiceModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
 

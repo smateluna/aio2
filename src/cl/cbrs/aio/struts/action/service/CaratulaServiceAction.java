@@ -44,6 +44,7 @@ import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ConstantesPortalConservador;
 import cl.cbrs.aio.util.InscripcionDigitalUtil;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.botondepagoweb.ws.response.SolicitarTransaccionPagoWebResponse;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CanalVO;
@@ -1945,15 +1946,15 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 				WsCaratulaClienteDelegate delegateCaratula = new WsCaratulaClienteDelegate();
 
 				for(int i=0;i<array.size();i++){
-					JSONObject jobj = (JSONObject)array.get(i);
-					JSONObject caratulaJson = (JSONObject)jobj.get("id");
+					JSONObject caratulaJson = (JSONObject)array.get(i);
+//					JSONObject caratulaJson = (JSONObject)jobj.get("id");
 
-					Boolean seleccionado = Boolean.parseBoolean(caratulaJson.get("Selected")==null?"false":caratulaJson.get("Selected").toString());;
+//					Boolean seleccionado = Boolean.parseBoolean(caratulaJson.get("Selected")==null?"false":caratulaJson.get("Selected").toString());;
+//
+//
+//					if(seleccionado){
 
-
-					if(seleccionado){
-
-						Long caratula = (Long)caratulaJson.get("caratula");
+						Long caratula = (Long)caratulaJson.get("numeroCaratula");
 						Long esctactep = (Long)caratulaJson.get("esCtaCte");
 
 						EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
@@ -1996,7 +1997,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 						}
 					}
 
-				}
+//				}
 
 				status=true;
 
@@ -2046,7 +2047,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 			com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 			if(statusRespuesta.getStatusCode() == 200){
-				caratulas = (JSONArray) getResponse(clientResponse);
+				caratulas = (JSONArray) RestUtil.getResponse(clientResponse);
 				status = true;
 			}
 
@@ -2096,7 +2097,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 			com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 			if(statusRespuesta.getStatusCode() == 200){
-				caratulas = (JSONArray) getResponse(clientResponse);
+				caratulas = (JSONArray) RestUtil.getResponse(clientResponse);
 				status = true;
 			}
 
@@ -2183,24 +2184,7 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		} catch (IOException e) {
 			logger.error(e);
 		}
-	}	
-
-	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(MediaType.APPLICATION_JSON_TYPE.equals(response.getType()))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
-	}      
+	}	      
 
 	private ProductoVO obtenerProductoVO(UsuarioWebVO usuarioWebVO, long tipoProductoLong,Long valorCaratula,Integer foja, Integer numero, Integer ano, String descripcionProducto, ReceptorEmailVO receptorEmailVO) {
 		ProductoVO productoVO=new ProductoVO();

@@ -5,6 +5,8 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +27,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.keycloak.KeycloakSecurityContext;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+
 import cl.cbr.util.GeneralException;
+import cl.cbr.util.TablaValores;
 import cl.cbr.util.locator.ServiceLocatorException;
 import cl.cbrs.aio.dao.AnteriorDAO;
 import cl.cbrs.aio.dao.FolioRealDAO;
@@ -41,6 +48,7 @@ import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ConstantesDigital;
 import cl.cbrs.aio.util.ConverterVoToDtoMachine;
 import cl.cbrs.aio.util.InscripcionDigitalUtil;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.aio.util.SolicitudConverter;
 import cl.cbrs.borrador.delegate.WsBorradorDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
@@ -55,6 +63,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 	private static int CARATULAS_EN_PROCESO = 0;
 	private static int CARATULAS_FINALIZADAS = 1;
 	private static long ANOTACION_FOLIADA = 6;
+	private static String WS_ALERTAS = "ws_alertas.parametros";
 
 	public ActionForward unspecified(ActionMapping mapping,
 			ActionForm form,
@@ -133,6 +142,8 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 
 		InscripcionDigitalDTO inscripcionAnteriorDTO = new InscripcionDigitalDTO();
 		InscripcionDigitalDTO inscripcionSiguienteDTO = new InscripcionDigitalDTO();
+		
+		JSONArray alertas = null;
 
 		ConsultaDocumentoDTO consultaDocumentoDTO = new ConsultaDocumentoDTO();
 
@@ -143,7 +154,21 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			WsInscripcionDigitalPHDelegate digitalDelegate = new WsInscripcionDigitalPHDelegate();
 
 			try {
+				//Buscar alertas
+				Client client = Client.create();
+				String ip = TablaValores.getValor(WS_ALERTAS, "IP_WS", "valor");
+				String port = TablaValores.getValor(WS_ALERTAS, "PORT_WS", "valor");
+				WebResource wr = client.resource(new URI("http://"+ip+":"+port+"/alertas/byInscripcion/"+foja+"/"+numero+"/"+ano+"/3/"+bisi));
+				ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
+				com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
+				if(statusRespuesta.getStatusCode() == 200){
+					alertas = (JSONArray) RestUtil.getResponse(clientResponse);
+				} else{
+					msg = "No se pudo verificar si existen alertas para esta inscripcion";
+					throw new Exception("No se pudo verificar si existen alertas para esta inscripcion");
+				}
+				
 				estadoTieneRechazo = digitalDelegate.solicitudTieneRechazo(foja, numero, ano, bisi);
 
 				if(estadoTieneRechazo){
@@ -244,6 +269,16 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 			} catch (ServiceLocatorException e) {
 				log.error(e);
 				msg = "Se ha detectado un problema en el servidor.";
+			} catch (URISyntaxException e) {
+				log.error(e.getMessage(),e);
+				msg = "No se pudo verificar si existen alertas para esta inscripcion";
+			} catch (HTTPException e) {
+				log.error(e.getMessage(),e);
+				msg = "No se pudo verificar si existen alertas para esta inscripcion";
+			} catch (Exception e) {
+				log.error(e.getMessage(),e);
+				if("".equals(msg))
+					msg = "Se ha detectado un problema en el servidor.";
 			}	
 		}
 
@@ -268,6 +303,7 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
 		respuesta.put("msg", msg);	
+		respuesta.put("alertas", alertas);
 		respuesta.put("estado", estado);
 		respuesta.put("urlGpOnline", urlGpOnline);
 		respuesta.put("inscripcionDigitalDTO", inscripcionDigitalDTO);
