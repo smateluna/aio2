@@ -283,7 +283,7 @@ app.factory('caratulaService', function ($http, $q) {
 	      var d = new Date();
 	      var dateNumber = d.getTime();
 	
-	      var paramsObj = 'v='+dateNumber+'&metodo=movercaratulaLiquidacion&caratulas='+encodeURIComponent(JSON.stringify(caratulas));
+	      var paramsObj = 'v='+dateNumber+'&metodo=movercaratulaLiquidacion&caratulas='+JSON.stringify(caratulas);
 	
 	      var deferred = $q.defer();
 	

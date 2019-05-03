@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $modalInstance, caratulaService) {
+app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $modalInstance, $timeout, caratulaService) {
 
 	$scope.listadoPendiente = {
 			resultados: [],
@@ -161,10 +161,23 @@ app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $m
 		$scope.limpiarmensajes();
 		var exito=true;
 		$scope.envioEnProceso = true;
+		
+		var caratulas = [];
+		
+		angular.forEach($scope.listadoPendiente.resultados, function (resultado) {
+			if(resultado.id.Selected){
+				var caratula ={
+						"numeroCaratula": resultado.id.caratula,
+						"esCtaCte": resultado.id.esCtaCte
+				};
+				caratulas.push(caratula);
+			}
+		});
 
-		caratulaService.movercaratulaLiquidacion($scope.listadoPendiente.resultados).then(function(data) {
+		caratulaService.movercaratulaLiquidacion(caratulas).then(function(data) {
 			if(data.status===null){
 			}else if(data.status){
+				$scope.openMensajeModal('success', 'Carátulas enviadas a Entrega Documentos', '', true, 3);
 				$scope.envioExitoso=true;
 				$scope.envioEnProceso = false;
 				$scope.verListadoPendienteUsuario();
@@ -210,6 +223,10 @@ app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $m
 	$scope.raiseErr = function(msg){
 		$scope.openMensajeModal('error',msg, '',  false, null);
 	};
+	
+	$scope.raiseSuccess = function(msg) {
+		$scope.openMensajeModal('success', msg, '', false, null);
+	};	
 
 	$scope.openMensajeModal = function (tipo, titulo, detalle, autoClose, segundos) {
 		var myModal = $modal.open({

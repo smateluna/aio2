@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import cl.cbr.util.TablaValores;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.documentos.constantes.ConstantesDocumentos;
 
 import com.sun.jersey.api.client.Client;
@@ -215,24 +216,7 @@ public class DocumentosCliente {
 		WebResource wr = client.resource(new URI(uriStrBuffer.toString()));
 		ClientResponse response = wr.type(MediaType.TEXT_HTML).get(ClientResponse.class);
 		
-		return getResponse(response);      
-    }   
-    
-	private Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(MediaType.APPLICATION_JSON_TYPE.equals(response.getType()))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
-	}      
+		return RestUtil.getResponse(response);      
+    }         
 
 }

@@ -27,6 +27,8 @@ app.directive('utilIzquierda', function () {
         valueResize = versionado === 'true'? 312 : 298;
       }else if(target=='terminada'){
         valueResize = versionado === 'true'? 312 : 298;
+      }else if(target=='alerta'){
+        valueResize = 300;
       }
 //      else if(target=='nota'){
 //        valueResize = 93;

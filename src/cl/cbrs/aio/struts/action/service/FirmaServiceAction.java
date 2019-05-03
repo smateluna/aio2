@@ -41,6 +41,7 @@ import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ConstantesPortalConservador;
 import cl.cbrs.aio.util.InscripcionDigitalUtil;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaTempVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
@@ -104,7 +105,7 @@ public class FirmaServiceAction extends CbrsAbstractAction {
 			com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 			if(statusRespuesta.getStatusCode() == 200){
-				tiposCertificados = (JSONArray) getResponse(clientResponse);
+				tiposCertificados = (JSONArray) RestUtil.getResponse(clientResponse);
 			}				
 
 			status = true;
@@ -131,25 +132,5 @@ public class FirmaServiceAction extends CbrsAbstractAction {
 			logger.error(e);
 		}
 	}
-	
-	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(MediaType.APPLICATION_JSON_TYPE.equals(response.getType()))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
-	}      
-	
-	
-	
 	
 }

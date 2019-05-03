@@ -749,7 +749,7 @@ public class CaratulaEstadoUtil {
 		com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 		if(statusRespuesta.getStatusCode() == 200){
-			posesionesEfectivas = (JSONArray) getResponse(clientResponse);
+			posesionesEfectivas = (JSONArray) RestUtil.getResponse(clientResponse);
 			
 			if (posesionesEfectivas != null) { 
 
@@ -1361,22 +1361,5 @@ public class CaratulaEstadoUtil {
 		}	
 
 		return bitacoraJSON;
-	}
-
-	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(response.getType().toString().startsWith("application/json"))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
 	}      
 }

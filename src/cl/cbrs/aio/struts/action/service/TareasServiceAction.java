@@ -74,6 +74,7 @@ import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.FuncionarioSeccionUtil;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.aio.util.UsuarioUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
@@ -195,7 +196,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 						com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 			
 						if(statusRespuesta.getStatusCode() == 200){
-							JSONArray jsonArray = (JSONArray) getResponse(clientResponse);
+							JSONArray jsonArray = (JSONArray) RestUtil.getResponse(clientResponse);
 							if(caratulaVOs==null)
 								caratulaVOs = new ArrayList<CaratulaVO>();
 							for(int i=0; i<jsonArray.size(); i++){					
@@ -380,7 +381,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 					com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 					if(statusRespuesta.getStatusCode() == 200){
-						caratulas = (JSONArray) getResponse(clientResponse);
+						caratulas = (JSONArray) RestUtil.getResponse(clientResponse);
 						if(caratulas.size()>0){
 							caratulaPendienteEntregaDoc=true;
 						}
@@ -406,7 +407,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
 				if(statusRespuesta.getStatusCode() == 200){
-					documentosLiquidacion = (JSONArray) getResponse(clientResponse);
+					documentosLiquidacion = (JSONArray) RestUtil.getResponse(clientResponse);
 				}	
 				
 				BitacoraCaratulaVO[] bitacoraCaratulaVOs = caratulaVO.getBitacoraCaratulaVO();
@@ -700,7 +701,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 						//						System.out.println(jsonInString);
 						clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString);
 
-						JSONObject obj = (JSONObject) getResponse(clientResponse);
+						JSONObject obj = (JSONObject) RestUtil.getResponse(clientResponse);
 
 						if(valorReal!=null){ 
 							if(!valorReal.equals(caratulaVO.getValorReal()) ){
@@ -1204,7 +1205,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 			ClientResponse clientResponse = wr.type("application/json").post(ClientResponse.class, documentoLiquidacion);
 			if(clientResponse.getClientResponseStatus().getStatusCode()==200){
 				respuesta.put("status", true);
-				respuestaDocumentoLiquidacion = (JSONObject) getResponse(clientResponse);
+				respuestaDocumentoLiquidacion = (JSONObject) RestUtil.getResponse(clientResponse);
 				
 				//Agregar bitacora
 				try{
@@ -1391,23 +1392,6 @@ public class TareasServiceAction extends CbrsAbstractAction {
 			if(pdf!=null)
 				pdf.close();
 		}
-	}
-
-	private static Object getResponse(ClientResponse response) throws HTTPException, Exception {
-		Object respuesta = null;
-		if(response!=null && response.getStatus() == Status.OK.getStatusCode() ){
-			if(MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getType()))
-				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
-			else if(MediaType.APPLICATION_JSON_TYPE.equals(response.getType()))
-				respuesta = new JSONParser().parse(response.getEntity(String.class));
-			else
-				respuesta = response.getEntity(String.class);
-
-		} else if(response!=null)
-			throw new HTTPException(response.getStatus());
-		else
-			throw new Exception("Sin respuesta del servicio");
-		return respuesta;
 	}      
 
 }
