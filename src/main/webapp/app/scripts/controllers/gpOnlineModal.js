@@ -5,7 +5,6 @@ app.controller('gpOnlineModalCtrl', function ($scope, $window, $timeout, $log, $
 	$scope.folio = folio;
 
 	$scope.cancelModal = function () {
-		console.log($scope);
 		$modalInstance.dismiss('cancel');
 	};
 

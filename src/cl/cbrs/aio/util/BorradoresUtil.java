@@ -55,22 +55,44 @@ public class BorradoresUtil {
 		return borradores;
 	}
 	
+	public JSONArray getBorradoresDesdeH(Integer fojah, Integer numeroh, Short anoh, Boolean bish){
+		
+		FolioRealDAO folioRealDAO = new FolioRealDAO();						
+		List<ProrealVO> proRealVOList;
+		JSONArray borradores = new JSONArray();
+
+		try {
+			proRealVOList = folioRealDAO.getBorradoresDesdeH(fojah, numeroh, anoh, bish);
+			
+			borradores = getJSONArrayBorradorDTO(proRealVOList);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+		
+		return borradores;
+	}	
+	
 
 	public BorradorDTO getBorradorDTO(ProrealVO prorealVO){
 		BorradorDTO borradorDTO = new BorradorDTO();
 		
 		FolioRealVO folioRealVO = prorealVO.getFolioReal();
 		
-		String direccion = folioRealVO.getDir();
+		if(folioRealVO!=null){
+			String direccion = folioRealVO.getDir();
+			borradorDTO.setDireccion(direccion);
+		}
 		
 		ProrealIdVO prorealIdVO = prorealVO.getProRealId();
 		
-		Integer borrador = prorealIdVO.getBorrador();
-		Integer folio = prorealIdVO.getFolio();
-		
-		borradorDTO.setBorrador(borrador);
-		borradorDTO.setDireccion(direccion);
-		borradorDTO.setFolio(folio);
+		if(prorealIdVO!=null){
+			Integer borrador = prorealIdVO.getBorrador();
+			Integer folio = prorealIdVO.getFolio();
+			
+			borradorDTO.setBorrador(borrador);		
+			borradorDTO.setFolio(folio);
+		}
 		
 		return borradorDTO;		
 	}

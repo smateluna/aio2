@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('gpOnline', function() {
+app.directive('gpOnline', function($timeout) {
     return {
       restrict: 'E',
       replace: false,
@@ -8,10 +8,14 @@ app.directive('gpOnline', function() {
       controller: 'GponlineCtrl',
       templateUrl: 'views/gponline.html',
       link: function(scope, element, attrs) {
+    	  scope.resetResultadoBorrador();
           scope.busquedaGponline.borrador = attrs.borrador;
           scope.busquedaGponline.folio = attrs.folio;
           scope.req.simpleMode = attrs.simpleMode;
-          scope.buscarPorBorrador();                                
+		  $timeout(function(){			
+			scope.buscarPorBorrador();  
+		  },1000);
+                                        
       }
     };
   });

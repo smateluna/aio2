@@ -1807,6 +1807,13 @@ table tbody td .btn{margin-bottom:2px!important}
     padding: 7px 10px;
 }
 
+.mensaje-label-nowrap{
+	white-space: nowrap !important;
+    display: inherit;
+    line-height: 18px;
+    padding: 7px 10px;
+}
+
 .tooltip-inner.ng-binding ul {
    padding-left: 0 !important;
 }

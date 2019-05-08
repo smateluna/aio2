@@ -2,6 +2,7 @@ package cl.cbrs.aio.struts.action.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class DesbloqueoServiceAction extends CbrsAbstractAction {
 			List<SolicitudVO> solicitudVOs =  digitalDelegate.obtenerSolicitudesPorFojaNumAno(foja, numero, ano, bis, null);
 			
 			JSONArray listaSolicitudes = new JSONArray();
+			List idSolicitudes = new ArrayList<Long>();
 			
 			if(solicitudVOs!=null){
 				for(SolicitudVO solicitudVO : solicitudVOs){
@@ -73,11 +75,14 @@ public class DesbloqueoServiceAction extends CbrsAbstractAction {
 					solicitudJSON.put("bis", solicitudVO.getBis());
 					solicitudJSON.put("usuario", solicitudVO.getUsuario());
 					solicitudJSON.put("fechaEstado", solicitudVO.getFechaEstado().getTime());
+					
 					listaSolicitudes.add(solicitudJSON);
+					idSolicitudes.add(solicitudVO.getIdSolicitud());
 				}
 			}
 
 			json.put("listaSolicitudes", listaSolicitudes);
+			json.put("idSolicitudes", idSolicitudes);
 
 			
 		} catch(ParseException pe){
@@ -100,42 +105,27 @@ public class DesbloqueoServiceAction extends CbrsAbstractAction {
 	public void desbloquear(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 		
-		String solicitudReq = request.getParameter("solicitud");
-		String listaSolicitudesReq = request.getParameter("listaSolicitudes");
+		String idSolicitudReq = request.getParameter("idSolicitud");
+		String idSolicitudesReq = request.getParameter("idSolicitudes");
 
 		JSONObject json = new JSONObject();
 		json.put("estado", false);	
-		String detalleError = "";
 
 		WsInscripcionDigitalDelegate digitalDelegate = new WsInscripcionDigitalDelegate();
 		JSONParser jsonParser = new JSONParser();
 
 		try {		
-			JSONObject solicitudJSON = (JSONObject)jsonParser.parse(solicitudReq);
-			Long idSolicitud = new Long(solicitudJSON.get("idSolicitud").toString());
-			Long foja = new Long(solicitudJSON.get("foja").toString());
-			String numero = solicitudJSON.get("numero").toString();
-			Long ano = new Long(solicitudJSON.get("ano").toString());
-			Integer bis = new Integer(solicitudJSON.get("bis").toString());
+			Long idSolicitud = Long.parseLong(idSolicitudReq);
 			KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
 			String usuario =context.getIdToken().getPreferredUsername();			
 			usuario = usuario.replaceAll("CBRS\\\\", "");
 			
-			logger.info("Desbloqueando solicitud id: " + idSolicitud + "\n Foja: " + foja + "\n Numero: " + numero + 
-					"\n Ano: " + ano + "\n (Usuario: " + usuario + ")");
+			List<Long> listaSolicitudes = (List<Long>)jsonParser.parse(idSolicitudesReq);
 			
-			//Buscar solicitudes Rechazadas
-			//List<SolicitudVO> solicitudVOs =  digitalDelegate.obtenerSolicitudesPorFojaNumAno(foja, numero, ano, bis, 3L);
-			JSONArray listaSolicitudesJSON = (JSONArray)jsonParser.parse(listaSolicitudesReq);
-			
-			if(listaSolicitudesJSON!=null){
-				for(int i=0; i<listaSolicitudesJSON.size(); i++){
-					JSONObject solicitud = (JSONObject)listaSolicitudesJSON.get(i);
-					Long idSolicitudLista = (Long)solicitud.get("idSolicitud");
+			if(listaSolicitudes!=null){
+				for(Long idSolicitudLista : listaSolicitudes){
 					SolicitudVO solicitudVO = digitalDelegate.obtenerSolicitud(idSolicitudLista);
-					solicitudVO.setFechaEstado(new Date());
-					solicitud.put("fechaEstado", solicitudVO.getFechaEstado().getTime());
-					
+					solicitudVO.setFechaEstado(new Date());					
 					
 					if(solicitudVO!=null && solicitudVO.getEstado()!=null && (solicitudVO.getEstado().getIdEstado().equals(3L) || solicitudVO.getEstado().getIdEstado().equals(6L))){
 						
@@ -144,35 +134,24 @@ public class DesbloqueoServiceAction extends CbrsAbstractAction {
 						if(!idSolicitud.equals(idSolicitudLista)){
 							logger.info("Actualizar solicitud id " + idSolicitudLista + " a estado 4");
 							estado.setIdEstado(4L);
-							solicitud.put("idEstado", 4);
-							solicitud.put("estado", "En Espera (ya existe una solicitud)");
-
 						} else{
 							logger.info("Actualizar solicitud id " + idSolicitudLista + " a estado 1");
 							estado.setIdEstado(1L);
-							solicitud.put("idEstado", 1);
-							solicitud.put("estado", "En Espera");
 						}
 						
 						solicitudVO.setEstado(estado );
 						String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
 						solicitudVO.setRut(new Long(rutUsuario));
 						solicitudVO.setUsuario(usuario);	
-						solicitud.put("usuario", usuario);
 						digitalDelegate.actualizarSolicitud(solicitudVO );
 						
 					}
 				}
 			}
 			
-			json.put("estado", true);
-			json.put("listaSolicitudes", listaSolicitudesJSON);		
-						
+			json.put("estado", true);			
 			
-		} /*catch (GeneralException e) {
-			json.put("msg", "Problemas en servidor al reingresar caratula: " + e.getInfoAdic());
-			logger.error("Error: " + e.getMessage(),e);
-		} */catch (Exception e) {
+		} catch (Exception e) {
 			json.put("msg", "Problemas en servidor al desbloquear solicitud");
 			logger.error("Error: " + e.getMessage(),e);
 		}

@@ -33,6 +33,7 @@ import com.sun.jersey.api.client.WebResource;
 import cl.cbr.util.GeneralException;
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dao.AnteriorDAO;
+import cl.cbrs.aio.dao.FolioRealDAO;
 import cl.cbrs.aio.documentos.DocumentosCliente;
 import cl.cbrs.aio.dto.BorradorDTO;
 import cl.cbrs.aio.dto.ConsultaDocumentoDTO;
@@ -196,12 +197,12 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 
 								inscripcionDigitalDTO = converter.getInscripcionDigitalDTO(true, inscripcionDigitalVO);
 
-								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
-								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
+								FolioRealDAO folioRealDAO = new FolioRealDAO();
+								contadorBorrador = folioRealDAO.getCantidadBorradoresDesdeH(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
-								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
-								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
-								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
+//								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
+//								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
+//								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
 								
 								if(inscripcionDigitalDTO.getFechaActualizacion()!=null){
 									Date fechaActual = new Date();
@@ -219,12 +220,12 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 									consultaDocumentoDTO.getTipoDocumento() == ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_ORIGINAL){
 								//es referencial
 
-								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
-								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
+//								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
+//								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
-								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
-								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
-								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
+//								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
+//								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
+//								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
 
 								estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);
 								
@@ -241,7 +242,6 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 								msg = "Tipo de documento desconocido. Tipo:"+consultaDocumentoDTO.getTipoDocumento();
 							}
 						}else{										
-//							estadoFna = digitalUtil.consultaIndice(foja, numero, ano);	
 							estadoFna = digitalUtil.consultaIndiceHipoteca(foja, numero, ano);
 							estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);							
 							status = true;
@@ -741,7 +741,7 @@ public class InscripcionDigitalHipotecasServiceAction extends CbrsAbstractAction
 			Boolean bis = "true".equalsIgnoreCase(bisReq)? true : false;
 
 			BorradoresUtil borradoresUtil = new BorradoresUtil();					
-			borradores = borradoresUtil.getBorradores(foja.intValue(), numero, ano.shortValue(), bis);
+			borradores = borradoresUtil.getBorradoresDesdeH(foja.intValue(), numero, ano.shortValue(), bis);
 
 			status = true;
 

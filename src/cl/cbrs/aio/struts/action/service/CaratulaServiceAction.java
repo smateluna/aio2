@@ -1931,7 +1931,8 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 	public void movercaratulaLiquidacion(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		String caratulasp = request.getParameter("caratulas");
+		String caratulap = request.getParameter("caratula");
+		String esCtaCtep = request.getParameter("esCtaCte");
 		String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
 
 		JSONObject respuesta = new JSONObject();
@@ -1939,79 +1940,61 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		Boolean status = false;
 		String msg = "";
 
-		if(!StringUtils.isBlank(caratulasp)){
-			JSONParser parser = new JSONParser();
+		if(!StringUtils.isBlank(caratulap) && !StringUtils.isBlank(esCtaCtep)){
 			try {
-				JSONArray array = (JSONArray)parser.parse(caratulasp);
 				WsCaratulaClienteDelegate delegateCaratula = new WsCaratulaClienteDelegate();
 
-				for(int i=0;i<array.size();i++){
-					JSONObject caratulaJson = (JSONObject)array.get(i);
-//					JSONObject caratulaJson = (JSONObject)jobj.get("id");
+				Long caratula = Long.parseLong(caratulap);
+				Long esctactep = Long.parseLong(esCtaCtep);
 
-//					Boolean seleccionado = Boolean.parseBoolean(caratulaJson.get("Selected")==null?"false":caratulaJson.get("Selected").toString());;
-//
-//
-//					if(seleccionado){
+				EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
+				FuncionarioVO funcionarioEnviaVO = new FuncionarioVO();
+				SeccionVO seccionVO = new SeccionVO();
+				FuncionarioVO funcionarioResponsableVO = new FuncionarioVO();
 
-						Long caratula = (Long)caratulaJson.get("numeroCaratula");
-						Long esctactep = (Long)caratulaJson.get("esCtaCte");
+				funcionarioEnviaVO.setRutFuncionario(rutUsuario);
+				estadoCaratulaVO.setEnviadoPor(funcionarioEnviaVO);
 
-						EstadoCaratulaVO estadoCaratulaVO = new EstadoCaratulaVO();
-						FuncionarioVO funcionarioEnviaVO = new FuncionarioVO();
-						SeccionVO seccionVO = new SeccionVO();
-						FuncionarioVO funcionarioResponsableVO = new FuncionarioVO();
+				if(esctactep==1)
+					funcionarioResponsableVO.setRutFuncionario("083367725");//pedro pablo torres (ctas ctes)
+				else				
+					funcionarioResponsableVO.setRutFuncionario("078437413");//manuel perez osorio
 
-						funcionarioEnviaVO.setRutFuncionario(rutUsuario);
-						estadoCaratulaVO.setEnviadoPor(funcionarioEnviaVO);
+				estadoCaratulaVO.setResponsable(funcionarioResponsableVO);	
 
-						if(esctactep==1)
-							funcionarioResponsableVO.setRutFuncionario("083367725");//pedro pablo torres (ctas ctes)
-						else				
-							funcionarioResponsableVO.setRutFuncionario("078437413");//manuel perez osorio
+				seccionVO.setCodigo("08"); //entrega de docs
+				estadoCaratulaVO.setSeccion(seccionVO);
+				estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 
-						estadoCaratulaVO.setResponsable(funcionarioResponsableVO);	
+				estadoCaratulaVO.setFechaMovimiento(new Date());
 
-						seccionVO.setCodigo("08"); //entrega de docs
-						estadoCaratulaVO.setSeccion(seccionVO);
-						estadoCaratulaVO.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+				delegateCaratula.moverCaratulaSeccion(caratula, estadoCaratulaVO);
 
-						estadoCaratulaVO.setFechaMovimiento(new Date());
+				//Eliminar de tabla temporal
+				Client client = Client.create();
+				String ARCHIVO_PARAMETROS_CARATULA = "ws_caratula.parametros";	
+				String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
+				String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
 
-						delegateCaratula.moverCaratulaSeccion(caratula, estadoCaratulaVO);
+				String url = "http://"+ip+":"+port+"/CaratulaRest/caratula/eliminarCaratulaPendiente/"+caratula.intValue();
 
-						//Eliminar de tabla temporal
-						Client client = Client.create();
-						String ARCHIVO_PARAMETROS_CARATULA = "ws_caratula.parametros";	
-						String ip = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "IP_WS", "valor");
-						String port = TablaValores.getValor(ARCHIVO_PARAMETROS_CARATULA, "PORT_WS", "valor");
+				WebResource wr = client.resource(new URI(url));
 
-						String url = "http://"+ip+":"+port+"/CaratulaRest/caratula/eliminarCaratulaPendiente/"+caratula.intValue();
+				ClientResponse clientResponse = wr.type(MediaType.TEXT_HTML).delete(ClientResponse.class);
+				com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
 
-						WebResource wr = client.resource(new URI(url));
-
-						ClientResponse clientResponse = wr.type(MediaType.TEXT_HTML).delete(ClientResponse.class);
-						com.sun.jersey.api.client.ClientResponse.Status statusRespuesta = clientResponse.getClientResponseStatus();
-
-						if(statusRespuesta.getStatusCode() == 200){
-						}
-					}
-
-//				}
+				if(statusRespuesta.getStatusCode() == 200){
+				}
 
 				status=true;
 
-			}catch (GeneralException e1) {
-				logger.error(e1);
-
+			}catch (Exception e) {
+				logger.error(e.getMessage(),e);
 				status = false;
 				msg = "Se ha detectado un problema en el servidor.";	
-			}catch (Exception e) {
-				logger.error(e);
-
-				status = false;
-				msg = "Se ha detectado un problema, comunicar area soporte.";
 			}
+		} else{
+			msg = "Error en la solicitud, no se envió ninguna carátula";
 		}
 
 		respuesta.put("status", status);
