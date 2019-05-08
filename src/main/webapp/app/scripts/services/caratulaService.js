@@ -279,11 +279,11 @@ app.factory('caratulaService', function ($http, $q) {
 	        });
 	
 	      return deferred.promise;
-     },movercaratulaLiquidacion: function (caratulas) {
+     },moverCaratulaLiquidacion: function (caratula, esCtaCte) {
 	      var d = new Date();
 	      var dateNumber = d.getTime();
 	
-	      var paramsObj = 'v='+dateNumber+'&metodo=movercaratulaLiquidacion&caratulas='+JSON.stringify(caratulas);
+	      var paramsObj = 'v='+dateNumber+'&metodo=movercaratulaLiquidacion&caratula='+caratula+'&esCtaCte='+esCtaCte;
 	
 	      var deferred = $q.defer();
 	
@@ -301,7 +301,7 @@ app.factory('caratulaService', function ($http, $q) {
 	        });
 	
 	      return deferred.promise;
-     },getListadoCaratulasPendientesPorUsuario: function () {
+    },getListadoCaratulasPendientesPorUsuario: function () {
 	      var d = new Date();
 	      var dateNumber = d.getTime();
 	

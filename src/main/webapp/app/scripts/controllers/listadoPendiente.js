@@ -21,6 +21,7 @@ app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $m
 	$scope.eliminacionExitosa = false;
 	$scope.envioEnProceso = false;
 	$scope.envioError = false;
+	$scope.envioParcial = false;
 	$scope.mensaje = '';
 	$scope.filterExprLiquidacion = '';
 
@@ -129,6 +130,7 @@ app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $m
 		$scope.envioExitoso = false;
 		$scope.envioEnProceso = false;
 		$scope.envioError = false;
+		$scope.envioParcial = false;
 		$scope.mensaje = '';
 	}
 
@@ -157,42 +159,89 @@ app.controller('listadoPendienteCtrl', function ($scope, $modal, $modalStack, $m
 
 	};
 
-	$scope.enviarEntregaDoc = function () {
+	$scope.enviarEntregaDoc = function (nCaratulas) {
 		$scope.limpiarmensajes();
 		var exito=true;
 		$scope.envioEnProceso = true;
+		var contador=0;
+		var contError=0;
+		$scope.porcentaje=0;		
 		
-		var caratulas = [];
-		
-		angular.forEach($scope.listadoPendiente.resultados, function (resultado) {
-			if(resultado.id.Selected){
-				var caratula ={
-						"numeroCaratula": resultado.id.caratula,
-						"esCtaCte": resultado.id.esCtaCte
-				};
-				caratulas.push(caratula);
+		$scope.listadoPendiente.resultados.forEach(function(resultado, index) {
+			if(resultado.id.Selected){  				
+				caratulaService.moverCaratulaLiquidacion(resultado.id.caratula, resultado.id.esCtaCte).then(function(data) {
+					contador++;
+					if(data.status===null){
+					}else if(data.status){
+						$scope.listadoPendiente.resultados.splice($scope.listadoPendiente.resultados.indexOf(resultado), 1);
+					}else{
+						contError++;
+					}
+					
+					$scope.porcentaje =parseInt(contador/nCaratulas*100);
+					
+					if(contador==nCaratulas){
+						$scope.envioEnProceso = false;						
+						
+						if(contError==0){
+							$scope.envioExitoso=true;	
+						} else if(contError>0 && contError<nCaratulas){
+							$scope.mensaje='Algunas carátulas no se han podido enviar. Intente nuevamente.';
+							$scope.envioParcial=true;
+							exito=false;
+						} else{
+							$scope.mensaje='No se pudo enviar las carátulas a Entrega Documentos. Intente nuevamente.';
+							$scope.envioError=true;
+							exito=false;
+						}
+					}					
+				}, function(reason) {
+					contError++;					
+					$scope.porcentaje =parseInt(contador/nCaratulas*100);
+					$scope.mensaje='No se ha podido establecer comunicación con el servidor';					
+				});					
+					
 			}
-		});
+		});		
+		
+		
+//		angular.forEach($scope.listadoPendiente.resultados, function (resultado) {
+//			if(resultado.id.Selected){
+//				
+//				$timeout(function(){
+//					console.log((contador++) + " de " + nCaratulas);
+//				},2000);
+//				
+//				var caratula ={
+//						"numeroCaratula": resultado.id.caratula,
+//						"esCtaCte": resultado.id.esCtaCte
+//				};
+////				caratulas.push(caratula);
+//				
+////				caratulaService.movercaratulaLiquidacion(caratula).then(function(data) {
+////					if(data.status===null){
+////					}else if(data.status){
+////						$scope.openMensajeModal('success', 'Carátulas enviadas a Entrega Documentos', '', true, 3);
+////						$scope.envioExitoso=true;
+////						$scope.envioEnProceso = false;
+////						$scope.verListadoPendienteUsuario();
+////					}else{
+////						$scope.envioError=true;
+////						$scope.mensaje=data.msg;
+////						exito=false;
+////						$scope.envioEnProceso = false;
+////					}
+////				}, function(reason) {
+////					$scope.envioError=true;
+////					$scope.mensaje='No se ha podido establecer comunicación con el servidor';
+////					exito=false;
+////					$scope.envioEnProceso = false;
+////				});				
+//			}
+//		});
 
-		caratulaService.movercaratulaLiquidacion(caratulas).then(function(data) {
-			if(data.status===null){
-			}else if(data.status){
-				$scope.openMensajeModal('success', 'Carátulas enviadas a Entrega Documentos', '', true, 3);
-				$scope.envioExitoso=true;
-				$scope.envioEnProceso = false;
-				$scope.verListadoPendienteUsuario();
-			}else{
-				$scope.envioError=true;
-				$scope.mensaje=data.msg;
-				exito=false;
-				$scope.envioEnProceso = false;
-			}
-		}, function(reason) {
-			$scope.envioError=true;
-			$scope.mensaje='No se ha podido establecer comunicación con el servidor';
-			exito=false;
-			$scope.envioEnProceso = false;
-		});
+		
+		
 	};
 	
 	$scope.eliminarCaratulaPendiente = function (caratula) {

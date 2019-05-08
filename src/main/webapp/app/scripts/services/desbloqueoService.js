@@ -22,8 +22,8 @@ app.factory('desbloqueoService', function ($q, $http) {
         return deferred.promise;
       },
       
-      desbloquear: function (solicitud, listaSolicitudes) {
-        var paramsObj = {metodo: 'desbloquear', solicitud: solicitud, listaSolicitudes: listaSolicitudes};
+      desbloquear: function (idSolicitud, idSolicitudes) {
+        var paramsObj = {metodo: 'desbloquear', idSolicitud: idSolicitud, idSolicitudes: idSolicitudes};
         var deferred = $q.defer();
 
         $http({

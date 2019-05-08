@@ -213,9 +213,9 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 								FolioRealDAO folioRealDAO = new FolioRealDAO();
 								contadorBorrador = folioRealDAO.getCantidadBorradoresDesdePH(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
-								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
-								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
-								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
+//								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
+//								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
+//								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
 
 								if(inscripcionDigitalDTO.getFechaActualizacion()!=null){
 									Date fechaActual = new Date();
@@ -236,9 +236,9 @@ public class InscripcionDigitalProhibicionesServiceAction extends CbrsAbstractAc
 								FolioRealDAO folioRealDAO = new FolioRealDAO();
 								contadorBorrador = folioRealDAO.getCantidadBorradoresDesdePH(foja.intValue(), numeroS.intValue(), anoShort, bis);
 
-								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
-								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
-								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
+//								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
+//								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
+//								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
 
 								estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);
 

@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import cl.cbr.common.exception.GeneralException;
 import cl.cbr.util.locator.ServiceLocatorException;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
+import cl.cbrs.borrador.vo.FolioRealVO;
 import cl.cbrs.borrador.vo.ProrealIdVO;
 import cl.cbrs.borrador.vo.ProrealVO;
 
@@ -25,18 +26,20 @@ public class FolioRealDAO extends AbstractJdbcDao {
 		
 	}
 	
-	public List<ProrealVO> getBorradoresDesdePH(Integer fojaph, Integer numeroph, Short anoph, Boolean bisph) throws SQLException, ServiceLocatorException,GeneralException{
+	public List<ProrealVO> getBorradoresDesdeH(Integer fojaph, Integer numeroph, Short anoph, Boolean bisph) throws SQLException, ServiceLocatorException,GeneralException{
 		List<ProrealVO> prorealVOs = new ArrayList<ProrealVO>();
 		Connection conn = null;
 		ResultSet rs = null;
 
 		try {
 			conn = this.conexionFlujo();
+			
+			int bis = bisph?1:0;
 
-			String sql = "select FOLIO, BORRADOR, DIGITO, prop.FOJA_P, prop.NUMERO_P, prop.ANO_P, prop.BIS_P, VIGENTE_T, FECHA_EST_T from Folio_Real.dbo.PROPROH proph inner join "
-					+ "Folio_Real.dbo.PROREAL prop on proph.FOJA_P=prop.FOJA_P and "
-					+ "proph.NUMERO_P=prop.NUMERO_P and proph.ANO_P=prop.ANO_P "
-					+ "where proph.FOJA_PH="+fojaph+" and proph.NUMERO_PH="+numeroph+" and proph.ANO_PH="+anoph+" and proph.BIS_PH='"+bisph+"'";
+			String sql = "select borfol.FOLIO, borfol.BORRADOR, borfol.DIGITO, borfol.FOJA_H, borfol.NUMERO_H, borfol.ANO_H, borfol.BIS_H, freal.DIR "
+					+ " from Folio_Real.dbo.BORFOLHIPO borfol "
+					+ " inner join Folio_Real.dbo.FOLIO_REAL freal on freal.FOLIO = borfol.FOLIO AND freal.BORRADOR = borfol.BORRADOR AND freal.DIGITO = borfol.DIGITO " 
+					+ " where borfol.FOJA_H="+fojaph+" and borfol.NUMERO_H="+numeroph+" and borfol.ANO_H="+anoph+" and borfol.BIS_H="+bis;
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
@@ -49,12 +52,11 @@ public class FolioRealDAO extends AbstractJdbcDao {
 				Integer folio = rs.getInt("FOLIO");
 				Integer borrador = rs.getInt("BORRADOR");
 				Short digito = rs.getShort("DIGITO");
-				Integer fojaP = rs.getInt("FOJA_P");
-				Integer numeroP = rs.getInt("NUMERO_P");
-				Short anoP = rs.getShort("ANO_P");
-				Boolean bisP = rs.getBoolean("BIS_P");
-				Boolean vigenteT = rs.getBoolean("VIGENTE_T");
-				Timestamp fechaEstT = rs.getTimestamp("FECHA_EST_T");
+				Integer fojaP = rs.getInt("FOJA_H");
+				Integer numeroP = rs.getInt("NUMERO_H");
+				Short anoP = rs.getShort("ANO_H");
+				Boolean bisP = rs.getBoolean("BIS_H");
+				String direccion = rs.getString("DIR");
 				
 				ProrealIdVO proRealId = new ProrealIdVO();
 				proRealId.setFolio(folio);
@@ -64,8 +66,121 @@ public class FolioRealDAO extends AbstractJdbcDao {
 				proRealId.setNumeroP(numeroP);
 				proRealId.setAnoP(anoP);
 				proRealId.setBisP(bisP);
-				prorealVO.setVigenteT(vigenteT);
-				prorealVO.setFechaEstT(fechaEstT);
+				prorealVO.setProRealId(proRealId);
+				FolioRealVO folioReal = new FolioRealVO();
+				folioReal.setDir(direccion);
+				prorealVO.setFolioReal(folioReal );
+				
+				prorealVOs.add(prorealVO);
+			}           
+		}catch (SQLException e) {
+			throw e;		
+		}finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				}catch (SQLException e) {
+					throw e;
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				}catch (SQLException e) {
+					throw e;
+				}
+			}
+		}        
+		return prorealVOs;
+	} 
+	
+	public Integer getCantidadBorradoresDesdeH(Integer fojaph, Integer numeroph, Short anoph, Boolean bisph) throws SQLException, ServiceLocatorException,GeneralException{
+		Integer cantidad = 0;
+		Connection conn = null;
+		ResultSet rs = null;
+
+		try {
+			conn = this.conexionFlujo();
+			
+			int bis = bisph?1:0;
+
+			String sql = "select COUNT(*) AS cantidad "
+					+ " from Folio_Real.dbo.BORFOLHIPO borfol "
+					+ " inner join Folio_Real.dbo.FOLIO_REAL freal on freal.FOLIO = borfol.FOLIO AND freal.BORRADOR = borfol.BORRADOR AND freal.DIGITO = borfol.DIGITO " 
+					+ " where borfol.FOJA_H="+fojaph+" and borfol.NUMERO_H="+numeroph+" and borfol.ANO_H="+anoph+" and borfol.BIS_H="+bis;
+
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			rs = ps.executeQuery();
+
+			if(rs != null && rs.next()){          					
+				cantidad = rs.getInt("cantidad");				
+			}           
+		}catch (SQLException e) {
+			throw e;		
+		}finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				}catch (SQLException e) {
+					throw e;
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				}catch (SQLException e) {
+					throw e;
+				}
+			}
+		}        
+		return cantidad;
+	}	
+	
+	public List<ProrealVO> getBorradoresDesdePH(Integer fojaph, Integer numeroph, Short anoph, Boolean bisph) throws SQLException, ServiceLocatorException,GeneralException{
+		List<ProrealVO> prorealVOs = new ArrayList<ProrealVO>();
+		Connection conn = null;
+		ResultSet rs = null;
+
+		try {
+			conn = this.conexionFlujo();
+			
+			int bis = bisph?1:0;
+
+			String sql = "select borfol.FOLIO, borfol.BORRADOR, borfol.DIGITO, borfol.FOJA_PH, borfol.NUMERO_PH, borfol.ANO_PH, borfol.BIS_PH, freal.DIR "
+					+ " from Folio_Real.dbo.BORFOLPROH borfol "
+					+ " inner join Folio_Real.dbo.FOLIO_REAL freal on freal.FOLIO = borfol.FOLIO AND freal.BORRADOR = borfol.BORRADOR AND freal.DIGITO = borfol.DIGITO " 
+					+ " where borfol.FOJA_PH="+fojaph+" and borfol.NUMERO_PH="+numeroph+" and borfol.ANO_PH="+anoph+" and borfol.BIS_PH="+bis;
+
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			rs = ps.executeQuery();
+
+			while (rs != null && rs.next()){          	
+
+				ProrealVO prorealVO = new ProrealVO();
+				
+				Integer folio = rs.getInt("FOLIO");
+				Integer borrador = rs.getInt("BORRADOR");
+				Short digito = rs.getShort("DIGITO");
+				Integer fojaP = rs.getInt("FOJA_PH");
+				Integer numeroP = rs.getInt("NUMERO_PH");
+				Short anoP = rs.getShort("ANO_PH");
+				Boolean bisP = rs.getBoolean("BIS_PH");
+				String direccion = rs.getString("DIR");
+				
+				ProrealIdVO proRealId = new ProrealIdVO();
+				proRealId.setFolio(folio);
+				proRealId.setBorrador(borrador);
+				proRealId.setDigito(digito);
+				proRealId.setFojaP(fojaP);
+				proRealId.setNumeroP(numeroP);
+				proRealId.setAnoP(anoP);
+				proRealId.setBisP(bisP);
+				prorealVO.setProRealId(proRealId);
+				FolioRealVO folioReal = new FolioRealVO();
+				folioReal.setDir(direccion);
+				prorealVO.setFolioReal(folioReal );
 				
 				prorealVOs.add(prorealVO);
 			}           
@@ -97,20 +212,20 @@ public class FolioRealDAO extends AbstractJdbcDao {
 
 		try {
 			conn = this.conexionFlujo();
+			
+			int bis = bisph?1:0;
 
-			String sql = "select COUNT(*) AS cantidad from Folio_Real.dbo.PROPROH proph inner join "
-					+ "Folio_Real.dbo.PROREAL prop on proph.FOJA_P=prop.FOJA_P and "
-					+ "proph.NUMERO_P=prop.NUMERO_P and proph.ANO_P=prop.ANO_P "
-					+ "where proph.FOJA_PH="+fojaph+" and proph.NUMERO_PH="+numeroph+" and proph.ANO_PH="+anoph+" and proph.BIS_PH='"+bisph+"'";
+			String sql = "select COUNT(*) AS cantidad "
+					+ " from Folio_Real.dbo.BORFOLPROH borfol "
+					+ "inner join Folio_Real.dbo.FOLIO_REAL freal on freal.FOLIO = borfol.FOLIO AND freal.BORRADOR = borfol.BORRADOR AND freal.DIGITO = borfol.DIGITO " 
+					+ "where borfol.FOJA_PH="+fojaph+" and borfol.NUMERO_PH="+numeroph+" and borfol.ANO_PH="+anoph+" and borfol.BIS_PH="+bis;
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
 			rs = ps.executeQuery();
 
-			if(rs != null && rs.next()){          	
-				
-				cantidad = rs.getInt("cantidad");
-				
+			if(rs != null && rs.next()){          					
+				cantidad = rs.getInt("cantidad");				
 			}           
 		}catch (SQLException e) {
 			throw e;		
