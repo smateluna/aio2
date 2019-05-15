@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('estadoIndice', function() {
+app.directive('estadoIndice', function($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -10,7 +10,9 @@ app.directive('estadoIndice', function() {
       link: function(scope, element, attrs) {
           scope.req.numeroCaratula = attrs.numeroCaratula;
           scope.req.simpleMode = attrs.simpleMode;
-          scope.buscar();                                
+          $timeout(function(){	
+        	  scope.buscar();       
+          },1000);
       }
     };
   });

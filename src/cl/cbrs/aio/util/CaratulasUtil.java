@@ -1,6 +1,7 @@
 package cl.cbrs.aio.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,16 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.WebResource;
+
 import cl.cbr.botondepagoweb.vo.TransaccionWebVO;
+import cl.cbr.common.exception.GeneralException;
+import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dao.RegistroDAO;
 import cl.cbrs.aio.dto.CaratulaDTO;
 import cl.cbrs.aio.dto.EstadoActualCaratulaDTO;
@@ -24,6 +34,7 @@ import cl.cbrs.aio.dto.TipoFormularioDTO;
 import cl.cbrs.aio.dto.TransaccionWebDTO;
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.dto.estado.FuncionarioDTO;
+import cl.cbrs.aio.dto.estado.PosesionEfectivaDTO;
 import cl.cbrs.aio.dto.estado.RegistroDTO;
 import cl.cbrs.aio.dto.firmaElectronica.RegistroFirmaElectronicaDTO;
 import cl.cbrs.aio.dto.firmaElectronica.TipoDocumentoDTO;
@@ -42,6 +53,7 @@ import cl.cbrs.caratula.flujo.vo.SeccionVO;
 import cl.cbrs.caratula.flujo.vo.TareaVO;
 import cl.cbrs.caratula.flujo.vo.TipoFormularioVO;
 import cl.cbrs.caratula.flujo.vo.TipoTareaVO;
+import cl.cbrs.carteles.vo.CertificadoCartelVO;
 import cl.cbrs.delegate.botondepago.WsBotonDePagoClienteDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
 import cl.cbrs.entregaenlinea.cliente.ws.delegate.WsEntregaEnLineaDelegate;
@@ -53,27 +65,24 @@ import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 
 public class CaratulasUtil {
 	private static final Logger logger = Logger.getLogger(CaratulasUtil.class);
-
-	//private static Integer CARATULAS_EN_PROCESO = 0;
-	//private static Integer CARATULAS_TERMINADA = 1;
+	private static String WS_CARATULA = "ws_caratula.parametros";
 
 	public CaratulasUtil(){	
 	}
 
-	public JSONArray getCaratulas(Long foja, String numero, Long ano, Integer bis, Integer estadoCaratula){
-		WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
-		List<CaratulaVO> caratulaVOList;
+	public JSONArray getCaratulas(Integer registro, Long foja, String numero, Long ano, Integer bis, Integer estadoCaratula) throws Exception{
 		JSONArray caratulas = new JSONArray();
-
-		try {
-
-			caratulaVOList = caratulaClienteDelegate.obtenerCaratulasPorTitulo(foja, numero, ano, bis, estadoCaratula);
-
-			caratulas = getJSONArrayCaratulaDTO(caratulaVOList);
-
-		} catch (Exception e) {
-			logger.error(e);
-			e.printStackTrace();
+		String ipCaratula = TablaValores.getValor(WS_CARATULA, "IP_WS", "valor");
+		String portCaratula = TablaValores.getValor(WS_CARATULA, "PORT_WS", "valor");
+		Client client = Client.create();
+		
+		WebResource wr = client.resource(new URI("http://"+ipCaratula+":"+portCaratula+"/CaratulaRest/caratula/obtenerCaratulasPorTitulo/"+registro+"/"+foja+"/"+numero+"/"+ano+"/"+bis+"/"+estadoCaratula));
+		ClientResponse clientResponse = wr.type("application/json").get(ClientResponse.class);
+		Status statusRespuesta = clientResponse.getClientResponseStatus();
+		if(statusRespuesta.getStatusCode() == 200){
+			caratulas = (JSONArray)RestUtil.getResponse(clientResponse);						
+		} else{
+			throw new Exception("obtenerCaratulasPorTitulo NOK. cod:" + statusRespuesta.getStatusCode());
 		}
 
 		return caratulas;
