@@ -15,21 +15,18 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.keycloak.KeycloakSecurityContext;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -44,7 +41,6 @@ import cl.cbrs.aio.dto.ConsultaDocumentoDTO;
 import cl.cbrs.aio.dto.DespachoCuadernilloDTO;
 import cl.cbrs.aio.dto.FojaIniFojaFinCuadernilloDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
-import cl.cbrs.aio.dto.ReingresoGPDTO;
 import cl.cbrs.aio.dto.SolicitudDTO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.AnotacionUtil;
@@ -79,6 +75,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 	private static int CARATULAS_FINALIZADAS = 1;
 	private static long ANOTACION_FOLIADA = 6;
 	private static String WS_ALERTAS = "ws_alertas.parametros";
+	private static String WS_CARATULA = "ws_caratula.parametros";
 
 	public ActionForward unspecified(ActionMapping mapping,
 			ActionForm form,
@@ -133,6 +130,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		//generales
 		Boolean status = false;
 		String msg = "";
+		String msgCaratulas = "";
+		String msgBorradores = "";
 		List<SolicitudVO> solicitudVOs;
 		SolicitudDTO solicitudDTO = null;
 
@@ -225,13 +224,6 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 
 								inscripcionDigitalDTO = converter.getInscripcionDigitalDTO(true, inscripcionDigitalVO);
 
-								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
-								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
-
-								WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
-								contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
-								contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
-
 								if(inscripcionDigitalDTO.getFechaActualizacion()!=null){
 									Date fechaActual = new Date();
 									SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy"); 
@@ -261,6 +253,48 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 								//tipo de documento desconocido
 								msg = "Tipo de documento desconocido. Tipo:"+consultaDocumentoDTO.getTipoDocumento();
 							}
+							
+							//Contar borradores
+							try{
+								WsBorradorDelegate wsBorradorDelegate = new WsBorradorDelegate();
+								contadorBorrador = wsBorradorDelegate.cantidadBorradores(foja.intValue(), numeroS.intValue(), anoShort, bis);
+							} catch(Exception e){
+								msgBorradores = "No se pudo obtener borradores relacionados a esta inscripcion";
+								contadorBorrador=-1;
+							}
+
+							//Contar caratulas en proceso y terminadas
+//							WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();	
+//							contadorProceso = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_EN_PROCESO);
+//							contadorTerminada = wsCaratulaClienteDelegate.cantidadCaratulasPorTitulo(foja, numero, ano, bisi, CARATULAS_FINALIZADAS);
+							try{
+								String ipCaratula = TablaValores.getValor(WS_CARATULA, "IP_WS", "valor");
+								String portCaratula = TablaValores.getValor(WS_CARATULA, "PORT_WS", "valor");
+								wr = client.resource(new URI("http://"+ipCaratula+":"+portCaratula+"/CaratulaRest/caratula/cantidadCaratulasPorTitulo/1/"+foja+"/"+numero+"/"+ano+"/"+bisi+"/"+CARATULAS_EN_PROCESO));
+								clientResponse = wr.type("application/json").get(ClientResponse.class);
+								statusRespuesta = clientResponse.getClientResponseStatus();
+								if(statusRespuesta.getStatusCode() == 200){
+									contadorProceso = Integer.parseInt((String)RestUtil.getResponse(clientResponse));
+								} else{
+									contadorProceso=-1;
+									msgCaratulas = "No se pudo obtener caratulas en proceso relacionadas a esta inscripción";
+								}
+								
+								wr = client.resource(new URI("http://"+ipCaratula+":"+portCaratula+"/CaratulaRest/caratula/cantidadCaratulasPorTitulo/1/"+foja+"/"+numero+"/"+ano+"/"+bisi+"/"+CARATULAS_FINALIZADAS));
+								clientResponse = wr.type("application/json").get(ClientResponse.class);
+								statusRespuesta = clientResponse.getClientResponseStatus();
+								if(statusRespuesta.getStatusCode() == 200){
+									contadorTerminada = Integer.parseInt((String)RestUtil.getResponse(clientResponse));
+								} else{
+									contadorTerminada=-1;
+									msgCaratulas = "No se pudo obtener caratulas terminadas relacionadas a esta inscripción";
+								}	
+							} catch(Exception e){
+								msgCaratulas = "No se pudo obtener caratulas relacionadas a esta inscripcion";
+								contadorProceso=-1;
+								contadorTerminada=-1;
+							}
+							
 						}else{										
 							estadoFna = digitalUtil.consultaIndice(foja, numero, ano);							
 							estadoEsAnoDigital = digitalDelegate.validaAnosDigitales(foja, numero, ano);							
@@ -311,6 +345,8 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 		respuesta.put("status", status);
 		respuesta.put("sesion", sesion);
 		respuesta.put("msg", msg);	
+		respuesta.put("msgCaratulas", msgCaratulas);
+		respuesta.put("msgBorradores", msgBorradores);
 		respuesta.put("alertas", alertas);
 		respuesta.put("estado", estado);
 		respuesta.put("urlGpOnline", urlGpOnline);
@@ -865,7 +901,7 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 			Integer estadoInt = Integer.parseInt(estado);
 
 			CaratulasUtil caratulasUtil = new CaratulasUtil();
-			caratulas = caratulasUtil.getCaratulas(foja, numeroReq, ano, bisi, estadoInt);
+			caratulas = caratulasUtil.getCaratulas(1,foja, numeroReq, ano, bisi, estadoInt);
 
 			status = true;
 
