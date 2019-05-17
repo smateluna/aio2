@@ -19,6 +19,8 @@ public class RestUtil {
 				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));			
 			else if(response.getType().toString().contains(MediaType.APPLICATION_JSON_TYPE.toString()))
 				respuesta = new JSONParser().parse(response.getEntity(String.class));
+			else if(response.getType().toString().contains("application/pdf"))
+				respuesta = IOUtils.toByteArray(response.getEntity(InputStream.class));
 			else
 				respuesta = response.getEntity(String.class);
 

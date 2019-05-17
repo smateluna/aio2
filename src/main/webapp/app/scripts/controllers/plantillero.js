@@ -41,7 +41,9 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			msg: null
 	};
 	
-	taOptions.toolbar = [['html']];
+	taOptions.toolbar = [['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo'],['justifyLeft','justifyCenter','justifyRight']];
+	if($rootScope.perfil.toUpperCase()==="DESARROLLO AIO")
+		taOptions.toolbar.push(['html']);
 
 	$scope.obtenerTiposCertificadosPorPerfil = function(){
 		$scope.openLoadingModal('Cargando Listado...', '');
@@ -51,11 +53,8 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			$scope.closeModal();
 			if(data.status===null){
 			}else if(data.status){
-
 				$scope.plantillero.tiposcertificados=data.listatiposCertificados;
-
 				$scope.doFocus('caratula');
-
 			}else{
 				$scope.raiseErr('data.msg', data.msg);
 			}
@@ -136,7 +135,8 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			if($scope.plantillero.caratula)
 				texto = texto.replace("_CARATULA_", $scope.plantillero.caratula);
 			if($scope.plantillero.valor)
-				texto = texto.replace("_VALOR_", $scope.plantillero.valor);
+				texto = texto.replace("_VALOR_", $scope.plantillero.valor.toLocaleString());
+			texto = texto.replace("_FECHA_", $scope.obtenerFechaEnPalabras($scope.fechahoy));
 
 			angular.forEach($scope.entity.fields, function(value, key) {
 				if(value.model){
@@ -163,22 +163,17 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 	};
 
 	$scope.vistaPrevia = function(){
-
-		$scope.openLoadingModal('Generando Vista Previa...', '');
-
-		var promise = certificacionService.vistaprevia($scope.plantillero.caratula,$scope.plantillero.tipocertificado.plantillas.plantillaCertificado,$scope.plantillero.cuerpocertificado,$scope.plantillero.tipocertificado.plantillas.fePDocumentoTipos.identificador,$scope.plantillero.valor);
+		$scope.openLoadingModal('Generando Certificado...', '');
+		
+		var promise = certificacionService.generarPdf($scope.plantillero.caratula,$scope.plantillero.tipocertificado.plantillas.plantillaCertificado,$scope.plantillero.cuerpocertificado,$scope.plantillero.tipocertificado.plantillas.fePDocumentoTipos.identificador,$scope.plantillero.valor);
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.status===null){
 
 			}else if(data.status){
-
-				$scope.raiseOk('', 'Certificacion realizada');
-
 				$scope.states.isError= false;
-
-				$rootScope.go('/verVistaPreviaPlantilla/'+$scope.plantillero.caratula+'/'+$scope.plantillero.tipocertificado.plantillas.fePDocumentoTipos.identificador+'/plantillero/');
-
+				
+				$rootScope.go('/verVistaPreviaPlantilla/'+data.nombreArchivoVersion+'/plantillero/');
 				$scope.limpiarPlantillero();
 			}else{
 				$scope.states.isOk= false;

@@ -85,6 +85,10 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 	anotaciones : {
 		isLoading : false,
 		error : false
+	},
+	notas : {
+		isLoading : false,
+		error : false
 	}
 	};
 
@@ -140,6 +144,7 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 		var tieneanotacion2 = false;
 		
 		$scope.loaders['anotaciones'].isLoading = true;
+		$scope.loaders['notas'].isLoading = true;
 		var promise = inscripcionDigitalService.getNotas(
 			$scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
 		promise
@@ -178,10 +183,12 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 				}
 
 				$scope.loaders['anotaciones'].isLoading = false;
+				$scope.loaders['notas'].isLoading = false;
 
 			},
 			function(reason) {
 				$scope.loaders['anotaciones'].isLoading = false;
+				$scope.loaders['notas'].isLoading = false;
 
 				$scope.loaders['anotaciones'].error = true;
 
@@ -601,6 +608,13 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 				$scope.loaders[tipo].error = true;
 			});
 	};
+	
+	$scope.verInscripcion = function(obj) {
+		$rootScope.go('/verInscripcion/'
+			+ $scope.parametros.registro + '/' + obj.foja
+			+ '/' + obj.numero + '/' + obj.ano + '/'
+			+ obj.bis + '/' + $scope.parametros.origen);
+	};	
 
 	$scope.irGpOnlineAIO = function(borrador,folio){
 		$modal.open({

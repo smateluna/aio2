@@ -139,7 +139,7 @@ app.config(function ($routeProvider, $compileProvider) {
 		templateUrl: 'views/verInscripcionCertificarProh.html',
 		controller: 'VerInscripcionCertificarProhCtrl'
 	})
-	.when('/verVistaPreviaPlantilla/:caratula/:prefijo/:origen', {
+	.when('/verVistaPreviaPlantilla/:nombreArchivo/:origen', {
 		templateUrl: 'views/verVistaPreviaPlantilla.html',
 		controller: 'VerVistaPreviaPlantillaCtrl'
 	})

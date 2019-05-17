@@ -144,6 +144,49 @@ app.factory('certificacionService', function ($http, $q) {
 	        });
 	
 	      return deferred.promise;
-     }
+     },generarPdf: function (caratula,titulo,cuerpocertificado,prefijo,valor) {
+	      var d = new Date();
+	      var dateNumber = d.getTime();
+	
+    	  var paramsObj = 'metodo=generarPdf&caratula='+caratula+'&titulo='+encodeURIComponent(titulo)+'&cuerpocertificado='+encodeURIComponent(cuerpocertificado)+'&prefijo='+prefijo+'&valor='+valor ;
+	
+	      var deferred = $q.defer();
+	
+	      $http({
+	        method: 'POST',
+	        url: '../do/service/certificacion',
+	        data: paramsObj,
+	        dataType: 'json',
+	        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+	      }).
+	        success(function(data, status, headers, config){
+	          deferred.resolve(data);
+	        }).
+	        error(function(data, status, headers, config){
+	          deferred.reject(status);
+	        });
+	
+	      return deferred.promise;
+    },certificarPdf: function (nombreArchivo) {
+	      var d = new Date();
+	      var dateNumber = d.getTime();
+	      var paramsObj = {v: dateNumber,metodo: 'certificarPdf', nombreArchivo:nombreArchivo};
+	
+	      var deferred = $q.defer();
+	
+	      $http({
+	        method: 'GET',
+	        url: '../do/service/certificacion',
+	        params: paramsObj
+	      }).
+	        success(function(data, status, headers, config){
+	          deferred.resolve(data);
+	        }).
+	        error(function(data, status, headers, config){
+	          deferred.reject(status);
+	        });
+	
+	      return deferred.promise;
+  }
     };
   });

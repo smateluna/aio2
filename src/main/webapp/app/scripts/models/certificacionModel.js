@@ -13,7 +13,8 @@ app.factory('certificacionModel', function () {
     resultados: [],
     data: null,
     predicate: null,
-    reverse: null 
+    reverse: null ,
+    tiemporefresco:10
   };
 
   var busquedaMis = {

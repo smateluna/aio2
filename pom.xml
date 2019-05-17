@@ -643,6 +643,11 @@
 		    <artifactId>javax.mail-api</artifactId>
 		    <version>1.6.2</version>
 		</dependency>
+		<dependency>
+            <groupId>cl.cbrs.common</groupId>
+            <artifactId>parametron</artifactId>
+            <version>1.0.1</version>
+        </dependency>		
 		
 		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
 	</dependencies>

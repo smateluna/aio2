@@ -1,9 +1,8 @@
 'use strict';
 
-app.controller('CertificacionEnParteCtrl', function ($scope,$timeout,$rootScope,$location,$anchorScroll,solicitudesModel,certificacionModel, certificacionService, caratulaService, $filter,$modal,$modalStack) {
+app.controller('CertificacionEnParteCtrl', function ($scope,$timeout,$rootScope,$location,$interval,$anchorScroll,solicitudesModel,certificacionModel, certificacionService, caratulaService, $filter,$modal,$modalStack) {
 	
 	$scope.busquedaCertificacion = certificacionModel.getBusquedaCertificacion();
-	//console.log('logggg ' + angular.toJson($scope.busquedaCertificacion));
 	$scope.states = certificacionModel.getStates();
 	$scope.listaResumida = certificacionModel.getListaResumida();
 	$scope.tab = solicitudesModel.getTab();
@@ -389,4 +388,31 @@ app.controller('CertificacionEnParteCtrl', function ($scope,$timeout,$rootScope,
 	      $scope.raiseErr('buscar','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
 	    });
 	};
+	
+	$scope.$watch('busquedaCertificacion.tiemporefresco', function() {
+	  $scope.start();
+    });	
+	
+	var promise;    
+    $scope.start = function() {
+      // stops any running interval to avoid two intervals running at the same time
+      $scope.stop(); 
+      
+      // store the interval promise
+      if($scope.busquedaCertificacion.tiemporefresco!=0){
+      			promise = $interval(function(){
+      						$scope.refrescar();
+   						  }.bind(this), $scope.busquedaCertificacion.tiemporefresco*60000);
+      }
+      
+    };	
+    $scope.stop = function() {
+	    $interval.cancel(promise);
+	};
+      
+    $scope.start();
+     
+    $scope.$on('$destroy', function() {
+    	$scope.stop(); 
+    });    
 });
