@@ -7,8 +7,7 @@
 app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, certificacionService) {
 
 	$scope.parametros = {
-		caratula: $routeParams.caratula,
-		prefijo: $routeParams.prefijo,
+		nombreArchivo: $routeParams.nombreArchivo,
 		origen: $routeParams.origen
 	};
 
@@ -22,10 +21,8 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 
 	$scope.buscar = function(){
 		$scope.isLoading = true;
-		var caratula = $scope.parametros.caratula,
-		prefijo = $scope.parametros.prefijo;
 
-		$scope.urlPDF = $sce.trustAsResourceUrl("../do/service/inscripcionDigital?metodo=verCertificadoPlantilla&caratula="+caratula+"&prefijo="+prefijo);
+		$scope.urlPDF = $sce.trustAsResourceUrl("../do/service/certificacion?metodo=obtenerPdf&nombreArchivo="+$scope.parametros.nombreArchivo);
 		$scope.isLoading  = false;
 	};
 	
@@ -62,7 +59,7 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 	$scope.certificar = function(){
 		$scope.openLoadingModal('Certificando...', '');
 
-		var promise = certificacionService.certificarvistapreviaplantilla($scope.parametros.caratula,$scope.parametros.prefijo);
+		var promise = certificacionService.certificarPdf($scope.parametros.nombreArchivo);
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.status===null){
@@ -73,7 +70,7 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 				$scope.salirSave();
 
 			}else{
-				$scope.raiseErr('No se pudo certificar caratula', data.msg);
+				$scope.raiseErr('No se pudo certificar documento', data.msg);
 			}
 		}, function(reason) {
 			$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');

@@ -1,7 +1,11 @@
 package cl.cbrs.aio.struts.action.service;
 
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,10 +21,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.keycloak.KeycloakSecurityContext;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.WebResource;
+
+import cl.cbr.firmaelectronica.ws.WSFirmaElectronica;
+import cl.cbr.firmaelectronica.ws.WSFirmaElectronicaServiceLocator;
 import cl.cbr.util.StringUtil;
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.certificado.GeneraCertificado;
+import cl.cbrs.aio.parametron.ParamsFirmaElectronica;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
+import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
@@ -38,6 +51,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 
 	private static final Logger logger = Logger.getLogger(CertificacionServiceAction.class);
 	final String TABLA_PARAMETROS="ProcesaImpresion.parametros";
+	final String GENERA_CERTIFICADO = "genera_certificado.parametros";
 	private final String SECCION_EN_PARTE = "C2";
 	Integer FECHA_REHACER_IMAGEN= Integer.parseInt(TablaValores.getValor(TABLA_PARAMETROS,"FECHA_REHACER_IMAGEN", "valor"));
 	private final String TIPO_EN_PARTE = "10";
@@ -609,5 +623,159 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			logger.error(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void generarPdf(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+		
+		JSONObject respuesta = new JSONObject();
+		Boolean status = false;
+		String msg = "";
+		
+		ParamsFirmaElectronica paramsFirma = new ParamsFirmaElectronica();			
+		
+		try{
+		
+			String caratula = request.getParameter("caratula")==null?"0":request.getParameter("caratula");
+	    	String titulo = request.getParameter("titulo")==null?"":request.getParameter("titulo");
+	    	String cuerpoplantilla = request.getParameter("cuerpocertificado")==null?"":request.getParameter("cuerpocertificado");
+	    	String prefijo = request.getParameter("prefijo")==null?"":request.getParameter("prefijo");
+	    	String valor = request.getParameter("valor")==null?"":request.getParameter("valor");		    
+	    	
+			Client client = Client.create();
+
+			//Registrar documento en firma
+			WebResource wr = client.resource(new URI(paramsFirma.getServiciosFirmaElectronicaUrl()));
+			JSONObject jsonInString = new JSONObject();
+			jsonInString.put("caratula", Integer.parseInt(caratula));
+			jsonInString.put("prefijo", prefijo);
+			jsonInString.put("nombreArchivo", prefijo+"_"+caratula);
+			jsonInString.put("valorDocumento", valor);
+			
+			ClientResponse clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString.toJSONString());
+			Status statusRespuesta = clientResponse.getClientResponseStatus();
+
+			if(statusRespuesta.getStatusCode() == 200){
+				JSONObject firmaJson = (JSONObject) RestUtil.getResponse(clientResponse);
+				
+				//Generar PDF
+				wr = client.resource(new URI(TablaValores.getValor(GENERA_CERTIFICADO, "endpoint_genera_pdf", "valor")));
+				jsonInString = new JSONObject();
+				jsonInString.put("caratula", caratula);
+				jsonInString.put("pathDestinoTemporal", TablaValores.getValor(GENERA_CERTIFICADO, "path_pdf", "valor"));
+				jsonInString.put("nombreArchivo", firmaJson.get("nombreArchivoVersion"));
+				jsonInString.put("codigoAlpha", firmaJson.get("codArchivoAlpha"));
+				jsonInString.put("cabecera", titulo);
+				jsonInString.put("texto", cuerpoplantilla);
+				
+				clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString.toJSONString());
+				statusRespuesta = clientResponse.getClientResponseStatus();
+				
+				if(statusRespuesta.getStatusCode() == 200){
+					respuesta.put("nombreArchivoVersion", firmaJson.get("nombreArchivoVersion"));
+					status = true;	
+				}else{
+					status=false;
+				}
+				
+			} else{
+				status=false;
+			}
+				
+			
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+
+			status = false;
+			msg = "Se ha detectado un problema, comunicar area soporte.";
+		}
+
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public void obtenerPdf(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+
+		String nombreArchivo = request.getParameter("nombreArchivo");
+		OutputStream out = null;
+		
+		
+		try {	 
+			out = new BufferedOutputStream(response.getOutputStream());
+
+			Client client = Client.create();
+
+			//Buscar PDF
+			WebResource wr = client.resource(new URI(TablaValores.getValor(GENERA_CERTIFICADO, "endpoint_obtener_pdf", "valor")));
+			JSONObject jsonInString = new JSONObject();
+			jsonInString.put("pathArchivo", TablaValores.getValor(GENERA_CERTIFICADO, "path_pdf", "valor"));
+			jsonInString.put("nombreArchivo", nombreArchivo);
+			
+			ClientResponse clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString.toJSONString());
+			Status statusRespuesta = clientResponse.getClientResponseStatus();
+			
+			if(statusRespuesta.getStatusCode() == 200){
+				byte[] pdf = (byte[])RestUtil.getResponse(clientResponse);
+				 
+				response.setContentType("application/pdf");
+				out.write(pdf);
+				out.close();
+				
+			} else{
+				
+			}
+			
+			out.flush();
+			if(out != null)
+				out.close();
+		} catch (Exception e) {
+			logger.error("Error al buscar documento: " + e.getMessage(),e);
+			request.setAttribute("error", "Archivo no encontrado.");
+		} finally{
+			if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}			
+		}
+
+	}		
+	
+	@SuppressWarnings("unchecked")
+	public void certificarPdf(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+		
+		String nombreArchivo = request.getParameter("nombreArchivo");
+		
+		JSONObject respuesta = new JSONObject();
+		Boolean status = false;
+		String msg = "";
+		
+		try{
+			WSFirmaElectronicaServiceLocator locator=new WSFirmaElectronicaServiceLocator();
+			WSFirmaElectronica  servicio = locator.getFirmaElectronicaWS(new URL(TablaValores.getValor(GENERA_CERTIFICADO, "endpoint_firma", "valor")));
+			String respuestaFirma =servicio.firmarArchivo(TablaValores.getValor(GENERA_CERTIFICADO, "path_pdf_windows", "valor"), nombreArchivo);
+			if (!respuestaFirma.equals("OK"))
+				throw new Exception();
+			
+			status = true;
+				
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			status = false;
+			msg = "Se ha detectado un problema, comunicar area soporte.";
+		}
+
+		respuesta.put("status", status);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}	
 	
 }
