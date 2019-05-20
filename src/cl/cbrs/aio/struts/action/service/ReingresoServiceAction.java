@@ -86,7 +86,6 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 	private static ArrayList<FormularioDTO> CACHE_LISTA_FORMULARIOS = null;
 	private static WorkflowVO[] CACHE_LISTA_WORKFLOWS = null;
-	private static List<NotarioElectronicoVO> CACHE_LISTA_NOTARIOS;
 	private final String REINGRESO_COMERCIO = "X0";
 	private static int OBSERVACION_INTERNA = 0;
 
@@ -1078,14 +1077,11 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 		boolean foundMatch = false;
 		try {
-			if (CACHE_LISTA_NOTARIOS == null) {
-				CACHE_LISTA_NOTARIOS = NotarioElectronicoRestClient.findAll();
-			}
+			List<NotarioElectronicoVO> listaNotarios = NotarioElectronicoRestClient.findAll();
 
 			Pattern regex = Pattern.compile(query.toLowerCase(), Pattern.MULTILINE);
 
-			for (int i = 0; i < CACHE_LISTA_NOTARIOS.size(); i++) {
-				NotarioElectronicoVO notario = CACHE_LISTA_NOTARIOS.get(i);
+			for (NotarioElectronicoVO notario : listaNotarios) {
 				Matcher regexMatcher = regex.matcher(notario.getNombre().toLowerCase());
 
 				foundMatch = regexMatcher.find();
