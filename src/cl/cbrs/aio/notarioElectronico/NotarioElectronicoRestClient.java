@@ -4,9 +4,8 @@ import java.util.List;
 
 import javax.xml.ws.http.HTTPException;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -15,7 +14,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 
 import cl.cbr.foliomercantil.vo.NotarioElectronicoVO;
-import cl.cbrs.aio.dto.estado.PosesionEfectivaDTO;
 import cl.cbrs.aio.util.ConstantesPortalConservador;
 import cl.cbrs.aio.util.RestUtil;
 

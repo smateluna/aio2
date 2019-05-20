@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 
 import com.lowagie.text.pdf.PdfReader;
 
