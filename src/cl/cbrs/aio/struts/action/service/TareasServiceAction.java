@@ -909,12 +909,14 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				File fileOcr = new File(folderOcr.toString() + File.separator +"OCR_"+numeroCaratula+".pdf");
 
 				FileOutputStream fop = new FileOutputStream(fileVersiona);
-				FileOutputStream fopOcr = new FileOutputStream(fileOcr);
+				FileOutputStream fopOcr = new FileOutputStream(fileOcr);			
+				
+				byte [] content = IOUtils.toByteArray(archivo);
 
-				IOUtils.copy(archivo,fop);
+				IOUtils.copy(new ByteArrayInputStream(content),fop);
 				fop.close();
 
-				IOUtils.copy(archivo,fopOcr);
+				IOUtils.copy(new ByteArrayInputStream(content),fopOcr);
 				fopOcr.close();
 
 				archivo.close();	
