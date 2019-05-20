@@ -758,7 +758,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			WSFirmaElectronica  servicio = locator.getFirmaElectronicaWS(new URL(TablaValores.getValor(GENERA_CERTIFICADO, "endpoint_firma", "valor")));
 			String respuestaFirma =servicio.firmarArchivo(TablaValores.getValor(GENERA_CERTIFICADO, "path_pdf_windows", "valor"), nombreArchivo);
 			if (!respuestaFirma.equals("OK"))
-				throw new Exception();
+				throw new Exception("Firma NOK");
 			
 			status = true;
 				

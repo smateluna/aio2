@@ -6090,6 +6090,7 @@ button.close {
   opacity: 0;
   filter: alpha(opacity=0);
   visibility: visible;
+  pointer-events: none;
 }
 
 .tooltip.in {
