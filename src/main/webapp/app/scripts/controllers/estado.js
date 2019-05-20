@@ -868,14 +868,10 @@ app
 					} else if (data.success) {
 						$scope.data.res.caratulaDTO.documentos = {};
 						$scope.documentos.escrituras = [];
-						for ( var i = 0; i < data.children.length; i++)
-							$scope.documentos.escrituras
-							.splice(
-									$scope.documentos.escrituras.length,
-									0,
-									data.children[i].children[0]);
-						//for(var j=0; j<data.children[i].children.length; j++)
-						//$scope.documentos.escrituras.splice($scope.documentos.escrituras.length, 0, data.children[i].children[0]);
+						for ( var i = 0; i < data.children.length; i++){
+							if(data.children[i].children!=undefined && data.children[i].children.length>0)
+								$scope.documentos.escrituras.splice($scope.documentos.escrituras.length,0,data.children[i].children[0]);
+						}
 
 						$scope.data.statusDocumentos = data.success;
 
@@ -1260,6 +1256,10 @@ app
 				});		
 
 	};
+	
+	$scope.downloadDocumentosEntregaZip = function(){
+		$window.open('../do/service/estado?metodo=getDocumentosEntregaZip&numeroCaratula='+ $scope.req.numeroCaratula);
+	}
 
 	$scope.verPosesionEfectiva = function(folio, fechaProceso) {
 		var documento ={

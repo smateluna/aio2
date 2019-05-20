@@ -63,11 +63,11 @@ app.controller('ReingresoEscrituraCtrl', function ($scope,$http,$timeout,$rootSc
 								if(data.children[i].children[0]){
 									if(data.children[i].children[0].vigente){
 										$scope.busquedaReingreso.version=data.children[i].children[0].version;
-										//									console.log($scope.busquedaReingreso.version);
 									}
 								}
 							}
-							$scope.busquedaReingreso.escrituras.splice($scope.busquedaReingreso.escrituras.length,0,data.children[i].children[0]);
+							if(data.children[i].children!=undefined && data.children[i].children.length>0)
+								$scope.busquedaReingreso.escrituras.splice($scope.busquedaReingreso.escrituras.length,0,data.children[i].children[0]);
 						}
 					}
 					$scope.busquedaReingreso.data = data;
@@ -186,7 +186,7 @@ app.controller('ReingresoEscrituraCtrl', function ($scope,$http,$timeout,$rootSc
 
 	$scope.buscarDocumento = function(){	
 		$scope.openLoadingModal('buscando documento...', '');	
-		var promise = tareasService.buscarDocumento($scope.busquedaReingreso.notario.idNotario,$scope.busquedaReingreso.codescritura,$scope.busquedaReingreso.notario.empresa,$scope.busquedaReingreso.caratula);
+		var promise = tareasService.buscarDocumento($scope.busquedaReingreso.notario.id,$scope.busquedaReingreso.codescritura,$scope.busquedaReingreso.notario.empresa,$scope.busquedaReingreso.caratula);
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.estado===null){
@@ -225,7 +225,7 @@ app.controller('ReingresoEscrituraCtrl', function ($scope,$http,$timeout,$rootSc
 
 	$scope.buscarDocumentoFusion = function(){	
 		$scope.openLoadingModal('buscando documento...', '');	
-		var promise = tareasService.buscarDocumentoFusion($scope.busquedaReingreso.notario2.idNotario,$scope.busquedaReingreso.codescritura2,$scope.busquedaReingreso.notario2.empresa,$scope.busquedaReingreso.caratula,$scope.busquedaReingreso.version);
+		var promise = tareasService.buscarDocumentoFusion($scope.busquedaReingreso.notario2.id,$scope.busquedaReingreso.codescritura2,$scope.busquedaReingreso.notario2.empresa,$scope.busquedaReingreso.caratula,$scope.busquedaReingreso.version);
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.estado===null){
@@ -336,30 +336,6 @@ app.controller('ReingresoEscrituraCtrl', function ($scope,$http,$timeout,$rootSc
 		angular.element("input[type='file']").val(null);
 		$scope.urlPDF='';
 	};
-
-	//	$scope.removeVersiondddd = function(escritura) {
-	//		 
-	//		if(confirm('Desea eliminar la version '+ escritura.version+' De caratula '+$scope.busquedaReingreso.caratula +'?')){
-	//			$scope.openLoadingModal('Eliminando version de escritura...', '');	
-	//			var promise = escrituraService.eliminarDocumento(escritura.idDocumento,$scope.busquedaReingreso.caratula,escritura.version);
-	//			promise.then(function(data) {
-	//				$scope.closeModal();
-	//				if(data.estado===null){
-	//				}else if(data.status){
-	//
-	//					$scope.raiseSuccess('Se ha eliminado la version de Escritura');
-	//					$scope.buscarEscriturasCaratula();
-	//
-	//				}else{
-	//					$scope.statesDescarga.ok=false;
-	//					$scope.statesDescarga.msg=data.msg;
-	//				}
-	//			}, function(reason) {
-	//				$scope.statesDescarga.ok=false;
-	//				$scope.statesDescarga.msg='no se ha podido establecer comunicacion con el servidor.';
-	//			});		  
-	//		}
-	//	}
 
 	$scope.removeVersion = Modal.confirm.delete(function(escritura){
 		$scope.openLoadingModal('Eliminando version de escritura...', '');	

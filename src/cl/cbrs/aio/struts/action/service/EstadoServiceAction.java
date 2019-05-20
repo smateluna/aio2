@@ -3,6 +3,7 @@ package cl.cbrs.aio.struts.action.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +16,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +63,7 @@ import cl.cbrs.aio.dto.estado.ProductoWebDTO;
 import cl.cbrs.aio.dto.estado.RepertorioDTO;
 import cl.cbrs.aio.dto.estado.TareaDTO;
 import cl.cbrs.aio.dto.firmaElectronica.EntregaEnLineaDTO;
+import cl.cbrs.aio.dto.firmaElectronica.RegistroFirmaElectronicaDTO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.aio.util.CaratulasUtil;
@@ -1119,8 +1124,7 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 	}	
 	
 	@SuppressWarnings({ "unchecked" })
-	public void getDocumentosEntrega(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+	public void getDocumentosEntrega(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 
 		String numeroCaratula = request.getParameter("numeroCaratula");		
@@ -1161,6 +1165,74 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			logger.error(e.getMessage());
 		}		
 	}		
+	
+	public void getDocumentosEntregaZip(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {			
+
+		String numeroCaratula = request.getParameter("numeroCaratula");
+		ServletOutputStream out = null;
+
+		Long numero = Long.parseLong(numeroCaratula);
+
+		try {		
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(baos);
+			out = response.getOutputStream();  
+			
+			EntregaEnLineaUtil entregaEnLineaUtil = new EntregaEnLineaUtil();
+			EntregaEnLineaDTO entregaEnLineaDTO = entregaEnLineaUtil.getDocumentosFirma(numero);
+			for(RegistroFirmaElectronicaDTO doc : entregaEnLineaDTO.getDocumentos()){
+				//existe archivo
+				Date fecha = null;
+				if(doc.getFechaFirma()!=null)
+					fecha = new Date(doc.getFechaFirma());
+				
+				String firmador = "LMC";
+				if(doc.getUsuario()!=null && !"".equals(doc.getUsuario()))
+					firmador = TablaValores.getValor("impresion.parametros", "RUT_" + doc.getUsuario().split("-")[0], "CARPETA");					
+				
+				DocumentosCliente documentosCliente = new DocumentosCliente();
+				JSONObject json = documentosCliente.existeFirma(doc.getNombreArchivoVersion(), firmador, fecha);
+				
+				if((Boolean)json.get("hayDocumento")){
+					//Descargar archivo y agregar al zip
+					byte[] docByteArray = documentosCliente.downloadFirma(doc.getNombreArchivoVersion(), firmador, fecha);
+					ZipEntry entry = new ZipEntry(doc.getNombreArchivoVersion().trim());
+				    entry.setSize(docByteArray.length);
+				    zos.putNextEntry(entry);
+				    zos.write(docByteArray);
+				    zos.closeEntry();
+				}
+			}
+
+			if(zos!=null)
+				zos.close();
+			
+			response.setContentType("application/zip");
+			response.setHeader("Content-disposition", "attachment; filename="+numeroCaratula+".zip");
+						 
+			out.write(baos.toByteArray(), 0, baos.size());     					
+			out.flush();	
+			if(out != null)
+				out.close();  
+			
+
+		} catch (Exception e) {
+			logger.error("Error: "+e.getMessage(),e);
+		}
+	
+	}	
+	
+	public static byte[] zipBytes(String filename, byte[] input) throws IOException {
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    ZipOutputStream zos = new ZipOutputStream(baos);
+	    ZipEntry entry = new ZipEntry(filename);
+	    entry.setSize(input.length);
+	    zos.putNextEntry(entry);
+	    zos.write(input);
+	    zos.closeEntry();
+	    zos.close();
+	    return baos.toByteArray();
+	}	
 	
 	@SuppressWarnings({ "unchecked" })
 	public void dejarDocumentoNoVigente(ActionMapping mapping, ActionForm form,

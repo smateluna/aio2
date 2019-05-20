@@ -3,8 +3,8 @@
 app.factory('escrituraService', function ($http, $q) {
 
     return {
-      obtenerEscrituraPorInscripcion: function (caratula) {
-        var paramsObj = {metodo: 'obtenerEscrituraPorInscripcion', caratula:caratula};
+      existeEscritura: function (caratula) {
+        var paramsObj = {metodo: 'existeEscritura', caratula:caratula};
 
         var deferred = $q.defer();
 
