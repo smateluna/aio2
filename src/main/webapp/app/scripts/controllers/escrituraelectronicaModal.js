@@ -18,14 +18,6 @@ app.controller('escrituraElectronicaModalCtrl', function ($scope, $modal, $modal
 	      $modalStack.dismiss(top.key);
 	    }
   	};
-
-//  	var promise = reingresoService.getListaNotariosFull();
-//  	promise.then(function(data) {
-//  		
-//  		$scope.listaNotarios = data;
-//  	}, function(reason) {
-//  		$scope.raiseErr('Problema contactando al servidor.');
-//  	});
   	
   	$scope.getListaNotarios = function(query){
   		var listaNotarios = [];
@@ -65,7 +57,7 @@ app.controller('escrituraElectronicaModalCtrl', function ($scope, $modal, $modal
   
   $scope.buscarDocumento = function(){	
 	  $scope.openLoadingModal('Buscando Documento...', '');	
-	  var promise = tareasService.buscarDocumento($scope.escritura.notario.idNotario,$scope.escritura.codescritura,$scope.escritura.notario.empresa,$scope.escritura.caratula);
+	  var promise = tareasService.buscarDocumento($scope.escritura.notario.id,$scope.escritura.codescritura,$scope.escritura.notario.empresa,$scope.escritura.caratula);
 	  promise.then(function(data) {
 		  $scope.closeModal();
 		  if(data.estado===null){

@@ -162,6 +162,14 @@ public class DocumentosCliente {
 		return (JSONObject)executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "existeEscritura", pathParams, null);			
 	}
 	
+	public JSONObject existeEscritura(Long caratulap) throws HTTPException, Exception{
+
+		//{caratulap}
+		String[] pathParams = {caratulap.toString()};
+		
+		return (JSONObject)executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "existeEscritura", pathParams, null);			
+	}	
+	
 	public byte[] downloadEscritura(boolean conRayas, Long idDocumentop, Long idDetalleDocumentop, Long caratulap, Integer versionp,  
 			boolean esVersion, boolean esDetalle, boolean esPrincipal) throws HTTPException, Exception{
 
@@ -171,6 +179,14 @@ public class DocumentosCliente {
 		
 		return (byte[])executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "downloadEscritura", pathParams, null);
 	}
+	
+	public byte[] downloadEscritura(boolean conRayas, Long caratulap) throws HTTPException, Exception{
+
+		//{conRayas}/{caratulap}
+		String[] pathParams = {String.valueOf(conRayas), caratulap.toString()};
+		
+		return (byte[])executeREST(SERVER_ESCRITURAS, PORT_ESCRITURAS, "file", "downloadEscritura", pathParams, null);
+	}	
 	
 	public byte[] downloadEscrituraVisor(boolean conRayas, Long caratulap) throws HTTPException, Exception{
 

@@ -306,12 +306,6 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		}
 		}
 		});
-		
-//		myModal.result.then(function () {
-//			$scope.buscarLiquidaciones();
-//		}, function () {
-//			$scope.buscarLiquidaciones();
-//		});
 	};
 	
 	$scope.obtenerEscrituraPorFuera = function (caratula) {

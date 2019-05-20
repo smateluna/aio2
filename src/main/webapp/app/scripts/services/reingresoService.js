@@ -98,25 +98,5 @@ app.factory('reingresoService', function ($q, $http) {
 
           return deferred.promise;
         }
-      ,
-      getListaNotariosFull: function () {
-          var paramsObj = {metodo: 'getListaNotariosFull'};
-
-          var deferred = $q.defer();
-
-          $http({
-          	method: 'GET',
-          	url: '../do/service/reingreso',
-          	params: paramsObj
-          	}).
-            success(function(data, status, headers, config){
-              deferred.resolve(data);
-            }).
-            error(function(data, status, headers, config){
-              deferred.reject(status);
-            });
-
-          return deferred.promise;
-        }
     };      
   });

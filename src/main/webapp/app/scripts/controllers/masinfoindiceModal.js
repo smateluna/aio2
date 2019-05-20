@@ -38,9 +38,6 @@ app.controller('masinfoindiceModalCtrl', function ($rootScope, $scope, $modal, $
 	if($scope.busquedaBorrador.titulosAnteriores!==undefined){
 		$scope.busquedaBorrador.titulosAnteriores.length = 0;
 	}
-	if($scope.urlPdf!==undefined){
-		$scope.urlPdf = '';
-	} 
 
 
 	var promise = borradorService.obtenerCantidadBorradores($scope.foja, $scope.numero, $scope.ano);
@@ -70,13 +67,12 @@ app.controller('masinfoindiceModalCtrl', function ($rootScope, $scope, $modal, $
 		$scope.setErr('Problema contactando al servidor.', '');
 	});
 
-	var promise = escrituraService.obtenerEscrituraPorInscripcion($scope.caratula);
+	var promise = escrituraService.existeEscritura($scope.caratula);
 	promise.then(function(data) {
 		//$scope.closeModal();
 		if(data.status===null){
 		}else if(data.status){
 			$scope.totalEscrituras = data.tieneImagen;
-			$scope.urlPdf = data.urlPdf;
 		}else{
 			$scope.setErr('data.msg', 'data.msg');
 		}

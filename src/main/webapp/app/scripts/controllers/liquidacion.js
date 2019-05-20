@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScope, $modal, $modalStack, $routeParams, tareasService, estadoService, $filter) {
+app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScope, $modal, $modalStack, $routeParams, tareasService, estadoService, escrituraService, $filter) {
 
 	$scope.nuevoDocumento = {
 			nombre: null,
@@ -81,24 +81,13 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 	};	
 	
 	$scope.buscarEscritura = function(){
-		var promise = estadoService
-		.getDocumentos(
-				$scope.caratula,
-		'ESCRITURAS');
-		promise
-		.then(
+		var promise = escrituraService.existeEscritura($scope.caratula);
+		promise.then(
 				function(data) {
 					if (data.status === null) {
 
-					} else if (data.success) {
-						if(data.children.length>0){
-							for ( var i = 0; i < data.children.length; i++){
-								if(data.children[i].children[0].vigente){
-									$scope.escritura = data.children[i].children[0];
-									break;
-								}
-							}
-						}
+					} else if (data.status) {
+						$scope.escritura = data.hayDocumento;
 
 						$scope.statusEscritura = data.success;
 
@@ -119,36 +108,10 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		$scope.caratula = null;
 		$scope.doFocus('caratula');  		
 	}
-
-	$scope.verDocumentoEstudio = function(escritura) {
-		var documento ={
-				"nombreArchivo": escritura.nombreArchivoVersion,
-				"idTipoDocumento": escritura.idTipoDocumento,
-				"idReg": escritura.idReg,
-				"fechaDocumento": escritura.fechaProcesa
-		};		
-
-		//existe documento
-		var promise = estadoService
-		.existeDocumento(documento);
-		promise
-		.then(
-				function(data) {
-					if (data.hayDocumento) {
-						//download documento
-						$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ $scope.liquidacionCaratula.caratulaDTO.numeroCaratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','popup','width=800,height=600');
-
-					} else {
-						$scope
-						.raiseErr(data.errormsg);
-					}
-				},
-				function(reason) {
-					$scope
-					.raiseErr('No se ha podido establecer comunicación con el servidor.');
-				});		
-
-	};	
+	
+	$scope.verEscritura = function(){
+		$window.open('../do/service/escritura?metodo=verDocumento&caratula='+ $scope.liquidacionCaratula.caratulaDTO.numeroCaratula +'&type=uri','popup','width=800,height=600');		
+	}	
 
 	$scope.masInfoLiquidacion = function (caratula) {
 
@@ -249,48 +212,6 @@ app.controller('LiquidacionCtrl', function ($scope, $window, $timeout, $rootScop
 		if (top) {
 			$modalStack.dismiss(top.key);
 		}
-	};
-
-	$scope.obtenerEscritura = function (sol) {
-
-		var myModal = $modal.open({
-			templateUrl: 'escrituraelectronicaModal.html',
-			backdrop: true,
-			windowClass: 'modal',
-			controller: 'escrituraElectronicaModalCtrl',
-			resolve: { 
-				sol: function(){
-					return sol;
-				}
-			}
-		});
-
-		myModal.result.then(function () {
-			$scope.buscarLiquidaciones();
-		}, function () {
-			$scope.buscarLiquidaciones();
-		});
-	};
-
-	$scope.obtenerEscrituraPorFuera = function (caratula) {
-
-		var myModal = $modal.open({
-			templateUrl: 'escrituraelectronicaModal.html',
-			backdrop: true,
-			windowClass: 'modal',
-			controller: 'escrituraElectronicaModalCtrl',
-			resolve: { 
-				sol: function(){
-					return caratula;
-				}
-			}
-		});
-
-		myModal.result.then(function () {
-			$scope.buscarLiquidaciones();
-		}, function () {
-			$scope.buscarLiquidaciones();
-		});
 	};
 
 	$scope.aprobarCaratula = function(){

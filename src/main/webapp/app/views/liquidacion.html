@@ -65,7 +65,7 @@
 							   
 							   <div class="col-md-3" align="left" style="display:inline-flex;" id="txblock">
 							      <label>Escritura:</label>
-								  <button ng-disabled="escritura==undefined" ng-click="verDocumentoEstudio(escritura)" class="btn btn-xs btn-primary" tooltip="Ver Documento" tooltip-placement="top"><i class="fa fa-file-pdf-o"></i></button>
+								  <button ng-disabled="escritura==undefined || !escritura" ng-click="verEscritura()" class="btn btn-xs btn-primary" tooltip="Ver Documento" tooltip-placement="top"><i class="fa fa-file-pdf-o"></i></button>
 							   </div>							
 							</div>									
 		</div>

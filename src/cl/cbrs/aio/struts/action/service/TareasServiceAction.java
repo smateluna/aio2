@@ -19,15 +19,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -64,7 +62,6 @@ import cl.cbrs.aio.dto.LiquidacionTemporalIdDTO;
 import cl.cbrs.aio.dto.PermisoDTO;
 import cl.cbrs.aio.dto.ProductoReceptorEmailDTO;
 import cl.cbrs.aio.dto.ProductoWebDTO;
-import cl.cbrs.aio.dto.ReingresoGPDTO;
 import cl.cbrs.aio.dto.TransaccionWebDTO;
 import cl.cbrs.aio.dto.estado.CaratulaEstadoDTO;
 import cl.cbrs.aio.dto.estado.CuentaCorrienteDTO;
@@ -74,19 +71,18 @@ import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.FuncionarioSeccionUtil;
+import cl.cbrs.aio.util.NotarioUtil;
 import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.aio.util.UsuarioUtil;
 import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CtaCteVO;
-import cl.cbrs.caratula.flujo.vo.EstadoActualCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
 import cl.cbrs.caratula.flujo.vo.ProductoGlosaVO;
 import cl.cbrs.caratula.flujo.vo.ProductoReceptorEmailVO;
 import cl.cbrs.caratula.flujo.vo.ProductoVO;
 import cl.cbrs.caratula.flujo.vo.SeccionVO;
-import cl.cbrs.caratula.flujo.vo.TipoFormularioVO;
 import cl.cbrs.cuentacorriente.delegate.WsCuentaCorrienteClienteDelegate;
 import cl.cbrs.delegate.botondepago.WsBotonDePagoClienteDelegate;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
@@ -892,53 +888,17 @@ public class TareasServiceAction extends CbrsAbstractAction {
 
 		String idNotario = (String)request.getParameter("idNotario");
 		String codDocumento = (String)request.getParameter("codDocumento");
-		String origen = (String)request.getParameter("origen");
 		String numeroCaratula = (String)request.getParameter("numeroCaratula");
 
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		URL url;
-		URI uri = null;
 
-		try {
+		try {			
+			NotarioUtil util = new NotarioUtil();
+			InputStream archivo = util.descargaDocumento(idNotario, codDocumento);
 
-			//			idNotario = "102";
-			//			codDocumento = "123456819053";
-			//			origen = "1";
-			//			numeroCaratula = "10000000";
-
-			if (origen.equals(NotarioElectronicoVO.FOJAS.toString())) {
-				String parametros = ConstantesComercio.WS_FOJAS_PARAMETROS;
-				parametros = parametros.replaceAll("_id_", idNotario);
-				parametros = parametros.replaceAll("_cod_", codDocumento);
-				uri = new URI(ConstantesComercio.WS_FOJAS_PROTOCOLO,
-						ConstantesComercio.WS_FOJAS_HOST,
-						ConstantesComercio.WS_FOJAS_PATH,
-						parametros,
-						null);
-			} else {
-				String parametros = ConstantesComercio.WS_SIRI_PARAMETROS;
-				parametros = parametros.replaceAll("_id_", idNotario);
-				parametros = parametros.replaceAll("_cod_", codDocumento);
-				uri = new URI(ConstantesComercio.WS_SIRI_PROTOCOLO,
-						ConstantesComercio.WS_SIRI_HOST,
-						ConstantesComercio.WS_SIRI_PATH,
-						parametros,
-						null);
-			}
-
-
-			url = uri.toURL();
-			URLConnection conn = url.openConnection();
-			InputStream archivo = conn.getInputStream();
-			InputStream archivoCopia = conn.getInputStream();
-			System.out.println(conn.getContentType());
-			if (StringUtils.isBlank(conn.getContentType()) || !conn.getContentType().startsWith("application/pdf")) {
-				status = false;
-				msg = "Se ha detectado un problema con el extracto";
-			}else{
-
+			if(archivo!=null){
 				File folderOcr = new File(UPLOAD_DIRECTORY_OCR+File.separator +"OCR_"+numeroCaratula);
 
 				if (!folderOcr.exists()) {
@@ -954,13 +914,14 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				IOUtils.copy(archivo,fop);
 				fop.close();
 
-				IOUtils.copy(archivoCopia,fopOcr);
+				IOUtils.copy(archivo,fopOcr);
 				fopOcr.close();
 
 				archivo.close();	
-				archivoCopia.close();
-
 				status = true;
+			} else{
+				status=false;
+				msg = "No se encontró documento en repositorio de Notaría";
 			}
 
 		} catch (Exception e) {
@@ -987,7 +948,6 @@ public class TareasServiceAction extends CbrsAbstractAction {
 
 		String idNotario = (String)request.getParameter("idNotario");
 		String codDocumento = (String)request.getParameter("codDocumento");
-		String origen = (String)request.getParameter("origen");
 		String numeroCaratulaS = (String)request.getParameter("numeroCaratula");
 		String version = (String)request.getParameter("version");
 
@@ -997,93 +957,66 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		String msg = "";
-		URL url;
-		URI uri = null;
 
 		try {
-
-			if (origen.equals(NotarioElectronicoVO.FOJAS.toString())) {
-				String parametros = ConstantesComercio.WS_FOJAS_PARAMETROS;
-				parametros = parametros.replaceAll("_id_", idNotario);
-				parametros = parametros.replaceAll("_cod_", codDocumento);
-				uri = new URI(ConstantesComercio.WS_FOJAS_PROTOCOLO,
-						ConstantesComercio.WS_FOJAS_HOST,
-						ConstantesComercio.WS_FOJAS_PATH,
-						parametros,
-						null);
-			} else {
-				String parametros = ConstantesComercio.WS_SIRI_PARAMETROS;
-				parametros = parametros.replaceAll("_id_", idNotario);
-				parametros = parametros.replaceAll("_cod_", codDocumento);
-				uri = new URI(ConstantesComercio.WS_SIRI_PROTOCOLO,
-						ConstantesComercio.WS_SIRI_HOST,
-						ConstantesComercio.WS_SIRI_PATH,
-						parametros,
-						null);
-			}
-
-
-			url = uri.toURL();
-			URLConnection conn = url.openConnection();
-			InputStream inputStream = conn.getInputStream();
-
-			if (StringUtils.isBlank(conn.getContentType()) || !conn.getContentType().startsWith("application/pdf")) {
-				status = false;
-				msg = "Se ha detectado un problema con el extracto";
-			}else{
+			NotarioUtil util = new NotarioUtil();
+			InputStream inputStream = util.descargaDocumento(idNotario, codDocumento);
+			
+			if(inputStream!=null){
+			
 				DocumentosCliente docDelegate = new DocumentosCliente();
 				DocumentoDAO dm = new DocumentoDAO();
 				DocumentoDTO documentoDTO = new DocumentoDTO();
-
+	
 				documentoDTO = dm.getDocumento(numeroCaratula, Integer.parseInt(version), ESCRITURA);
-
+	
 				if(documentoDTO==null){
 					msg = "Caratula no encontrada en documentos";
 					status=false;
 				}else{
-
+	
 					byte[] archivo = docDelegate.downloadEscritura(false, documentoDTO.getIdDocumento(), 0L, 0L, documentoDTO.getVersion().intValue(), false, false, true);
-
+	
 					// write byte array to the output stream
 					List<InputStream> lista = new ArrayList<InputStream>();
 					List<InputStream> lista2 = new ArrayList<InputStream>();
 					//archivo 1
 					lista.add(new ByteArrayInputStream(archivo));
 					lista2.add(new ByteArrayInputStream(archivo));
-
+	
 					//archivo 2							
 					lista.add(inputStream);
 					lista2.add(inputStream);
-
+	
 					File folderOcr = new File(UPLOAD_DIRECTORY_OCR+File.separator +"OCR_"+numeroCaratula);
-
+	
 					if (!folderOcr.exists()) {
 						folderOcr.mkdir();
 					}
-
+	
 					File fileVersiona = new File(UPLOAD_DIRECTORY+File.separator +"C_"+numeroCaratula+".pdf");
 					File fileOcr = new File(folderOcr.toString() + File.separator +"OCR_"+numeroCaratula+".pdf");
-
+	
 					FileOutputStream fop = new FileOutputStream(fileVersiona);
 					FileOutputStream fopOcr = new FileOutputStream(fileOcr);
-
+	
 					this.merge(lista, fop);
 					fop.close();
-
+	
 					this.merge(lista2, fopOcr);
 					fopOcr.close();
-
+	
 					status = true;
 				}
-
+	
 				//Reingresar Caratula
 				CaratulaEstadoDTO caratulaEstadoDTO = new CaratulaEstadoDTO();
-
+	
 				WsCaratulaClienteDelegate delegate = new WsCaratulaClienteDelegate();
-
+	
 				try {		
 					CaratulaVO caratulaVO = delegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), numeroCaratula);
-
+	
 					if(caratulaVO!=null){	
 						//Reviso si la caratula esta rechazada
 						if(SECCIONES_RECHAZOS.contains(caratulaVO.getEstadoActualCaratula().getSeccion().getCodigo())){
@@ -1091,7 +1024,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 							String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
 							caratulaEstadoDTO = cu.getCaratulaEstadoDTO(caratulaVO);
 							List<MovimientoDTO> movimientos = caratulaEstadoDTO.getMovimientoDTOs();
-
+	
 							for (int i=movimientos.size()-1; i >= 0; i--){
 								MovimientoDTO movimientoDto = (MovimientoDTO)movimientos.get(i);
 								//							System.out.println(movimientoDto.getSeccionDTO().getDescripcion());
@@ -1111,7 +1044,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 										SeccionVO seccionVO = new SeccionVO();
 										seccionVO.setCodigo(movimientoDto.getSeccionDTO().getId());
 										estadoCaratulaFlujoVO.setSeccion(seccionVO);
-
+	
 										caratulasUtil.moverCaratulaSeccion(numeroCaratula, estadoCaratulaFlujoVO );
 										break;
 									}
@@ -1119,14 +1052,14 @@ public class TareasServiceAction extends CbrsAbstractAction {
 							}
 						} 	
 					}
-
+	
 				} catch (Exception e) {
 					status = false;
 					msg = "Se ha detectado un problema en reingreso de caratula";
 				}
 				//Fin Reingresar Caratula
-
 			}
+			
 
 		} catch (Exception e) {
 			logger.error(e);

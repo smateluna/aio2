@@ -5,11 +5,16 @@
         </span>
 
         <div class="loader loader-xs" ng-show="data.status && !data.statusDocumentosEntrega"></div> Documentos Entrega</div>
-	    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="subPermisos['estado'].indexOf('VINCULAR_DOCUMENTOS') >= 0 && data.res.entregaEnLineaDTO.estado && data.res.entregaEnLineaDTO.documentos.length>0 && !req.simpleMode && data.status!=null && !anulada" >
-			<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openDocumentosEntregaModal()" >
-	            <i class="fa  fa-share-alt"></i>  Vincular
+        <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="data.res.entregaEnLineaDTO.estado && data.res.entregaEnLineaDTO.documentos.length>0 && !req.simpleMode && data.status!=null && !anulada" >
+
+			<button ng-if="subPermisos['estado'].indexOf('VINCULAR_DOCUMENTOS') >= 0" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openDocumentosEntregaModal()" >
+	            <i class="fa fa-share-alt"></i>  Vincular
+	        </button>		    
+			<button style="float:right" type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Descargar todos los archivos" ng-click="downloadDocumentosEntregaZip()" >
+	            <i class="fa fa-download"></i>
 	        </button>
-	    </div>         
+		    
+		</div>       
     <div class="panel-body no-padding" ng-hide="area.collapsed">
         <form class="form-inline" role="form" ng-if="data.res.entregaEnLineaDTO.estado===false">
             <fieldset>
