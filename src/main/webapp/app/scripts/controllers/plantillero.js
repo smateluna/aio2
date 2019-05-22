@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $timeout, $modalStack, $sce, firmaService,taOptions,certificacionService) {
+app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $timeout, $modalStack, $sce, firmaService,taOptions,certificacionService, $window, plantilleroModel) {
 
 	$scope.fechahoy = new Date().toJSON().split('T')[0];
 
@@ -22,16 +22,18 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			model:"200"
 	};
 
-	$scope.plantillero = {
-			tipocertificado : null,
-			cuerpocertificado : null,
-			copiatemplate : null,
-			tiposcertificados : null,
-			caratula : null,
-			valor : null,
-			mostrarcampotexto : false,
-			mostrarboton : 0
-	};	
+//	$scope.plantillero = {
+//			tipocertificado : null,
+//			cuerpocertificado : null,
+//			copiatemplate : null,
+//			tiposcertificados : null,
+//			caratula : null,
+//			valor : null,
+//			mostrarcampotexto : false,
+//			mostrarboton : 0
+//	};	
+	
+	$scope.plantillero = plantilleroModel.getPlantillero();
 
 	$scope.states = {
 			isLoading: false,
@@ -104,10 +106,11 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 
 	$scope.limpiarPlantillero = function(){
 
-		$scope.plantillero.tipocertificado = null;
-		$scope.plantillero.cuerpocertificado = null;
-		$scope.plantillero.caratula = null;
-		$scope.plantillero.copiatemplate = null;
+//		$scope.plantillero.tipocertificado = null;
+//		$scope.plantillero.cuerpocertificado = null;
+//		$scope.plantillero.caratula = null;
+//		$scope.plantillero.copiatemplate = null;
+		plantilleroModel.resetPlantillero();
 		
 		$scope.states.isLoading = false;
 		$scope.states.isError = false;
@@ -126,6 +129,7 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 	};
 
 	$timeout(function(){
+	if(!$scope.plantillero.tipocertificado)
 		$scope.obtenerTiposCertificadosPorPerfil();
 	}, 200);
 
@@ -134,10 +138,11 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			var texto = $scope.plantillero.copiatemplate;
 			if($scope.plantillero.caratula)
 				texto = texto.replace("_CARATULA_", $scope.plantillero.caratula);
-			if($scope.plantillero.valor)
+			if($scope.plantillero.valor>0)
 				texto = texto.replace("_VALOR_", $scope.plantillero.valor.toLocaleString());
+			if($scope.plantillero.valor==0)
+				texto = texto.replace("_VALOR_", "S/D");			
 			texto = texto.replace("_FECHA_", $scope.obtenerFechaEnPalabras($scope.fechahoy));
-
 			angular.forEach($scope.entity.fields, function(value, key) {
 				if(value.model){
 					value.data = $scope.$eval(value.model)
@@ -172,9 +177,11 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 
 			}else if(data.status){
 				$scope.states.isError= false;
+				plantilleroModel.setPlantillero($scope.plantillero);
 				
+//				$window.open('/aio/index.html#/verVistaPreviaPlantilla/'+data.nombreArchivoVersion+'/plantillero/' +'&type=uri','popup','width=800,height=600');
 				$rootScope.go('/verVistaPreviaPlantilla/'+data.nombreArchivoVersion+'/plantillero/');
-				$scope.limpiarPlantillero();
+				//$scope.limpiarPlantillero();
 			}else{
 				$scope.states.isOk= false;
 				$scope.raiseErr('No se pudo certificar caratula', data.msg);

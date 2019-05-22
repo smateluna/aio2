@@ -4,7 +4,7 @@
 
 'use strict';
 
-app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, certificacionService) {
+app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, certificacionService, plantilleroModel) {
 
 	$scope.parametros = {
 		nombreArchivo: $routeParams.nombreArchivo,
@@ -39,13 +39,13 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 			windowClass: 'modal',
 			controller: 'LoadingModalCtrl',
 			resolve: {
-			titulo: function () {
-			return titulo;
-		},
-		detalle: function () {
-			return detalle;
-		}
-		}
+				titulo: function () {
+					return titulo;
+				},
+				detalle: function () {
+					return detalle;
+				}
+			}
 		});
 	};
 
@@ -63,12 +63,12 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.status===null){
-
 			}else if(data.status){
-
 				$scope.raiseOk('', 'Certificacion realizada');
+				if(data.warn)
+					$scope.raiseOk('', 'Certificacion realizada, pero no se pudo enviar a Entrega Documentos');
+				plantilleroModel.resetPlantillero();
 				$scope.salirSave();
-
 			}else{
 				$scope.raiseErr('No se pudo certificar documento', data.msg);
 			}
@@ -94,7 +94,7 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 		$timeout(function(){
 			//CertificacionCtrl.refrescar();
 			$scope.cerrar();
-		},2000);
+		},4000);
 	};
 
 	$scope.buscar();

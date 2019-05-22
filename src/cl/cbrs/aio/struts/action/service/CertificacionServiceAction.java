@@ -32,6 +32,7 @@ import cl.cbr.util.StringUtil;
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.certificado.GeneraCertificado;
 import cl.cbrs.aio.parametron.ParamsFirmaElectronica;
+import cl.cbrs.aio.servlet.CacheAIO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
 import cl.cbrs.aio.util.RestUtil;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
@@ -45,6 +46,9 @@ import cl.cbrs.inscripciondigital.vo.EstadoInscripcionVO;
 import cl.cbrs.inscripciondigital.vo.InscripcionDigitalVO;
 import cl.cbrs.inscripciondigital.vo.OrigenVO;
 import cl.cbrs.inscripciondigital.vo.SolicitudVO;
+import cl.cbrs.parametros.ws.ServicioParametrosDelegate;
+import cl.cbrs.parametros.ws.request.ObtenerFuncionariosSeccionRequest;
+import cl.cbrs.parametros.ws.response.ObtenerFuncionariosSeccionResponse;
 import cl.cbrs.usuarioweb.vo.UsuarioWebVO;
 
 public class CertificacionServiceAction extends CbrsAbstractAction {
@@ -751,6 +755,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
+		Boolean warn = false;
 		String msg = "";
 		
 		try{
@@ -760,15 +765,45 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			if (!respuestaFirma.equals("OK"))
 				throw new Exception("Firma NOK");
 			
+			//Certificado de deslindes -> enviar a Entrega Docs
+			try{
+				if(nombreArchivo.startsWith("CDP")){
+					Long caratula = Long.parseLong(nombreArchivo.substring(4, nombreArchivo.indexOf("-")));
+					WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
+					ServicioParametrosDelegate parametrosDelegate = new ServicioParametrosDelegate();
+					
+					ObtenerFuncionariosSeccionRequest funcionariosSeccionRequest = new ObtenerFuncionariosSeccionRequest();
+					funcionariosSeccionRequest.setCodSeccion("08");
+					funcionariosSeccionRequest.setSoloResponsables(true);
+					ObtenerFuncionariosSeccionResponse funcionariosSeccionResponse = parametrosDelegate.obtenerFuncionariosSeccion(funcionariosSeccionRequest);
+					cl.cbrs.parametros.vo.FuncionarioVO[] funcionarioVOs = funcionariosSeccionResponse.getFuncionarios();
+					if(funcionarioVOs!=null && funcionarioVOs.length>0){
+						EstadoCaratulaVO estado = new EstadoCaratulaVO();
+						FuncionarioVO funcionarioVO = new FuncionarioVO((String) request.getSession().getAttribute("rutUsuario"));
+						estado.setEnviadoPor(funcionarioVO);
+						FuncionarioVO responsable = new FuncionarioVO(funcionarioVOs[0].getRut());
+						estado.setResponsable(responsable );
+						estado.setFechaMovimiento(new Date());
+						estado.setSeccion(new SeccionVO("08"));
+						estado.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+						caratulaClienteDelegate.moverCaratulaSeccion(caratula, estado );
+					}	throw new Exception();			
+				}
+			} catch(Exception e){
+				logger.error(e.getMessage(),e);
+				warn=true;
+			}
+			
 			status = true;
 				
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			status = false;
-			msg = "Se ha detectado un problema, comunicar area soporte.";
+			msg = "No se pudo certificar el documento. Por favor intente nuevamente.";
 		}
 
 		respuesta.put("status", status);
+		respuesta.put("warn", warn);
 		respuesta.put("msg", msg);
 
 		try {
