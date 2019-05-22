@@ -787,7 +787,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 						estado.setSeccion(new SeccionVO("08"));
 						estado.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 						caratulaClienteDelegate.moverCaratulaSeccion(caratula, estado );
-					}	throw new Exception();			
+					}			
 				}
 			} catch(Exception e){
 				logger.error(e.getMessage(),e);
