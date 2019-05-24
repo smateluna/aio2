@@ -16,7 +16,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 	
 	$scope.paginacionMaster = {
 		currentPage: 1,
-		numPerPage: 150,
+		numPerPage: 25,
 		maxSize: 10,
 		filteredTodos: [],
 		todos: []

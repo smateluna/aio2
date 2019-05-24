@@ -198,6 +198,16 @@ public class TareasServiceAction extends CbrsAbstractAction {
 							for(int i=0; i<jsonArray.size(); i++){					
 								CaratulaVO caratulaVO = gson.fromJson(jsonArray.get(i).toString(), CaratulaVO.class);
 								caratulaVOs.add(caratulaVO);
+//								CaratulaDTO caratulaDTO = new CaratulaDTO();
+//								caratulaDTO.setNumeroCaratula(caratulaVO.getNumeroCaratula());
+//								caratulaDTO.setCanalTexto(canalTexto);
+//								
+//								caratulaDTO.setOrigenCreacion(caratulaVO.getOrigenCreacion());
+//								caratulaDTO.setTipoFormularioDTO(
+//);
+//								caratulaDTO.setEstadoActualCaratulaDTO(estadoActualCaratulaDTO);
+//								
+//								resultado.add(caratulaDTO);
 							}				
 						} else{
 							//TODO warning error al cargar tareas de reingresos
@@ -208,7 +218,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 			
 			if(caratulaVOs!=null && caratulaVOs.size()>0){
 				for(CaratulaVO caratulaVO: caratulaVOs){
-					CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaVO);
+					CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTOLigth(caratulaVO);
 					resultado.add(caratulaDTO);
 					
 					if(caratulaDTO.getInscripcionDigitalDTO()!=null && 

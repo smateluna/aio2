@@ -6,7 +6,7 @@
             <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">x</button>
 
             <h3 class="title-dv">Certificando Caratula {{parametros.caratula}}</h3>							   						
-            <h6 class="title-dv"><input type="button" class="btn btn-sm btn-alto" ng-click="certificar()" value="Certificar"><i class="icon-ok cert-ok" style="display:none" id="ok"></i><i class="icon-remove cert-remove" style="display:none" id="nok"></i>
+            <h6 class="title-dv"><input type="button" class="btn btn-sm btn-alto" ng-if="!states.isOk && !states.isLoading" ng-click="certificar()" value="Certificar"><i class="icon-ok cert-ok" style="display:none" id="ok"></i><i class="icon-remove cert-remove" style="display:none" id="nok"></i>
             </h6>
                                 
             <div class="border-header">
@@ -53,7 +53,7 @@
     
           <div class="block-flat">
             <div class="content border-simple heighFrame" resize-inscripcion>
-				<div ng-if="isLoading" id="loading" class="cargando">Obteniendo documento <img class="mtm3" src="../app/images/load-18.gif" alt=""/>
+				<div ng-if="states.isLoading" id="loading" class="cargando">Obteniendo documento <img class="mtm3" src="../app/images/load-18.gif" alt=""/>
                 	<span class="mensajeLento" ng-bind-html="mensajeDemora"> </span>
             	</div>
 

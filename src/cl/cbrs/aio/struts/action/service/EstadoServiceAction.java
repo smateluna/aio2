@@ -1766,14 +1766,17 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 			JSONParser jsonParser = new JSONParser();
 			JSONObject documentoJSON = (JSONObject)jsonParser.parse(documentoReq); 
 			String nombreArchivop = documentoJSON.get("nombreArchivo").toString();  
-			String rutFirmadorp = documentoJSON.get("rutFirmador").toString();
+			
 			Date fechap = null;
 			if(documentoJSON.get("fechaDocumento")!=null)
 				fechap = new Date((Long)documentoJSON.get("fechaDocumento"));
 
 			String firmador = "LMC";
-			if(rutFirmadorp!=null && !"".equals(rutFirmadorp))
-				firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
+			if(documentoJSON.get("rutFirmador")!=null){
+				String rutFirmadorp = documentoJSON.get("rutFirmador").toString();
+				if(rutFirmadorp!=null && !"".equals(rutFirmadorp))
+					firmador = TablaValores.getValor("impresion.parametros", "RUT_" + rutFirmadorp.split("-")[0], "CARPETA");
+			}
 			
 			DocumentosCliente documentosCliente = new DocumentosCliente();
 			byte[] archivo = documentosCliente.downloadFirma(nombreArchivop, firmador, fechap);

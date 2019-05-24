@@ -40,6 +40,7 @@ import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
 import cl.cbrs.caratula.flujo.vo.InscripcionCitadaVO;
 import cl.cbrs.caratula.flujo.vo.SeccionVO;
+import cl.cbrs.caratula.flujo.vo.TareaVO;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
 import cl.cbrs.inscripciondigital.delegate.WsInscripcionDigitalDelegate;
 import cl.cbrs.inscripciondigital.vo.EstadoInscripcionVO;
@@ -756,6 +757,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 		JSONObject respuesta = new JSONObject();
 		Boolean status = false;
 		Boolean warn = false;
+		Boolean entrega = false;
 		String msg = "";
 		
 		try{
@@ -765,29 +767,37 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			if (!respuestaFirma.equals("OK"))
 				throw new Exception("Firma NOK");
 			
-			//Certificado de deslindes -> enviar a Entrega Docs
+			//Certificado de deslindes -> enviar a Entrega Docs si caratula tiene tarea "Certificado de Deslindes" (116)
 			try{
 				if(nombreArchivo.startsWith("CDP")){
 					Long caratula = Long.parseLong(nombreArchivo.substring(4, nombreArchivo.indexOf("-")));
 					WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
 					ServicioParametrosDelegate parametrosDelegate = new ServicioParametrosDelegate();
 					
-					ObtenerFuncionariosSeccionRequest funcionariosSeccionRequest = new ObtenerFuncionariosSeccionRequest();
-					funcionariosSeccionRequest.setCodSeccion("08");
-					funcionariosSeccionRequest.setSoloResponsables(true);
-					ObtenerFuncionariosSeccionResponse funcionariosSeccionResponse = parametrosDelegate.obtenerFuncionariosSeccion(funcionariosSeccionRequest);
-					cl.cbrs.parametros.vo.FuncionarioVO[] funcionarioVOs = funcionariosSeccionResponse.getFuncionarios();
-					if(funcionarioVOs!=null && funcionarioVOs.length>0){
-						EstadoCaratulaVO estado = new EstadoCaratulaVO();
-						FuncionarioVO funcionarioVO = new FuncionarioVO((String) request.getSession().getAttribute("rutUsuario"));
-						estado.setEnviadoPor(funcionarioVO);
-						FuncionarioVO responsable = new FuncionarioVO(funcionarioVOs[0].getRut());
-						estado.setResponsable(responsable );
-						estado.setFechaMovimiento(new Date());
-						estado.setSeccion(new SeccionVO("08"));
-						estado.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
-						caratulaClienteDelegate.moverCaratulaSeccion(caratula, estado );
-					}			
+					CaratulaVO caratulaVO = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratula);
+					for(TareaVO tareaVO : caratulaVO.getTareas()){
+						if(tareaVO.getTipo()!=null && tareaVO.getTipo().getCodigo().intValue()==116){
+							ObtenerFuncionariosSeccionRequest funcionariosSeccionRequest = new ObtenerFuncionariosSeccionRequest("0","08",true);
+							ObtenerFuncionariosSeccionResponse funcionariosSeccionResponse = parametrosDelegate.obtenerFuncionariosSeccion(funcionariosSeccionRequest);
+							cl.cbrs.parametros.vo.FuncionarioVO[] funcionarioVOs = funcionariosSeccionResponse.getFuncionarios();
+							if(funcionarioVOs!=null && funcionarioVOs.length>0){
+								EstadoCaratulaVO estado = new EstadoCaratulaVO();
+								FuncionarioVO funcionarioVO = new FuncionarioVO((String) request.getSession().getAttribute("rutUsuario"));
+								estado.setEnviadoPor(funcionarioVO);
+								FuncionarioVO responsable = new FuncionarioVO(funcionarioVOs[0].getRut());
+								estado.setResponsable(responsable );
+								estado.setFechaMovimiento(new Date());
+								estado.setSeccion(new SeccionVO("08"));
+								estado.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
+								caratulaClienteDelegate.moverCaratulaSeccion(caratula, estado );
+								entrega=true;
+							}
+							
+							break;
+						}
+					}
+					
+			
 				}
 			} catch(Exception e){
 				logger.error(e.getMessage(),e);
@@ -804,6 +814,7 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 
 		respuesta.put("status", status);
 		respuesta.put("warn", warn);
+		respuesta.put("entrega", entrega);
 		respuesta.put("msg", msg);
 
 		try {

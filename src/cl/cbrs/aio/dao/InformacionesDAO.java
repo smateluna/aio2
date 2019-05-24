@@ -200,6 +200,7 @@ public class InformacionesDAO extends AbstractJdbcDao {
 			" where EAC.COD_SECCION='01' "+
 			" and TI.REGISTRO=1 "+
 			" and TI.TIPO_FORM=1 "+
+			" and ec.CARATULA not in (select CARATULA from flujo.dbo.REL_FORMULARIO_TAREAS where CARATULA=ec.CARATULA and COD_TAREA='116')"+
 			" ORDER BY EAC.CARATULA desc";
 
 			PreparedStatement ps = conn.prepareStatement(sql);

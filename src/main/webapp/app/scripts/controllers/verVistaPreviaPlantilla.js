@@ -4,7 +4,7 @@
 
 'use strict';
 
-app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, certificacionService, plantilleroModel) {
+app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, $window, certificacionService, plantilleroModel) {
 
 	$scope.parametros = {
 		nombreArchivo: $routeParams.nombreArchivo,
@@ -20,10 +20,9 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 	};
 
 	$scope.buscar = function(){
-		$scope.isLoading = true;
-
+		$scope.states.isLoading = true;
 		$scope.urlPDF = $sce.trustAsResourceUrl("../do/service/certificacion?metodo=obtenerPdf&nombreArchivo="+$scope.parametros.nombreArchivo);
-		$scope.isLoading  = false;
+		$scope.states.isLoading  = false;
 	};
 	
 	$scope.cerrar = function(){
@@ -58,17 +57,28 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 
 	$scope.certificar = function(){
 		$scope.openLoadingModal('Certificando...', '');
+		$scope.states.isLoading = true;
 
 		var promise = certificacionService.certificarPdf($scope.parametros.nombreArchivo);
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.status===null){
 			}else if(data.status){
-				$scope.raiseOk('', 'Certificacion realizada');
+				$scope.raiseOk('', 'Certificación realizada');
+				if(data.entrega)
+					$scope.raiseOk('', 'Certificación realizada y carátula enviada a Entrega Documentos');
 				if(data.warn)
-					$scope.raiseOk('', 'Certificacion realizada, pero no se pudo enviar a Entrega Documentos');
+					$scope.raiseOk('', 'Certificación realizada, pero no se pudo enviar a Entrega Documentos');
 				plantilleroModel.resetPlantillero();
-				$scope.salirSave();
+				
+				var documento ={
+						"nombreArchivo": $scope.parametros.nombreArchivo,
+						"fechaDocumento": Date.now()
+				};
+
+								
+				$scope.urlPDF = $sce.trustAsResourceUrl($window.location.protocol+'//'+$window.location.host+'/aio/do/service/estado?metodo=downloadFirma&download=false&documento='+ encodeURIComponent(JSON.stringify(documento)));
+//				$scope.salirSave();
 			}else{
 				$scope.raiseErr('No se pudo certificar documento', data.msg);
 			}
@@ -82,12 +92,14 @@ app.controller('VerVistaPreviaPlantillaCtrl', function ($scope, $routeParams, $r
 		$scope.states.isError = true;
 		$scope.states.title = title;
 		$scope.states.msg = msg;
+		$scope.states.isLoading  = false;
 	};
 
 	$scope.raiseOk = function(title, msg){
 		$scope.states.isOk = true;
 		$scope.states.title = title;
 		$scope.states.msg = msg;
+		$scope.states.isLoading  = false;
 	};
 	
 	$scope.salirSave = function(){

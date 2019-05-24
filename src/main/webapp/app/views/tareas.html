@@ -140,12 +140,21 @@
                         	alzamiento web
                         </button>
 			    	</div>
-			    	<div class="col-md-5 col-sm-5 " align="right">				       
+			    	
+			         <div class="col-md-3 col-sm-3" >				          
+                        <select class="form-control" name="resultadosPorPagina" ng-model="paginacionMaster.numPerPage" ng-change="buscarLiquidaciones()">				        				        	
+				        	<option value="25">Mostrar 25 resultados</option>
+				        	<option value="50">Mostrar 50 resultados</option>
+				        	<option value="150">Mostrar 150 resultados</option>
+				        	<option value="0">Mostrar todo</option>
+				        </select>                       
+                     </div>			    	
+			    	
+			    	<div class="col-md-4 col-sm-4" align="right">				       
                            <label style="margin-top: 6px;">Auto Refrescar:</label>
-                     </div>
-                     <div class="col-md-4 col-sm-4 col-lg-3" style="display: inline-flex;">      
-                           <select class="form-control" id="tiemporefresco" name="tiemporefresco"
-                             ng-model="busquedaTareas.tiemporefresco">
+                     
+                     <div  style="display: inline-flex;">      
+                           <select class="form-control" id="tiemporefresco" name="tiemporefresco" ng-model="busquedaTareas.tiemporefresco">
 				        	<option value="0">
 				     		-- Nunca --
 				        	</option>
@@ -164,7 +173,7 @@
                         </button>
 			    		
 			    	</div>	
-			   
+			   </div>
                   
                 </div>
                 
