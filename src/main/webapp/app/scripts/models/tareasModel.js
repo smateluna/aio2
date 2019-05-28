@@ -10,6 +10,14 @@ app.factory('tareasModel', function () {
     tiemporefresco:10
   };
   
+  var paginacionMaster = {
+	currentPage: 1,
+	numPerPage: 25,
+	maxSize: 10,
+	filteredTodos: [],
+	todos: []
+  }  
+  
   var states = {
     buscar : {
       isLoading: false,
@@ -34,11 +42,17 @@ app.factory('tareasModel', function () {
 	
   return {
     getBusquedaTareas: function () {
-      return busquedaTareas;
+    	return busquedaTareas;
     },
     setBusquedaTareas: function (newBusquedaTareas){
-      busquedaTareas = newBusquedaTareas;
+    	busquedaTareas = newBusquedaTareas;
     },
+    getPaginacionMaster: function () {
+    	return paginacionMaster;
+	},
+	setPaginacionMaster: function (newPaginacionMaster){
+		paginacionMaster = newPaginacionMaster;
+	},    
     getStates: function () {
       return states;
     },

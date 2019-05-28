@@ -12,29 +12,32 @@ app.filter('startFrom', function () {
 
 app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, $interval, $filter, $modal, $window, $modalStack, $routeParams, tareasService, estadoService, tareasModel, caratulaService,filterFilter) {
 
-	$scope.busquedaTareas = tareasModel.getBusquedaTareas();
 	
-	$scope.paginacionMaster = {
-		currentPage: 1,
-		numPerPage: 25,
-		maxSize: 10,
-		filteredTodos: [],
-		todos: []
-	}
+	
+//	$scope.paginacionMaster = {
+//		currentPage: 1,
+//		numPerPage: 25,
+//		maxSize: 10,
+//		filteredTodos: [],
+//		todos: []
+//	}
+	
+	$scope.busquedaTareas = tareasModel.getBusquedaTareas();
+	$scope.paginacionMaster = tareasModel.getPaginacionMaster();
+	
 //	$scope.listaCaratulas = [];
 	$scope.paginacionTareas = angular.copy($scope.paginacionMaster);
 	$scope.paginacionTareas.todos=[];
 	
 	$scope.buscarLiquidaciones = function(){	
+		tareasModel.setPaginacionMaster($scope.paginacionMaster);
 		$scope.openLoadingModal('Buscando carátulas...', '');	
 		var promise = tareasService.obtenerCaratulasPorUsuario();
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.estado===null){
 			}else if(data.status){
-				$scope.busquedaTareas.data = data;
-//				$scope.listaCaratulas= data.caratulas;
-
+				$scope.busquedaTareas.data = data;				
 				$scope.makeTodos(data.caratulas);
 			}else{
 				$scope.raiseErr(data.msg);
@@ -452,7 +455,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 			});		
 	}	
 	
-	$scope.checkAll = function () {console.log("checkAll");
+	$scope.checkAll = function () {
 
 		if (!$scope.selectedAll) {
 			$scope.selectedAll = true;
