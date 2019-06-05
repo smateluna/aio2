@@ -13,8 +13,8 @@
                 <th class="estado-table-title text-center">Fecha digitalización</th>
                 <th class="estado-table-title text-center">Fecha disponible</th>
                 <th class="estado-table-title text-center">ver</th>
-                <th class="estado-table-title text-center" ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">modificar</th>
-                <th class="estado-table-title text-center" ng-if="subPermisos['estado'].indexOf('ELIMINAR_ESCRITURA') >= 0">eliminar</th>
+                <th class="estado-table-title text-center" ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer">modificar</th>
+                <th class="estado-table-title text-center" ng-if="subPermisos['estado'].indexOf('ELIMINAR_ESCRITURA')>=0 || developer">eliminar</th>
             </tr>
             </thead>
             <tbody>
@@ -27,12 +27,12 @@
                    <i class="fa fa-file-pdf-o"></i> 
                 </button>
               </td>
-              <td ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">
+              <td ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer">
               	  <a  href="cbrsVisor:{{req.numeroCaratula}}" ng-if="$first">
        				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> <i class="fa fa-pencil"></i></button>
        			  </a>  
 	          </td>
-	          <td ng-if="subPermisos['estado'].indexOf('ELIMINAR_ESCRITURA') >= 0">
+	          <td ng-if="subPermisos['estado'].indexOf('ELIMINAR_ESCRITURA')>=0 || developer">
 				<button ng-show="escritura.vigente" class="btn btn-danger btn-xs"
 					ng-click="removeVersion(escritura)" tooltip="Eliminar" tooltip-placement="top">
 					<i class="fa fa-trash-o"></i>

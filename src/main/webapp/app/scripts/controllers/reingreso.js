@@ -91,10 +91,10 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 
 
 
-	$scope.reingresarCaratula = function(){
+	$scope.reingresarCaratula = function(esReingresoGP){
 		$scope.openLoadingModal('Reingresando carátula #'+$scope.req.numeroCaratula+'...', '');
 		if ($scope.formReingresar.$valid) {
-			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario);
+			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario, esReingresoGP);
 			promise.then(function(data) {
 				$scope.closeModal();
 				if(data.estado===null){

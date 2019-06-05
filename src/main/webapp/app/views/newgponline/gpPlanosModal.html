@@ -1,0 +1,65 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="gpPlanosModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		Planos Relacionados
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+    <div class="modal-body modal-body-solicitar">
+        <div class="bs-callout bs-callout-warning">
+            <h4>
+            	Borrador: {{busquedaGponline.borrador}} - Folio: {{busquedaGponline.folio}} 
+			</h4>
+					
+				<div class="content">
+                <div class="table-responsive mt10">
+                    <table class="hover table-curved">
+                        <thead>
+                        <tr>
+                            <th class="text-left">Categor&iacute;a</th>
+                            <th class="text-left">N&uacute;mero</th>
+                            <th class="text-center">Ver</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="plano in busquedaPlanos.data.planos">
+                            <td class="text-right" ng-switch="plano.categoria">
+								<span ng-switch-when="1" class="label label-success label-registro mLmenos2">Ley 19.537</span>
+								<span ng-switch-when="2" class="label label-prop label-registro mLmenos2">Ley 6.071</span>
+								<span ng-switch-when="3" class="label label-primary label-registro mLmenos2">Subdivisi&oacute;n</span>
+							</td>
+                            <td class="text-right">{{plano.numero}}</td>
+							<td class="text-center">
+								<a href="{{plano.url}}" target="_blank" class="btn btn-primary btn-xs btn-rad">
+									<i class="fa fa-camera"></i>
+								</a>
+							</td>
+						</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+				<!--fin row-->
+			<div ng-if="busquedaGponline.gp.length===0" class="row mt35">
+    		   <div class="col-md-6 col-md-offset-3">
+    	    	   <div class="block-transparent">
+	            	   <div class="content">
+                   			<div class="text-center">
+                       			<div class="i-circle primary"><i class="fa fa-info"></i></div>
+                       			<p>No hay Certificados.</p>
+                   			</div>
+               			</div>
+				    </div>
+       			</div>
+    		</div>
+
+	   </div>
+	   <!--fin bs-callout-->
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

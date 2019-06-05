@@ -1394,24 +1394,20 @@ public class CaratulaServiceAction extends CbrsAbstractAction {
 		JSONArray bitacoras = new JSONArray();
 		Boolean status = false;
 		String msg = "";
-		CaratulaVO caratulaVO = null;
 
 		try{
-			Long caratula = Long.parseLong(request.getParameter("caratula"));
+			Integer caratula = Integer.parseInt(request.getParameter("caratula"));
 
 			WsCaratulaClienteDelegate wsCaratulaClienteDelegate = new WsCaratulaClienteDelegate();
-			caratulaVO = wsCaratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratula);
-			if(caratulaVO!=null){ 
-				BitacoraCaratulaVO[] bitacoraCaratulaVOs = caratulaVO.getBitacoraCaratulaVO();
-				if(null!=bitacoraCaratulaVOs){
-					for(BitacoraCaratulaVO bitacora:bitacoraCaratulaVOs){
-						JSONObject fila = new JSONObject();
-						fila.put("id", bitacora.getIdBitacora());
-						fila.put("observacion", bitacora.getObservacion());
-						fila.put("fecha", sdf.format(bitacora.getFecha()));
-						fila.put("funcionario", bitacora.getNombreFuncionario()+ " " +  bitacora.getApellidoPaternoFuncionario());
-						bitacoras.add(fila);
-					}
+			List<BitacoraCaratulaVO> bitacoraCaratulaVOs = wsCaratulaClienteDelegate.obtenerBitacoraCaratula(caratula);
+			if(bitacoraCaratulaVOs!=null && bitacoraCaratulaVOs.size()>0){ 
+				for(BitacoraCaratulaVO bitacora:bitacoraCaratulaVOs){
+					JSONObject fila = new JSONObject();
+					fila.put("id", bitacora.getIdBitacora());
+					fila.put("observacion", bitacora.getObservacion());
+					fila.put("fecha", sdf.format(bitacora.getFecha()));
+					fila.put("funcionario", bitacora.getNombreFuncionario()+ " " +  bitacora.getApellidoPaternoFuncionario());
+					bitacoras.add(fila);
 				}
 			}	
 

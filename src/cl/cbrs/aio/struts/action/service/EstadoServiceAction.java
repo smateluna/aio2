@@ -305,34 +305,48 @@ public class EstadoServiceAction extends CbrsAbstractAction {
 		response.setContentType("text/json");
 
 		String numeroCaratula = request.getParameter("caratula");		
-		String correoRequirente = request.getParameter("correo");
+		String requirenteReq = request.getParameter("requirente");
 
 		JSONObject json = new JSONObject();
 		json.put("status", false);
 		json.put("msg", "");
 
-		JSONObject req = new JSONObject();
-		req.put("numero", numeroCaratula);
-		req.put("correo", correoRequirente);
-		json.put("req", req);	
+//		JSONObject req = new JSONObject();
+//		req.put("numero", numeroCaratula);
+//		req.put("correo", correoRequirente);
+//		json.put("req", req);	
 
 		WsCaratulaClienteDelegate delegate = new WsCaratulaClienteDelegate();
 		
 		if(StringUtils.isNotBlank(numeroCaratula) && StringUtils.isNumeric(numeroCaratula)){
 			try {	
 				Long numero = Long.parseLong(numeroCaratula);
-				correoRequirente = cambiaEncoding(correoRequirente);
+//				correoRequirente = cambiaEncoding(correoRequirente);
+				JSONObject requirenteJSON = (JSONObject)new JSONParser().parse(requirenteReq);
 	
 				CaratulaVO caratulaVO = delegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), numero);
 				CaratulasUtil caratulasUtil = new CaratulasUtil();
 
 				if(caratulaVO!=null && caratulaVO.getRequirente()!=null){
 					RequirenteVO requirenteVO = caratulaVO.getRequirente();
-					requirenteVO.setEmail(correoRequirente);
+					String email = ((String)requirenteJSON.get("email"));
+					String nombres = ((String)requirenteJSON.get("nombres"));
+					String apellidoPaterno = ((String)requirenteJSON.get("apellidoPaterno"));
+					String apellidoMaterno = ((String)requirenteJSON.get("apellidoMaterno"));
+					String telefono = ((String)requirenteJSON.get("telefono"));
+					String direccion = ((String)requirenteJSON.get("direccion"));
+					
+					requirenteVO.setEmail(email.trim());
+					requirenteVO.setNombres(nombres.trim());
+					requirenteVO.setApellidoPaterno(apellidoPaterno.trim());
+					requirenteVO.setApellidoMaterno(apellidoMaterno.trim());
+					requirenteVO.setTelefono(telefono.trim());
+					requirenteVO.setDireccion(direccion.trim());
+					
 					delegate.actualizarRequirente(new UsuarioWebVO(), requirenteVO);
 					
 					//Agregar bitacora
-					String observacion = "Se cambia email requirente a " + correoRequirente;
+					String observacion = "Se actualizan datos de requirente.";
 					String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
 					BitacoraDTO bitacoraDTO = caratulasUtil.agregarBitacoraCaratula(new Long(numeroCaratula), rutUsuario, observacion,BitacoraCaratulaVO.OBSERVACION_INTERNA);
 					json.put("bitacoraDTO", bitacoraDTO);

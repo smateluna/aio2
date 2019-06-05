@@ -59,7 +59,7 @@
 					      <td>Estado</td>
 					      <td>Usuario</td>
 					      <td>Fecha Estado</td>
-					      <td ng-if="subPermisos['desbloqueo'].indexOf('DESBLOQUEAR') >= 0">Desbloquear</td>
+					      <td ng-if="subPermisos['desbloqueo'].indexOf('DESBLOQUEAR')>=0 || developer">Desbloquear</td>
 					   </tr>
 					   </thead>
 					   <tbody>
@@ -68,7 +68,7 @@
 				  			<td class="estado-table-td">{{dto.estado}}</td>
 			            	<td class="estado-table-td">{{dto.usuario}}</td>
 			                <td class="estado-table-td">{{dto.fechaEstado | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
-			                <td><button ng-if="(dto.idEstado==3 || dto.idEstado==6) && subPermisos['desbloqueo'].indexOf('DESBLOQUEAR') >= 0" type="button" class="btn btn-primary btn-xs" ng-click="desbloquear(dto)"><i class="fa fa-unlock"></i> Desbloquear</button>   </td>
+			                <td><button ng-if="(dto.idEstado==3 || dto.idEstado==6) && (subPermisos['desbloqueo'].indexOf('DESBLOQUEAR')>=0 || developer)" type="button" class="btn btn-primary btn-xs" ng-click="desbloquear(dto)"><i class="fa fa-unlock"></i> Desbloquear</button>   </td>
 			            </tr>
 			            <tr ng-if="!data.listaSolicitudes || data.listaSolicitudes.length===0">
 			                <td colspan="5" class="estado-table-td text-center text-italic">No hay datos.</td>

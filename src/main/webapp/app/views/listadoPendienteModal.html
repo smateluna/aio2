@@ -14,9 +14,9 @@
 
 	 <div class="col-md-6" align="left">
 		
-		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROPIEDAD') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('51')"><i class="fa fa-list"></i> Ver Pendientes Propiedad</button>
-		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_HIPOTECA') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('53')"><i class="fa fa-list"></i> Ver Pendientes Hipoteca</button>
-		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROHIBICIONES') >= 0" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('54')"><i class="fa fa-list"></i> Ver Pendientes Prohibiciones</button>
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROPIEDAD')>=0 || developer" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('51')"><i class="fa fa-list"></i> Ver Pendientes Propiedad</button>
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_HIPOTECA')>=0 || developer" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('53')"><i class="fa fa-list"></i> Ver Pendientes Hipoteca</button>
+		<button ng-if="verMisCaratulas && subPermisos['liquidacion'].indexOf('LIQUIDADOR_PROHIBICIONES')>=0 || developer" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteSeccion('54')"><i class="fa fa-list"></i> Ver Pendientes Prohibiciones</button>
 
 		<button ng-if="!verMisCaratulas" class="btn btn-primary btn-sm btn-rad" type="button" ng-click="verListadoPendienteUsuario()"><i class="fa fa-list"></i> Ver Mis Caratulas</button>
 

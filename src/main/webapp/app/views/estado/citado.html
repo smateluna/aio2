@@ -5,7 +5,7 @@
         </span>
 
         Citado</div>
-    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CITADO')>=0 && data.status!=null && !anulada && data.res.caratulaDTO.citadoDTOs.length==1">
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && (subPermisos['estado'].indexOf('EDITAR_CITADO')>=0 || developer) && data.status!=null && !anulada && data.res.caratulaDTO.citadoDTOs.length==1">
         <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openCitadoModal()">
             <i class="fa fa-edit"></i>  Editar datos
         </button>

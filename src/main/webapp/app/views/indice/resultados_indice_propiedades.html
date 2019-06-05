@@ -88,6 +88,7 @@
 					      <ul class="dropdown-menu" role="menu">
 						    <li><a href="" ng-if="sol.ano>=aioParametros.anoArchivoNacional" ng-click="openSolicitar(sol,'prop')"> Crear Pre-Caratula</a></li>
 						    <li><a href="" ng-click="reingresar(sol,'Propiedad','1')"> Reingresar</a></li>
+						    <li><a ng-if="subPermisos['indice'].indexOf('EDITAR_INDICE')>=0 || developer" href="" ng-click="editarIndice(sol,'prop')"> Editar</a></li>
 						    <li class="divider"></li>
 						    <li><a href="" ng-click="ticket(sol,'prop')"> Ticket Prop.</a></li>
 						  </ul>

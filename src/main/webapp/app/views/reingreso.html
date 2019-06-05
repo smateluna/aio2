@@ -100,7 +100,7 @@
          <!--fin panel body-->
     </div>   
   </div>
-<form role="form" name="formReingresar" id="formReingresar" ng-submit="reingresarCaratula()" >   
+<form role="form" name="formReingresar" id="formReingresar" >   
    <div class="col-md-6" ng-if="data.reingresoGP==null">   	
 	      <div class="panel panel-default">
 	         <div class="panel-heading">
@@ -189,8 +189,8 @@
 	           <!--fin row-->          
 	            <div class="row mt20">   
 	               <div class="col-md-8 col-xs-offset-2">
-	                 <button ng-if="data.caratulaDTO.tipoFormularioDTO.id!=5 || data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo!='10' || subPermisos['reingreso'].indexOf('REINGRESO_GP') < 0" type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null || !validarReingreso()" >Reingresar</button>
-	                 <button ng-if="data.caratulaDTO.tipoFormularioDTO.id==5 && data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo=='10' && subPermisos['reingreso'].indexOf('REINGRESO_GP') >= 0" type="submit" class="btn btn-success" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null || !validarReingreso()" >Reingreso GP</button>
+	                 <button ng-click="reingresarCaratula()" ng-if="data.caratulaDTO.tipoFormularioDTO.id!=5 || data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo!='10' || subPermisos['reingreso'].indexOf('REINGRESO_GP') < 0" type="submit" class="btn btn-primary" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null || !validarReingreso()" >Reingresar</button>
+	                 <button ng-click="reingresarCaratula(true)" ng-if="data.caratulaDTO.tipoFormularioDTO.id==5 && data.caratulaDTO.estadoActualCaratulaDTO.seccionDTO.codigo=='10' && (subPermisos['reingreso'].indexOf('REINGRESO_GP')>=0 || developer)" type="submit" class="btn btn-success" ng-disabled="formReingresar.$invalid || data.reingresoGP!=null || !validarReingreso()" >Reingreso GP</button>
 	                 <button type="button" class="btn btn-default" ng-click="limpiar()">Limpiar</button>
 	               </div>
 	           </div>

@@ -3,7 +3,9 @@
 app.controller('RequirenteModalCtrl', function ($log, $rootScope, $scope, $modal, $modalInstance, $modalStack, $window, $timeout, data, estadoService) {
 	
 	$scope.data = data;
-	$scope.requirente = {email:""};
+//	$scope.requirente = {email:""};
+	$scope.requirente = angular.copy($scope.data.res.caratulaDTO.requirenteDTO);
+	console.log($scope.requirente);
 	
 	$scope.cancel = function () {
 	    var top = $modalStack.getTop();
@@ -14,16 +16,16 @@ app.controller('RequirenteModalCtrl', function ($log, $rootScope, $scope, $modal
   	
   	
 
-  $scope.guardarCorreoRequirente = function(){
+  $scope.updateRequirente = function(){
 	$scope.openLoadingModal('Guardando...', '');
 	  
-    var promise = estadoService.cambiarCorreo($scope.data.req.numeroCaratula, $scope.requirente.email);
+    var promise = estadoService.updateRequirente($scope.data.req.numeroCaratula, $scope.requirente);
     promise.then(function(data) {
     	$scope.closeModal();
       if(data.status===null){
 
       }else if(data.status){
-    	$scope.data.res.caratulaDTO.requirenteDTO.email = $scope.requirente.email;
+    	$scope.data.res.caratulaDTO.requirenteDTO = $scope.requirente;
     	$scope.data.res.caratulaDTO.bitacoraDTOs.unshift(data.bitacoraDTO);
 		$scope.closeModal();
         $scope.openMensajeModal('success','Datos requiente modificado exitosamente', '',  false, null);
@@ -100,8 +102,8 @@ app.controller('RequirenteModalCtrl', function ($log, $rootScope, $scope, $modal
     }
   };
   
-  $timeout(function(){
-	    $scope.doFocus('email');
-  }, 500);
+//  $timeout(function(){
+//	    $scope.doFocus('email');
+//  }, 500);
 
 });

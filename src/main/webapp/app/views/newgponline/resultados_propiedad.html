@@ -17,8 +17,8 @@
                                 </button>     
 									
                                     
-                                 <span ng-if="(busquedaGponline.urls=='' || busquedaGponline.urls==null) && !busquedaPlanos.data.status">
-                                 <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="buscarPlanos()"><i class="fa fa-search"></i> Planos</button>        
+                                 <span ng-if="busquedaPlanos.tienePlanos==null || busquedaPlanos.tienePlanos==true">
+                                 	<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="buscarPlanos()"><i class="fa fa-search"></i> Planos</button>        
                                  </span> 
                                  
                                  <span ng-if="busquedaPlanos.data.status && !busquedaPlanos.tienePlanos">

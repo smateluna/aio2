@@ -16,7 +16,7 @@
 				        	<option value="0">Observacion Interna</option>
 				        	<option value="1">Observacion Externa</option>
 				</select>
-				<div ng-if="observacion.categoria==1 && subPermisos['estado'].indexOf('ENVIAR_OBSERVACION_CLIENTE') >= 0">					
+				<div ng-if="observacion.categoria==1 && (subPermisos['estado'].indexOf('ENVIAR_OBSERVACION_CLIENTE')>=0 || developer)">					
 					<span>&iquest;Enviar correo a requirente?</span>
 					<input type="checkbox" ng-model="observacion.enviarCorreo" ng-disabled="data.res.caratulaDTO.requirenteDTO.email==''"  />
 					<span class="label label-warning text-center mensaje-label ng-scope" ng-if="data.res.caratulaDTO.requirenteDTO.email==''"><i class="fa fa-warning"></i> Requirente no tiene correo registrado</span>

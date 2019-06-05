@@ -5,9 +5,9 @@
         </span>
 
         Requirente</div>
-    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_CORREO') >= 0 && data.status!=null && !anulada" >
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed" ng-if="!req.simpleMode && (subPermisos['estado'].indexOf('EDITAR_CORREO')>=0 || developer) && data.status!=null && !anulada" >
 <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openRequirenteModal()" >
-            <i class="fa fa-envelope"></i>  Editar correo
+            <i class="fa fa-user"></i>  Editar requirente
         </button>
     </div>
     <div class="panel-body estado-content-padding" ng-hide="area.collapsed">

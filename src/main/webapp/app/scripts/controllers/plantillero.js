@@ -139,7 +139,7 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 			if($scope.plantillero.caratula)
 				texto = texto.replace("_CARATULA_", $scope.plantillero.caratula);
 			if($scope.plantillero.valor>0)
-				texto = texto.replace("_VALOR_", $scope.plantillero.valor.toLocaleString());
+				texto = texto.replace("_VALOR_", $scope.plantillero.valor.toLocaleString("es-CL"));
 			if($scope.plantillero.valor==0)
 				texto = texto.replace("_VALOR_", "S/D");			
 			texto = texto.replace("_FECHA_", $scope.obtenerFechaEnPalabras($scope.fechahoy));

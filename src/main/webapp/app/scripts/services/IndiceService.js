@@ -179,6 +179,24 @@ app.factory('indiceService', function ($http, $q, $modal, $rootScope) {
 					controller: 'ingresaRutModalCtrl'
 				});
 			}
+		},actualizarIndice: function (indice) {
+			var paramsObj = {metodo: 'actualizarIndice', indice: indice};
+
+			var deferred = $q.defer();
+
+			$http({
+				method: 'POST',
+				url: '../do/service/indice',
+				params: paramsObj
+			}).
+			success(function(data, status, headers, config){
+				deferred.resolve(data);
+			}).
+			error(function(data, status, headers, config){
+				deferred.reject(status);
+			});
+
+			return deferred.promise;
 		}
 	};
 });

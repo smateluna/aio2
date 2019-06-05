@@ -77,6 +77,7 @@ public class IndiceServiceUtil {
 		String tipo = (String)doc.getFieldValue("tipo");
 		String descComunaj = (String)doc.getFieldValue("descComuna");
 		String caratulaj = (String)doc.getFieldValue("caratula");
+		Integer registroj = (Integer)doc.getFieldValue("registro");
 
 		Integer tieneImagenj = (Integer)doc.getFieldValue("tieneImagen");
 
@@ -108,10 +109,13 @@ public class IndiceServiceUtil {
 			salida.put("caratula", caratulaj.trim());
 		}
 		
+		
 		salida.put("nombre", "");
 		if(nombrej!=null){
 			salida.put("nombre", nombrej.trim());
 		}
+		
+		salida.put("registro", registroj);
 
 		salida.put("naturaleza", "");
 		if(naturalezaj!=null){

@@ -227,8 +227,12 @@ app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location
 		  if(data.status===null){
 
 		  }else if(data.status){
-			  if(data.tienePlanos){
-				  $scope.busquedaGponline.urls=data.urls;
+			  if(data.planos.length>0){
+//				  $scope.busquedaGponline.urls=data.urls;
+				  $timeout(function(){
+					  $scope.openGpPlanosModal();
+				  },200);
+				  
 			  }
 			  $scope.busquedaPlanos.tienePlanos=data.tienePlanos;
 			  $scope.busquedaPlanos.data = data;
@@ -409,6 +413,17 @@ app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location
       }
     });
   };
+  
+  $scope.openGpPlanosModal = function () {
+	    $modal.open({
+	      templateUrl: 'gpPlanosModal.html',
+	      backdrop: 'static',
+	      keyboard: false,
+	      size: 'md',
+	      windowClass: 'modal',
+	      controller: 'GponlineCtrl'
+	    });
+	  };  
   
   $scope.openEventosModal = function () {
     $modal.open({

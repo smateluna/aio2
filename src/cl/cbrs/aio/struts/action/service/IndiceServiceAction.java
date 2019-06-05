@@ -44,9 +44,11 @@ import cl.cbr.common.exception.GeneralException;
 import cl.cbr.foliomercantil.vo.ActoJuridicoVO;
 import cl.cbr.foliomercantil.vo.TipoSociedadVO;
 import cl.cbr.util.locator.ServiceLocatorException;
+import cl.cbrs.aio.dao.IndiceDAO;
 import cl.cbrs.aio.dao.InformacionesDAO;
 import cl.cbrs.aio.dto.AtencionInformacionesDTO;
 import cl.cbrs.aio.dto.CamposIndiceDTO;
+import cl.cbrs.aio.dto.IndicePropDTO;
 import cl.cbrs.aio.dto.InformacionesDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
 import cl.cbrs.aio.dto.SearchTermDTO;
@@ -82,8 +84,7 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void obtenerActos(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+	public void obtenerActos(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		JSONObject respuesta = new JSONObject();
 		JSONArray actos = new JSONArray();
@@ -127,6 +128,57 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 			logger.error(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void actualizarIndice(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+		JSONObject respuesta = new JSONObject();
+		Boolean status = false;
+		Boolean warn = false;
+		String msg = "";
+		String indiceReq = request.getParameter("indice");
+		try{
+
+			JSONObject indiceJSON = (JSONObject)new JSONParser().parse(indiceReq);
+			Long foja =(Long)indiceJSON.get("foja");
+			Long numero =(Long)indiceJSON.get("num");
+			Long ano =(Long)indiceJSON.get("ano");
+			
+			IndicePropDTO indiceDTO = new IndicePropDTO();
+			indiceDTO.setFoja(foja.intValue());
+			indiceDTO.setNumero(numero.intValue());
+			indiceDTO.setAno(ano.intValue());
+			indiceDTO.setDirAntigua((String)indiceJSON.get("dir"));
+			indiceDTO.setNombresCom((String)indiceJSON.get("nombre"));
+			indiceDTO.setIdI(Long.parseLong((String)indiceJSON.get("id")));
+			
+			IndiceDAO dao = new IndiceDAO();
+			Integer res = dao.updateIndiceProp(indiceDTO);
+			
+			if(res<1){
+				warn=true;
+				msg = "Ya hay una solicitud de actualización en proceso para este registro.";
+			}
+			
+			status = true;			
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+
+			status = false;
+			msg = "Se ha detectado un problema, comunicar area soporte.";
+		}
+
+		respuesta.put("status", status);
+		respuesta.put("warn", warn);
+		respuesta.put("msg", msg);
+
+		try {
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}	
 
 	private static String stripAccents(String s) 
 	{
@@ -231,24 +283,24 @@ public class IndiceServiceAction extends CbrsAbstractAction {
 			String bis = request.getParameter("bis");	
 			String rut = request.getParameter("rut"); 
 			String nombre = "";
-			try {
+//			try {
 				if(request.getParameter("apellidos")!=null){
-					nombre = new String(request.getParameter("apellidos").getBytes("ISO-8859-15"),"UTF-8");
-					nombre = nombre.toLowerCase();
+//					nombre = new String(request.getParameter("apellidos").getBytes("ISO-8859-15"),"UTF-8").toLowerCase();
+					nombre = request.getParameter("apellidos").toLowerCase();
 				}
-			} catch (UnsupportedEncodingException e3) {
-				nombre= "";
-			}
+//			} catch (UnsupportedEncodingException e3) {
+//				nombre= "";
+//			}
 			
 			String direccion = "";
-			try {
+//			try {
 				if(request.getParameter("direccion")!=null){
-					direccion = new String(request.getParameter("direccion").getBytes("ISO-8859-15"),"UTF-8");
-					direccion = direccion.toLowerCase();
+//					direccion = new String(request.getParameter("direccion").getBytes("ISO-8859-15"),"UTF-8").toLowerCase();
+					direccion = request.getParameter("direccion").toLowerCase();
 				}
-			} catch (UnsupportedEncodingException e3) {
-				direccion= "";
-			}
+//			} catch (UnsupportedEncodingException e3) {
+//				direccion= "";
+//			}
 
 			String comunaS = request.getParameter("comuna");  
 			String anoS = request.getParameter("anoInscripcion");

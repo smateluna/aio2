@@ -41,6 +41,7 @@ import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.delegate.caratula.WsCaratulaClienteDelegate;
 import cl.cbrs.firmaelectronica.delagate.ClienteWsFirmadorDelegate;
 import cl.cbrs.firmaelectronica.vo.RegistroFirmaElectronicaVO;
+import cl.cbrs.planos.vo.PlanoVO;
 import cl.cbrs.planos.vo.SimplePlanoVO;
 import cl.cbrs.planos.vo.TituloPlanoVO;
 import cl.cbrs.planos.ws.ServicioPlanoDelegate;
@@ -947,18 +948,14 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		String msg = "";
 
         JSONObject respuesta = new JSONObject();
-       
-        response.setContentType("application/json; charset=ISO-8859-1");
         
-        String listaInscripcionesReq = request.getParameter("listaInscripcionesPlano");
-        logger.debug("listaInscripcionesReq: " + listaInscripcionesReq);
-        
-        JSONArray listaInscripcionesJSON = new JSONArray();
+        String listaInscripcionesReq = request.getParameter("listaInscripcionesPlano");                
+        JSONArray listaInscripcionesJSON = new JSONArray();        
+        JSONArray planos = new JSONArray();
         
         try { 
         	JSONParser parser = new JSONParser();
         	listaInscripcionesJSON = (JSONArray)parser.parse(listaInscripcionesReq);
-        	logger.debug("listaInscripcionesJSON size: " + listaInscripcionesJSON.size() );
         	TituloPlanoVO[] titulosPlanosVO = new TituloPlanoVO[listaInscripcionesJSON.size()];
         	
         	for (int i=0; i<listaInscripcionesJSON.size(); i++) {
@@ -983,33 +980,18 @@ public class GponlineServiceAction extends CbrsAbstractAction {
         	ServicioPlanoDelegate planosDelegate = new ServicioPlanoDelegate();
         	titulosPlanosVO = planosDelegate.obtenerPlanosPorTitulos(titulosPlanosVO );
         	
-        	//Filtrar planos repetidos
-        	ArrayList<Integer> categorias = new ArrayList<Integer>();
-        	ArrayList<Integer> numeros = new ArrayList<Integer>();        	 
-        	ArrayList aux = new ArrayList();
-        	for(int i=0; i<titulosPlanosVO.length; i++){
-        		SimplePlanoVO[] planosVO = titulosPlanosVO[i].getSimplePlano();
+        	for(int i=0; i<titulosPlanosVO.length; i++){        		        	
+        		SimplePlanoVO[] planosVO = titulosPlanosVO[i].getSimplePlano();        		
         		for(int j=0; j<planosVO.length; j++){        			
-        			if(!aux.contains(planosVO[j].getIdCategoria()+"-"+planosVO[j].getNumeroPlano())){
-        				categorias.add(planosVO[j].getIdCategoria().intValue());
-        				numeros.add(planosVO[j].getNumeroPlano().intValue());
-        				
-        				aux.add(planosVO[j].getIdCategoria()+"-"+planosVO[j].getNumeroPlano());
-        			}        			
+            		JSONObject planoJSON = new JSONObject();
+            		planoJSON.put("categoria", planosVO[j].getIdCategoria());
+            		planoJSON.put("numero", planosVO[j].getNumeroPlano());
+            		planoJSON.put("url", Util.getUrlPlano(planosVO[j].getNumeroPlano().intValue(),planosVO[j].getIdCategoria().intValue()));
+            		planos.add(planoJSON);        			
         		}
         	}
-        	
-        	//Armar URL
-        	JSONArray listaUrl = new JSONArray();
-        	for(int i=0; i<categorias.size(); i++){
-        		JSONObject urlJSON = new JSONObject();
-        		urlJSON.put("url", Util.getUrlPlano(numeros.get(i),categorias.get(i)));
-        		listaUrl.add(urlJSON);
-//        		listaUrl.add(Util.getUrlPlano(numeros.get(i),categorias.get(i)));
-        	}
-        	
-        	respuesta.put("urls", listaUrl); 
-        	if(listaUrl.size()>0)
+ 
+        	if(planos.size()>0)
         		respuesta.put("tienePlanos", true);
         	else
         		respuesta.put("tienePlanos", false);
@@ -1021,6 +1003,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 			msg = "Se ha detectado un problema, comunicar area soporte.";
 		}		
 		
+        respuesta.put("planos", planos);
 		respuesta.put("status", status);
 		respuesta.put("msg", msg);
 

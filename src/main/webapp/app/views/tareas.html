@@ -80,7 +80,7 @@
 	                               			<i class="fa fa-download"></i>
 	                           </button>        
 	                           			<!-- <button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===1" ng-click="verDocumentoEstudio(sol)" class="btn btn-primary btn-xs btn-rad" alt="ver documento"><i class="fa fa-file-pdf-o"></i> </button> -->              			
-	                    		<span ng-if="caratulafuera.caratula.codSeccion=='16' && caratulafuera.caratula.estadoDescargaEscri===1 && subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0">
+	                    		<span ng-if="caratulafuera.caratula.codSeccion=='16' && caratulafuera.caratula.estadoDescargaEscri===1 && (subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer)">
 					              	  <a  href="cbrsVisor:{{caratulafuera.caratula.numeroCaratula}}">
 					       				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> 
                                           <i class="fa fa-pencil"></i>
@@ -251,7 +251,7 @@
 									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C2' || sol.estadoActualCaratulaDTO.seccionDTO.codigo=='C3'"><a href="" ng-click="verInscripcionCertificar(sol)"><i class="fa fa-file-text-o"></i> Revisar y Certificar</a></li>
 									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='RL'"><a href="" ng-click="masInfoLiquidacion(sol)"><i class="fa fa-info-circle"></i> Mas Info Liquidacion</a></li>
 										    <li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'"><a href="" ng-click="obtenerEscritura(sol)"><i class="fa fa-download"></i> Obtener Escritura</a></li>										    
-										    <li ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA') >= 0"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-pencil"></i> Editar Escritura</a></li>
+										    <li ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-pencil"></i> Editar Escritura</a></li>
 										  </ul>
 									    </div>             			
 	                    		</td>

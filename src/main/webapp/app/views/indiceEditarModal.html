@@ -1,0 +1,107 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/ng-template" id="indiceEditarModal.html">
+
+    <div class="modal-header">
+		 <h4>&nbsp;
+		<span ng-switch="indice.registro">
+            <span ng-switch-when=4 class="label label-com label-registro">Comercio</span>
+           	<span ng-switch-when=1 class="label label-prop label-registro">Propiedad</span>
+           	<span ng-switch-when=3 class="label label-proh label-registro">Prohibición</span>
+           	<span ng-switch-when=2 class="label label-hipo label-registro">Hipoteca</span>
+        </span>
+        <button type="button" class="close" ng-click="cancel()">×</button>
+       </h4>
+    </div>
+
+    <div class="modal-body modal-body-solicitar">
+	    <form role="form" name="sform" id="sform">
+	
+        <div class="bs-callout bs-callout-warning">
+            <h4>
+            	Editar indice
+			</h4>
+
+                <div class="row mt15">           
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="snombre">Foja
+                            </label> <input type="number" numbers-only="" ng-class="{'error-field': sform.sfoja.$invalid}" class="form-control" ng-model="indice.foja" loading-state="isLoadingSolicitar"
+                                            id="sfoja" name="sfoja" placeholder="foja" maxlength="6" required="required" enter-next="">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="snombre">N&uacute;mero
+                            </label> <input type="number" numbers-only="" ng-class="{'error-field': sform.snumero.$invalid}" class="form-control" ng-model="indice.num" loading-state="isLoadingSolicitar"
+                                            id="snumero" name="snumero" placeholder="numero" maxlength="6" required="required" enter-next="">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="snombre">Año
+                            </label> <input type="number" numbers-only="" ng-class="{'error-field': sform.sano.$invalid}" class="form-control" ng-model="indice.ano" loading-state="isLoadingSolicitar"
+                                            id="sano" name="sano" placeholder="ano" maxlength="4" required="required" enter-next="">
+                        </div>
+                    </div>
+				</div>
+				<!--fin row-->
+					
+				<div class="row">	
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label" for="snumero">Nombre </label>
+                            <input type="text" ng-class="{'error-field': sform.snombre.$invalid}" class="form-control" ng-model="indice.nombre" loading-state="isLoadingSolicitar"
+                                            id="snombre" name="snombre" placeholder="nombre" maxlength="150" required="required" enter-next="">
+                        </div>
+                    </div>                    
+                </div>
+				<!--fin row-->
+                
+				<div class="row">	
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label" for="sdireccion">Direcci&oacute;n </label>
+                            <input type="text" ng-class="{'error-field': sform.sdireccion.$invalid}" class="form-control" ng-model="indice.dir" loading-state="isLoadingSolicitar"
+                                            id="sdireccion" name="sdireccion" placeholder="nombre" maxlength="500" required="required" enter-next="">
+                        </div>
+                    </div>                    
+                </div>
+				<!--fin row-->		
+	   </div>
+	   <!--fin bs-callout-->
+
+                    <div ng-if="solicitudStatus.error">
+                        <div class="alert alert-danger mt15 mb0 alert-white rounded">
+                            <div class="icon"> <i class="fa fa-times-circle"></i> </div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> {{solicitudStatus.msg}}
+                        </div>
+                    </div>
+
+                    <div ng-if="solicitudStatus.warning">
+                        <div class="alert alert-warning mt15 mb0 alert-white rounded">
+                            <div class="icon"> <i class="fa fa-exclamation-circle"></i> </div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> {{solicitudStatus.msg}}
+                        </div>
+                    </div>
+
+                    <div ng-if="solicitudStatus.ok">
+                        <div class="alert alert-success mt15 mb0 alert-white rounded">
+                            <div class="icon"> <i class="fa fa-check-circle"></i> </div>
+                            <strong>{{solicitudStatus.msgTitle}}</strong> {{solicitudStatus.msg}}
+                        </div>
+                    </div>
+
+                <div class="row mt15" ng-if="!solicitudStatus.ok">
+                    <div class="text-center">
+                        <button type="submit" class="btn  btn-primary btn-rad" data-loading-text="Solicitando..." loading-state="isLoadingSolicitar"  ng-disabled="sform.$invalid || sform.$pristine" ng-click="actualizarIndice()">Guardar</button>
+                    </div>					
+                </div>
+				<!--fin row-->
+            </form>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn  btn-default btn-rad" loading-state="isLoadingSolicitar" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

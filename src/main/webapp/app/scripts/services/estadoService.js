@@ -42,8 +42,8 @@ app.factory('estadoService', function ($q, $http) {
 
         return deferred.promise;
       },
-      cambiarCorreo: function (caratula, correo) {
-        var paramsObj = {metodo: 'updateRequirente', caratula: caratula, correo: correo};
+      updateRequirente: function (caratula, requirente) {
+        var paramsObj = {metodo: 'updateRequirente', caratula: caratula, requirente: requirente};
 
         var deferred = $q.defer();
 

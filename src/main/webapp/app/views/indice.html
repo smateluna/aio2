@@ -176,7 +176,7 @@
                                     ng-click="buscarIndice()" >Buscar</button>
                                     <!-- ng-disabled="myform.$invalid"  -->
 
-                             <button type="button" class="btn  btn-primary "  ng-if="(subPermisos['indice'].indexOf('EXCEL_INDICE') >= 0 && ((busquedaIndice.resultados.length>0) || (busquedaIndice.resultadoshipotecas.length>0) || (busquedaIndice.resultadosprohibiciones.length>0) || (busquedaIndice.resultadoscomercio.length>0)))"
+                             <button type="button" class="btn  btn-primary "  ng-if="(subPermisos['indice'].indexOf('EXCEL_INDICE')>=0 || developer) && ((busquedaIndice.resultados.length>0) || (busquedaIndice.resultadoshipotecas.length>0) || (busquedaIndice.resultadosprohibiciones.length>0) || (busquedaIndice.resultadoscomercio.length>0))"
                                     ng-click="exportarExcel()" >Exportar resultado a Excel</button>
                              <button type="button" class="btn  btn-primary " ng-if="perfil=='DESARROLLO AIO' || perfil=='INFORMACIONES'" ng-click="contarAtencion()" alt="Nueva Atencion">Registrar Atención</button>       
                         </div> 
@@ -343,3 +343,4 @@
 <div ng-include="'views/loadingModal.html'"></div>
 <div ng-include="'views/estadoIndiceModal.html'"></div>
 <div ng-include="'views/indiceModal.html'"></div>
+<div ng-include="'views/indiceEditarModal.html'"></div>

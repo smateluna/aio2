@@ -13,7 +13,7 @@
             <span class="fa fa-times"></span> Rechazar
         </button>
         <!-- <button type="button" class="btn btn-primary btn-xs btn-rad" data-toggle="modal" data-target="#cambiar-estado"> -->
-        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openDatosFormularioModal()" ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_ESTADO') >= 0 && data.status!=null && !anulada"> 
+        <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openDatosFormularioModal()" ng-if="!req.simpleMode && (subPermisos['estado'].indexOf('EDITAR_ESTADO')>=0 || developer) && data.status!=null && !anulada"> 
             <i class="fa fa-edit"></i>  Cambiar Estado
         </button>
     </div>

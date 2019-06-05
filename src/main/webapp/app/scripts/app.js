@@ -391,6 +391,9 @@ app.run(function($rootScope, $location, Usuario, $log, $modalStack, amMoment, $w
 					$rootScope.nombreCliente='';
 					$rootScope.idPerfil = data.idPerfil;
 					
+					if($rootScope.idPerfil==67)
+						$rootScope.developer=true; //Desarrollo AIO
+					
 					//llamado a socket
 					socketService.conexion();
 
@@ -446,7 +449,9 @@ app.run(function($rootScope, $location, Usuario, $log, $modalStack, amMoment, $w
 					if(data.perfilesUsuario.length == 1){
 
 						$rootScope.perfil = data.perfilesUsuario[0].perfil.trim();
-						$rootScope.idPerfil = data.perfilesUsuario[0].idPerfil;
+						$rootScope.idPerfil = data.perfilesUsuario[0].idPerfil;						
+						if($rootScope.idPerfil==67)
+							$rootScope.developer=true; //Desarrollo AIO
 						
 						Usuario.setSessionAttribute('idPerfil', data.perfilesUsuario[0].idPerfil);
 

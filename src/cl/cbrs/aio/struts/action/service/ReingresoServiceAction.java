@@ -208,6 +208,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 						? request.getParameter("codigoExtracto").trim() : null;
 		String notarioReq = request.getParameter("notario");
 		String workflowReq = request.getParameter("workflow");
+		String reingresoGPReq = request.getParameter("reingresoGP");
 		String rutUsuario = (String) request.getSession().getAttribute("rutUsuario");
 
 		JSONObject json = new JSONObject();
@@ -277,13 +278,8 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 						&& !"".equals(reglaReingresoDTO.getCodSeccion());
 				boolean reingresoGP = false;
 
-				// REINGRESO GP para usuarios con perfil reingresoGP y caratula
-				// en seccion "Despachada"
-				ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession()
-						.getAttribute("permisosUsuario");
-				UsuarioUtil util = new UsuarioUtil();
-				ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "reingreso");
-				if (caratulaDTO.getTipoFormularioDTO().getId().equals(5) && subPermisos.contains("REINGRESO_GP")) {
+				//REINGRESO GP
+				if (reingresoGPReq!=null && !"".equalsIgnoreCase(reingresoGPReq) && Boolean.parseBoolean(reingresoGPReq)) {
 					CaratulaDTO dto = caratulasUtil.getCaratulaDTO(caratulaOriginalDTO.getNumeroCaratula());
 					if (dto.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("10")) {
 						moverCaratula = false;

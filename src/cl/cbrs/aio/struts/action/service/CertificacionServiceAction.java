@@ -34,7 +34,9 @@ import cl.cbrs.aio.certificado.GeneraCertificado;
 import cl.cbrs.aio.parametron.ParamsFirmaElectronica;
 import cl.cbrs.aio.servlet.CacheAIO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
+import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.RestUtil;
+import cl.cbrs.caratula.flujo.vo.BitacoraCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.CaratulaVO;
 import cl.cbrs.caratula.flujo.vo.EstadoCaratulaVO;
 import cl.cbrs.caratula.flujo.vo.FuncionarioVO;
@@ -767,11 +769,14 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 			if (!respuestaFirma.equals("OK"))
 				throw new Exception("Firma NOK");
 			
-			//Certificado de deslindes -> enviar a Entrega Docs si caratula tiene tarea "Certificado de Deslindes" (116)
-			try{
-				if(nombreArchivo.startsWith("CDP")){
+			//Certificado de deslindes -> enviar a Entrega Docs si caratula tiene tarea "Certificado de Deslindes" (116)			
+			WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
+			CaratulasUtil caratulasUtil = new CaratulasUtil();
+			
+			if(nombreArchivo.startsWith("CDP")){
+				try{
 					Long caratula = Long.parseLong(nombreArchivo.substring(4, nombreArchivo.indexOf("-")));
-					WsCaratulaClienteDelegate caratulaClienteDelegate = new WsCaratulaClienteDelegate();
+					
 					ServicioParametrosDelegate parametrosDelegate = new ServicioParametrosDelegate();
 					
 					CaratulaVO caratulaVO = caratulaClienteDelegate.obtenerCaratulaPorNumero(new UsuarioWebVO(), caratula);
@@ -796,13 +801,20 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 							break;
 						}
 					}
-					
-			
+				} catch(Exception e){
+					logger.error(e.getMessage(),e);
+					warn=true;
+				}							
+			} else{	
+				//Insertar bitacora
+				try{
+					Long caratula = Long.parseLong(nombreArchivo.substring(4, nombreArchivo.indexOf("-")));
+					caratulasUtil.agregarBitacoraCaratula(caratula, (String) request.getSession().getAttribute("rutUsuario"), "Certificado "+nombreArchivo+" generado", 0);
+				} catch(Exception e){
+					logger.error(e.getMessage(),e);
 				}
-			} catch(Exception e){
-				logger.error(e.getMessage(),e);
-				warn=true;
 			}
+			
 			
 			status = true;
 				

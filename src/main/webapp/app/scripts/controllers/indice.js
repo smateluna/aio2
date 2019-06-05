@@ -665,14 +665,30 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 
 	};
 
-	//  $scope.checkTieneImagen = function(valor) {
-	//  if (valor == 1) {
-	//	   return false;
-	//	  }
-	//	  else {
-	//	   return true;
-	//	  }
-	//  };
+	$scope.editarIndice = function (indice, registro) {
+
+		//marco linea consultada
+		$scope.rowHighilited(indice.id);
+
+		$scope.resolveModal.refresca = false;
+
+		var myModal = $modal.open({
+			templateUrl: 'indiceEditarModal.html',
+			backdrop: true,
+			windowClass: 'modal',
+			controller: 'IndiceModalCtrl',
+			resolve: {   
+				resolveModal : function(){
+					return $scope.resolveModal;
+				},
+				indice: function(){
+					return indice;
+				}
+			}
+		});
+
+
+	};
 
 	$scope.solicitar = function (titulo) {
 		$scope.resetStatus();
@@ -709,8 +725,8 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 			$scope.isLoadingSolicitar = false;
 			$scope.setErr('Problema contactando al servidor.', 'No se ha guardado la solicitud.');
 		});
-	};
-
+	};	
+	
 	$scope.verTitulo = function(titulo){
 
 		//marco linea consultada
@@ -968,6 +984,11 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 		$scope.solicitudStatus.error = true;
 		$scope.setStatusMsg(title, mensaje);
 	};
+	
+	$scope.setWarn = function(title, mensaje){
+		$scope.solicitudStatus.warning = true;
+		$scope.setStatusMsg(title, mensaje);
+	};	
 
 	$scope.setStatusMsg = function(title, mensaje){
 		$scope.solicitudStatus.msgTitle = title;

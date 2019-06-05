@@ -177,8 +177,8 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 				$scope.closeModal();
 				if(data.status===null){
 
-				}else if(data.status){
-					if(data.res.caratulaDTO.citadoDTOs!=null && data.res.caratulaDTO.citadoDTOs.length==1 && data.res.caratulaDTO.citadoDTOs[0].registroDTO!=null && data.res.caratulaDTOs.citadoDTO[0].registroDTO.id!=undefined){
+				}else if(data.status){console.log(data);
+					if(data.res.caratulaDTO.citadoDTOs!=null && data.res.caratulaDTO.citadoDTOs.length>0 && data.res.caratulaDTO.citadoDTOs[0].registroDTO!=null && data.res.caratulaDTO.citadoDTOs[0].registroDTO.id!=undefined){
 						titulo.registro=data.res.caratulaDTO.citadoDTOs[0].registroDTO.id;
 						$scope.verInscripcion(titulo);
 					} else
@@ -206,7 +206,7 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 		    	registro = 'prop';
 		        break;
 		    case 2:
-		    	registro = 'hipo';
+		    	registro = 'hip';
 		        break;
 		    case 3:
 		    	registro = 'proh';

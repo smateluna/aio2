@@ -249,13 +249,12 @@
 		<dependency>
 			<groupId>commonPlanos</groupId>
 			<artifactId>commonPlanos</artifactId>
-			<version>1.0.0</version>
-
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>wsPlanosCliente</groupId>
+			<groupId>cl.cbrs.wsClient</groupId>
 			<artifactId>wsPlanosCliente</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.2</version>
 
 		</dependency>
 		<dependency>

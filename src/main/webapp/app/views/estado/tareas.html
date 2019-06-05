@@ -5,7 +5,7 @@
         </span>
 
         Tareas solicitadas</div>
-    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed"  ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_TAREA') >= 0 && data.status!=null && !anulada">
+    <div class="panel-heading panel-toolbar" ng-hide="area.collapsed"  ng-if="!req.simpleMode && (subPermisos['estado'].indexOf('EDITAR_TAREA')>=0 || developer) && data.status!=null && !anulada">
         <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openTareasModal('add')">
             <span class="fa fa-plus"></span> Agregar tarea
         </button>
@@ -22,7 +22,7 @@
             <tr ng-repeat="task in data.res.caratulaDTO.tareaDTOs">
                 <td class="estado-table-td">{{task.descripcion}}</td>
                 <td class="estado-table-td text-center" >
-                    <button ng-if="!req.simpleMode && subPermisos['estado'].indexOf('EDITAR_TAREA') >= 0 && data.status!=null && !anulada" class="btn btn-xs btn-danger btn-rad" ng-if="data.res!=null" ng-click="openTareasModal('remove', task)"> <i class="fa fa-times"></i> </button> </td>
+                    <button ng-if="!req.simpleMode && (subPermisos['estado'].indexOf('EDITAR_TAREA')>=0 || developer) && data.status!=null && !anulada" class="btn btn-xs btn-danger btn-rad" ng-if="data.res!=null" ng-click="openTareasModal('remove', task)"> <i class="fa fa-times"></i> </button> </td>
             </tr>
             <tr ng-if="!data.res.caratulaDTO.tareaDTOs || data.res.caratulaDTO.tareaDTOs.length===0">
                 <td colspan="2" class="estado-table-td text-center text-italic">No hay datos.</td>
