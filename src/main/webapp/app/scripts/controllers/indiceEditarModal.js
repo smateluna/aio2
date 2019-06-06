@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('IndiceModalCtrl', function ($rootScope, $routeParams, $scope, $modal, $modalInstance, $modalStack, $window, $timeout, indiceService, resolveModal, indice) {
+app.controller('IndiceEditarModalCtrl', function ($rootScope, $routeParams, $scope, $modal, $modalInstance, $modalStack, $window, $timeout, indiceService, resolveModal, indice) {
 
 	$scope.indice = indice;
 

@@ -676,7 +676,7 @@ app.controller('IndiceCtrl', function ($scope,$timeout,$window,$rootScope,$locat
 			templateUrl: 'indiceEditarModal.html',
 			backdrop: true,
 			windowClass: 'modal',
-			controller: 'IndiceModalCtrl',
+			controller: 'IndiceEditarModalCtrl',
 			resolve: {   
 				resolveModal : function(){
 					return $scope.resolveModal;
