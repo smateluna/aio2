@@ -5,7 +5,6 @@ app.controller('RequirenteModalCtrl', function ($log, $rootScope, $scope, $modal
 	$scope.data = data;
 //	$scope.requirente = {email:""};
 	$scope.requirente = angular.copy($scope.data.res.caratulaDTO.requirenteDTO);
-	console.log($scope.requirente);
 	
 	$scope.cancel = function () {
 	    var top = $modalStack.getTop();
