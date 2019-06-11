@@ -280,12 +280,11 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 				//REINGRESO GP
 				if (reingresoGPReq!=null && !"".equalsIgnoreCase(reingresoGPReq) && Boolean.parseBoolean(reingresoGPReq)) {
-					CaratulaDTO dto = caratulasUtil.getCaratulaDTO(caratulaOriginalDTO.getNumeroCaratula());
-					if (dto.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("10")) {
+//					CaratulaDTO dto = caratulasUtil.getCaratulaDTO(caratulaOriginalDTO.getNumeroCaratula());
+					if (caratulaOriginalDTO.getEstadoActualCaratulaDTO().getSeccionDTO().getCodigo().equals("10")) {
 						moverCaratula = false;
 						reingresoGP = true;
-						CaratulaVO nuevaCaratula = agregarCaratulaGP(caratulaDTO,
-								(String) request.getSession().getAttribute("rutUsuario"));
+						CaratulaVO nuevaCaratula = agregarCaratulaReingreso(caratulaDTO, (String) request.getSession().getAttribute("rutUsuario"), true);
 						logger.debug("nueva caratula: " + nuevaCaratula.getNumeroCaratula());
 
 						// Mover caratula nueva
@@ -368,26 +367,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 				// Comparar Inscripciones
 				boolean actualizarInscripcion = false;
-				// if( /*(caratulaDTO.getInscripcionDigitalDTO()!=null &&
-				// caratulaOriginalDTO.getInscripcionDigitalDTO()==null) ||*/
-				// ( caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null &&
-				// (caratulaOriginalDTO.getInscripcionDigitalDTO()==null ||
-				// !caratulaDTO.getInscripcionDigitalDTO().getFoja().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getFoja()))
-				// ) ||
-				// ( caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null &&
-				// !caratulaDTO.getInscripcionDigitalDTO().getNumero().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getNumero())
-				// ) ||
-				// ( caratulaDTO.getInscripcionDigitalDTO().getAno()!=null &&
-				// !caratulaDTO.getInscripcionDigitalDTO().getAno().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getAno())
-				// ) ||
-				// ( caratulaDTO.getInscripcionDigitalDTO().getBis()!=null &&
-				// !caratulaDTO.getInscripcionDigitalDTO().getBis().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getBis())
-				// ) /*||
-				// ( caratulaDTO.getInscripcionDigitalDTO().getRegistro()!=null
-				// && (caratulaOriginalDTO.getInscripcionDigitalDTO()==null ||
-				// !caratulaDTO.getInscripcionDigitalDTO().getRegistro().equals(caratulaOriginalDTO.getInscripcionDigitalDTO().getRegistro()))
-				// )*/
-				// ){
+
 				if (caratulaDTO.getInscripcionDigitalDTO().getFoja() != null
 						&& caratulaDTO.getInscripcionDigitalDTO().getNumero() != null
 						&& caratulaDTO.getInscripcionDigitalDTO().getAno() != null
@@ -790,8 +770,89 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	@SuppressWarnings({ "unchecked" })
+	public void clonarCaratula(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/json");
 
-	private CaratulaVO agregarCaratulaGP(CaratulaDTO caratulaDTO, String rut) throws Exception {
+		String caratulaDTOReq = request.getParameter("caratulaDTO");
+		String observacionReq = request.getParameter("observacion") != null ? request.getParameter("observacion").trim():"";
+		String rutUsuario = (String) request.getSession().getAttribute("rutUsuario");
+
+		JSONObject json = new JSONObject();
+		json.put("estado", false);
+
+		String detalleError = "";
+		String observacionBitacora = !"".equals(observacionReq) ? observacionReq : "Reingreso desde AIO.";
+
+		CaratulasUtil caratulasUtil = new CaratulasUtil();
+
+		try {
+			KeycloakSecurityContext context = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+			String usuario = context.getIdToken().getPreferredUsername();
+			usuario = usuario.replaceAll("CBRS\\\\", "");
+			JSONParser jsonParser = new JSONParser();
+
+			// Data
+			JSONObject caratulaDTOJSON = (JSONObject) jsonParser.parse(cambiaEncoding(caratulaDTOReq));
+			CaratulaDTO caratulaDTO = caratulasUtil.getCaratulaDTO(caratulaDTOJSON);
+
+			if (caratulaDTO.getInscripcionDigitalDTO() != null) {
+				// Data original
+				CaratulaDTO caratulaOriginalDTO = caratulasUtil.getCaratulaDTO(caratulaDTO.getNumeroCaratula());
+
+				logger.info("Clonando caratula " + caratulaOriginalDTO.getNumeroCaratula() + "\n Usuario: "
+						+ usuario + " CaratulaDTO: " + caratulaDTOReq + " Observacion: " + observacionReq);
+
+				if (caratulaOriginalDTO.getCodigo()!=null && caratulaOriginalDTO.getCodigo().intValue()!=0 && caratulaDTO.getTipoFormularioDTO().getId().intValue()==1) {
+					CaratulaVO nuevaCaratula = agregarCaratulaReingreso(caratulaDTO, (String) request.getSession().getAttribute("rutUsuario"), false);
+					logger.debug("nueva caratula: " + nuevaCaratula.getNumeroCaratula());
+
+					try {
+						caratulasUtil.agregarBitacoraCaratula(caratulaDTO.getNumeroCaratula(), rutUsuario,
+								"Se genera nueva caratula " + nuevaCaratula.getNumeroCaratula() + " por reingreso: " + observacionBitacora, OBSERVACION_INTERNA);
+						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, "Clonación de caratula " + caratulaDTO.getNumeroCaratula(), OBSERVACION_INTERNA);
+						caratulasUtil.agregarBitacoraCaratula(nuevaCaratula.getNumeroCaratula(), rutUsuario, observacionBitacora, OBSERVACION_INTERNA);
+					} catch (Exception e) {
+						logger.error("Error al agregar bitacora: " + e.getMessage(), e);
+					}
+
+					json.put("msg", "Clonación exitosa. Se generó nueva caratula " + nuevaCaratula.getNumeroCaratula());
+					json.put("nuevaCaratula", nuevaCaratula.getNumeroCaratula());
+					json.put("estado", true);
+				} else{
+					//No cumple condiciones
+					json.put("estado", false);
+					json.put("msg","Esta carátula no puede ser clonada");
+				}
+
+				json.put("caratulaDTO", caratulaDTO);
+
+			} else {
+				json.put("estado", false);
+				json.put("msg", "Faltan datos para el reingreso");
+			}		
+
+		} catch (SystemException e) {
+			json.put("msg", e.getMessage());
+			logger.warn(e.getMessage());
+		} catch (GeneralException e) {
+			json.put("msg", "Problemas en servidor al reingresar caratula: " + e.getInfoAdic());
+			logger.error("Error: " + e.getMessage(), e);
+		} catch (Exception e) {
+			json.put("msg", "Problemas en servidor al reingresar caratula: " + detalleError);
+			logger.error("Error: " + e.getMessage(), e);
+		}
+
+		try {
+			json.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
+
+	private CaratulaVO agregarCaratulaReingreso(CaratulaDTO caratulaDTO, String rut, Boolean reingresoGP) throws Exception {
 		WsCaratulaClienteDelegate delegate = new WsCaratulaClienteDelegate();
 
 		CaratulaVO caratulaVOOriginal = delegate.obtenerCaratulaPorNumero(new UsuarioWebVO(),
@@ -802,7 +863,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 
 		caratulaVO.setNumeroCaratula(nuevoNumero);
 		caratulaVO.setCanal(caratulaVOOriginal.getCanal());
-		TipoFormularioVO tipoFormularioVO = new TipoFormularioVO(5);
+		TipoFormularioVO tipoFormularioVO = new TipoFormularioVO(caratulaDTO.getTipoFormularioDTO().getId());
 		caratulaVO.setTipoFormulario(tipoFormularioVO);
 		caratulaVO.setCapital(caratulaVOOriginal.getCapital());
 		caratulaVO.setClienteCtaCte(caratulaVOOriginal.getClienteCtaCte());
@@ -861,16 +922,20 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		// estado.setFechaMovimiento(new Date());
 		estado.setMaquina(CacheAIO.CACHE_CONFIG_AIO.get("SISTEMA"));
 		estado.setResponsable(new FuncionarioVO(rut));
-		estado.setSeccion(new SeccionVO("RG"));
+		estado.setSeccion(new SeccionVO("63"));
+
+		if(reingresoGP){
+			TareaVO[] tareas = new TareaVO[1];
+			TareaVO tareaVO = new TareaVO();
+			TipoTareaVO tipoTareaVO = new TipoTareaVO(46);
+			tareaVO.setTipo(tipoTareaVO);
+			tareas[0] = tareaVO;
+			caratulaVO.setTareas(tareas);
+			estado.setSeccion(new SeccionVO("RG"));
+		}
+		
 		estados[0] = estado;
 		caratulaVO.setEstados(estados);
-
-		TareaVO[] tareas = new TareaVO[1];
-		TareaVO tareaVO = new TareaVO();
-		TipoTareaVO tipoTareaVO = new TipoTareaVO(46);
-		tareaVO.setTipo(tipoTareaVO);
-		tareas[0] = tareaVO;
-		caratulaVO.setTareas(tareas);
 
 		delegate.agregarCaratula(new UsuarioWebVO(), caratulaVO);
 

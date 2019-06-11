@@ -97,6 +97,25 @@ app.factory('reingresoService', function ($q, $http) {
             });
 
           return deferred.promise;
+        },
+        clonarCaratula: function (caratulaDTO, observacion) {
+	        var paramsObj = {metodo: 'clonarCaratula', caratulaDTO: caratulaDTO, observacion: observacion};
+	
+	        var deferred = $q.defer();
+	
+	        $http({
+	        	method: 'POST',
+	        	url: '../do/service/reingreso',
+	        	params: paramsObj
+	        	}).
+	          success(function(data, status, headers, config){
+	            deferred.resolve(data);
+	          }).
+	          error(function(data, status, headers, config){
+	            deferred.reject(status);
+	          });
+	
+	        return deferred.promise;
         }
     };      
   });

@@ -127,6 +127,38 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 		}
 	};	
 	
+	$scope.clonarCaratula = function(){
+		$scope.openLoadingModal('Generando nueva carátula...', '');
+		if ($scope.formReingresar.$valid) {
+			var promise = reingresoService.clonarCaratula($scope.data.caratulaDTO, $scope.data.observacion);
+			promise.then(function(data) {
+				$scope.closeModal();
+				if(data.estado===null){
+				}else if(data.estado){
+					$scope.data = data;
+					$scope.dataOriginal = angular.copy($scope.data);
+					if(data.msg){
+						$scope.raiseSuccess(data.msg);
+						$timeout(function(){
+							$scope.closeModal();
+							$scope.verEstadoCaratula(data.nuevaCaratula);
+						},2000);
+					}
+
+					$scope.limpiar();					
+					
+				}else{
+					$scope.raiseErr(data.msg);
+				}
+			}, function(reason) {
+				$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
+			});
+
+		} else {
+			$scope.formEditar.submitted = true;
+		}
+	};	
+	
 	$scope.validarReingreso = function(){
 		if($scope.data.caratulaDTO.tipoFormularioDTO.id!=1 && (
 				$scope.data.caratulaDTO.inscripcionDigitalDTO.foja=="" || $scope.data.caratulaDTO.inscripcionDigitalDTO.foja==undefined ||
