@@ -895,7 +895,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 		caratulaVO.setValorTasado(0L);
 		// caratulaVO.setInscripciones(caratulaVOOriginal.getInscripciones());
 		caratulaVO.setRequirente(caratulaVOOriginal.getRequirente());
-		caratulaVO.setProducto(caratulaVOOriginal.getProducto());
+		//caratulaVO.setProducto(caratulaVOOriginal.getProducto());
 
 		if (caratulaDTO.getInscripcionDigitalDTO()!=null && caratulaDTO.getInscripcionDigitalDTO().getFoja()!=null && caratulaDTO.getInscripcionDigitalDTO().getNumero()!=null
 				&& caratulaDTO.getInscripcionDigitalDTO().getAno()!=null) {
