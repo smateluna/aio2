@@ -189,8 +189,7 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 	$scope.printReingresoGPCaratula = function(caratula) {
 		$scope.openLoadingModal('Generando pdf...', '');
 		$scope.urlPDF = $sce.trustAsResourceUrl('../do/service/reingreso?metodo=imprimirReingresoGP&caratula='+caratula);
-		console.log($scope.urlPDF);
-		$timeout(function(){console.log($scope.urlPDF);
+		$timeout(function(){
 		     window.frames["pdfReingreso"].focus();
 		     window.frames["pdfReingreso"].print();
 			 $scope.closeModal();
