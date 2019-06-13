@@ -10,6 +10,7 @@ import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 
 import cl.cbrs.aio.dto.estado.BitacoraDTO;
+import cl.cbrs.aio.dto.estado.RequirenteDTO;
 
 public class CaratulaDTO implements JSONAware, Serializable {
 	
@@ -183,7 +184,7 @@ public class CaratulaDTO implements JSONAware, Serializable {
 		else
 			sb.append("\"\"");
 		
-		sb.append(",");
+		sb.append(",");	
 		
 		sb.append("\"estadoActualCaratulaDTO\"");
 		sb.append(":");
@@ -366,6 +367,7 @@ public class CaratulaDTO implements JSONAware, Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
+
 
 //	public ArrayList<BitacoraDTO> getBitacoraDTOs() {
 //		return bitacoraDTOs;

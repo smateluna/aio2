@@ -36,6 +36,7 @@ import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.dto.estado.FuncionarioDTO;
 import cl.cbrs.aio.dto.estado.PosesionEfectivaDTO;
 import cl.cbrs.aio.dto.estado.RegistroDTO;
+import cl.cbrs.aio.dto.estado.RequirenteDTO;
 import cl.cbrs.aio.dto.firmaElectronica.RegistroFirmaElectronicaDTO;
 import cl.cbrs.aio.dto.firmaElectronica.TipoDocumentoDTO;
 import cl.cbrs.aio.servlet.CacheAIO;
@@ -155,7 +156,6 @@ public class CaratulasUtil {
 			caratulaDTO.setTipoFormularioDTO(tipoFormularioDTO);
 		}
 
-		System.out.println(caratulaJSON);
 		if(caratulaJSON.containsKey("productoWebDTO") && !caratulaJSON.get("productoWebDTO").equals("")){
 			JSONObject productoWebDTOJSON = (JSONObject)caratulaJSON.get("productoWebDTO");
 			Long idTransaccion = (Long) productoWebDTOJSON.get("idTransaccion");
@@ -333,6 +333,7 @@ public class CaratulasUtil {
 			tipoFormularioDTO.setDescripcion(tipoFormularioVO.getDescripcion());/**/
 			tipoFormularioDTO.setIdDescripcion(tipoFormularioVO.getTipo()+"-"+tipoFormularioVO.getDescripcion());
 		}
+		caratulaDTO.setTipoFormularioDTO(tipoFormularioDTO);
 
 		EstadoActualCaratulaVO estadoActualCaratulaVO = caratulaVO.getEstadoActualCaratula();
 		if(estadoActualCaratulaVO!=null){		
@@ -359,7 +360,7 @@ public class CaratulasUtil {
 			caratulaDTO.setEstadoActualCaratulaDTO(estadoActualCaratulaDTO);
 		}
 
-		caratulaDTO.setTipoFormularioDTO(tipoFormularioDTO);		
+				
 
 		//		ArrayList<BitacoraDTO> bitacoraDTOs = getBitacoraDTOs(caratulaVO.getBitacoraCaratulaVO());
 		//		caratulaDTO.setBitacoraDTOs(bitacoraDTOs);

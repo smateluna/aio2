@@ -22,8 +22,8 @@ app.factory('reingresoService', function ($q, $http) {
 
         return deferred.promise;
       },
-      reingresarCaratula: function (caratulaDTO, observacion, workflow, codigoExtracto, notario, esReingresoGP) {
-        var paramsObj = {metodo: 'reingresarCaratula', caratulaDTO: caratulaDTO, observacion: observacion, workflow: workflow, codigoExtracto: codigoExtracto, notario: notario, reingresoGP: esReingresoGP};
+      reingresarCaratula: function (caratulaDTO, observacion, workflow, codigoExtracto, notario) {
+        var paramsObj = {metodo: 'reingresarCaratula', caratulaDTO: caratulaDTO, observacion: observacion, workflow: workflow, codigoExtracto: codigoExtracto, notario: notario};
 
         var deferred = $q.defer();
 
@@ -41,6 +41,25 @@ app.factory('reingresoService', function ($q, $http) {
 
         return deferred.promise;
       },
+      reingresarCaratulaGP: function (caratulaDTO, observacion) {
+          var paramsObj = {metodo: 'reingresarCaratulaGP', caratulaDTO: caratulaDTO, observacion: observacion};
+
+          var deferred = $q.defer();
+
+          $http({
+          	method: 'POST',
+          	url: '../do/service/reingreso',
+          	params: paramsObj
+          	}).
+            success(function(data, status, headers, config){
+              deferred.resolve(data);
+            }).
+            error(function(data, status, headers, config){
+              deferred.reject(status);
+            });
+
+          return deferred.promise;
+        },      
       getCaratulaSesion: function () {
         var paramsObj = {metodo: 'getCaratulaSesion'};
 

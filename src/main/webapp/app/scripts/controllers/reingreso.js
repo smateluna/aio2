@@ -91,30 +91,47 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 
 
 
-	$scope.reingresarCaratula = function(esReingresoGP){
+	$scope.reingresarCaratula = function(){
 		$scope.openLoadingModal('Reingresando carátula #'+$scope.req.numeroCaratula+'...', '');
 		if ($scope.formReingresar.$valid) {
-			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario, esReingresoGP);
+			var promise = reingresoService.reingresarCaratula($scope.data.caratulaDTO, $scope.data.observacion, $scope.data.workflow, $scope.data.codigoExtracto, $scope.data.notario);
 			promise.then(function(data) {
 				$scope.closeModal();
 				if(data.estado===null){
 				}else if(data.estado){
-					$scope.data = data;
-					$scope.dataOriginal = angular.copy($scope.data);
 					if(data.msg){
 						$scope.raiseSuccess(data.msg);
-						$timeout(function(){
-							$scope.closeModal();
-							if(data.reingresoGP){
-								$scope.verEstadoCaratula(data.reingresoGP);
-								$scope.printReingresoGPCaratula(data.reingresoGP);
-							}
-						},2000);
 					}
 
-					$scope.limpiar();
-					
-					
+					$scope.limpiar();										
+				}else{
+					$scope.raiseErr(data.msg);
+				}
+			}, function(reason) {
+				$scope.raiseErr('No se ha podido establecer comunicacion con el servidor.');
+			});
+
+		} else {
+			$scope.formEditar.submitted = true;
+		}
+	};	
+	
+	$scope.reingresarCaratulaGP = function(){
+		$scope.openLoadingModal('Generando nueva carátula...', '');
+		if ($scope.formReingresar.$valid) {
+			var promise = reingresoService.reingresarCaratulaGP($scope.data.caratulaDTO, $scope.data.observacion);
+			promise.then(function(data) {
+				$scope.closeModal();
+				if(data.estado===null){
+				}else if(data.estado){
+					$scope.raiseSuccess(data.msg);
+					$timeout(function(){															
+							$scope.closeModal();
+							$scope.verEstadoCaratula(data.nuevaCaratula);
+							$scope.printReingresoGPCaratula(data.nuevaCaratula);
+					},500);
+
+					$scope.limpiar();	
 				}else{
 					$scope.raiseErr(data.msg);
 				}
@@ -172,16 +189,18 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 	$scope.printReingresoGPCaratula = function(caratula) {
 		$scope.openLoadingModal('Generando pdf...', '');
 		$scope.urlPDF = $sce.trustAsResourceUrl('../do/service/reingreso?metodo=imprimirReingresoGP&caratula='+caratula);
-		$timeout(function(){
-			 $scope.printReingresoGP();
+		console.log($scope.urlPDF);
+		$timeout(function(){console.log($scope.urlPDF);
+		     window.frames["pdfReingreso"].focus();
+		     window.frames["pdfReingreso"].print();
 			 $scope.closeModal();
 		},4000);
 	}	
 	
-	$scope.printReingresoGP = function() {
-	    window.frames["pdfReingreso"].focus();
-	    window.frames["pdfReingreso"].print();
-	}		
+//	$scope.printReingresoGP = function() {
+//	    window.frames["pdfReingreso"].focus();
+//	    window.frames["pdfReingreso"].print();
+//	}		
 
 	$scope.limpiar = function(){
 		$scope.reset();
