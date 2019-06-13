@@ -9,9 +9,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 
-import cl.cbrs.aio.dto.estado.BitacoraDTO;
-import cl.cbrs.aio.dto.estado.RequirenteDTO;
-
 public class CaratulaDTO implements JSONAware, Serializable {
 	
 	private static final long serialVersionUID = 4758298456601324860L;

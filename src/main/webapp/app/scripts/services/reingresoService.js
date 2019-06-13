@@ -135,6 +135,25 @@ app.factory('reingresoService', function ($q, $http) {
 	          });
 	
 	        return deferred.promise;
+        },
+        clonarEscritura: function (caratulaOrigen, caratulaDestino) {
+	        var paramsObj = {metodo: 'clonarEscritura', caratulaOrigen: caratulaOrigen, caratulaDestino: caratulaDestino};
+	
+	        var deferred = $q.defer();
+	
+	        $http({
+	        	method: 'POST',
+	        	url: '../do/service/reingreso',
+	        	params: paramsObj
+	        	}).
+	          success(function(data, status, headers, config){
+	            deferred.resolve(data);
+	          }).
+	          error(function(data, status, headers, config){
+	            deferred.reject(status);
+	          });
+	
+	        return deferred.promise;
         }
     };      
   });

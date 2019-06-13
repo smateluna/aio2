@@ -2,7 +2,11 @@ package cl.cbrs.aio.struts.action.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +24,10 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -31,6 +39,7 @@ import org.keycloak.KeycloakSecurityContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.itextpdf.text.pdf.PdfReader;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -44,6 +53,7 @@ import cl.cbr.foliomercantil.vo.WorkflowVO;
 import cl.cbr.util.SystemException;
 import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dao.FlujoDAO;
+import cl.cbrs.aio.documentos.DocumentosCliente;
 import cl.cbrs.aio.dto.CaratulaDTO;
 import cl.cbrs.aio.dto.CierreCtasCtesFinalDTO;
 import cl.cbrs.aio.dto.FormularioDTO;
@@ -55,6 +65,7 @@ import cl.cbrs.aio.dto.estado.BitacoraDTO;
 import cl.cbrs.aio.notarioElectronico.NotarioElectronicoRestClient;
 import cl.cbrs.aio.servlet.CacheAIO;
 import cl.cbrs.aio.struts.action.CbrsAbstractAction;
+import cl.cbrs.aio.util.CaratulaEstadoUtil;
 import cl.cbrs.aio.util.CaratulasUtil;
 import cl.cbrs.aio.util.ComercioUtil;
 import cl.cbrs.aio.util.ParametrosUtil;
@@ -807,8 +818,7 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 	}
 	
 	@SuppressWarnings({ "unchecked" })
-	public void clonarCaratula(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void clonarCaratula(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/json");
 
 		String caratulaDTOReq = request.getParameter("caratulaDTO");
@@ -877,6 +887,52 @@ public class ReingresoServiceAction extends CbrsAbstractAction {
 			logger.error("Error: " + e.getMessage(), e);
 		} catch (Exception e) {
 			json.put("msg", "Problemas en servidor al reingresar caratula: " + detalleError);
+			logger.error("Error: " + e.getMessage(), e);
+		}
+
+		try {
+			json.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	@SuppressWarnings({ "unchecked" })
+	public void clonarEscritura(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/json");
+
+		String caratulaOrigenReq = request.getParameter("caratulaOrigen");
+		String caratulaDestinoReq = request.getParameter("caratulaDestino");
+		String rutUsuario = (String) request.getSession().getAttribute("rutUsuario");
+
+		JSONObject json = new JSONObject();
+		json.put("estado", false);
+
+		String detalleError = "";
+
+		try {
+			DocumentosCliente documentosCliente = new DocumentosCliente();
+			byte[] doc = documentosCliente.downloadEscritura(true, Long.parseLong(caratulaOrigenReq));
+			InputStream is = new ByteArrayInputStream(doc);
+					
+			String UPLOAD_DIRECTORY =TablaValores.getValor("aio.parametros", "PATH_VERSIONAR_ESCRITURA", "valor");
+			File fileVersiona = new File(UPLOAD_DIRECTORY+File.separator +"C_"+caratulaDestinoReq+".pdf");
+			
+			FileOutputStream fop = new FileOutputStream(fileVersiona);
+			IOUtils.copy(is,fop);
+	  		fop.close();
+
+	  		new CaratulasUtil().agregarBitacoraCaratula(Long.parseLong(caratulaDestinoReq), rutUsuario, "Escritura copiada de caratula " + caratulaOrigenReq, BitacoraCaratulaVO.OBSERVACION_INTERNA);
+	  		json.put("estado", true);
+
+		} catch (SystemException e) {
+			json.put("msg", e.getMessage());
+			logger.warn(e.getMessage());
+		} catch (GeneralException e) {
+			json.put("msg", "Problemas en servidor al copiar escritura: " + e.getInfoAdic());
+			logger.error("Error: " + e.getMessage(), e);
+		} catch (Exception e) {
+			json.put("msg", "Problemas en servidor al copiar escritura: " + detalleError);
 			logger.error("Error: " + e.getMessage(), e);
 		}
 

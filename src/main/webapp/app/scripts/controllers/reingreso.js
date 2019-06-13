@@ -152,15 +152,13 @@ app.controller('ReingresoCtrl', function ($scope, $timeout, localStorageService,
 				$scope.closeModal();
 				if(data.estado===null){
 				}else if(data.estado){
-					$scope.data = data;
-					$scope.dataOriginal = angular.copy($scope.data);
-					if(data.msg){
-						$scope.raiseSuccess(data.msg);
-						$timeout(function(){
-							$scope.closeModal();
-							$scope.verEstadoCaratula(data.nuevaCaratula);
-						},2000);
-					}
+					reingresoService.clonarEscritura($scope.data.caratulaDTO.numeroCaratula, data.nuevaCaratula);
+
+					$scope.raiseSuccess(data.msg);
+					$timeout(function(){
+						$scope.closeModal();
+						$scope.verEstadoCaratula(data.nuevaCaratula);
+					},200);
 
 					$scope.limpiar();					
 					
