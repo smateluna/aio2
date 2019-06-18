@@ -173,6 +173,18 @@ public class TareasServiceAction extends CbrsAbstractAction {
 				}
 			}
 			
+			//Excepcion: Los usuarios ggallo y fbecerra debe visualizar las caratulas en seccion Auditoria asignadas a msaquel
+			if("ggallo".equalsIgnoreCase(usuario) || "fbecerra".equalsIgnoreCase(usuario)){
+				List<CaratulaVO> caratulasSaquel = caratulaClienteDelegate.obtenerCaratulasPorSeccionUsuario("A3", "msaquel");
+				if(caratulaVOs!=null){										
+					if(caratulasSaquel!=null){
+						caratulaVOs = new ArrayList<CaratulaVO>(caratulaVOs);
+						caratulaVOs.addAll(caratulasSaquel);
+					}
+				} else
+					caratulaVOs = caratulasSaquel;
+			}			
+			
 			//Caratulas Reingresos GP pendientes - Solo si el usuario tiene recurso REINGRESO_GP
 	    	ArrayList<PermisoDTO> listaPermisos = (ArrayList<PermisoDTO>) request.getSession().getAttribute("permisosUsuario");
 	    	if(listaPermisos!=null){
