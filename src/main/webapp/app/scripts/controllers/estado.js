@@ -1110,24 +1110,24 @@ app
 	//fin utils
 	$timeout(function() {
 		//init
-		if ($routeParams.caratula !== undefined) {
-			//Si caratula viene en el request, buscar
-			if ($scope.stringIsNumber($routeParams.caratula)
-					&& $routeParams.caratula.length <= 10) {
-
-				$scope.req.numeroCaratula = $routeParams.caratula;
-
-				$timeout(function() {
-					$scope.buscar();
-				}, 500);
-			} else if ($routeParams.caratula === 'limpiar') {
-				$scope.limpiarCache();
-			}
-		} else if ($scope.req.simpleMode != "true") {
-			//Si no, buscar caratula en sesion y buscar datos si existe
-			var promise = estadoService.getCaratulaSesion();
-			promise
-			.then(
+		if($scope.req.simpleMode != "true"){
+			if ($routeParams.caratula !== undefined) {
+				//Si caratula viene en el request, buscar
+				if ($scope.stringIsNumber($routeParams.caratula) && $routeParams.caratula.length <= 10) {
+	
+					$scope.req.numeroCaratula = $routeParams.caratula;
+	
+					$timeout(function() {
+						$scope.buscar();
+					}, 500);
+				} else if ($routeParams.caratula === 'limpiar') {
+					$scope.limpiarCache();
+				}
+			} else {
+				//Si no, buscar caratula en sesion y buscar datos si existe
+				var promise = estadoService.getCaratulaSesion();
+				promise
+				.then(
 					function(data) {
 						if (data.status === null) {
 						} else if (data.status) {
@@ -1140,6 +1140,7 @@ app
 						$scope
 						.raiseErr('No se ha podido establecer comunicación con el servidor.');
 					});
+			}
 		}
 
 		$scope.doFocus('numeroCaratula');

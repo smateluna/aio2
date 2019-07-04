@@ -2,11 +2,15 @@ package cl.cbrs.aio.util;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 
 import cl.cbr.util.GeneralException;
+import cl.cbr.util.TablaValores;
+import cl.cbrs.aio.dao.FlujoDAO;
 import cl.cbrs.aio.dto.AnotacionDTO;
+import cl.cbrs.aio.dto.EstadoActualCaratulaDTO;
 import cl.cbrs.aio.dto.EstadoAnotacionDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
 import cl.cbrs.aio.dto.TipoAnotacionDTO;
@@ -116,6 +120,23 @@ public class AnotacionUtil {
 		anotacionDTO.setIdNota(anotacionVO.getIdNota());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setActo(anotacionVO.getActo());
+		
+		try{
+			//Si acto es transferencia, revisar estado caratula (Anotacion pendiente entrega)
+			String strActosTransferencia = TablaValores.getValor("ws_inscripciondigital.parametros", "ACTOS_TRANSFERENCIA", "valor");
+			if(strActosTransferencia!=null){
+				if(ArrayUtils.contains( strActosTransferencia.split(","), anotacionVO.getActo().trim() )){
+					Long caratula = anotacionVO.getCaratula();
+					EstadoActualCaratulaDTO eacDTO = new FlujoDAO().getEstadoActualCaratulaPendiente(caratula);
+					if(eacDTO != null){
+						anotacionDTO.setPendiente(true);
+						anotacionDTO.setEstadoActualCaratulaPendienteDTO(eacDTO);
+					}
+				}
+			}
+		} catch(Exception e){
+			logger.error(e.getMessage(),e);
+		}
 		
 		InscripcionDigitalVO  inscripcionDigitalByIdInscripcionDestinoVo = anotacionVO.getInscripcionDigitalByIdInscripcionDestinoVo();
 		InscripcionDigitalDTO inscripcionDigitalByIdInscripcionDestinoDTO = this.getInscripcionDigitalDTO(false, inscripcionDigitalByIdInscripcionDestinoVo);

@@ -736,13 +736,15 @@
 								</div>
 
 
-								<div class="anotacion-card notas-sombra">
+								<div class="anotacion-card notas-sombra" ng-class="{'notas-warning': nota.pendiente}">
 									<div class="nota-header">
 										<div class="nota-title text-center">
 											<!--                                    <div class="pull-left">
                                         <span class="anotacion-counter label label-default">{{$index+1}}</span>
                                     </div>-->
-											{{nota.acto | uppercase}}
+	                                    	<span ng-if="nota.pendiente" class="warning-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+												{{nota.acto | uppercase}}  
+											<span ng-if="nota.pendiente" class="warning-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
 										</div>
 									</div>
 									<div class="borrador-field text-center" ng-switch
@@ -825,7 +827,9 @@
 												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratula}}</a>
 											<a ng-if="nota.caratulaMatriz!=''" href
 												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratulaMatriz}}</a>
-
+											<div ng-if="nota.pendiente" style="padding-left:1em">
+												({{nota.estadoActualCaratulaPendienteDTO.fechaMov}} - {{nota.estadoActualCaratulaPendienteDTO.seccionDTO.descripcion}})
+											</div>
 										</div>
 
 										<div>
@@ -896,6 +900,7 @@
 <div ng-include="'views/gpOnlineModal.html'"></div>
 <div ng-include="'views/estadoIndiceModal.html'"></div>
 <div ng-include="'views/digital/embargoModal.html'"></div>
+<div ng-include="'views/mensajeModal.html'"></div>
 
 
 <script type="text/javascript">

@@ -964,9 +964,6 @@
 								<div class="anotacion-card notas-sombra">
 									<div class="nota-header">
 										<div class="nota-title text-center">
-											<!--                                    <div class="pull-left">
-                                        <span class="anotacion-counter label label-default">{{$index+1}}</span>
-                                    </div>-->
 											{{nota.acto | uppercase}}
 										</div>
 									</div>
@@ -1050,7 +1047,9 @@
 												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratula}}</a>
 											<a ng-if="nota.caratulaMatriz!=''" href
 												ng-click="verEstadoCaratula(nota.caratula)">{{nota.caratulaMatriz}}</a>
-
+											<div ng-if="nota.pendiente" style="padding-left:1em">
+												({{nota.estadoActualCaratulaPendienteDTO.fechaMov}} - {{nota.estadoActualCaratulaPendienteDTO.seccionDTO.descripcion}})
+											</div>
 										</div>
 
 										<div>

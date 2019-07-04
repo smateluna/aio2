@@ -41,6 +41,7 @@ public class CaratulaDTO implements JSONAware, Serializable {
 	
 	private Integer origenCreacion;
     private Long idTransaccion;
+    private String visado;
 	
 	public CaratulaDTO() {
 
@@ -60,6 +61,11 @@ public class CaratulaDTO implements JSONAware, Serializable {
 		sb.append(":");
 		sb.append(this.codigo);		
 		sb.append(",");		
+		
+		sb.append("\"visado\"");
+		sb.append(":");
+		sb.append("\"" + this.visado + "\"");
+		sb.append(",");
 		
 		sb.append("\"origenCreacion\"");
 		sb.append(":");
@@ -363,6 +369,14 @@ public class CaratulaDTO implements JSONAware, Serializable {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getVisado() {
+		return visado;
+	}
+
+	public void setVisado(String visado) {
+		this.visado = visado;
 	}
 
 

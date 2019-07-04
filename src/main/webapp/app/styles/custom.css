@@ -1856,3 +1856,12 @@ table tbody td .btn{margin-bottom:2px!important}
   display: block !important; 
 }
   
+.warning-icon {
+    color: #ffbf01;
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 2.0em;
+}
+
+.notas-warning {
+	background-color: #ffff107a;
+}

@@ -422,6 +422,8 @@ public class CaratulasUtil {
 			caratulaDTO.setFechaCreacionL(caratulaVO.getFechaCreacion().getTime());
 			caratulaDTO.setFechaCreacion(caratulaVO.getFechaCreacion());
 		}
+		
+		caratulaDTO.setVisado(caratulaVO.getVisado());
 
 		caratulaDTO.setValorPagado(caratulaVO.getValorPagado());
 		caratulaDTO.setValorReal(caratulaVO.getValorReal());

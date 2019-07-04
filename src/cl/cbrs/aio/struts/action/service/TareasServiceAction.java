@@ -1269,6 +1269,47 @@ public class TareasServiceAction extends CbrsAbstractAction {
 			logger.error(e);
 		}
 	}		
+	
+	@SuppressWarnings("unchecked")
+	public void visarCaratula(ActionMapping mapping, ActionForm pform, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		JSONObject respuesta = new JSONObject();
+		respuesta.put("status", false);
+		String msg = "";	
+
+		String numeroCaratulaReq = request.getParameter("numeroCaratula");
+
+		try {
+			Long ncaratula = Long.parseLong(numeroCaratulaReq);
+			
+			new FlujoDAO().visarCaratula(ncaratula);
+
+			//Agregar bitacora
+			try{
+				String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
+				CaratulasUtil caratulasUtil = new CaratulasUtil();
+				String observacionBitacora = "Carátula visada";
+				caratulasUtil.agregarBitacoraCaratula(ncaratula, rutUsuario, observacionBitacora, BitacoraCaratulaVO.OBSERVACION_INTERNA);
+			} catch (Exception e) {
+				logger.error("Error: " + e.getMessage(), e);
+				respuesta.put("warn", true);
+				msg = "Advertencia, usuario no puede agregar bitacora. Avisar a soporte.";
+			}		
+			respuesta.put("status", true);
+
+		} catch (Exception e1) {
+			logger.error(e1.getMessage(), e1);
+			msg = "Se ha detectado un problema, intente nuevamente. Si el problema persiste comunicarse con soporte";			
+		}		
+
+		try {
+			respuesta.put("msg", msg);
+			respuesta.writeJSONString(response.getWriter());
+		} catch (IOException e) {
+			logger.error(e.getMessage(),e);
+		}
+	}			
 
 	public static void merge(List<InputStream> streamOfPDFFiles, OutputStream outputStream) throws Exception,
 	DocumentException {

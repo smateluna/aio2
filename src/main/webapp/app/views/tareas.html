@@ -214,7 +214,7 @@
                                     {{sol.canalTexto}}
                                 </td>
 				        		<td class="text-left">				        			
-			        				{{sol.tipoFormularioDTO.idDescripcion}}			        				
+			        				{{sol.tipoFormularioDTO.idDescripcion}}     				
 				        		</td>
 				        		<td class="text-left" ng-if="busquedaTareas.data.hayInscripcion">
 				        			{{sol.inscripcionDigitalDTO.foja}}-{{sol.inscripcionDigitalDTO.numero}}-{{sol.inscripcionDigitalDTO.ano}} {{sol.inscripcionDigitalDTO.bis===1?'bis':''}}
@@ -246,6 +246,8 @@
 									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='RL'"><a href="" ng-click="masInfoLiquidacion(sol)"><i class="fa fa-info-circle"></i> Mas Info Liquidacion</a></li>
 										    <li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'"><a href="" ng-click="obtenerEscritura(sol)"><i class="fa fa-download"></i> Obtener Escritura</a></li>										    
 										    <li ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-pencil"></i> Editar Escritura</a></li>
+										    <li ng-if="(perfil=='AUDITORIAX' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado!='S'"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-thumbs-o-up"></i> Visar Carátula</a></li>
+										    <li ng-if="(perfil=='AUDITORIAX' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado=='S'"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-thumbs-o-down"></i> Denegar Carátula</a></li>
 										  </ul>
 									    </div>             			
 	                    		</td>

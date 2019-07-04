@@ -858,7 +858,7 @@ app
 						});
 				}
 
-				$scope.makeTodos();
+				$scope.makeTodos();				
 
 				if($scope.embargos.length>0){
 					$timeout(function(){
@@ -882,7 +882,7 @@ app
 							$scope.openMensajeModal('warn',$scope.alertas[i].texto, '',  false, null);								
 					}
 				}, 2000);
-			}
+			}		
 
 		};
 
@@ -970,14 +970,10 @@ app
 						$scope.makeTodos();
 
 						if($scope.embargos.length>0){
-							//				console.log("pase embargo")
-
 							$timeout(function(){
 								$scope.openEmbargosModal();
 							}, 2000);
-
-							//				console.log("listo modal embargo")
-						}
+						}						
 
 					} else {
 						$scope.raiseErr('error','Error Obteniendo Notas.',data.msg);

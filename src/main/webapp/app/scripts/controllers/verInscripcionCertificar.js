@@ -4,7 +4,7 @@
 
 'use strict';
 
-app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout,inscripcionDigitalService,caratulaService, certificacionService, filterFilter, $window) {
+app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $rootScope, $modal, $modalStack, $sce, $timeout, $filter, inscripcionDigitalService,caratulaService, certificacionService, filterFilter, $window) {
 
 	$scope.parametros = {
 		caratula: $routeParams.caratula,
@@ -91,6 +91,11 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 		error : false
 	}
 	};
+	
+	//comentarios caratula para ver si muestro boton ver comentarios caratula
+	$scope.caratula = {
+		resultados: []
+	};
 
 	$scope.derechaStatus = {
 		notasExpanded : true
@@ -120,6 +125,25 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 					$scope.data = data;
 
 					$scope.inicia();
+					
+					var promise = caratulaService.obtenerBitacoraCaratula($scope.parametros.caratula);
+					promise.then(function(data) {
+
+						if(data.status===null){
+						}else if(data.status){
+							$scope.caratula.resultados = data.listabitacoras;
+							$scope.status = data.status;
+
+							if($scope.caratula.resultados.length!==0){
+								$scope.openComentariosModal(); 
+							}	
+
+						}else{
+							$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
+						}
+					}, function(reason) {
+						$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+					});
 
 					$scope.isLoading = false;
 				} else {
@@ -176,6 +200,15 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 					}
 					
 					$scope.makeTodos();
+					
+					//Revisar notas de transferencia data.anotaciones
+					var notaPendiente = false;
+					angular.forEach(data.anotaciones, function(obj) {
+						if(obj.pendiente)
+							notaPendiente=true;												
+					});
+					if($filter('filter')(data.anotaciones, {'pendiente':true}).length>0)
+						$scope.openMensajeModal('warn',"Esta inscripción tiene notas pendientes", '',  false, null);
 
 				} else {
 					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
@@ -211,36 +244,6 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 	$scope.cerrar = function(){
 		$rootScope.go('/'+$scope.parametros.origen);
 	};
-
-
-	//comentarios caratula para ver si muestro boton ver comentarios caratula
-	$scope.caratula = {
-		resultados: []
-	};
-
-	var promise = caratulaService.obtenerBitacoraCaratula($scope.parametros.caratula);
-	promise.then(function(data) {
-
-		if(data.status===null){
-
-		}else if(data.status){
-
-			$scope.caratula.resultados = data.listabitacoras;
-			$scope.status = data.status;
-
-			if($scope.caratula.resultados.length!==0){
-
-				$scope.openComentariosModal(); 
-
-			}	
-
-		}else{
-			$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
-		}
-	}, function(reason) {
-		$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
-	});
-	//fin comentarios caratula
 
 	$scope.modificaTitulo = function(){
 
@@ -642,10 +645,10 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 			controller : 'EstadoIndiceModalCtrl',
 			size : 'lg',
 			resolve : {
-			numeroCaratula : function() {
-			return parseInt(numeroCaratula);
-		}
-		}
+				numeroCaratula : function() {
+					return parseInt(numeroCaratula);
+				}
+			}
 		});
 	};
 
@@ -724,6 +727,33 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 		}
 		});
 	};
+	
+	$scope.openMensajeModal = function (tipo, titulo, detalle, autoClose, segundos) {
+		$modal.open({
+			templateUrl: 'mensajeModal.html',
+			backdrop: true,
+			keyboard: true,
+			windowClass: 'modal',
+			controller: 'MensajeModalCtrl',
+			resolve: {
+			tipo: function () {
+			return tipo;
+		},
+		titulo: function () {
+			return titulo;
+		},
+		detalle: function () {
+			return detalle;
+		}
+		}
+		});
+
+		if(autoClose){
+			$timeout(function(){
+				$scope.closeModal();
+			},segundos*1000);
+		}
+	};	
 	
 	$scope.imprimirNotas = function() {
 		$window.open($window.location.protocol+'//'+$window.location.host+'/aio/do/service/anotacion?metodo=printNotas&fojas='+$scope.parametros.foja+'&numero='+$scope.parametros.numero+'&ano='+$scope.parametros.ano+'&bis='+$scope.parametros.bis+'&registro='+$scope.parametros.registro+'&download=false','popupNotas','width=800,height=600');			

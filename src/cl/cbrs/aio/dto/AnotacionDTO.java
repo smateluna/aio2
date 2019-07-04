@@ -39,6 +39,9 @@ public class AnotacionDTO implements JSONAware, Serializable{
 	
 	private String nombreUsuarioEliminador;
 	private Date fechaEliminacion;
+	
+	private Boolean pendiente;
+	private EstadoActualCaratulaDTO estadoActualCaratulaPendienteDTO;
 
 	public AnotacionDTO(){
 
@@ -196,6 +199,21 @@ public class AnotacionDTO implements JSONAware, Serializable{
 		sb.append(":");
 		sb.append(this.idNota);
 		sb.append(",");			
+		
+		sb.append("\"pendiente\"");
+		sb.append(":");
+		sb.append(this.pendiente);
+		sb.append(",");	
+		
+		sb.append("\"estadoActualCaratulaPendienteDTO\"");
+		sb.append(":");
+		
+		if(this.estadoActualCaratulaPendienteDTO!=null){
+			sb.append(this.estadoActualCaratulaPendienteDTO.toJSONString());
+		}else{
+			sb.append("null");				
+		}		
+		sb.append(",");
 		
 		sb.append("\"tipoAnotacionDTO\"");
 		sb.append(":");
@@ -503,4 +521,20 @@ public class AnotacionDTO implements JSONAware, Serializable{
 	public void setIdNota(Long idNota) {
 		this.idNota = idNota;
 	}
+
+	public Boolean getPendiente() {
+		return pendiente;
+	}
+
+	public void setPendiente(Boolean pendiente) {
+		this.pendiente = pendiente;
+	}
+	
+	public EstadoActualCaratulaDTO getEstadoActualCaratulaPendienteDTO() {
+		return estadoActualCaratulaPendienteDTO;
+	}
+
+	public void setEstadoActualCaratulaPendienteDTO(EstadoActualCaratulaDTO estadoActualCaratulaPendienteDTO) {
+		this.estadoActualCaratulaPendienteDTO = estadoActualCaratulaPendienteDTO;
+	}	
 }

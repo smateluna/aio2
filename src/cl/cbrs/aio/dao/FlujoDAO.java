@@ -4,14 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import cl.cbr.util.TablaValores;
 import cl.cbrs.aio.dto.CierreCtasCtesFinalDTO;
+import cl.cbrs.aio.dto.EstadoActualCaratulaDTO;
 import cl.cbrs.aio.dto.RecepcionPlanoDTO;
+import cl.cbrs.aio.dto.SeccionDTO;
 import cl.cbrs.aio.dto.estado.CuentaCorrienteDTO;
+import cl.cbrs.caratula.util.ConstantesCaratula;
 
 
 public class FlujoDAO extends AbstractJdbcDao {	
@@ -300,6 +306,91 @@ public class FlujoDAO extends AbstractJdbcDao {
 		return listaPrestamos;
 	}	
 	
+	public void visarCaratula(Long caratula) throws Exception{
+		Connection conn = null;
 	
+		try {
+			conn = this.conexionFlujo();
+			String sql = "UPDATE flujo.dbo.ENCABEZADO_CARATULA set " +
+			"VISADO='S' " +
+			"where CARATULA=" + caratula;
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.executeUpdate();	           
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				}catch (SQLException e) {
+					throw e;
+				}
+			}
+		}        		
+	} 
+	
+	public EstadoActualCaratulaDTO getEstadoActualCaratulaPendiente(Long caratula) throws Exception{
+		Connection con = null;
+		ResultSet rs = null;
+		PreparedStatement ps = null;
+		try {
+			con = conexionFlujo();
+			
+			String COD_SEC_FINALIZADOS = ConstantesCaratula.getParametro("TAB_SECCIONES.FINALIZADOS");
+
+			String sql = "select eac.FECHA_MOV, eac.CARATULA, eac.COD_SECCION, ts.DESC_SECCION from flujo.dbo.ESTADO_ACTUAL_CARATULA eac, flujo.dbo.TAB_SECCIONES ts " +
+						" where eac.COD_SECCION = ts.COD_SECCION and  eac.caratula="+caratula+" and eac.COD_SECCION not in ("+COD_SEC_FINALIZADOS+")";
+
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			if(rs!=null){
+				if(rs.next()){ 		
+					EstadoActualCaratulaDTO dto = new EstadoActualCaratulaDTO();
+					Timestamp fechaMov = rs.getTimestamp("FECHA_MOV");
+					String codSeccion = rs.getString("COD_SECCION");
+					String descSeccion = rs.getString("DESC_SECCION");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					String fechaMovS = sdf.format(fechaMov);
+					
+					dto.setFechaMov(fechaMovS);
+					dto.setFechaMovL(fechaMov.getTime());
+					SeccionDTO seccionDTO = new SeccionDTO();
+					seccionDTO.setCodigo(codSeccion);
+					seccionDTO.setDescripcion(descSeccion);
+					dto.setSeccionDTO(seccionDTO );
+					return dto;
+				}   				
+			}
+			
+			return null;
+
+		}catch(SQLException sqle){
+			logger.error(sqle);
+		}catch(Exception e){
+			logger.error(e);
+		}finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				}catch (SQLException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				}catch (SQLException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				}catch (SQLException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+		}        
+		return null;
+	} 		
 	
 }
