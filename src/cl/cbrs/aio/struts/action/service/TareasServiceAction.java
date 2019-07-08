@@ -1279,24 +1279,27 @@ public class TareasServiceAction extends CbrsAbstractAction {
 		String msg = "";	
 
 		String numeroCaratulaReq = request.getParameter("numeroCaratula");
+		String valorReq = request.getParameter("valor");
 
 		try {
-			Long ncaratula = Long.parseLong(numeroCaratulaReq);
-			
-			new FlujoDAO().visarCaratula(ncaratula);
-
-			//Agregar bitacora
-			try{
-				String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
-				CaratulasUtil caratulasUtil = new CaratulasUtil();
-				String observacionBitacora = "Carátula visada";
-				caratulasUtil.agregarBitacoraCaratula(ncaratula, rutUsuario, observacionBitacora, BitacoraCaratulaVO.OBSERVACION_INTERNA);
-			} catch (Exception e) {
-				logger.error("Error: " + e.getMessage(), e);
-				respuesta.put("warn", true);
-				msg = "Advertencia, usuario no puede agregar bitacora. Avisar a soporte.";
-			}		
-			respuesta.put("status", true);
+			if(!valorReq.matches("^[sn]{1}$") && numeroCaratulaReq!=null){
+				Long ncaratula = Long.parseLong(numeroCaratulaReq);						
+				
+				new FlujoDAO().visarCaratula(ncaratula, valorReq);
+	
+				//Agregar bitacora
+				try{
+					String rutUsuario = (String)request.getSession().getAttribute("rutUsuario");
+					CaratulasUtil caratulasUtil = new CaratulasUtil();
+					String observacionBitacora = valorReq.equalsIgnoreCase("S")?"Carátula visada":"Carátula con alerta";
+					caratulasUtil.agregarBitacoraCaratula(ncaratula, rutUsuario, observacionBitacora, BitacoraCaratulaVO.OBSERVACION_INTERNA);
+				} catch (Exception e) {
+					logger.error("Error: " + e.getMessage(), e);
+					respuesta.put("warn", true);
+					msg = "Advertencia, usuario no puede agregar bitacora. Avisar a soporte.";
+				}		
+				respuesta.put("status", true);
+			}
 
 		} catch (Exception e1) {
 			logger.error(e1.getMessage(), e1);

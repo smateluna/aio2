@@ -254,7 +254,8 @@ app.factory('inscripcionDigitalService', function ($http, $q) {
     	  $http({
     		  method: 'GET',
     		  url: '../do/service/inscripcionDigital',
-    		  params: paramsObj
+    		  params: paramsObj,
+    		  timeout: 60000
     	  }).
     	  success(function(data, status, headers, config){
     		  deferred.resolve(data);

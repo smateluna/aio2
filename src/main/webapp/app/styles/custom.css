@@ -1863,5 +1863,9 @@ table tbody td .btn{margin-bottom:2px!important}
 }
 
 .notas-warning {
-	background-color: #ffff107a;
+	background-color: #ffff107a !important;
+}
+
+.caratula-visada {
+	background: #90ee9073 !important;
 }

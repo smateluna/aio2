@@ -213,6 +213,25 @@ app.factory('tareasService', function ($http, $q) {
                });
 
              return deferred.promise;     
-   	    }
+   	    },      
+   	    visarCaratula: function (numeroCaratula, valor) {
+            var paramsObj = {metodo: 'visarCaratula', numeroCaratula:numeroCaratula, valor:valor};
+
+            var deferred = $q.defer();
+
+            $http({
+              method: 'GET',
+              url: '../do/service/tareas',
+              params: paramsObj
+            }).
+              success(function(data, status, headers, config){
+                deferred.resolve(data);
+              }).
+              error(function(data, status, headers, config){
+                deferred.reject(status);
+              });
+
+            return deferred.promise;     
+  	    }
 	  };
   });

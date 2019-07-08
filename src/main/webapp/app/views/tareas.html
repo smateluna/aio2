@@ -73,7 +73,7 @@
                        		   <button ng-if="caratulafuera.caratula.codSeccion=='16'" type="button" class="btn btn-primary btn-xs btn-rad" ng-click="obtenerEscrituraPorFuera(caratulafuera.caratula)" tooltip="Obtener Escritura" tooltip-placement="top">
 	                               			<i class="fa fa-download"></i>
 	                           </button>        
-	                           			<!-- <button ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16' && sol.estadoDescargaEscri===1" ng-click="verDocumentoEstudio(sol)" class="btn btn-primary btn-xs btn-rad" alt="ver documento"><i class="fa fa-file-pdf-o"></i> </button> -->              			
+              			
 	                    		<span ng-if="caratulafuera.caratula.codSeccion=='16' && caratulafuera.caratula.estadoDescargaEscri===1 && (subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer)">
 					              	  <a  href="cbrsVisor:{{caratulafuera.caratula.numeroCaratula}}">
 					       				<button  type="button" class="btn btn-primary btn-xs btn-rad" tooltip="Modificar Escritura" tooltip-placement="top"> 
@@ -203,13 +203,14 @@
 			        </tr>
 			        </thead>
 			        <tbody>
-						<tr ng-repeat="sol in filtered = (busquedaTareas.data.caratulas | filter:filterExpr | orderBy:busquedaTareas.predicate:busquedaTareas.reverse | startFrom:(paginacionTareas.currentPage-1)*paginacionTareas.numPerPage | limitTo:paginacionTareas.numPerPage)">
-						<!-- <tr ng-repeat="sol in busquedaTareas.data.caratulas)"> -->
+						<tr ng-class="{'caratula-visada':sol.visado=='S'}" ng-repeat="sol in filtered = (busquedaTareas.data.caratulas | filter:filterExpr | orderBy:busquedaTareas.predicate:busquedaTareas.reverse | startFrom:(paginacionTareas.currentPage-1)*paginacionTareas.numPerPage | limitTo:paginacionTareas.numPerPage)">
                                 <td>
                                  <input type="checkbox" class="icheck" ng-i-check="" ng-model="sol.check" />
                                   
                                 </td>
-				        		<td class="text-left"><strong><a href ng-click="verEstadoCaratula(sol.numeroCaratula)">{{sol.numeroCaratula}}</a></strong></td>
+				        		<td class="text-left">
+				        			<strong><a href ng-click="verEstadoCaratula(sol.numeroCaratula)">{{sol.numeroCaratula}}</a><span ng-if="sol.visado=='S'"><i class="fa fa-thumbs-o-up"></i></span></strong>
+				        		</td>
 				        		<td class="text-left">
                                     {{sol.canalTexto}}
                                 </td>
@@ -246,8 +247,8 @@
 									      	<li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='RL'"><a href="" ng-click="masInfoLiquidacion(sol)"><i class="fa fa-info-circle"></i> Mas Info Liquidacion</a></li>
 										    <li ng-if="sol.estadoActualCaratulaDTO.seccionDTO.codigo=='16'"><a href="" ng-click="obtenerEscritura(sol)"><i class="fa fa-download"></i> Obtener Escritura</a></li>										    
 										    <li ng-if="subPermisos['estado'].indexOf('MODIFICAR_ESCRITURA')>=0 || developer"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-pencil"></i> Editar Escritura</a></li>
-										    <li ng-if="(perfil=='AUDITORIAX' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado!='S'"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-thumbs-o-up"></i> Visar Carátula</a></li>
-										    <li ng-if="(perfil=='AUDITORIAX' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado=='S'"><a href="" ng-click="editarEscritura(sol.numeroCaratula)"><i class="fa fa-thumbs-o-down"></i> Denegar Carátula</a></li>
+										    <li ng-if="(perfil=='AUDITORIA' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado!='S'"><a href="" ng-click="visarCaratula(sol, 'S')"><i class="fa fa-thumbs-o-up"></i> Visar Carátula</a></li>
+										    <li ng-if="(perfil=='AUDITORIA' || developer) && sol.estadoActualCaratulaDTO.seccionDTO.codigo=='A3' && sol.visado=='S'"><a href="" ng-click="visarCaratula(sol, 'N')"><i class="fa fa-thumbs-o-down"></i> Alertar Carátula</a></li>
 										  </ul>
 									    </div>             			
 	                    		</td>

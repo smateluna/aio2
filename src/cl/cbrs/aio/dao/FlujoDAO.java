@@ -306,15 +306,15 @@ public class FlujoDAO extends AbstractJdbcDao {
 		return listaPrestamos;
 	}	
 	
-	public void visarCaratula(Long caratula) throws Exception{
+	public void visarCaratula(Long caratula, String valor) throws Exception{
 		Connection conn = null;
 	
 		try {
 			conn = this.conexionFlujo();
-			String sql = "UPDATE flujo.dbo.ENCABEZADO_CARATULA set " +
-			"VISADO='S' " +
-			"where CARATULA=" + caratula;
+			String sql = "UPDATE flujo.dbo.ENCABEZADO_CARATULA set VISADO=? where CARATULA=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, valor);
+			ps.setLong(2, caratula);
 			ps.executeUpdate();	           
 		} finally {
 			if (conn != null) {

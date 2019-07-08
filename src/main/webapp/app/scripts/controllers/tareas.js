@@ -332,39 +332,6 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 //		});
 	};
 	
-	$scope.verDocumentoEstudio = function(caratula) {
-
-		var escri = $scope.buscarEscritura(caratula.numeroCaratula);
-	
-//		var documento ={
-//			"nombreArchivo": escritura.nombreArchivoVersion,
-//			"idTipoDocumento": escritura.idTipoDocumento,
-//			"idReg": escritura.idReg,
-//			"fechaDocumento": escritura.fechaProcesa
-//		};		
-//		
-//		//existe documento
-//		var promise = estadoService
-//		.existeDocumento(documento);
-//		promise
-//		.then(
-//			function(data) {
-//				if (data.hayDocumento) {
-//					//download documento
-//					$window.open('../do/service/escritura?metodo=verDocumentoEstudio&caratula='+ $scope.req.numeroCaratula +'&version='+escritura.version+'&idTipoDocumento='+escritura.idTipoDocumento+'&type=uri','','width=800,height=600');
-//
-//				} else {
-//					$scope
-//					.raiseErr(data.errormsg);
-//				}
-//			},
-//			function(reason) {
-//				$scope
-//				.raiseErr('No se ha podido establecer comunicación con el servidor.');
-//			});		
-
-	};
-	
 	$scope.editarEscritura = function(caratula){
 		var escritura = null;
 		var promise = estadoService
@@ -454,6 +421,27 @@ app.controller('TareasCtrl', function ($scope, $timeout, $rootScope, $location, 
 				.raiseErr('No se ha podido establecer comunicación con el servidor.');
 			});		
 	}	
+	
+	$scope.visarCaratula = function(registro, valor){
+		
+		var caratula = registro.numeroCaratula;
+		
+		$scope.openLoadingModal('Procesando...', '');
+
+		var promise = tareasService.visarCaratula(caratula, valor);
+		promise.then(function(data) {
+			$scope.closeModal();
+			if(data.status===null){
+
+			}else if(data.status){
+				registro.visado=valor;
+			}else{
+				$scope.raiseErr('buscar','Problema detectado', data.msg);
+			}
+		}, function(reason) {
+			$scope.raiseErr('buscar','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+		});
+	}; 	
 	
 	$scope.checkAll = function () {
 
