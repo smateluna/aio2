@@ -121,21 +121,23 @@ public class AnotacionUtil {
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setActo(anotacionVO.getActo());
 		
-		try{
-			//Si acto es transferencia, revisar estado caratula (Anotacion pendiente entrega)
-			String strActosTransferencia = TablaValores.getValor("ws_inscripciondigital.parametros", "ACTOS_TRANSFERENCIA", "valor");
-			if(strActosTransferencia!=null){
-				if(ArrayUtils.contains( strActosTransferencia.split(","), anotacionVO.getActo().trim() )){
-					Long caratula = anotacionVO.getCaratula();
-					EstadoActualCaratulaDTO eacDTO = new FlujoDAO().getEstadoActualCaratulaPendiente(caratula);
-					if(eacDTO != null){
-						anotacionDTO.setPendiente(true);
-						anotacionDTO.setEstadoActualCaratulaPendienteDTO(eacDTO);
+		if(anotacionVO.getActo()!=null){
+			try{			
+				//Si acto es transferencia, revisar estado caratula (Anotacion pendiente entrega)
+				String strActosTransferencia = TablaValores.getValor("ws_inscripciondigital.parametros", "ACTOS_TRANSFERENCIA", "valor");
+				if(strActosTransferencia!=null){
+					if(ArrayUtils.contains( strActosTransferencia.split(","), anotacionVO.getActo().trim() )){
+						Long caratula = anotacionVO.getCaratula();
+						EstadoActualCaratulaDTO eacDTO = new FlujoDAO().getEstadoActualCaratulaPendiente(caratula);
+						if(eacDTO != null){
+							anotacionDTO.setPendiente(true);
+							anotacionDTO.setEstadoActualCaratulaPendienteDTO(eacDTO);
+						}
 					}
 				}
+			} catch(Exception e){
+				logger.error(e.getMessage(),e);
 			}
-		} catch(Exception e){
-			logger.error(e.getMessage(),e);
 		}
 		
 		InscripcionDigitalVO  inscripcionDigitalByIdInscripcionDestinoVo = anotacionVO.getInscripcionDigitalByIdInscripcionDestinoVo();

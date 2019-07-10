@@ -89,20 +89,45 @@
 			
 				<div class="header">
                 
-			        <h3> Carátulas Asignadas <small class="vertAM"><span class="badge ng-scope ng-binding">{{filtered.length}}</span></small> </h3> 
+			        <h3> Carátulas Asignadas <small class="vertAM"><span class="badge ng-scope ng-binding">{{paginacionCertificacion.todos.length}}</span></small> </h3> 
 			    </div>
 			    
-                 <div class="row mb10">
+                 <div class="row">
                      
-			    	<div class="col-md-3 col-sm-3">
-                       <input ng-model="filterExpr" placeholder="Filtrar..." class="form-control">
-                       
+			    	<div class="col-sm-3">
+                       <input ng-model="filterExpr" placeholder="Filtrar..." class="form-control">                       
                     </div>
-                    <div class="col-md-9 col-sm-9" align="right">   
-                         <button type="button" class="btn btn-primary btn-sm" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="bottom">
-                         <i class="fa fa-refresh"></i></button>
-                     
-                     </div>
+                    <div class="pull-right col-sm-4">
+				        <div class="col-sm-5" >				          
+	                        <select class="form-control" name="resultadosPorPagina" ng-model="paginacionCertificacion.numPerPage" ng-change="refrescar()">				        				        	
+					        	<option value="25">Mostrar 25 resultados</option>
+					        	<option value="50">Mostrar 50 resultados</option>
+					        	<option value="150">Mostrar 150 resultados</option>
+					        	<option value="9999">Mostrar todo</option>
+					        </select>                       
+	                     </div>			    					    					    				      
+                        <label style="margin-top: 6px;">Auto Refrescar:</label>                     
+                    	<div  style="display: inline-flex;" >      
+	                        <select class="form-control" id="tiemporefresco" name="tiemporefresco" ng-model="busquedaCertificacion.tiemporefresco">
+					        	<option value="0">
+				     		-- Nunca --
+				        	</option>
+					        	<option value="5">
+				     		5 minutos
+				        	</option>
+					        	<option value="10">
+					      	10 minutos
+				        	</option>
+					        	<option value="15">
+					      	15 minutos
+				        	</option>				        	
+					        </select>	
+				    		<button type="button" class=" btn  btn-primary btn-sm" ng-click="refrescar()" tooltip="Refrescar" tooltip-placement="bottom">
+	                          <i class="fa fa-refresh"></i>
+	                        </button>			    		
+			    		</div>	
+				   	  
+				   	</div>
                  </div>
 			  
               <div class="table-responsive">  
@@ -136,23 +161,33 @@
 			        </tr>
 			        </thead>
 			        <tbody>
-				        <!--<tr ng-repeat="sol in busquedaCertificacion.resultados | orderBy:predicate:reverse">
-				        --><tr ng-repeat="sol in filtered = (busquedaCertificacion.resultados | filter:filterExpr | orderBy:busquedaCertificacion.predicate:busquedaCertificacion.reverse)">
-				        		<td class="text-left"><a href="" ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
-				        		<td class="text-left">{{sol.tipoFormulario}}</td>
-				        		<td class="text-left">{{sol.foja}}</td>
-				        		<td class="text-left">{{sol.numero}}</td>
-				        		<td class="text-left">{{sol.ano}}</td>
-				        		<td class="text-center"><span ng-show="sol.bis===1"><i class="fa fa-check"></i></span></td>
-				        		<td class="text-left">{{sol.fechaCreacion}}</td>
-				        		<td class="text-left"> 
-				        			<span>
-	                           			<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verInscripcionCertificar(sol)" tooltip="Revisar y Certificar" tooltip-placement="top">
-	                               			<i class="fa fa-file-text-o"></i>
-	                           			</button>
-	                    			</span>
-	                    		</td>
-				        </tr>
+						<tr ng-repeat="sol in filtered = (busquedaCertificacion.resultados | filter:filterExpr | orderBy:busquedaCertificacion.predicate:busquedaCertificacion.reverse | startFrom:(paginacionCertificacion.currentPage-1)*paginacionCertificacion.numPerPage | limitTo:paginacionCertificacion.numPerPage)">
+			        		<td class="text-left"><a href="" ng-click="verEstadoCaratula(sol.caratula)">{{sol.caratula}}</a></td>
+			        		<td class="text-left">{{sol.tipoFormulario}}</td>
+			        		<td class="text-left">{{sol.foja}}</td>
+			        		<td class="text-left">{{sol.numero}}</td>
+			        		<td class="text-left">{{sol.ano}}</td>
+			        		<td class="text-center"><span ng-show="sol.bis===1"><i class="fa fa-check"></i></span></td>
+			        		<td class="text-left">{{sol.fechaCreacion}}</td>
+			        		<td class="text-left"> 
+			        			<span>
+                           			<button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="verInscripcionCertificar(sol)" tooltip="Revisar y Certificar" tooltip-placement="top">
+                               			<i class="fa fa-file-text-o"></i>
+                           			</button>
+                    			</span>
+                    		</td>
+			        	</tr>
+				         <tr>
+							<td colspan="12" class="text-center">
+								<pagination ng-model="paginacionCertificacion.currentPage"
+									page="paginacionCertificacion.currentPage"
+									total-items="paginacionCertificacion.todos.length" items-per-page="paginacionCertificacion.numPerPage"
+									max-size="paginacionCertificacion.maxSize" boundary-links="true"
+									previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+									last-text="&raquo;">
+								</pagination>
+							</td>				
+						</tr>			        	
 			        </tbody>
 			    </table>
 			  </div>

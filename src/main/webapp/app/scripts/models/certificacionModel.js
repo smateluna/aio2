@@ -16,6 +16,14 @@ app.factory('certificacionModel', function () {
     reverse: null ,
     tiemporefresco:10
   };
+  
+  var paginacionMaster = {
+	currentPage: 1,
+	numPerPage: 25,
+	maxSize: 10,
+	filteredTodos: [],
+	todos: []
+  } 
 
   var busquedaMis = {
     resultados: [],
@@ -58,6 +66,12 @@ app.factory('certificacionModel', function () {
     setStates: function (newStates){
       states = newStates;
     },
+    getPaginacionMaster: function () {
+    	return paginacionMaster;
+	},
+	setPaginacionMaster: function (newPaginacionMaster){
+		paginacionMaster = newPaginacionMaster;
+	},     
     getListaResumida: function () {
       return listaresumida;
     },

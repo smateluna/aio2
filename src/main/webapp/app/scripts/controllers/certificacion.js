@@ -1,12 +1,12 @@
 'use strict';
 
-app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$location,$anchorScroll,solicitudesModel,certificacionModel, certificacionService, caratulaService, $filter,$modal,$modalStack) {
+app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$location,$anchorScroll,solicitudesModel,certificacionModel, certificacionService, caratulaService, $filter,$modal,$modalStack,$interval,filterFilter) {
 	
 	$scope.busquedaCertificacion = certificacionModel.getBusquedaCertificacion();
-	//console.log('logggg ' + angular.toJson($scope.busquedaCertificacion));
 	$scope.states = certificacionModel.getStates();
 	$scope.listaResumida = certificacionModel.getListaResumida();
 	$scope.tab = solicitudesModel.getTab();
+	$scope.paginacionCertificacion = certificacionModel.getPaginacionMaster();
 
 	$scope.solicitudStatus = {
 	    ok: false,
@@ -26,25 +26,12 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 	    esDigital: false,
 	    tieneRechazo: false
   	};
-
-	var promise = certificacionService.obtenerCaratulasParaCertificar();
-	promise.then(function(data) {
-	    if(data.status===null){
-	    }else if(data.status){
-	    	
-	      $scope.busquedaCertificacion.data = data;
-	      $scope.busquedaCertificacion.resultados = data.resultado;
-
-	    }else{
-	      $scope.setErr('data.msg', data.msg);
-	      
-	    }
-	  }, function(reason) {
-	    $scope.setErr('Problema contactando al servidor.', '');
-	});
+	
+	$timeout(function(){
+		$scope.refrescar();
+	}, 500);   
 
 	$scope.redistribuir = function(numerocaratula){
-		console.log('url '+'/distribucion/'+numerocaratula+'/');
 	    $rootScope.go('/distribucion/'+numerocaratula+'/');
     };
     
@@ -56,7 +43,6 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 		    if(data.status===null){
 		    }else if(data.status){
 	    	var bis = inscripcion.bis==1?0:1;
-				console.log('url '+'/verInscripcionCertificar/prop/'+inscripcion.numeroCaratula+'/'+inscripcion.foja+'/'+inscripcion.numero+'/'+inscripcion.ano+'/'+inscripcion.bis+'/'+inscripcion.fechaDocLong+'/'+inscripcion.idtipoFormulario+'/certificacion/');
 			    $rootScope.go('/verInscripcionCertificar/prop/'+inscripcion.numeroCaratula+'/'+inscripcion.foja+'/'+inscripcion.numero+'/'+inscripcion.ano+'/'+inscripcion.bis+'/'+inscripcion.fechaDocLong+'/'+inscripcion.rehaceImagen+'/'+inscripcion.idtipoFormulario+'/certificacion/');
 		    }else{
 		      $scope.setErr('data.msg', data.msg);
@@ -69,7 +55,6 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 	
 	$scope.verInscripcionCertificar = function(inscripcion){
 	    var bis = inscripcion.bis==1?0:1;
-		console.log('url '+'/verInscripcionCertificar/prop/'+inscripcion.caratula+'/'+inscripcion.foja+'/'+inscripcion.numero+'/'+inscripcion.ano+'/'+inscripcion.bis+'/'+inscripcion.fechaDocLong+'/'+inscripcion.idtipoFormulario+'/certificacion/');
 	    $rootScope.go('/verInscripcionCertificar/prop/'+inscripcion.caratula+'/'+inscripcion.foja+'/'+inscripcion.numero+'/'+inscripcion.ano+'/'+inscripcion.bis+'/'+inscripcion.fechaDocLong+'/'+inscripcion.rehaceImagen+'/'+inscripcion.idtipoFormulario+'/certificacion/');
     }; 
     
@@ -80,8 +65,8 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 			$scope.closeModal();
 		    if(data.status===null){
 		    }else if(data.status){
-		      $scope.busquedaCertificacion.data = data;
 		      $scope.busquedaCertificacion.resultados = data.resultado;
+		      $scope.makeTodos(data.resultado);
 		    }else{
 		      $scope.setErr('data.msg', data.msg);
 		      
@@ -91,204 +76,8 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 		});
     };
 	
-//	$scope.buscarIndice = function(){
-//		
-//		 var foja = $scope.busquedaIndice.foja,
-//	     numero = $scope.busquedaIndice.numero,
-//	     ano = $scope.busquedaIndice.ano,
-//	     bis = $scope.busquedaIndice.bis,
-//		 rut = $scope.busquedaIndice.rut,
-//		 apellidos = $scope.busquedaIndice.nombre,
-//		 direccion = $scope.busquedaIndice.direccion,
-//		 regPropiedades = $scope.busquedaIndice.propiedades,
-//		 regHipoteca = $scope.busquedaIndice.hipoteca,
-//		 regProhibiciones = $scope.busquedaIndice.prohibiciones,
-//		 regComercio = $scope.busquedaIndice.comercio,
-//		 buscarPorInscricionHipo = $scope.busquedaIndice.buscarPorInscricionHipo,
-//		 buscarPorInscricionProh = $scope.busquedaIndice.buscarPorInscricionProh,
-//		 exacta = $scope.busquedaIndice.exacta;
-//		 
-//		 if(!buscarPorInscricionHipo && !buscarPorInscricionProh)
-//		 	$scope.resetResultadoIndice();
-//		
-//		 if($scope.busquedaIndice.comuna!=null)
-//		 	var comuna = $scope.busquedaIndice.comuna.codigo;
-//		 if($scope.busquedaIndice.anoInscripcion!=null)
-//		 	var anoInscripcion = $scope.busquedaIndice.anoInscripcion.codigo;
-//		 if($scope.busquedaIndice.acto!=null)
-//		 	var acto = $scope.busquedaIndice.acto.nombre;
-//		 if($scope.busquedaIndice.tipo!=null)
-//		 	var tipo = $scope.busquedaIndice.tipo.nombre;
-//		 
-//		 
-//	     $scope.openLoadingModal('Buscando...', '');
-//	
-//	     var promise = indiceService.getIndicePropiedades(rut,apellidos,direccion,foja, numero, ano, bis, comuna, anoInscripcion,acto,tipo,exacta,regPropiedades,regHipoteca,regProhibiciones,regComercio,buscarPorInscricionHipo,buscarPorInscricionProh);
-//	     promise.then(function(data) {
-//	      $scope.closeModal();
-//	      if(data.status===null){
-//	
-//	      }else if(data.status){
-////	        $scope.busquedaIndice.fecha = new Date();
-//	
-//	        $scope.busquedaIndice.data = data;
-//	        
-// 			if(data.aaDataComercio.length>0){
-//	        	if(!buscarPorInscricionHipo && !buscarPorInscricionProh){
-//		        	$scope.busquedaIndice.resultadoscomercio = data.aaDataComercio;
-//		        	$scope.loadMoreComercio();
-//		        	$scope.activateParent(4);
-//	        	}
-//	        }
-//	        if(data.aaDataHipotecas.length>0){
-//	        	if(!buscarPorInscricionProh){
-//		        	$scope.busquedaIndice.resultadoshipotecas = data.aaDataHipotecas;
-//		        	$scope.loadMoreHipoteca();
-//		        	$scope.activateParent(3);
-//	        	}
-//	        }	
-//	        if(data.aaDataProhibiciones.length>0){
-//	        	if(!buscarPorInscricionHipo){
-//	        		$scope.busquedaIndice.resultadosprohibiciones = data.aaDataProhibiciones;
-//	        		$scope.loadMoreProhibiciones();
-//	        		$scope.activateParent(2);
-//	        	}
-//	        }	
-//	        if(data.aaData.length>0){
-//	        	if(!buscarPorInscricionHipo && !buscarPorInscricionProh){
-//		        	$scope.busquedaIndice.resultados = data.aaData;
-//		        	$scope.loadMorePropiedad();
-//		        	$scope.activateParent(1);
-//	        	}
-//	        }	
-//	
-//	      }else{
-//	        $scope.raiseErr('buscar','Problema detectado', data.msg);
-//	      }
-//	    }, function(reason) {
-//	      $scope.raiseErr('buscar','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
-//	    });
-//	};
-	
-	$scope.loadMorePropiedad = function() {
-
-	    var carga = $scope.busquedaIndice.resultados.slice($scope.listaPropiedad.inicio, $scope.listaPropiedad.fin);
-	
-	    angular.forEach(carga, function(sol){
-	      $scope.listaPropiedad.data.push(sol);
-	    });
-	
-	    $scope.listaPropiedad.inicio = $scope.listaPropiedad.inicio + $scope.listaPropiedad.offset;
-	    $scope.listaPropiedad.fin = $scope.listaPropiedad.fin + $scope.listaPropiedad.offset;
-  	};
-  	
-  	$scope.loadMoreProhibiciones = function() {
-
-	    var carga = $scope.busquedaIndice.resultadosprohibiciones.slice($scope.listaProhibiciones.inicio, $scope.listaProhibiciones.fin);
-	
-	    angular.forEach(carga, function(sol){
-	      $scope.listaProhibiciones.data.push(sol);
-	    });
-	
-	    $scope.listaProhibiciones.inicio = $scope.listaProhibiciones.inicio + $scope.listaProhibiciones.offset;
-	    $scope.listaProhibiciones.fin = $scope.listaProhibiciones.fin + $scope.listaProhibiciones.offset;
-  	};
-  	
-  	$scope.loadMoreHipoteca = function() {
-
-	    var carga = $scope.busquedaIndice.resultadoshipotecas.slice($scope.listaHipoteca.inicio, $scope.listaHipoteca.fin);
-	
-	    angular.forEach(carga, function(sol){
-	      $scope.listaHipoteca.data.push(sol);
-	    });
-	
-	    $scope.listaHipoteca.inicio = $scope.listaHipoteca.inicio + $scope.listaHipoteca.offset;
-	    $scope.listaHipoteca.fin = $scope.listaHipoteca.fin + $scope.listaHipoteca.offset;
-  	};
-  	
-  	$scope.loadMoreComercio = function() {
-
-	    var carga = $scope.busquedaIndice.resultadoscomercio.slice($scope.listaComercio.inicio, $scope.listaComercio.fin);
-	
-	    angular.forEach(carga, function(sol){
-	      $scope.listaComercio.data.push(sol);
-	    });
-	
-	    $scope.listaComercio.inicio = $scope.listaComercio.inicio + $scope.listaComercio.offset;
-	    $scope.listaComercio.fin = $scope.listaComercio.fin + $scope.listaComercio.offset;
-  	};
-	
 	$scope.resolveModal = {
     	refresca: false
-  	};
-
-	$scope.resetResultadoCertificacion = function(){
-	    $scope.busquedaIndice.data = null;
-	    $scope.states.buscar.isError = false;
-	    
-	    $scope.busquedaIndice.buscarPorInscricionHipo=false;
-		$scope.busquedaIndice.buscarPorInscricionProh=false;
-	    
-	
-	    if($scope.busquedaIndice.resultados!==undefined){
-	      $scope.busquedaIndice.resultados.length = 0;
-	    }
-	    
-	    if($scope.busquedaIndice.resultadosprohibiciones!==undefined){
-	      $scope.busquedaIndice.resultadosprohibiciones.length = 0;
-	    }
-	    
-	    if($scope.busquedaIndice.resultadoshipotecas!==undefined){
-	      $scope.busquedaIndice.resultadoshipotecas.length = 0;
-	    }
-	    
-	    if($scope.busquedaIndice.resultadoscomercio!==undefined){
-	      $scope.busquedaIndice.resultadoscomercio.length = 0;
-	    }
-	    
-	    if($scope.listaPropiedad.data!==undefined){
-	      $scope.listaPropiedad.data.length = 0;
-	    }
-	    $scope.listaPropiedad.inicio = 0;
-	    $scope.listaPropiedad.fin = $scope.listaPropiedad.offset;
-	    
-	    if($scope.listaProhibiciones.data!==undefined){
-	      $scope.listaProhibiciones.data.length = 0;
-	    }
-	    $scope.listaProhibiciones.inicio = 0;
-	    $scope.listaProhibiciones.fin = $scope.listaProhibiciones.offset;
-	    
-	    if($scope.listaHipoteca.data!==undefined){
-	      $scope.listaHipoteca.data.length = 0;
-	    }
-	    $scope.listaHipoteca.inicio = 0;
-	    $scope.listaHipoteca.fin = $scope.listaHipoteca.offset;
-	    
-	    if($scope.listaComercio.data!==undefined){
-	      $scope.listaComercio.data.length = 0;
-	    }
-	    $scope.listaComercio.inicio = 0;
-	    $scope.listaComercio.fin = $scope.listaComercio.offset;
-	};
-	
-		$scope.limpiarTitulo = function(){
-		$scope.resetResultadoIndice();
-
-	    $scope.busquedaIndice.foja = null;
-	    $scope.busquedaIndice.numero = null;
-	    $scope.busquedaIndice.ano = null;
-	    $scope.busquedaIndice.bis = false;
-	    $scope.busquedaIndice.rut = null;
-	    $scope.busquedaIndice.nombre = null;
-	    $scope.busquedaIndice.direccion = null;
-	    $scope.busquedaIndice.comuna = null;
-	    $scope.busquedaIndice.anoInscripcion = null;
-	    $scope.busquedaIndice.acto = null;
-	    $scope.busquedaIndice.tipo = null;
-	
-	    $scope.myform.$setPristine(true);
-	
-	    $scope.doFocus('rutt');
   	};
   	
   	$scope.limpiar = function(){
@@ -446,4 +235,56 @@ app.controller('CertificacionCtrl', function ($scope,$timeout,$rootScope,$locati
 			}
 		});
 	}; 	
+	
+	$scope.makeTodos = function(data) {
+		$scope.paginacionCertificacion.todos=data;
+		var begin = (($scope.paginacionCertificacion.currentPage - 1) * $scope.paginacionCertificacion.numPerPage),
+		 end = begin + $scope.paginacionCertificacion.numPerPage;
+		$scope.paginacionCertificacion.filteredTodos = $scope.paginacionCertificacion.todos.slice(begin, end);		
+		$scope.paginacionCertificacion.maxSize = Math.round($scope.paginacionCertificacion.todos.length / $scope.paginacionCertificacion.numPerPage);
+
+	};	
+	
+	// $watch search to update pagination
+	$scope.$watch('filterExpr', function (newVal, oldVal) {
+		if(newVal!=undefined){
+			$scope.filtered = filterFilter($scope.busquedaCertificacion.resultados, newVal);
+			$scope.paginacionCertificacion.todos = $scope.filtered;
+//			$scope.paginacionCertificacion.currentPage = 1;
+			var begin = (($scope.paginacionCertificacion.currentPage - 1) * $scope.paginacionCertificacion.numPerPage),
+			 end = begin + $scope.paginacionCertificacion.numPerPage;
+			$scope.paginacionCertificacion.filteredTodos = $scope.paginacionCertificacion.todos.slice(begin, end);			
+			$scope.paginacionCertificacion.maxSize = Math.round($scope.paginacionCertificacion.todos.length / $scope.paginacionCertificacion.numPerPage);
+		}
+		
+	}, true);	
+	
+	$scope.$watch('busquedaCertificacion.tiemporefresco', function() {
+	  $scope.start();
+    });	
+	
+	var promise;    
+    $scope.start = function() {
+      // stops any running interval to avoid two intervals running at the same time
+      $scope.stop(); 
+      
+      // store the interval promise
+      if($scope.busquedaCertificacion.tiemporefresco!=0){
+  			promise = $interval(function(){
+  				$scope.refrescar();
+  			}.bind(this), $scope.busquedaCertificacion.tiemporefresco*60000);
+      }
+      
+    };
+  
+    // stops the interval
+    $scope.stop = function() {
+      $interval.cancel(promise);
+    };
+    
+    $scope.start();
+   
+    $scope.$on('$destroy', function() {
+    	$scope.stop(); 
+    });	
 });
