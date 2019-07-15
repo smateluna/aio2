@@ -13,8 +13,16 @@ app.factory('plantilleroModel', function () {
 			mostrarboton : 0
 	};    
 	
+	var plantillerogp = {
+			gp : null
+	};
+	
   return {
-	    getPlantillero: function () {
+	  	getPlantillerogp: function () {
+	      return plantillerogp;
+	    },setPlantillerogp: function (req) {
+	    	plantillerogp = req;
+	    },getPlantillero: function () {
 	      return plantillero;
 	    },setPlantillero: function (req) {
 	    	plantillero = req;

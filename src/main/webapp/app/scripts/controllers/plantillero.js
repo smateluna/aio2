@@ -170,7 +170,7 @@ app.controller('PlantilleroCtrl', function ($log, $rootScope, $scope, $modal, $t
 	$scope.vistaPrevia = function(){
 		$scope.openLoadingModal('Generando Certificado...', '');
 		
-		var promise = certificacionService.generarPdf($scope.plantillero.caratula,$scope.plantillero.tipocertificado.plantillas.plantillaCertificado,$scope.plantillero.cuerpocertificado,$scope.plantillero.tipocertificado.plantillas.fePDocumentoTipos.identificador,$scope.plantillero.valor);
+		var promise = certificacionService.generarPdf($scope.plantillero.caratula,$scope.plantillero.tipocertificado.plantillas.plantillaCertificado,$scope.plantillero.cuerpocertificado,$scope.plantillero.tipocertificado.plantillas.fePDocumentoTipos.identificador,$scope.plantillero.valor,'');
 		promise.then(function(data) {
 			$scope.closeModal();
 			if(data.status===null){

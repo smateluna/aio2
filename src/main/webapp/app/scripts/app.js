@@ -143,6 +143,10 @@ app.config(function ($routeProvider, $compileProvider) {
 		templateUrl: 'views/verVistaPreviaPlantilla.html',
 		controller: 'VerVistaPreviaPlantillaCtrl'
 	})
+	.when('/verVistaPreviaGP/:nombreArchivo/:origen/:caratula', {
+		templateUrl: 'views/verVistaPreviaGP.html',
+		controller: 'VerVistaPreviaGPCtrl'
+	})
 	.when('/digital', {
 		templateUrl: 'views/digital.html',
 		controller: 'DigitalCtrl'
@@ -325,7 +329,7 @@ app.run(function($rootScope, $location, Usuario, $log, $modalStack, amMoment, $w
 	}  
 
 	$rootScope.quitaPadding = function(){
-		return ($location.path().indexOf('verInscripcion')>0) || ($location.path().indexOf('verCartel')>0) || ($location.path().indexOf('consultadiablito')>0) || ($location.path().indexOf('verVistaPreviaPlantilla')>0);
+		return ($location.path().indexOf('verInscripcion')>0) || ($location.path().indexOf('verCartel')>0) || ($location.path().indexOf('consultadiablito')>0) || ($location.path().indexOf('verVistaPreviaPlantilla')>0) || ($location.path().indexOf('verVistaPreviaGP')>0);
 	};
 
 	$rootScope.$on('$routeChangeSuccess', function() {

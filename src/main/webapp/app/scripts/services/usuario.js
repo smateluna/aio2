@@ -25,6 +25,8 @@ app.factory('Usuario', function ($q, $http) {
     	return true;
       }else if(key.indexOf('/verVistaPreviaPlantilla')===0){
       	return true;
+      }else if(key.indexOf('/verVistaPreviaGP')===0){
+        	return true;
     	
       }else {
     	  if(permisos!=null){

@@ -21,6 +21,7 @@ app.controller('SidebarCtrl', function ($scope, $location, localStorageService) 
     return ( ($location.path().indexOf('verInscripcion')>0) ||
     ($location.path().indexOf('verCartel')>0)||
     ($location.path().indexOf('consultadiablito')>0)||
-    ($location.path().indexOf('verVistaPreviaPlantilla')>0));
+    ($location.path().indexOf('verVistaPreviaPlantilla')>0)||
+    ($location.path().indexOf('verVistaPreviaGP')>0));
   };
 });
