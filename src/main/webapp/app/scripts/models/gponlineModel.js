@@ -34,6 +34,8 @@ app.factory('gponlineModel', function () {
     tieneNoVigenteProp: false,
     tieneNoVigenteProh: false,
     tieneNoVigenteHipo: false,
+    cantvigenteshipo: null,
+    cantvigentesproh: null,
     listaCaratulaPorPropiedad: []
   };
 
@@ -52,6 +54,11 @@ app.factory('gponlineModel', function () {
   
   var busquedaPlanos = {
 	tienePlanos: null,  
+    data: null
+  };
+  
+  var busquedaGp = {
+    caratulaGp: null,  
     data: null
   };
 
@@ -73,10 +80,22 @@ app.factory('gponlineModel', function () {
       isError: false,
       title: '',
       msg: ''
-    }
+    },
+    caratulagp: {
+        isLoading: false,
+        isError: false,
+        title: '',
+        msg: ''
+     }
   };
 
   return {
+	getBusquedaGp: function () {
+      return busquedaGp;
+    },
+    setBusquedaGp: function (newBusquedaGp){
+    	busquedaGp = newBusquedaGp;
+    },
     getMostrar: function () {
       return mostrar;
     },

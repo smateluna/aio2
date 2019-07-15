@@ -1,0 +1,75 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<div class="row row-title-dv">
+    <div class="col-md-12 no-padding">
+        <div class="page-head no-padding">
+            <button type="button" class="close close-resultado ng-scope" ng-click="cerrar()" tooltip="Cerrar" tooltip-placement="left">x</button>
+
+            <h3 class="title-dv">Generando GP para Caratula {{parametros.caratula}}</h3>							   						
+            <h6 class="title-dv"><input type="button" class="btn btn-sm btn-alto" ng-if="!states.isOk && !states.isLoading" ng-click="certificar()" value="Certificar"><i class="icon-ok cert-ok" style="display:none" id="ok"></i><i class="icon-remove cert-remove" style="display:none" id="nok"></i>
+            </h6>
+                                
+            <div class="border-header">
+             
+             <div ng-if="states.isError" class="row mt35">
+			    <div class="col-md-6 col-md-offset-3">
+				         <div class="block-transparent">
+				             <div class="content">
+				                 <div class="text-center">
+				                     <p class="label label-danger">{{states.msg}}</p>
+				                 </div>
+				             </div>
+				         </div>
+				     </div>
+				</div>
+				<div ng-if="states.isOk" class="row mt35">
+				    <div class="col-md-6 col-md-offset-3">
+				         <div class="block-transparent">
+				             <div class="content">
+				                 <div class="text-center">
+				                     <p class="label label-success">{{states.msg}}</p>
+				                 </div>
+				             </div>
+				         </div>
+				     </div>
+				</div>
+            
+            </div>    
+            <!--fin borde-->    
+                
+                
+            
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row row-custom">
+
+	<div class="col-md-12">
+    
+          <div class="block-flat">
+            <div class="content border-simple heighFrame" resize-inscripcion>
+				<div ng-if="states.isLoading" id="loading" class="cargando">Obteniendo documento <img class="mtm3" src="../app/images/load-18.gif" alt=""/>
+                	<span class="mensajeLento" ng-bind-html="mensajeDemora"> </span>
+            	</div>
+
+	                <iframe ng-src="{{urlPDF}}" width="100%" height="100%" my-load="myLoader"></iframe>
+            
+        	</div>
+
+    	</div>
+
+	</div>
+
+</div>
+
+<div ng-include="'views/loadingModal.html'"></div>
+
+<script type="text/javascript">
+   //$('#element').popover('hide')
+</script>
+

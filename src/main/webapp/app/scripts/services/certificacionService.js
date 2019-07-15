@@ -144,11 +144,11 @@ app.factory('certificacionService', function ($http, $q) {
 	        });
 	
 	      return deferred.promise;
-     },generarPdf: function (caratula,titulo,cuerpocertificado,prefijo,valor) {
+     },generarPdf: function (caratula,titulo,cuerpocertificado,prefijo,valor,borrador) {
 	      var d = new Date();
 	      var dateNumber = d.getTime();
 	
-    	  var paramsObj = 'metodo=generarPdf&caratula='+caratula+'&titulo='+encodeURIComponent(titulo)+'&cuerpocertificado='+encodeURIComponent(cuerpocertificado)+'&prefijo='+prefijo+'&valor='+valor ;
+    	  var paramsObj = 'metodo=generarPdf&caratula='+caratula+'&titulo='+encodeURIComponent(titulo)+'&cuerpocertificado='+encodeURIComponent(cuerpocertificado)+'&prefijo='+prefijo+'&valor='+valor+'&borrador='+borrador;
 	
 	      var deferred = $q.defer();
 	

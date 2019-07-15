@@ -646,8 +646,9 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 	    	String titulo = request.getParameter("titulo")==null?"":request.getParameter("titulo");
 	    	String cuerpoplantilla = request.getParameter("cuerpocertificado")==null?"":request.getParameter("cuerpocertificado");
 	    	String prefijo = request.getParameter("prefijo")==null?"":request.getParameter("prefijo");
-	    	String valor = request.getParameter("valor")==null?"":request.getParameter("valor");		    
-	    	
+	    	String valor = request.getParameter("valor")==null?"":request.getParameter("valor");
+	    	String borrador = request.getParameter("borrador")==null?"":request.getParameter("borrador");
+	    		    	
 			Client client = Client.create();
 
 			//Registrar documento en firma
@@ -673,6 +674,15 @@ public class CertificacionServiceAction extends CbrsAbstractAction {
 				jsonInString.put("codigoAlpha", firmaJson.get("codArchivoAlpha"));
 				jsonInString.put("cabecera", titulo);
 				jsonInString.put("texto", cuerpoplantilla);
+				
+				if("CGP".equalsIgnoreCase(prefijo)){
+					KeycloakSecurityContext context = (KeycloakSecurityContext)request.getAttribute(KeycloakSecurityContext.class.getName());
+					String usuario =context.getIdToken().getPreferredUsername();			
+					usuario = usuario.replaceAll("CBRS\\\\", "");
+					
+					jsonInString.put("borrador", borrador);
+					jsonInString.put("usuario", usuario);
+				}
 				
 				clientResponse = wr.type("application/json").post(ClientResponse.class, jsonInString.toJSONString());
 				statusRespuesta = clientResponse.getClientResponseStatus();

@@ -477,6 +477,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 			logger.debug("listaHipotecas agrupado size: " + listaHipotecas.size());
 			
 			boolean tieneNoVigente = false;
+			int cantvigenteshipo = 0;
 			
 			for(HipotecaDTO hipotecaDTO: listaHipotecas){					
 				
@@ -510,6 +511,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 					tieneNoVigente=true;
 				}else{
 					hipotecaJSON.put("vigente",true);
+					cantvigenteshipo++;
 				}
 				if(null!=hipotecaDTO.getCaratula())
 					hipotecaJSON.put("caratula", hipotecaDTO.getCaratula());
@@ -565,6 +567,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 					tieneNoVigente=true;
 				}else{
 					hipotecaJSON.put("vigente",true);
+					cantvigenteshipo++;
 				}
 				if(null!=hipotecaDTO.getCaratula())
 					hipotecaJSON.put("caratula", hipotecaDTO.getCaratula());
@@ -601,8 +604,9 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 				}
 				listaHipotecasJSON.add(hipotecaJSON);
 			}					
-			
+
 			respuesta.put("tieneNoVigenteHipo",tieneNoVigente);
+			respuesta.put("cantvigenteshipo",cantvigenteshipo);
 			respuesta.put("hipotecasVigentes", listaHipotecasJSON);
 		} catch(Exception e){
 			logger.error(e.getMessage());
@@ -671,6 +675,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 			listaProhibiciones = obtenerAcreedoresProhibicion(listaProhibiciones);
 			logger.debug("listaProhibiciones filtrado size: " + listaProhibiciones.size());
 			boolean tieneNoVigente = false;
+			int cantvigentesproh = 0;
 			for(ProhibicionDTO prohibicionDTO: listaProhibiciones){
 				
 				//Buscar cancelaciones de hipotecas
@@ -702,6 +707,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 					tieneNoVigente=true;
 				}else{
 					prohibicionJSON.put("vigente",true);
+					cantvigentesproh++;
 				}
 				
 				JSONArray listaNotasJSON = new JSONArray();
@@ -748,6 +754,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 				tieneNoVigente=true;
 			}else{
 				prohibicionJSON.put("vigente",true);
+				cantvigentesproh++;
 			}
 			if(null!=prohibicionDTO.getCaratula())
 				prohibicionJSON.put("caratula", prohibicionDTO.getCaratula());
@@ -786,6 +793,7 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 		}					
 
 		respuesta.put("tieneNoVigenteProh",tieneNoVigente);
+		respuesta.put("cantvigentesproh",cantvigentesproh);
 		respuesta.put("prohibicionesVigentes", listaProhibicionesJSON);
 		
 		} catch(Exception e){

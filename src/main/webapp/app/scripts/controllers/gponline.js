@@ -1,19 +1,22 @@
 'use strict';
 
-app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location, $http, $filter, $modal, $modalStack, $routeParams, gponlineModel, gponlineService, indiceService) {
-  
-  $scope.fechahoy = new Date().toJSON().split('T')[0];	
-  
-  //modelos
-  $scope.tab = gponlineModel.getTab();
-  $scope.mostrar = gponlineModel.getMostrar();
-  $scope.busquedaGponline = gponlineModel.getBusquedaGponline();
-  $scope.busquedaCaratula = gponlineModel.getBusquedaCaratula();
-  $scope.busquedaInscripcion = gponlineModel.getBusquedaInscripcion();
-  $scope.busquedaPlanos = gponlineModel.getBusquedaPlanos();
-  $scope.states = gponlineModel.getStates();
-  $scope.gpAutomatico = null;
-  //fin modelos
+app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location, $http, $filter, $modal, $modalStack, $routeParams, gponlineModel, gponlineService, indiceService, certificacionService, plantilleroModel, firmaService, caratulaService) {
+
+	$scope.fechahoy = new Date().toJSON().split('T')[0];	
+
+	//modelos
+	$scope.tab = gponlineModel.getTab();
+	$scope.mostrar = gponlineModel.getMostrar();
+	$scope.busquedaGponline = gponlineModel.getBusquedaGponline();
+	$scope.busquedaCaratula = gponlineModel.getBusquedaCaratula();
+	$scope.busquedaInscripcion = gponlineModel.getBusquedaInscripcion();
+	$scope.busquedaPlanos = gponlineModel.getBusquedaPlanos();
+	$scope.busquedaGp = gponlineModel.getBusquedaGp();
+	$scope.plantillerogp = plantilleroModel.getPlantillerogp();
+	$scope.states = gponlineModel.getStates();
+	$scope.gpAutomatico = null;
+
+	//fin modelos
 
   $scope.req = {
        simpleMode: false
@@ -111,6 +114,8 @@ app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location
 				  $scope.busquedaGponline.tieneNoVigenteProp=data.tieneNoVigenteProp;
 				  $scope.busquedaGponline.tieneNoVigenteProh=data.tieneNoVigenteProh;
 				  $scope.busquedaGponline.tieneNoVigenteHipo=data.tieneNoVigenteHipo;
+				  $scope.busquedaGponline.cantvigenteshipo=data.cantvigenteshipo;
+				  $scope.busquedaGponline.cantvigentesproh=data.cantvigentesproh;
 				  
 				  //Alerta Quiebras / Interdicciones
 				  if(data.listaQuiebras!=null && data.listaQuiebras.length>0){
@@ -817,5 +822,293 @@ app.controller('GponlineCtrl', function ($rootScope, $scope, $timeout, $location
 			});
 
 	};
-  
+
+	$scope.vistaPreviaGP = function(){
+		$scope.cleanErr('caratulagp');
+		if($scope.busquedaGp.caratulaGp!=null && $scope.busquedaGp.caratulaGp!=''){
+
+			$scope.openLoadingModal('Buscando...', '');
+
+			var promise = caratulaService.obtenerCaratula($scope.busquedaGp.caratulaGp);
+			promise.then(function(data) {
+				$scope.closeModal();
+				if(data.status===null){
+				}else if(data.status){
+
+					if(data.caratula.numeroCaratula){
+						$scope.openLoadingModal('Generando Certificado...', '');
+
+						var fojap,numerop,anop,duenos="",bisp="";
+
+						$scope.busquedaGponline.duenyos;
+						$scope.busquedaGponline.datosPropiedad;
+						var hipotecas = $scope.busquedaGponline.cantvigenteshipo;
+						var prohibiciones = $scope.busquedaGponline.cantvigentesproh;
+
+						for (var i = 0; i < $scope.busquedaGponline.duenyos.length; i++) {
+							if($scope.busquedaGponline.duenyos[i].vigente){
+								fojap=$scope.busquedaGponline.duenyos[i].fojas
+								numerop=$scope.busquedaGponline.duenyos[i].numero
+								anop=$scope.busquedaGponline.duenyos[i].anyo
+								if($scope.busquedaGponline.duenyos[i].bis)
+									bisp=" BIS";
+
+								for (var d = 0; d < $scope.busquedaGponline.duenyos[i].clientes.length; d++) {
+									if($scope.busquedaGponline.duenyos[i].clientes[d].vigente){
+										if(duenos=="")
+											duenos=duenos+$scope.busquedaGponline.duenyos[i].clientes[d].nombres+"<br>";
+										else
+											duenos=duenos+", "+$scope.busquedaGponline.duenyos[i].clientes[d].nombres+"<br>";
+									}
+								}
+							}
+						}	
+
+						var texto = "Del inmueble inscrito a Fojas "+fojap+" Número "+numerop+bisp+" del Registro de Propiedad del año "+anop+" ubicado en la comuna de "+$scope.busquedaGponline.datosPropiedad.comuna+" que corresponde a: "+$scope.busquedaGponline.datosPropiedad.direccion+" de propiedad de "+duenos;
+						texto = texto+"<br><b>Registro de Hipotecas y Gravámenes</b>";
+						texto = texto+"<br>Revisados los índices del Registro de Hipotecas y Gravámenes durante TREINTA años a la fecha, certifico que la propiedad individualizada precedentemente tiene en dicho periodo "+$scope.numerosaLetras(hipotecas)+" inscripción(es) vigente(s).-";
+						//Hipotecas Vigentes
+						var contadorvigente=1;
+						for (var i = 0; i < $scope.busquedaGponline.hipoteca.length; i++) {
+							if($scope.busquedaGponline.hipoteca[i].vigente){
+								texto = texto+"<br><br>"+contadorvigente+") "+$scope.busquedaGponline.hipoteca[i].resumen;
+								contadorvigente++;
+							}
+						}
+
+						texto = texto+"<br><br><b>Registro de Interdicciones y Prohibiciones de Enajenar</b>";
+						texto = texto+"<br>Revisados igualmente durante TREINTA años los índices del Registro de Interdicciones y Prohibiciones de Enajenar, certifico que la referida propiedad tiene en dicho periodo "+$scope.numerosaLetras(prohibiciones)+" inscripción(es) vigente(s).-";
+						//Prohibiciones Vigentes
+						contadorvigente=1;
+						for (var i = 0; i < $scope.busquedaGponline.prohibicion.length; i++) {
+							if($scope.busquedaGponline.prohibicion[i].vigente){
+								texto = texto+"<br><br>"+contadorvigente+") "+$scope.busquedaGponline.prohibicion[i].resumen;
+								contadorvigente++;
+							}
+						}
+
+						texto = texto+$scope.plantillerogp.gp.plantillas.plantillaTemplate;
+
+						if($scope.plantillerogp.gp.plantillas.valor>0)
+							texto = texto.replace("_VALOR_", $scope.plantillerogp.gp.plantillas.valor.toLocaleString("es-CL"));
+						if($scope.plantillerogp.gp.plantillas.valor==0)
+							texto = texto.replace("_VALOR_", "S/D");
+						texto = texto.replace("_FECHA_", $scope.obtenerFechaEnPalabras($scope.fechahoy));
+
+//						console.log(texto);
+						
+						var promise = certificacionService.generarPdf($scope.busquedaGp.caratulaGp,$scope.plantillerogp.gp.plantillas.plantillaCertificado,texto,$scope.plantillerogp.gp.plantillas.fePDocumentoTipos.identificador,$scope.plantillerogp.gp.plantillas.valor,$scope.busquedaGponline.datosPropiedad.borrador);
+						promise.then(function(data) {
+							$scope.closeModal();
+							if(data.status===null){
+
+							}else if(data.status){
+								$scope.states.isError= false;
+								plantilleroModel.setPlantillero($scope.plantillerogp.gp);
+
+								$rootScope.go('/verVistaPreviaGP/'+data.nombreArchivoVersion+'/gponline/'+$scope.busquedaGp.caratulaGp);
+
+							}else{
+								$scope.states.isOk= false;
+								$scope.raiseErr('No se pudo certificar caratula', data.msg);
+							}
+						}, function(reason) {
+							$scope.states.isOk= false;
+							$scope.raiseErr('caratulagp','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+						});
+					}else{
+						$scope.raiseErr('caratulagp','Problema detectado', 'Caratula no existe.');
+					}
+
+
+				}else{
+					$scope.raiseErr('caratulagp','Problema detectado', data.msg);
+				}
+			}, function(reason) {
+				$scope.raiseErr('caratulagp','Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+			});
+		}else{
+			$scope.raiseErr('caratulagp','Problema detectado', 'Debe ingresar numero de caratula para generar Certificado GP.');
+		}
+
+	};
+
+	$scope.obtenerTiposCertificadosPorIdPlantilla = function(){
+
+		//Voy a buscar plantilla GP
+		var promise = firmaService.obtenerTiposCertificadosPorIdPlantilla(8);
+		promise.then(function(data) {
+			if(data.status===null){
+			}else if(data.status){
+				$scope.plantillerogp.gp=data.tipoCertificado;
+			}else{
+				$scope.raiseErr('data.msg', data.msg);
+			}
+		}, function(reason) {
+			$scope.raiseErr('Problema contactando al servidor.', '');
+		});
+
+	};
+
+	$scope.obtenerFechaEnPalabras = function(fecha){
+		var parts = fecha.split("-");
+		var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+		var f=new Date(parts[0], parts[1] - 1, parts[2]);
+		return f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+	};
+
+	$scope.numerosaLetras =  function (cantidad) {
+
+		var numero = 0;
+		cantidad = parseFloat(cantidad);
+
+		if (cantidad == "0.00" || cantidad == "0") {
+			return "CERO";
+		} else {
+			var ent = cantidad.toString().split(".");
+			var arreglo = separar_split(ent[0]);
+			var longitud = arreglo.length;
+
+			switch (longitud) {
+			case 1:
+				numero = unidades(arreglo[0]);
+				break;
+			case 2:
+				numero = decenas(arreglo[0], arreglo[1]);
+				break;
+			case 3:
+				numero = centenas(arreglo[0], arreglo[1], arreglo[2]);
+				break;
+			case 4:
+				numero = unidadesdemillar(arreglo[0], arreglo[1], arreglo[2], arreglo[3]);
+				break;
+			case 5:
+				numero = decenasdemillar(arreglo[0], arreglo[1], arreglo[2], arreglo[3], arreglo[4]);
+				break;
+			case 6:
+				numero = centenasdemillar(arreglo[0], arreglo[1], arreglo[2], arreglo[3], arreglo[4], arreglo[5]);
+				break;
+			}
+
+			ent[1] = isNaN(ent[1]) ? '00' : ent[1];
+
+			return numero;
+		}
+	}
+
+	function unidades(unidad) {
+		var unidades = Array('UNA ','DOS ','TRES ' ,'CUATRO ','CINCO ','SEIS ','SIETE ','OCHO ','NUEVE ');
+
+
+		return unidades[unidad - 1];
+	}
+
+	function decenas(decena, unidad) {
+		var diez = Array('ONCE ','DOCE ','TRECE ','CATORCE ','QUINCE' ,'DIECISEIS ','DIECISIETE ','DIECIOCHO ','DIECINUEVE ');
+		var decenas = Array('DIEZ ','VEINTE ','TREINTA ','CUARENTA ','CINCUENTA ','SESENTA ','SETENTA ','OCHENTA ','NOVENTA ');
+
+		if (decena ==0 && unidad == 0) {
+			return "";
+		}
+
+		if (decena == 0 && unidad > 0) {
+			return unidades(unidad);
+		}
+
+		if (decena == 1) {
+			if (unidad == 0) {
+				return decenas[decena -1];
+			} else {
+				return diez[unidad -1];
+			}
+		} else if (decena == 2) {
+			if (unidad == 0) {
+				return decenas[decena -1];
+			}
+			else if (unidad == 1) {
+				return veinte = "VEINTI" + "UNO";
+			} 
+			else {
+				return veinte = "VEINTI" + unidades(unidad);
+			}
+		} else {
+
+			if (unidad == 0) {
+				return decenas[decena -1] + " ";
+			}
+			if (unidad == 1) {
+				return decenas[decena -1] + " Y " + "UNO";
+			}
+
+			return decenas[decena -1] + " Y " + unidades(unidad);
+		}
+	}
+
+	function centenas(centena, decena, unidad) {
+		var centenas = Array( "CIENTO ", "DOSCIENTOS ", "TRESCIENTOS ", "CUATROCIENTOS ","QUINIENTOS ","SEISCIENTOS ","SETECIENTOS ", "OCHOCIENTOS ","NOVECIENTOS ");
+
+		if (centena == 0 && decena == 0 && unidad == 0) {
+			return "";
+		}
+		if (centena == 1 && decena == 0 && unidad == 0) {
+			return "CIEN ";
+		}
+
+		if (centena == 0 && decena == 0 && unidad > 0) {
+			return unidades(unidad);
+		}
+
+		if (decena == 0 && unidad == 0) {
+			return centenas[centena - 1]  +  "" ;
+		}
+
+		if (decena == 0) {
+			var numero = centenas[centena - 1] + "" + decenas(decena, unidad);
+			return numero.replace(" Y ", " ");
+		}
+		if (centena == 0) {
+
+			return  decenas(decena, unidad);
+		}
+
+		return centenas[centena - 1]  +  "" + decenas(decena, unidad);
+
+	}
+
+	function unidadesdemillar(unimill, centena, decena, unidad) {
+		var numero = unidades(unimill) + " MIL " + centenas(centena, decena, unidad);
+		numero = numero.replace("UN  MIL ", "MIL " );
+		if (unidad == 0) {
+			return numero.replace(" Y ", " ");
+		} else {
+			return numero;
+		}
+	}
+
+	function decenasdemillar(decemill, unimill, centena, decena, unidad) {
+		var numero = decenas(decemill, unimill) + " MIL " + centenas(centena, decena, unidad);
+		return numero;
+	}
+
+	function centenasdemillar(centenamill,decemill, unimill, centena, decena, unidad) {
+
+		var numero = 0;
+		numero = centenas(centenamill,decemill, unimill) + " MIL " + centenas(centena, decena, unidad);
+
+		return numero;
+	}
+
+	function separar_split(texto){
+		var contenido = new Array();
+		for (var i = 0; i < texto.length; i++) {
+			contenido[i] = texto.substr(i,1);
+		}
+		return contenido;
+	}
+
+
+	$timeout(function(){
+		if(!$scope.plantillerogp.gp)
+			$scope.obtenerTiposCertificadosPorIdPlantilla();
+	}, 1000);
 });

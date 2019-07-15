@@ -21,7 +21,26 @@ app.factory('firmaService', function ($http, $q) {
           });
 
         return deferred.promise;
-      }
+      },
+      obtenerTiposCertificadosPorIdPlantilla: function (idPlanilla) {
+          var paramsObj = {metodo: 'obtenerTiposCertificadosPorIdPlantilla', idPlanilla:idPlanilla};
+
+          var deferred = $q.defer();
+
+          $http({
+            method: 'GET',
+            url: '../do/service/firma',
+            params: paramsObj
+          }).
+            success(function(data, status, headers, config){
+              deferred.resolve(data);
+            }).
+            error(function(data, status, headers, config){
+              deferred.reject(status);
+            });
+
+          return deferred.promise;
+        }
     };
   });
  

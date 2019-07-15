@@ -3,9 +3,23 @@
         <div class="block-flat block-border">
             <!--<button type="button" class="close close-resultado" ng-click="cerrarResultadoTitulo()" tooltip="Cerrar resultado" tooltip-placement="left">×</button>-->
             <div class="row mt0">
-                            <div class="col-md-12 col-sm-12 barra-buttons">
+            <hr>
+                            <div class="col-md-12 col-sm-12">
+                            <div class="col-md-4">
+                                <div ng-if="subPermisos['gponline'].indexOf('GENERA_GP_AIO')>=0 || developer">
+                                  <input type="text" required="" ng-model="busquedaGp.caratulaGp" focus-input ="caratulaGpIsFocused" ng-enter="vistaPreviaGP()" maxlength="10" required="required" numbers-only="numbers-only" placeholder="caratula GP" >
+                                  <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="vistaPreviaGP()">
+                                  Generar GP
+                                  </button>
+                                </div>
                                 
-                               <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openGpCertfEmitModal()"><i class="fa fa-search"></i> Certificados Emitidos
+                            </div>
+                            
+                            <div class="col-md-8" align="right">
+                               
+                                <div class="row mt0">
+                                   <div class="col-md-12">
+                                  <button type="button" class="btn btn-primary btn-xs btn-rad" ng-click="openGpCertfEmitModal()"><i class="fa fa-search"></i> Certificados Emitidos
                                </button>
                                
                                 <button type="button" class="btn  btn-primary btn-xs btn-rad" ng-click="openEventosModal()">
@@ -28,15 +42,34 @@
                                    <span ng-repeat="urls in busquedaGponline.urls">
                                     <a href="{{urls.url}}" target="_blank"  class="btn btn-xs btn-success"><i class="fa fa-camera"></i> Plano</a>
                                     </span> 
-                                 </span> 
+                                 </span>
                                  
+                                  </div>
+                                </div>
+                                
+                               
+                                 <div class="row mt10">
+                                   <div class="col-md-12"> 
                                  <span ng-if="busquedaGponline.fechaUltimoGP !='' && busquedaGponline.fechaUltimoGP !=null" class="label label-default">
                                       Último GP: <span>{{busquedaGponline.fechaUltimoGP}} <button type="button" class="btn  btn-primary btn-xs btn-rad" ng-click="verGP()" style="padding: 1px 6px;"><i class="fa fa-search"></i></button></span>
-                                 </span>                         
+                                 </span> 
+                                 </div>
+                                 </div> 
+                                 
+                                                        
 								</div>
-                            
+                            </div>
                         </div>
-                        
+                        <div ng-if="states.caratulagp.isError" class="row mt35">
+						            <div class="block-transparent">
+						                <div class="content">
+						                    <div class="text-center">
+						                        <div class="i-circle danger"><i class="fa fa-times"></i></div>
+						                        <p>{{states.caratulagp.msg}}</p>
+						                    </div>
+						                </div>
+						            </div>
+						    </div>
             
             
             <div class="header">
