@@ -46,7 +46,7 @@ public class SolicitudHipotecasServiceAction extends CbrsAbstractAction {
 	//	private static final Integer ESTADO_DIGITALIZADO = 2; 
 	//	private static final Integer ESTADO_RECHAZADO = 3; 
 		private static final Long ESTADO_EN_ESPERA_DUPLICADO = 4L;
-	//	private static final Integer ESTADO_REVISADO = 5; 
+		private static final Integer ESTADO_REVISADO = 5; 
 
 	private static final Integer ESTADO_RECHAZO_REVISADO = 6;
 	//private static final Integer ESTADO_IMPRESO_ENTREGA_MANUAL = 7;
@@ -98,8 +98,9 @@ public class SolicitudHipotecasServiceAction extends CbrsAbstractAction {
 
 					for(SolicitudVO solicitudVO: solicitudVOs){
 
-						if(solicitudVO.getEstado()!=null && 
-								solicitudVO.getEstado().getIdEstado().intValue() != ESTADO_RECHAZO_REVISADO){
+						if(solicitudVO.getEstado()!=null 
+								&&  solicitudVO.getEstado().getIdEstado().intValue() != ESTADO_RECHAZO_REVISADO 
+								&&  solicitudVO.getEstado().getIdEstado().intValue() != ESTADO_REVISADO){
 							SolicitudDTO solicitudDTO = solicitudConverter.getSolicitudDTO(solicitudVO);
 
 							solicitudDTOs.add(solicitudDTO);
