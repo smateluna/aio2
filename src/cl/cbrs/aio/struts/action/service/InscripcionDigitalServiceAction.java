@@ -3,6 +3,7 @@ package cl.cbrs.aio.struts.action.service;
 
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -1154,19 +1155,17 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 					bytesRead = file.read(buffer, 0, buffer.length);
 					out.write(buffer, 0, bytesRead);
 				}while (bytesRead == buffer.length);
-			}else{
-				if(null!=buffer)
-					out.write(buffer, 0, buffer.length);
 			}
-
 
 			out.flush();
 
 			if(out != null)
 				out.close();
+		} catch (FileNotFoundException e) {
+			request.setAttribute("error", "Archivo no encontrado.");
 		} catch (Exception e) {
 			logger.error("Error al buscar documento: " + e.getMessage(),e);
-			request.setAttribute("error", "Archivo no encontrado.");
+			request.setAttribute("error", "Error al buscar archivo.");
 		} finally{
 			if(out!=null){try{out.close();}catch(Exception e){logger.error("Error: " + e.getMessage(),e);}}
 		}

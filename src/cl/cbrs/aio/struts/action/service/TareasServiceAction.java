@@ -190,7 +190,7 @@ public class TareasServiceAction extends CbrsAbstractAction {
 	    	if(listaPermisos!=null){
 		    	UsuarioUtil util = new UsuarioUtil();
 		    	ArrayList<String> subPermisos = util.getSubPermisosUsuarioModulo(listaPermisos, "tareas");
-				if(subPermisos.contains("REINGRESO_GP")){
+				if(subPermisos!=null && subPermisos.contains("REINGRESO_GP")){
 					FuncionarioSeccionUtil funcionarioSeccionUtil = new FuncionarioSeccionUtil();
 					FuncionariosSeccionVO funcionarioSeccion = funcionarioSeccionUtil.obtenerFuncionarioVO(usuario);
 					
