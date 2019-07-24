@@ -361,10 +361,9 @@
 
 		</dependency>
 		<dependency>
-			<groupId>cl.cbrs.wsclient</groupId>
-			<artifactId>wsClienteEntregaEnLinea</artifactId>
+			<groupId>wsEntregaEnLineaCliente</groupId>
+			<artifactId>wsEntregaEnLineaCliente</artifactId>
 			<version>1.0.0</version>
-
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>

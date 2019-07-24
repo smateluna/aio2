@@ -460,7 +460,7 @@ public class GeneraCertificado {
 		}catch(JRRuntimeException jre){
 			logger.error(jre.getMessage(),jre);
 		}catch (FileNotFoundException e) {
-			logger.error(e.getMessage(),e);
+//			logger.error(e.getMessage(),e);
 			throw new GeneralException("JRE",e.getMessage()); 
 		}finally{
 			try{if(input!=null)input.close();}catch(Exception e){}

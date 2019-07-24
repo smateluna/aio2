@@ -957,13 +957,12 @@ public class GponlineServiceAction extends CbrsAbstractAction {
 
         JSONObject respuesta = new JSONObject();
         
-        String listaInscripcionesReq = request.getParameter("listaInscripcionesPlano");                
-        JSONArray listaInscripcionesJSON = new JSONArray();        
+        String listaInscripcionesReq = request.getParameter("listaInscripcionesPlano");                        
         JSONArray planos = new JSONArray();
         
         try { 
         	JSONParser parser = new JSONParser();
-        	listaInscripcionesJSON = (JSONArray)parser.parse(listaInscripcionesReq);
+        	JSONArray listaInscripcionesJSON = (JSONArray)parser.parse(listaInscripcionesReq);
         	TituloPlanoVO[] titulosPlanosVO = new TituloPlanoVO[listaInscripcionesJSON.size()];
         	
         	for (int i=0; i<listaInscripcionesJSON.size(); i++) {
@@ -995,7 +994,8 @@ public class GponlineServiceAction extends CbrsAbstractAction {
             		planoJSON.put("categoria", planosVO[j].getIdCategoria());
             		planoJSON.put("numero", planosVO[j].getNumeroPlano());
             		planoJSON.put("url", Util.getUrlPlano(planosVO[j].getNumeroPlano().intValue(),planosVO[j].getIdCategoria().intValue()));
-            		planos.add(planoJSON);        			
+            		if(!planos.contains(planoJSON))
+            			planos.add(planoJSON);        			
         		}
         	}
  
