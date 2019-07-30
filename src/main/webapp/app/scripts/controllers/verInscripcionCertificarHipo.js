@@ -96,6 +96,23 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 					$scope.data = data;
 
 					$scope.inicia();
+					
+					var promise = caratulaService.obtenerBitacoraCaratula($scope.parametros.caratula);
+					promise.then(function(data) {
+						if(data.status===null){
+						}else if(data.status){
+							$scope.caratula.resultados = data.listabitacoras;
+							$scope.status = data.status;
+							if($scope.caratula.resultados.length!==0){
+								$scope.openComentariosModal(); 
+							}	
+						}else{
+							$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
+						}
+					}, function(reason) {
+						$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
+					});
+					//fin comentarios caratula
 
 					$scope.isLoading = false;
 				} else {
@@ -119,20 +136,20 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 	$scope.inicia = function() {
 		var tieneanotacion2 = false;
 		
-		$scope.loaders['anotaciones'].isLoading = true;
-		var promise = inscripcionDigitalHipotecasService.getNotas(
-			$scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
-		promise
-		.then(
-			function(data) {
-				if (data.status == null) {
-				} else if (data.status) {
+//		$scope.loaders['anotaciones'].isLoading = true;
+//		var promise = inscripcionDigitalHipotecasService.getNotas(
+//			$scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
+//		promise
+//		.then(
+//			function(data) {
+//				if (data.status == null) {
+//				} else if (data.status) {
 
 					if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
 
 						angular
 						.forEach(
-							data.anotaciones,
+							$scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino,
 							function(obj) {
 								if (obj.tipoAnotacionDTO.idTipoAnotacion === 2) {
 									tieneanotacion2=true;
@@ -144,22 +161,22 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 
 					}
 
-				} else {
-					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
-					$scope.loaders['anotaciones'].error = true;
-				}
-
-				$scope.loaders['anotaciones'].isLoading = false;
-
-			},
-			function(reason) {
-				$scope.loaders['anotaciones'].isLoading = false;
-
-				$scope.loaders['anotaciones'].error = true;
-
-				$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
-
-			});
+//				} else {
+//					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
+//					$scope.loaders['anotaciones'].error = true;
+//				}
+//
+//				$scope.loaders['anotaciones'].isLoading = false;
+//
+//			},
+//			function(reason) {
+//				$scope.loaders['anotaciones'].isLoading = false;
+//
+//				$scope.loaders['anotaciones'].error = true;
+//
+//				$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
+//
+//			});
 
 		if(($scope.userLoginSinCBRS=='jbelmar') && $scope.data.inscripcionDigitalDTO.ano<$rootScope.aioParametros.anoDigitalHipotecas){
 			$scope.parametros.rehaceImagen='1';
@@ -183,29 +200,8 @@ app.controller('VerInscripcionCertificarHipoCtrl', function ($scope, $routeParam
 		resultados: []
 	};
 
-	var promise = caratulaService.obtenerBitacoraCaratula($scope.parametros.caratula);
-	promise.then(function(data) {
+	
 
-		if(data.status===null){
-
-		}else if(data.status){
-
-			$scope.caratula.resultados = data.listabitacoras;
-			$scope.status = data.status;
-
-			if($scope.caratula.resultados.length!==0){
-
-				$scope.openComentariosModal(); 
-
-			}	
-
-		}else{
-			$scope.raiseErr('No se pudo obtener bitacora caratula', data.msg);
-		}
-	}, function(reason) {
-		$scope.raiseErr('Problema detectado', 'No se ha podido establecer comunicación con el servidor.');
-	});
-	//fin comentarios caratula
 
 	$scope.modificaTitulo = function(){
 

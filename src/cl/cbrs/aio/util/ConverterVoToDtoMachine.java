@@ -1,11 +1,14 @@
 package cl.cbrs.aio.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 
+import cl.cbr.util.TablaValores;
+import cl.cbrs.aio.dao.FlujoDAO;
 import cl.cbrs.aio.dto.AnotacionDTO;
+import cl.cbrs.aio.dto.EstadoActualCaratulaDTO;
 import cl.cbrs.aio.dto.EstadoAnotacionDTO;
 import cl.cbrs.aio.dto.EstadoBitacoraDTO;
 import cl.cbrs.aio.dto.InscripcionDigitalDTO;
@@ -17,6 +20,8 @@ import cl.cbrs.inscripciondigital.vo.InscripcionDigitalVO;
 import cl.cbrs.inscripciondigital.vo.TipoAnotacionVO;
 
 public class ConverterVoToDtoMachine {
+	
+	private static final Logger logger = Logger.getLogger(ConverterVoToDtoMachine.class);
 	
 	public ConverterVoToDtoMachine(){
 		
@@ -207,6 +212,24 @@ public class ConverterVoToDtoMachine {
 		
 		
 		anotacionDTO.setActo(anotacionVO.getActo());
+		if(anotacionVO.getActo()!=null && anotacionVO.getEstadoAnotacionVo()!=null && anotacionVO.getEstadoAnotacionVo().getIdEstado()!=7){
+			try{			
+				//Si acto es transferencia, revisar estado caratula (Anotacion pendiente entrega)
+				String strActosTransferencia = TablaValores.getValor("ws_inscripciondigital.parametros", "ACTOS_TRANSFERENCIA", "valor");
+				if(strActosTransferencia!=null){
+					if(ArrayUtils.contains( strActosTransferencia.split(","), anotacionVO.getActo().trim() )){
+						Long caratula = anotacionVO.getCaratula();
+						EstadoActualCaratulaDTO eacDTO = new FlujoDAO().getEstadoActualCaratulaPendiente(caratula);
+						if(eacDTO != null){
+							anotacionDTO.setPendiente(true);
+							anotacionDTO.setEstadoActualCaratulaPendienteDTO(eacDTO);
+						}
+					}
+				}
+			} catch(Exception e){
+				logger.error(e.getMessage(),e);
+			}
+		}
 		anotacionDTO.setBorrador(anotacionVO.getBorrador());
 		anotacionDTO.setDireccion(anotacionVO.getDireccion());
 		anotacionDTO.setRepertorio(anotacionVO.getRepertorio());

@@ -167,21 +167,20 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 	$scope.inicia = function() {
 		var tieneanotacion2 = false;
 		
-		$scope.loaders['anotaciones'].isLoading = true;
-		$scope.loaders['notas'].isLoading = true;
-		var promise = inscripcionDigitalService.getNotas(
-			$scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
-		promise
-		.then(
-			function(data) {
-				if (data.status == null) {
-				} else if (data.status) {
+//		$scope.loaders['anotaciones'].isLoading = true;
+//		$scope.loaders['notas'].isLoading = true;
+//		var promise = inscripcionDigitalService.getNotas(
+//			$scope.parametros.foja, $scope.parametros.numero, $scope.parametros.ano, $scope.parametros.bis);
+//		promise
+//		.then(
+//			function(data) {
+//				if (data.status == null) {
+//				} else if (data.status) {
 
 					if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
-
 						angular
 						.forEach(
-							data.anotaciones,
+								$scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino,
 							function(obj) {
 								if (obj.tipoAnotacionDTO.idTipoAnotacion === 2) {
 									tieneanotacion2=true;
@@ -199,35 +198,37 @@ app.controller('VerInscripcionCertificarCtrl', function ($scope, $routeParams, $
 
 					}
 					
-					$scope.makeTodos();
+					$timeout(function(){
+						$scope.makeTodos();
+					}, 500)
 					
 					//Revisar notas de transferencia data.anotaciones
 					var notaPendiente = false;
-					angular.forEach(data.anotaciones, function(obj) {
+					angular.forEach($scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino, function(obj) {
 						if(obj.pendiente)
 							notaPendiente=true;												
 					});
-					if($filter('filter')(data.anotaciones, {'pendiente':true}).length>0)
+					if($filter('filter')($scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino, {'pendiente':true}).length>0)
 						$scope.openMensajeModal('warn',"Esta inscripción tiene notas pendientes", '',  false, null);
 
-				} else {
-					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
-					$scope.loaders['anotaciones'].error = true;
-				}
-
-				$scope.loaders['anotaciones'].isLoading = false;
-				$scope.loaders['notas'].isLoading = false;
-
-			},
-			function(reason) {
-				$scope.loaders['anotaciones'].isLoading = false;
-				$scope.loaders['notas'].isLoading = false;
-
-				$scope.loaders['anotaciones'].error = true;
-
-				$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
-
-			});
+//				} else {
+//					$scope.raiseErr('error','Error Obteniendo Anotaciones.',data.msg);
+//					$scope.loaders['anotaciones'].error = true;
+//				}
+//
+//				$scope.loaders['anotaciones'].isLoading = false;
+//				$scope.loaders['notas'].isLoading = false;
+//
+//			},
+//			function(reason) {
+//				$scope.loaders['anotaciones'].isLoading = false;
+//				$scope.loaders['notas'].isLoading = false;
+//
+//				$scope.loaders['anotaciones'].error = true;
+//
+//				$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
+//
+//			});
 
 		if(($scope.userLoginSinCBRS=='mfarfan' || $scope.userLoginSinCBRS=='jopazo' || $scope.userLoginSinCBRS=='hegonzalez') && $scope.data.inscripcionDigitalDTO.ano<2014){
 			$scope.parametros.rehaceImagen='1';
