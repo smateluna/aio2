@@ -834,12 +834,11 @@ app
 			}
 
 
-
-			if(registro=='prop'){
-				$scope.buscaNotas();
-			}else{
+//			Se comenta por error al obtener notas
+//			if(registro=='prop'){
+//				$scope.buscaNotas();
+//			}else{
 				if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
-
 					angular
 					.forEach(
 						$scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino,
@@ -866,7 +865,7 @@ app
 					}, 2000);
 
 				}
-			}
+//			}
 			
 			//Revisar alertas
 			if($scope.data.alertas){

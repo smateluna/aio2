@@ -207,7 +207,9 @@ public class InscripcionDigitalServiceAction extends CbrsAbstractAction {
 							if(consultaDocumentoDTO.getTipoDocumento()== ConstantesDocumentos.ID_TIPO_DOCUMENTO_INSCRIPCION_VERSIONADO){
 								//tenemos imagen al dia
 
-								InscripcionDigitalVO inscripcionDigitalVO = digitalDelegate.obtenerInscripcionDigitalSimple(foja, numero, ano, bis);
+								//Se comenta por error al obtener solo notas
+//								InscripcionDigitalVO inscripcionDigitalVO = digitalDelegate.obtenerInscripcionDigitalSimple(foja, numero, ano, bis);
+								InscripcionDigitalVO inscripcionDigitalVO = digitalDelegate.obtenerInscripcionDigital(foja, numero, ano, bis);
 
 								ConverterVoToDtoMachine converter = new ConverterVoToDtoMachine();
 
