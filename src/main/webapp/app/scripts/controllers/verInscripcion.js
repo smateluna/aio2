@@ -833,15 +833,12 @@ app
 					+ estado);
 			}
 
-
-//			Se comenta por error al obtener notas
-//			if(registro=='prop'){
+//			if(registro=='prop' && false){
 //				$scope.buscaNotas();
 //			}else{
 				if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
-					angular
-					.forEach(
-						$scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino,
+
+					angular.forEach($scope.data.inscripcionDigitalDTO.anotacionsForIdInscripcionDestino,
 						function(obj) {
 							if ((obj.tipoAnotacionDTO.idTipoAnotacion === 1 || obj.tipoAnotacionDTO.idTipoAnotacion === 2)
 									&& obj.estadoAnotacionDTO.idEstado !== 7) {
@@ -854,17 +851,15 @@ app
 								$scope.anotaciones
 								.push(obj);
 							}
-						});
+						});										
 				}
-
-				$scope.makeTodos();				
-
-				if($scope.embargos.length>0){
-					$timeout(function(){
+				
+				$timeout(function(){
+					$scope.makeTodos();
+					if($scope.embargos.length>0)
 						$scope.openEmbargosModal();
-					}, 2000);
+				}, 1000);
 
-				}
 //			}
 			
 			//Revisar alertas
@@ -928,74 +923,74 @@ app
 
 		};
 
-		$scope.buscaNotas = function() {
-
-			//			alert('buscando notas');
-
-			$scope.loaders['anotaciones'].isLoading = true;
-			$scope.loaders['notas'].isLoading = true;
-
-			var foja = $scope.parametros.foja, numero = $scope.parametros.numero, ano = $scope.parametros.ano, bis = $scope.parametros.bis;
-
-			var promise = $scope.servicioInscripcion.getNotas(
-				foja, numero, ano, bis);
-			promise
-			.then(
-				function(data) {
-					if (data.status == null) {
-					} else if (data.status) {
-
-						if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
-
-							angular
-							.forEach(
-								data.anotaciones,
-								function(obj) {
-									if ((obj.tipoAnotacionDTO.idTipoAnotacion === 1 || obj.tipoAnotacionDTO.idTipoAnotacion === 2)
-											&& obj.estadoAnotacionDTO.idEstado !== 7) {
-										$scope.notas.push(obj);
-
-										if((obj.tipoAnotacionDTO.idTipoAnotacion === 2 || obj.tipoAnotacionDTO.idTipoAnotacion === 1) && (obj.acto=='Prejudicial' || obj.acto=='Embargo' || obj.acto=='Medida Precautoria' || obj.acto=='Medida Prejudicial Precautoria' || obj.acto=='Quiebra' || obj.acto=='Interdiccion' || obj.acto=='Prohibicion Judicial' || obj.acto=='Prohibicion Voluntaria' || obj.acto=='Desposeimiento' || obj.acto=='Litigio' || obj.acto=='LIQUIDACION LEY 20720')){
-											$scope.embargos.push(obj);
-										}
-									} else if (obj.tipoAnotacionDTO.idTipoAnotacion === 3) {
-										$scope.anotaciones
-										.push(obj);
-									}
-								});
-
-						}
-
-						$scope.makeTodos();
-
-						if($scope.embargos.length>0){
-							$timeout(function(){
-								$scope.openEmbargosModal();
-							}, 2000);
-						}						
-
-					} else {
-						$scope.raiseErr('error','Error Obteniendo Notas.',data.msg);
-						$scope.loaders['anotaciones'].error = true;
-						$scope.loaders['notas'].error = true;
-					}
-
-					$scope.loaders['anotaciones'].isLoading = false;
-					$scope.loaders['notas'].isLoading = false;
-
-				},
-				function(reason) {
-					$scope.loaders['anotaciones'].isLoading = false;
-					$scope.loaders['notas'].isLoading = false;
-
-					$scope.loaders['anotaciones'].error = true;
-					$scope.loaders['notas'].error = true;
-
-					$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
-
-				});
-
-		};
+//		$scope.buscaNotas = function() {
+//
+//			//			alert('buscando notas');
+//
+//			$scope.loaders['anotaciones'].isLoading = true;
+//			$scope.loaders['notas'].isLoading = true;
+//
+//			var foja = $scope.parametros.foja, numero = $scope.parametros.numero, ano = $scope.parametros.ano, bis = $scope.parametros.bis;
+//
+//			var promise = $scope.servicioInscripcion.getNotas(
+//				foja, numero, ano, bis);
+//			promise
+//			.then(
+//				function(data) {
+//					if (data.status == null) {
+//					} else if (data.status) {
+//
+//						if ($scope.data.consultaDocumentoDTO.tipoDocumento === 8) {
+//
+//							angular
+//							.forEach(
+//								data.anotaciones,
+//								function(obj) {
+//									if ((obj.tipoAnotacionDTO.idTipoAnotacion === 1 || obj.tipoAnotacionDTO.idTipoAnotacion === 2)
+//											&& obj.estadoAnotacionDTO.idEstado !== 7) {
+//										$scope.notas.push(obj);
+//
+//										if((obj.tipoAnotacionDTO.idTipoAnotacion === 2 || obj.tipoAnotacionDTO.idTipoAnotacion === 1) && (obj.acto=='Prejudicial' || obj.acto=='Embargo' || obj.acto=='Medida Precautoria' || obj.acto=='Medida Prejudicial Precautoria' || obj.acto=='Quiebra' || obj.acto=='Interdiccion' || obj.acto=='Prohibicion Judicial' || obj.acto=='Prohibicion Voluntaria' || obj.acto=='Desposeimiento' || obj.acto=='Litigio' || obj.acto=='LIQUIDACION LEY 20720')){
+//											$scope.embargos.push(obj);
+//										}
+//									} else if (obj.tipoAnotacionDTO.idTipoAnotacion === 3) {
+//										$scope.anotaciones
+//										.push(obj);
+//									}
+//								});
+//
+//						}
+//
+//						$scope.makeTodos();
+//
+//						if($scope.embargos.length>0){
+//							$timeout(function(){
+//								$scope.openEmbargosModal();
+//							}, 2000);
+//						}						
+//
+//					} else {
+//						$scope.raiseErr('error','Error Obteniendo Notas.',data.msg);
+//						$scope.loaders['anotaciones'].error = true;
+//						$scope.loaders['notas'].error = true;
+//					}
+//
+//					$scope.loaders['anotaciones'].isLoading = false;
+//					$scope.loaders['notas'].isLoading = false;
+//
+//				},
+//				function(reason) {
+//					$scope.loaders['anotaciones'].isLoading = false;
+//					$scope.loaders['notas'].isLoading = false;
+//
+//					$scope.loaders['anotaciones'].error = true;
+//					$scope.loaders['notas'].error = true;
+//
+//					$scope.raiseErr('error','Error detectado.',	'No se ha podido establecer comunicación.');
+//
+//				});
+//
+//		};
 
 		if ($scope.parametros.origen === 'digital') {
 			var dataState = digitalModel.getDataState();
