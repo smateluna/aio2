@@ -245,13 +245,15 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
-			
-		//news
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
 		anotacionDTO.setFechaEliminacion(anotacionVO.getFechaEliminacion());
 		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
 		
 		EstadoAnotacionDTO estadoAnotacionDTO = getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo());
 		anotacionDTO.setEstadoAnotacionDTO(estadoAnotacionDTO);
@@ -293,14 +295,16 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setIdUsuarioCreador(anotacionVO.getIdUsuarioCreador());
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
-		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
-			
-		//news
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
+		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());			
 		anotacionDTO.setFechaEliminacion(anotacionVO.getFechaEliminacion());
 		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
 		
 		EstadoAnotacionDTO estadoAnotacionDTO = getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo());
 		anotacionDTO.setEstadoAnotacionDTO(estadoAnotacionDTO);
@@ -343,13 +347,15 @@ public class ConverterVoToDtoMachine {
 		anotacionDTO.setIdUsuarioFirmador(anotacionVO.getIdUsuarioFirmador());
 		anotacionDTO.setTexto(anotacionVO.getTexto());
 		anotacionDTO.setCaratulaMatriz(anotacionVO.getCaratulaMatriz());
-			
-		//news
-		anotacionDTO.setNombreUsuarioEliminador(anotacionVO.getNombreUsuarioEliminador());
 		anotacionDTO.setFechaEliminacion(anotacionVO.getFechaEliminacion());
 		
-		anotacionDTO.setNombreUsuarioCreador(anotacionVO.getNombreUsuarioCreador());
-		anotacionDTO.setNombreUsuarioFirmador(anotacionVO.getNombreUsuarioFirmador());
+		//Se omite el "CBRS\" guardado en BD
+		String usuarioCreador = anotacionVO.getNombreUsuarioCreador()!=null?anotacionVO.getNombreUsuarioCreador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioFirmador = anotacionVO.getNombreUsuarioFirmador()!=null?anotacionVO.getNombreUsuarioFirmador().replaceAll("CBRS\\\\", ""):"";
+		String usuarioEliminador = anotacionVO.getNombreUsuarioEliminador()!=null?anotacionVO.getNombreUsuarioEliminador().replaceAll("CBRS\\\\", ""):"";		
+		anotacionDTO.setNombreUsuarioCreador(usuarioCreador);
+		anotacionDTO.setNombreUsuarioFirmador(usuarioFirmador);
+		anotacionDTO.setNombreUsuarioEliminador(usuarioEliminador);
 		
 		EstadoAnotacionDTO estadoAnotacionDTO = getEstadoAnotacionDTO(anotacionVO.getEstadoAnotacionVo());
 		anotacionDTO.setEstadoAnotacionDTO(estadoAnotacionDTO);
